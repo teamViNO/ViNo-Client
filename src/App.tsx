@@ -1,3 +1,4 @@
+import { RecoilRoot } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -18,22 +19,24 @@ import SummaryPage from '@/pages/SummaryPage';
 const App = () => {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
 
-        <BrowserRouter>
-          <Routes>
-            <Route path="/category" element={<CategoryPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/sign-up" element={<SignUpPage />} />
-            <Route path="/example" element={<ExamplePage />} />
-            <Route path="/summary" element={<SummaryPage />} />
-            <Route path="/" element={<HomePage />} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/category" element={<CategoryPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/example" element={<ExamplePage />} />
+              <Route path="/summary" element={<SummaryPage />} />
+              <Route path="/" element={<HomePage />} />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </RecoilRoot>
     </>
   );
 };
