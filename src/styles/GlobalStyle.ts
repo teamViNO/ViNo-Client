@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
 
   * {
     font-family: 'Pretendard', 'Spline Sans' !important;
+    box-sizing: border-box;
   }
 `;
 
