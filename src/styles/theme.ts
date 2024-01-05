@@ -36,7 +36,7 @@ const typography = {
   },
   Subheader2: {
     fontSize: 20,
-    fontWeight: 'medium',
+    fontWeight: 500,
     lineHeight: 1.6,
   },
   Subheader3: {
@@ -46,7 +46,7 @@ const typography = {
   },
   Body1: {
     fontSize: 16,
-    fontWeight: 'medium',
+    fontWeight: 500,
     lineHeight: 1.6,
   },
   Body2: {
@@ -56,7 +56,7 @@ const typography = {
   },
   Body3: {
     fontSize: 14,
-    fontWeight: 'medium',
+    fontWeight: 500,
     lineHeight: 1.6,
   },
   Body4: {
@@ -66,7 +66,7 @@ const typography = {
   },
   Caption1: {
     fontSize: 12,
-    fontWeight: 'medium',
+    fontWeight: 500,
     lineHeight: 1.6,
   },
   Caption2: {
@@ -76,7 +76,7 @@ const typography = {
   },
   Caption3: {
     fontSize: 10,
-    fontWeight: 'medium',
+    fontWeight: 500,
     lineHeight: 1.6,
   },
   Caption4: {
