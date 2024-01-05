@@ -13,6 +13,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
+import SummaryPage from '@/pages/SummaryPage';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/sign-up" element={<SignUpPage />} />
             <Route path="/example" element={<ExamplePage />} />
+            <Route path="/summary" element={<SummaryPage />} />
             <Route path="/" element={<HomePage />} />
           </Routes>
         </BrowserRouter>
