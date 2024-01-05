@@ -1,17 +1,5 @@
-import logoSrc from '@/assets/logo.png';
-import UpIcon from '@/assets/icons/up.svg?react';
-
-import ExampleComponent from '@/components/example';
-
 const HomePage = () => {
-  return (
-    <div>
-      <img src={logoSrc} alt="Vi.No Logo" style={{ width: 100 }} />
-      <ExampleComponent />
-      Home Page
-      <UpIcon />
-    </div>
-  );
+  return <div>Home Page</div>;
 };
 
 export default HomePage;
