@@ -17,20 +17,20 @@ const SvgIcons = {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M5.41699 7.91797H54.5837V12.0846H5.41699V7.91797Z"
         fill={darkMode ? theme.color.white : theme.color.gray500}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M5.41699 27.918H54.5837V32.0846H5.41699V27.918Z"
         fill={darkMode ? theme.color.white : theme.color.gray500}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M5.41699 47.918H54.5837V52.0846H5.41699V47.918Z"
         fill={darkMode ? theme.color.white : theme.color.gray500}
       />
@@ -45,14 +45,14 @@ const SvgIcons = {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M23.7503 9.58268C15.9263 9.58268 9.58366 15.9253 9.58366 23.7493C9.58366 31.5734 15.9263 37.916 23.7503 37.916C31.5744 37.916 37.917 31.5734 37.917 23.7493C37.917 15.9253 31.5744 9.58268 23.7503 9.58268ZM5.41699 23.7493C5.41699 13.6241 13.6251 5.41602 23.7503 5.41602C33.8755 5.41602 42.0837 13.6241 42.0837 23.7493C42.0837 33.8746 33.8755 42.0827 23.7503 42.0827C13.6251 42.0827 5.41699 33.8746 5.41699 23.7493Z"
         fill={darkMode ? theme.color.white : theme.color.gray500}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M37.5 34.5547L52.9463 50.001L50 52.9472L34.5537 37.501L37.5 34.5547Z"
         fill={darkMode ? theme.color.white : theme.color.gray500}
       />
@@ -114,7 +114,7 @@ const SvgIcons = {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_855_90575)">
+      <g clipPath="url(#clip0_855_90575)">
         <path
           d="M56.0476 196.035L0 3.83398H45.8691L73.8929 115.929L83.9392 160.609H84.8645L94.6464 115.929L122.802 3.83398H168.672L112.624 196.035H56.0476Z"
           fill={
