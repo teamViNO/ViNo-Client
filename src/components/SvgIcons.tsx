@@ -1,6 +1,6 @@
 import theme from '@/styles/theme';
 
-interface SvgPropsType {
+interface ISvgPropsType {
   width?: number;
   height?: number;
   footer?: boolean;
@@ -8,7 +8,7 @@ interface SvgPropsType {
 }
 
 const SvgIcons = {
-  MenuIcon: ({ width = 60, height = 60, darkMode }: SvgPropsType) => (
+  MenuIcon: ({ width = 60, height = 60, darkMode }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
@@ -36,7 +36,7 @@ const SvgIcons = {
       />
     </svg>
   ),
-  SearchIcon: ({ width = 60, height = 60, darkMode }: SvgPropsType) => (
+  SearchIcon: ({ width = 60, height = 60, darkMode }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
@@ -58,7 +58,7 @@ const SvgIcons = {
       />
     </svg>
   ),
-  NotifyOff: ({ width = 60, height = 60, darkMode }: SvgPropsType) => (
+  NotifyOff: ({ width = 60, height = 60, darkMode }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
@@ -80,7 +80,7 @@ const SvgIcons = {
       />
     </svg>
   ),
-  NotifyOn: ({ width = 60, height = 60, darkMode }: SvgPropsType) => (
+  NotifyOn: ({ width = 60, height = 60, darkMode }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
@@ -106,7 +106,7 @@ const SvgIcons = {
       />
     </svg>
   ),
-  Logo: ({ width = 646, height = 200, darkMode, footer }: SvgPropsType) => (
+  Logo: ({ width = 646, height = 200, darkMode, footer }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
@@ -177,7 +177,7 @@ const SvgIcons = {
       </defs>
     </svg>
   ),
-  PlayIcon: ({ width = 60, height = 60 }: SvgPropsType) => (
+  PlayIcon: ({ width = 60, height = 60 }: ISvgPropsType) => (
     <svg
       width={width}
       height={height}
