@@ -23,8 +23,8 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
 
-        <Layout>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Layout>
             <Routes>
               <Route path="/category" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -35,8 +35,8 @@ const App = () => {
               <Route path="/summary" element={<SummaryPage />} />
               <Route path="/" element={<HomePage />} />
             </Routes>
-          </BrowserRouter>
-        </Layout>
+          </Layout>
+        </BrowserRouter>
       </ThemeProvider>
     </RecoilRoot>
   );
