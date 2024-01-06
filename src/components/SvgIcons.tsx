@@ -197,4 +197,6 @@ const SvgIcons = {
   ),
 };
 
+export type KeyOfIcon = keyof typeof SvgIcons;
+
 export default SvgIcons;
