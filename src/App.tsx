@@ -15,15 +15,16 @@ import SearchPage from '@/pages/SearchPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import SummaryPage from '@/pages/SummaryPage';
+import Layout from './components/layout/Layout';
 
 const App = () => {
   return (
-    <>
-      <RecoilRoot>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
 
-          <BrowserRouter>
+        <BrowserRouter>
+          <Layout>
             <Routes>
               <Route path="/category" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -34,10 +35,10 @@ const App = () => {
               <Route path="/summary" element={<SummaryPage />} />
               <Route path="/" element={<HomePage />} />
             </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </RecoilRoot>
-    </>
+          </Layout>
+        </BrowserRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   );
 };
 
