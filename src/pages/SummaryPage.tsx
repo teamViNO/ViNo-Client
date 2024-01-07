@@ -1,7 +1,8 @@
 import DownIcon from '@/assets/icons/down.svg?react';
 import OpenFileIcon from '@/assets/icons/open-file.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
-import SvgIcons from '@/components/SvgIcons';
+import SearchIcon from '@/assets/icons/search-light.svg?react';
+import PlayIcon from '@/assets/icons/play.svg?react';
 
 import { Container, DetailBox, ScriptBox } from '@/styles/SummaryPage';
 
@@ -137,7 +138,7 @@ const SummaryPage = () => {
 
           <div style={{ display: 'flex', gap: 8 }}>
             <span className="icon-button">
-              <SvgIcons.SearchIcon width={18} height={18} />
+              <SearchIcon width={18} height={18} />
             </span>
 
             <span className="icon-button">
@@ -158,7 +159,7 @@ const SummaryPage = () => {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                   <span className="play-button">
-                    <SvgIcons.PlayIcon width={36} height={36} />
+                    <PlayIcon width={36} height={36} />
                   </span>
 
                   <span className="script-title">생성형 AI 검색과 광고</span>
@@ -204,7 +205,7 @@ const SummaryPage = () => {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                   <span className="play-button">
-                    <SvgIcons.PlayIcon width={36} height={36} />
+                    <PlayIcon width={36} height={36} />
                   </span>
 
                   <span className="script-title">비즈니스 핵심 전략, 숏폼</span>
@@ -239,7 +240,7 @@ const SummaryPage = () => {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                   <span className="play-button">
-                    <SvgIcons.PlayIcon width={36} height={36} />
+                    <PlayIcon width={36} height={36} />
                   </span>
 
                   <span className="script-title">

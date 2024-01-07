@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import SvgIcons from '../../SvgIcons';
 import * as FooterStyle from '@/styles/layout/Footer.style';
 import AboutViNO from './AboutViNO';
 import SendEmail from './SendEmail';
@@ -14,7 +13,7 @@ const Footer = () => {
 
   return (
     <FooterStyle.Container>
-      <SvgIcons.Logo width={64.55} height={20} footer />
+      <img src="/src/assets/logo-footer.png" alt="Footer 로고 이미지" />
       <SendEmail feedback={feedback} setFeedback={setFeedback} />
       <AboutViNO aboutViNOs={aboutViNOs} />
       <FooterStyle.CopyRight>
