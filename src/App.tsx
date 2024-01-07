@@ -8,7 +8,6 @@ import GlobalStyle from '@/styles/GlobalStyle';
 
 // Pages
 import CategoryPage from '@/pages/CategoryPage';
-import ExamplePage from '@/pages/ExamplePage';
 import HomePage from '@/pages/HomePage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
@@ -31,7 +30,6 @@ const App = () => {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
-              <Route path="/example" element={<ExamplePage />} />
               <Route path="/summary" element={<SummaryPage />} />
               <Route path="/" element={<HomePage />} />
             </Routes>
