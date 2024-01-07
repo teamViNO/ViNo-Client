@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import theme from '../theme';
+import theme from '../../theme';
 
 export const Container = styled.header`
   border: 1px solid black;
@@ -8,11 +8,16 @@ export const Container = styled.header`
   display: flex;
   justify-content: space-between;
   background-color: ${theme.color.gray500};
+  position: relative;
+  z-index: 1;
 `;
 
 export const Area = styled.div`
   display: flex;
   align-items: center;
+  div > Button {
+    margin-right: 0px;
+  }
 `;
 
 export const Button = styled.button`
@@ -21,9 +26,6 @@ export const Button = styled.button`
   background-color: rgba(0, 0, 0, 0);
   padding: 0;
   margin-right: 20px;
-  &:last-child {
-    margin-right: 0px;
-  }
 `;
 
 export const LinkWithMargin = styled(Link)`

@@ -1,25 +1,33 @@
-import * as HeaderStyle from '@/styles/layout/Header.style';
+import * as HeaderStyle from '@/styles/layout/header/Header.style';
 import { Link } from 'react-router-dom';
 import IconWithButton from './IconWithButton';
-import SearchIcon from '@/assets/icons/search-light.svg?react';
+import { useState } from 'react';
+import LoginButton from './LoginButton';
+import Profile from './Profile';
 
 const Header = () => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const isUser: boolean = true;
+
+  const closeModal = () => setModalOpen(false);
+
   return (
-    <HeaderStyle.Container>
+    <HeaderStyle.Container id="header">
       <HeaderStyle.Area>
-        <IconWithButton name="Menu" onClick={() => {}} />
-        <Link to="/">
+        <IconWithButton name="Menu" onClick={closeModal} />
+        <Link to="/" onClick={closeModal}>
           <img src="/src/assets/logo-light.png" alt="하얀색 로고 이미지" />
         </Link>
       </HeaderStyle.Area>
       <HeaderStyle.Area>
-        <HeaderStyle.LinkWithMargin to="/search">
-          <SearchIcon width={28} height={28} />
-        </HeaderStyle.LinkWithMargin>
-        <IconWithButton name="NotifyOff" onClick={() => {}} />
-        <HeaderStyle.Button>
-          <img src="/src/assets/default-profile.png" alt="프로필 이미지" />
-        </HeaderStyle.Button>
+        {!isUser && <LoginButton />}
+        {isUser && (
+          <Profile
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            closeModal={closeModal}
+          />
+        )}
       </HeaderStyle.Area>
     </HeaderStyle.Container>
   );
