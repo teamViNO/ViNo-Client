@@ -163,7 +163,7 @@ const Container = styled.div`
         color: #BBBBBB;
    }
 
-   & button {
+   & button{
         width: 90px;
         height: 36px;
 
@@ -174,10 +174,14 @@ const Container = styled.div`
         line-height: 160%;
 
         color: #FFFFFF;
-        background: #BBBBBB;
+        background : #1E1E1E;
         border-radius: 8px;
         order : 1;
         border : 0;
+   }
+
+   & button:disabled {
+        background: #BBBBBB; 
    }
 
    & div.hashtag {
@@ -209,7 +213,7 @@ const HashtagBox = styled.div`
 
     background: #FFFFFF;
 
-    border: 1.29032px solid #E8E8E8;
+    border: 1.3px solid #E8E8E8;
     border-radius: 8px;
 
     font-family: 'Pretendard';
@@ -222,7 +226,7 @@ const HashtagBox = styled.div`
 
     &:hover {
         box-shadow: 0.5px 0.5px 5px #ddd;
-      }
+    }
 `
 
 
