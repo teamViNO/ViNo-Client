@@ -1,20 +1,30 @@
 import { Container, HashtagBox } from '@/styles/SearchPage';
 import TooltipImg from '@/assets/tooltip.svg';
 import SearchIcon from '@/assets/search.svg';
-import { useState } from 'react';
+import { useRef } from 'react';
+
+import Tags from "@yaireo/tagify/dist/react.tagify"; // tagify library For React file
+import '../styles/tagify.css';
+
 
 const SearchPage = () => {
-    let [UserInput, SetUserInput] = useState<string>(''); // 사용자 검색 내용
-    let [Active, SetActive] = useState<Boolean>(true);
+    const baseTagifySetting = {
+        blacklist: ["xxx", "yyy", "zzz"],
+        maxTags: 2,
+        backspace: "edit",
+        placeholder: "검색하고 싶은 키워드를 입력해주세요",
+        pattern : /^#[\w\d가-힣]+$/
+    };
 
-    let OnchangeHandler = (e : React.ChangeEvent<HTMLInputElement>) => {
-        SetUserInput(e.target.value);
+    const tagifyRef = useRef();
 
-        return UserInput.length === 0 ? SetActive(true) : SetActive(false);
-    }
-    
-    console.log(Active)
-    
+    const handleClick = (e : React.MouseEvent, value : string) => { // 해쉬태그 추가 구현
+        const tagify = tagifyRef.current; 
+        if (tagify) {
+          tagify.addTags('#'+value); 
+        }
+      };
+
     return (
             <Container>
                 <div className='wrap'>
@@ -29,14 +39,14 @@ const SearchPage = () => {
                                     <div className='input'>
                                         <img src={SearchIcon} alt='not IMG' 
                                         style={{width: '36px', height: '36px',left: '0px', top: '0px'}}></img>
-                                        <input value={UserInput} type='text' placeholder='검색하고 싶은 키워드를 입력해주세요' onChange={(e) => OnchangeHandler(e)}></input>
+                                        <Tags tagifyRef={tagifyRef} settings={baseTagifySetting}/>
                                     </div>
-                                    <button disabled={!UserInput}>Search</button>
+                                    <button>Search</button>
                                 </div>
                             </div>
                             
                         </div>
-                        <img src={TooltipImg} alt='not IMG' style={!UserInput ? {visibility : 'visible'} : {visibility : 'hidden'}}/>
+                        <img src={TooltipImg} alt='not IMG' style={true ? {visibility : 'visible'} : {visibility : 'hidden'}}/>
                     </div>
 
                     <div className="hashtag">
