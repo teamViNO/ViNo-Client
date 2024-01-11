@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import BlurBackground from '../BlurBackground';
 import ProfileContainer from './ProfileContainer';
+import AlarmContainer from './AlarmContainer';
 
 interface IProfileProps {
   modalOpen: boolean;
@@ -25,7 +26,12 @@ const Profile = ({ modalOpen, closeModal, setModalOpen }: IProfileProps) => {
       <HeaderStyle.LinkWithMargin to="/search">
         <SearchIcon width={28} height={28} onClick={closeModal} />
       </HeaderStyle.LinkWithMargin>
-      <IconWithButton name="NotifyOff" onClick={() => {}} />
+      <div>
+        <section>
+          <IconWithButton name="NotifyOff" onClick={() => {}} />
+        </section>
+        <AlarmContainer />
+      </div>
       <div>
         <HeaderStyle.Button onClick={() => setModalOpen(!modalOpen)}>
           <img
