@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
+  user-select: none;
 `;
 
 export const DetailBox = styled.div`
@@ -113,17 +114,17 @@ export const DetailBox = styled.div`
 `;
 
 export const ScriptBox = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 40px;
   height: 100vh;
-  padding-top: 20px;
   min-width: 555px;
   max-width: 865px;
   box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
 
   & div.tools {
-    padding: 0 100px 0 60px;
+    padding: 20px 100px 0 60px;
     display: flex;
     align-items: center;
     width: 100%;
@@ -131,7 +132,6 @@ export const ScriptBox = styled.div`
 
   & div.indicator {
     display: flex;
-    justify-content: center;
     flex: 1 1 auto;
     gap: 20px;
   }
@@ -202,5 +202,14 @@ export const ScriptBox = styled.div`
       line-height: 1.6;
       color: ${(props) => props.theme.color.gray500};
     }
+  }
+
+  & div.resize-thumb {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    cursor: ew-resize;
   }
 `;
