@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import DownIcon from '@/assets/icons/down.svg?react';
 
@@ -16,16 +16,14 @@ type Props = {
 const DropdownItem = ({ category }: Props) => {
   const [isShow, setIsShow] = useState(false);
 
-  const dynamicStyles = useMemo(() => {
-    return {
-      icon: {
-        transform: isShow ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
-      },
-      subCategory: {
-        height: isShow ? (category.items?.length || 0) * 46 : 0,
-      },
-    };
-  }, [category, isShow]);
+  const dynamicStyles = {
+    icon: {
+      transform: isShow ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
+    },
+    subCategory: {
+      height: isShow ? (category.items?.length || 0) * 46 : 0,
+    },
+  };
 
   const handleItemClick = async (id: number) => {
     // API 요청
