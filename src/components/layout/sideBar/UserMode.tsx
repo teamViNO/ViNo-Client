@@ -1,29 +1,23 @@
 import LookSvg from '@/assets/icons/look.svg?react';
-import theme from '@/styles/theme';
+import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
+import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 
 const UserMode = () => {
+  const folders = ['기획', '디자인', '개발', '팁', '방법론'];
   return (
     <div>
-      <button
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: '11px 20px',
-          borderWidth: 0,
-          backgroundColor: theme.color.white,
-        }}
-      >
+      <UserModeStyle.RecentVideoButton>
         <LookSvg width={28} height={28} />
-        <span
-          style={{
-            color: theme.color.gray500,
-            ...theme.typography.Subheader3,
-            marginLeft: '10px',
-          }}
-        >
-          최근 읽은 영상
-        </span>
-      </button>
+        <UserModeStyle.CommonTitle>최근 읽은 영상</UserModeStyle.CommonTitle>
+      </UserModeStyle.RecentVideoButton>
+      {folders.map((folder: string) => (
+        <UserModeStyle.FolderButton key={`${folder}button`}>
+          <ClosedFileSvg key={`${folder}folder`} width={28} height={28} />
+          <UserModeStyle.CommonTitle key={`${folder}`}>
+            {folder}
+          </UserModeStyle.CommonTitle>
+        </UserModeStyle.FolderButton>
+      ))}
     </div>
   );
 };
