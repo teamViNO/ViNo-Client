@@ -7,16 +7,20 @@ import ProfileDetail from './ProfileDetail';
 interface IProfileProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlarmOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Profile = ({ modalOpen, setModalOpen }: IProfileProps) => {
+const Profile = ({ modalOpen, setModalOpen, setAlarmOpen }: IProfileProps) => {
   const [header, setHeader] = useState<Element | null>(null);
 
   useEffect(() => {
     setHeader(document.querySelector('#header'));
   }, []);
 
-  const toggleModalState = () => setModalOpen(!modalOpen);
+  const toggleModalState = () => {
+    setModalOpen(!modalOpen);
+    setAlarmOpen(false);
+  };
 
   return (
     <>

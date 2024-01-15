@@ -9,9 +9,13 @@ import Alarm from './alarm';
 
 const Header = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [alarmOpen, setAlarmOpen] = useState<boolean>(false);
   const isUser: boolean = true;
 
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    setAlarmOpen(false);
+  };
 
   return (
     <HeaderStyle.Container id="header">
@@ -25,10 +29,18 @@ const Header = () => {
         <HeaderStyle.LinkWithMargin to="/search">
           <SearchIcon width={28} height={28} onClick={closeModal} />
         </HeaderStyle.LinkWithMargin>
-        <Alarm />
+        <Alarm
+          alarmOpen={alarmOpen}
+          setAlarmOpen={setAlarmOpen}
+          setModalOpen={setModalOpen}
+        />
         {!isUser && <LoginButton />}
         {isUser && (
-          <Profile modalOpen={modalOpen} setModalOpen={setModalOpen} />
+          <Profile
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            setAlarmOpen={setAlarmOpen}
+          />
         )}
       </HeaderStyle.Area>
     </HeaderStyle.Container>
