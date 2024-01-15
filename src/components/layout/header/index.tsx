@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import IconWithButton from './IconWithButton';
 import { useState } from 'react';
 import LoginButton from './LoginButton';
-import Profile from './Profile';
+import Profile from './profile';
+import SearchIcon from '@/assets/icons/search-light.svg?react';
+import Alarm from './alarm';
 
 const Header = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -20,13 +22,13 @@ const Header = () => {
         </Link>
       </HeaderStyle.Area>
       <HeaderStyle.Area>
+        <HeaderStyle.LinkWithMargin to="/search">
+          <SearchIcon width={28} height={28} onClick={closeModal} />
+        </HeaderStyle.LinkWithMargin>
+        <Alarm />
         {!isUser && <LoginButton />}
         {isUser && (
-          <Profile
-            modalOpen={modalOpen}
-            setModalOpen={setModalOpen}
-            closeModal={closeModal}
-          />
+          <Profile modalOpen={modalOpen} setModalOpen={setModalOpen} />
         )}
       </HeaderStyle.Area>
     </HeaderStyle.Container>

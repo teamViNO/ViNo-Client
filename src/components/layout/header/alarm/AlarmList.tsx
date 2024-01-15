@@ -1,15 +1,15 @@
-import * as AlarmContainerStyle from '@/styles/layout/header/AlarmContainer.style';
+import * as AlarmListStyle from '@/styles/layout/header/alarm/AlarmList.style';
 import theme from '@/styles/theme';
-import Alarm from './Alarm';
+import AlarmItem from './AlarmItem';
 
-interface IAlarmContainerProps {
+interface IAlarmListProps {
   type: 'convert' | 'error' | 'welcome';
   title?: string;
   nickname?: string;
 }
 
-const AlarmContainer = () => {
-  const alarms: IAlarmContainerProps[] = [
+const AlarmList = () => {
+  const alarms: IAlarmListProps[] = [
     { type: 'convert', title: '2023 콜드체인 트렌드 리포트' },
     {
       type: 'error',
@@ -19,24 +19,24 @@ const AlarmContainer = () => {
   ];
 
   return (
-    <AlarmContainerStyle.Layout>
-      <AlarmContainerStyle.Container>
-        <AlarmContainerStyle.NoticeWrap>
+    <AlarmListStyle.Layout>
+      <AlarmListStyle.Container>
+        <AlarmListStyle.NoticeWrap>
           <span style={theme.typography.Subheader3}>읽지 않은 알림</span>
-          <AlarmContainerStyle.NoticeCount length={alarms.length}>
+          <AlarmListStyle.NoticeCount length={alarms.length}>
             {alarms.length}
-          </AlarmContainerStyle.NoticeCount>
-        </AlarmContainerStyle.NoticeWrap>
+          </AlarmListStyle.NoticeCount>
+        </AlarmListStyle.NoticeWrap>
         {alarms.length ? (
           alarms.map((alarm) =>
             alarm.type === 'welcome' ? (
-              <Alarm
+              <AlarmItem
                 type={alarm.type}
                 nickname={alarm.nickname}
                 key={`${alarm.nickname}`}
               />
             ) : (
-              <Alarm
+              <AlarmItem
                 type={alarm.type}
                 title={alarm.title}
                 key={`${alarm.title}`}
@@ -44,13 +44,13 @@ const AlarmContainer = () => {
             ),
           )
         ) : (
-          <AlarmContainerStyle.NoticeAbsenceMessage>
+          <AlarmListStyle.NoticeAbsenceMessage>
             알람이 없어요!
-          </AlarmContainerStyle.NoticeAbsenceMessage>
+          </AlarmListStyle.NoticeAbsenceMessage>
         )}
-      </AlarmContainerStyle.Container>
-    </AlarmContainerStyle.Layout>
+      </AlarmListStyle.Container>
+    </AlarmListStyle.Layout>
   );
 };
 
-export default AlarmContainer;
+export default AlarmList;

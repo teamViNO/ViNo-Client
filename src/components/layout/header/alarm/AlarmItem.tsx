@@ -1,5 +1,5 @@
 import theme from '@/styles/theme';
-import * as AlarmStyle from '@/styles/layout/header/Alarm.style';
+import * as AlarmItemStyle from '@/styles/layout/header/alarm/AlarmItem.style';
 
 interface IAlarmContainerProps {
   type: 'convert' | 'error' | 'welcome';
@@ -14,7 +14,7 @@ interface IDatas {
   content: string;
 }
 
-const Alarm = ({ type, title, nickname }: IAlarmContainerProps) => {
+const AlarmItem = ({ type, title, nickname }: IAlarmContainerProps) => {
   let datas: IDatas | null = null;
   switch (type) {
     case 'convert':
@@ -47,21 +47,21 @@ const Alarm = ({ type, title, nickname }: IAlarmContainerProps) => {
   }
   return (
     <>
-      <AlarmStyle.StateWrap>
-        <AlarmStyle.StateColor background={datas?.color} />
-        <AlarmStyle.StateType>영상 변환</AlarmStyle.StateType>
-        <AlarmStyle.Divide />
+      <AlarmItemStyle.StateWrap>
+        <AlarmItemStyle.StateColor background={datas?.color} />
+        <AlarmItemStyle.StateType>영상 변환</AlarmItemStyle.StateType>
+        <AlarmItemStyle.Divide />
         <span style={theme.typography.Caption2}>10분 전</span>
-      </AlarmStyle.StateWrap>
-      <AlarmStyle.ContentContainer>
-        <AlarmStyle.Image src={`src/assets/${datas?.image}.png`} />
-        <AlarmStyle.ContentWrap>
+      </AlarmItemStyle.StateWrap>
+      <AlarmItemStyle.ContentContainer>
+        <AlarmItemStyle.Image src={`src/assets/${datas?.image}.png`} />
+        <AlarmItemStyle.ContentWrap>
           <span>{datas?.title}</span>
           <span>{datas?.content}</span>
-        </AlarmStyle.ContentWrap>
-      </AlarmStyle.ContentContainer>
+        </AlarmItemStyle.ContentWrap>
+      </AlarmItemStyle.ContentContainer>
     </>
   );
 };
 
-export default Alarm;
+export default AlarmItem;
