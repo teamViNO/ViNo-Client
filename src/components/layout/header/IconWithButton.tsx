@@ -1,4 +1,4 @@
-import * as HeaderStyle from '@/styles/layout/header/Header.style';
+import * as HeaderStyle from '@/styles/layout/header/index';
 import MenuIcon from '@/assets/icons/menu-light.svg?react';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import NotifyOffIcon from '@/assets/icons/notify-off-light.svg?react';

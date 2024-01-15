@@ -1,14 +1,14 @@
-import * as SideBarStyle from '@/styles/layout/sideBar';
+import * as AddCategoryStyle from '@/styles/layout/sideBar/AddCategory.style';
 import PlusSvg from '@/assets/icons/plus.svg?react';
 
 const AddCategory = () => {
   return (
-    <SideBarStyle.CategoryWrap>
-      <SideBarStyle.CategoryText>카테고리</SideBarStyle.CategoryText>
-      <SideBarStyle.CategoryAddButton>
+    <AddCategoryStyle.Wrap>
+      <AddCategoryStyle.Text>카테고리</AddCategoryStyle.Text>
+      <AddCategoryStyle.Button>
         <PlusSvg width={20} height={20} />
-      </SideBarStyle.CategoryAddButton>
-    </SideBarStyle.CategoryWrap>
+      </AddCategoryStyle.Button>
+    </AddCategoryStyle.Wrap>
   );
 };
 

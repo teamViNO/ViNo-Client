@@ -1,18 +1,16 @@
 import VideoSvg from '@/assets/icons/video.svg?react';
 import DownSvg from '@/assets/icons/down.svg?react';
-import * as SideBarStyle from '@/styles/layout/sideBar';
+import * as ConvertVideoStyle from '@/styles/layout/sideBar/ConvertVideo.style';
 
 const ConvertVideo = () => {
   return (
-    <SideBarStyle.ConvertVideoWrap>
+    <ConvertVideoStyle.Wrap>
       <div style={{ display: 'flex' }}>
         <VideoSvg width={28} height={28} />
-        <SideBarStyle.ConvertVideoButton>
-          영상 변환하기
-        </SideBarStyle.ConvertVideoButton>
+        <ConvertVideoStyle.Button>영상 변환하기</ConvertVideoStyle.Button>
       </div>
       <DownSvg width={18} height={18} />
-    </SideBarStyle.ConvertVideoWrap>
+    </ConvertVideoStyle.Wrap>
   );
 };
 

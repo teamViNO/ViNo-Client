@@ -1,4 +1,4 @@
-import * as HeaderStyle from '@/styles/layout/header/Header.style';
+import * as HeaderStyle from '@/styles/layout/header/index';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import BlurBackground from '../../BlurBackground';

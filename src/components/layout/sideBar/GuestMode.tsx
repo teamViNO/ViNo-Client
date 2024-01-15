@@ -1,5 +1,5 @@
 import { sideBarState } from '@/stores/sideBar';
-import * as SideBarStyle from '@/styles/layout/sideBar';
+import * as GuestModeStyle from '@/styles/layout/sideBar/GuestMode.style';
 import { useSetRecoilState } from 'recoil';
 
 const GuestMode = () => {
@@ -7,21 +7,19 @@ const GuestMode = () => {
 
   const closeSideBar = () => setSideBarState(false);
   return (
-    <SideBarStyle.LoginNoticeWrap>
-      <SideBarStyle.LoginNoticeContent>
-        로그인하고
-      </SideBarStyle.LoginNoticeContent>
+    <GuestModeStyle.Wrap>
+      <GuestModeStyle.Content>로그인하고</GuestModeStyle.Content>
       <br />
-      <SideBarStyle.LoginNoticeContent>
+      <GuestModeStyle.Content>
         더 편리하게 사용해 보세요!
-      </SideBarStyle.LoginNoticeContent>
+      </GuestModeStyle.Content>
       <br />
-      <SideBarStyle.LoginNoticeLinkWrap>
-        <SideBarStyle.LoginNoticeLink to="/sign-in" onClick={closeSideBar}>
+      <GuestModeStyle.SigninLinkWrap>
+        <GuestModeStyle.SigninLink to="/sign-in" onClick={closeSideBar}>
           로그인/회원가입
-        </SideBarStyle.LoginNoticeLink>
-      </SideBarStyle.LoginNoticeLinkWrap>
-    </SideBarStyle.LoginNoticeWrap>
+        </GuestModeStyle.SigninLink>
+      </GuestModeStyle.SigninLinkWrap>
+    </GuestModeStyle.Wrap>
   );
 };
 

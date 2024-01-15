@@ -1,4 +1,4 @@
-import * as FooterStyle from '@/styles/layout/Footer.style';
+import * as FooterStyle from '@/styles/layout/footer';
 import AboutViNO from './AboutViNO';
 import SendEmail from './SendEmail';
 

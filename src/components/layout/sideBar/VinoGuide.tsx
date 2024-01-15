@@ -1,12 +1,12 @@
 import GuideSvg from '@/assets/icons/guide.svg?react';
-import * as SideBarStyle from '@/styles/layout/sideBar';
+import * as VinoGuideStyle from '@/styles/layout/sideBar/VinoGuide.style';
 
 const VinoGuide = () => {
   return (
-    <SideBarStyle.GuideWrap>
+    <VinoGuideStyle.Wrap>
       <GuideSvg width={28} height={28} />
-      <SideBarStyle.GuideButton>Vino 가이드</SideBarStyle.GuideButton>
-    </SideBarStyle.GuideWrap>
+      <VinoGuideStyle.Button>Vino 가이드</VinoGuideStyle.Button>
+    </VinoGuideStyle.Wrap>
   );
 };
 
