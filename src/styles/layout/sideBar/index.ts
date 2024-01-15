@@ -17,6 +17,7 @@ export const CommonWrapStyle = styled.div`
 `;
 
 export const CommonButtonStyle = styled.button`
+  cursor: pointer;
   border: 0;
   background-color: rgba(0, 0, 0, 0);
   ${theme.typography.Subheader3};
