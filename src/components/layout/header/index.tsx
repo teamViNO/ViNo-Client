@@ -6,14 +6,15 @@ import LoginButton from './LoginButton';
 import Profile from './profile';
 import SearchIcon from '@/assets/icons/search-light.svg?react';
 import Alarm from './alarm';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { sideBarState } from '@/stores/sideBar';
+import { userState } from '@/stores/user';
 
 const Header = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [alarmOpen, setAlarmOpen] = useState<boolean>(false);
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(sideBarState);
-  const isUser: boolean = false;
+  const isUser = useRecoilValue(userState);
 
   const closeModal = () => {
     setModalOpen(false);
