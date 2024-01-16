@@ -8,13 +8,13 @@ import { CommonTitle } from '@/styles/layout/sideBar/UserMode.style';
 const ConvertVideo = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [url, setURL] = useState<string>('');
-  const [isFocuse, setIsFocus] = useState<boolean>(false);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
 
-  const youtubeURLValidation = url.includes('https://youtu.be/');
+  const youtubeURLValidation = url.includes('https://youtube.com/');
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
-  const handleFocustState = () => setIsFocus(true);
+  const handleFocusState = () => setIsFocus(true);
 
   const inputURL = (e: React.ChangeEvent<HTMLInputElement>) =>
     setURL(e.target.value);
@@ -32,13 +32,13 @@ const ConvertVideo = () => {
       {isOpen && (
         <>
           <ConvertVideoStyle.URLInput
-            placeholder="https://youtu.be/..."
+            placeholder="https://youtube/..."
             type="text"
             value={url}
             onChange={inputURL}
-            onFocus={handleFocustState}
+            onFocus={handleFocusState}
           />
-          {isFocuse && !youtubeURLValidation && (
+          {isFocus && !youtubeURLValidation && (
             <ConvertVideoStyle.WarningMessage>
               *youtube.com이 들어간 링크만 가능해요
             </ConvertVideoStyle.WarningMessage>
