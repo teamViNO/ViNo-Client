@@ -24,7 +24,8 @@ const Profile = ({ modalOpen, setModalOpen, setAlarmOpen }: IProfileProps) => {
 
   return (
     <>
-      {modalOpen && createPortal(<BlurBackground />, header!)}
+      {modalOpen &&
+        createPortal(<BlurBackground setModalOpen={setModalOpen} />, header!)}
       <div>
         <HeaderStyle.Button onClick={toggleModalState}>
           <img
