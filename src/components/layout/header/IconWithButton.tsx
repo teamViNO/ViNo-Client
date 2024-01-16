@@ -1,5 +1,9 @@
-import SvgIcons, { KeyOfIcon } from '@/components/SvgIcons';
-import * as HeaderStyle from '@/styles/layout/Header.style';
+import * as HeaderStyle from '@/styles/layout/header/index';
+import MenuIcon from '@/assets/icons/menu-light.svg?react';
+import CloseIcon from '@/assets/icons/close.svg?react';
+import NotifyOffIcon from '@/assets/icons/notify-off-light.svg?react';
+import NotifyOnIcon from '@/assets/icons/notify-on-light.svg?react';
+import { KeyOfIcon } from 'types/icon';
 
 const IconWithButton = ({
   name,
@@ -9,22 +13,28 @@ const IconWithButton = ({
   onClick: () => void;
 }) => {
   switch (name) {
-    case 'MenuIcon':
+    case 'Menu':
       return (
         <HeaderStyle.Button onClick={onClick}>
-          <SvgIcons.MenuIcon width={28} height={28} darkMode />;
+          <MenuIcon width={28} height={28} />
+        </HeaderStyle.Button>
+      );
+    case 'Close':
+      return (
+        <HeaderStyle.Button onClick={onClick}>
+          <CloseIcon width={28} height={28} />
         </HeaderStyle.Button>
       );
     case 'NotifyOff':
       return (
         <HeaderStyle.Button onClick={onClick}>
-          <SvgIcons.NotifyOff width={28} height={28} darkMode />
+          <NotifyOffIcon width={28} height={28} />
         </HeaderStyle.Button>
       );
     case 'NotifyOn':
       return (
         <HeaderStyle.Button onClick={onClick}>
-          <SvgIcons.NotifyOn width={28} height={28} darkMode />
+          <NotifyOnIcon width={28} height={28} />
         </HeaderStyle.Button>
       );
     default:

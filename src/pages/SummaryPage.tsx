@@ -7,7 +7,6 @@ const SummaryPage = () => {
   return (
     <Container>
       <SummaryDetailBox />
-
       <SummaryScriptBox />
     </Container>
   );
