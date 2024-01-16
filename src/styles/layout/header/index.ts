@@ -26,6 +26,10 @@ export const Button = styled.button`
   background-color: rgba(0, 0, 0, 0);
   padding: 0;
   margin-right: 20px;
+  #profile {
+    position: relative;
+    z-index: 2;
+  }
 `;
 
 export const LinkWithMargin = styled(Link)`

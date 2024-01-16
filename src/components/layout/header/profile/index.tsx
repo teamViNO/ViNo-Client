@@ -28,6 +28,7 @@ const Profile = ({ modalOpen, setModalOpen, setAlarmOpen }: IProfileProps) => {
       <div>
         <HeaderStyle.Button onClick={toggleModalState}>
           <img
+            id="profile"
             src="/src/assets/default-profile-circle.png"
             alt="원형 프로필 이미지"
           />
