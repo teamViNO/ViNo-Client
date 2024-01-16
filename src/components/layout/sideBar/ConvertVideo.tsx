@@ -32,7 +32,7 @@ const ConvertVideo = () => {
       {isOpen && (
         <>
           <ConvertVideoStyle.URLInput
-            placeholder="https://youtube/..."
+            placeholder="https://youtube.com/..."
             type="text"
             value={url}
             onChange={inputURL}
