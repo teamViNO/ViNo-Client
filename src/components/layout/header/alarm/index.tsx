@@ -1,19 +1,18 @@
 import AlarmList from './AlarmList';
 import IconWithButton from '../IconWithButton';
+import useOutsideClick from '@/hooks/useOutsideClick';
 
 interface IAlarmProps {
   alarmOpen: boolean;
   setAlarmOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Alarm = ({ alarmOpen, setAlarmOpen, setModalOpen }: IAlarmProps) => {
-  const toggleOpenState = () => {
-    setAlarmOpen(!alarmOpen);
-    setModalOpen(false);
-  };
+const Alarm = ({ alarmOpen, setAlarmOpen }: IAlarmProps) => {
+  const toggleOpenState = () => setAlarmOpen(!alarmOpen);
+  const [alarmRef] = useOutsideClick<HTMLDivElement>(() => setAlarmOpen(false));
+
   return (
-    <div>
+    <div ref={alarmRef}>
       <section>
         <IconWithButton name="NotifyOff" onClick={toggleOpenState} />
       </section>

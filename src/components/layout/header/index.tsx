@@ -9,7 +9,6 @@ import Alarm from './alarm';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sideBarState } from '@/stores/sideBar';
 import { userState } from '@/stores/user';
-import useOutsideClick from '@/hooks/useOutsideClick';
 
 const Header = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -21,7 +20,6 @@ const Header = () => {
     setModalOpen(false);
     setAlarmOpen(false);
   };
-  const [ref] = useOutsideClick<HTMLDivElement>(closeModal);
 
   const toggleSideBarState = () => {
     closeModal();
@@ -29,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <HeaderStyle.Container ref={ref} id="header">
+    <HeaderStyle.Container id="header">
       <HeaderStyle.Area>
         <IconWithButton
           name={isSideBarOpen ? 'Close' : 'Menu'}
@@ -46,17 +44,9 @@ const Header = () => {
             <HeaderStyle.LinkWithMargin to="/search">
               <SearchIcon width={28} height={28} onClick={closeModal} />
             </HeaderStyle.LinkWithMargin>
-            <Alarm
-              alarmOpen={alarmOpen}
-              setAlarmOpen={setAlarmOpen}
-              setModalOpen={setModalOpen}
-            />
+            <Alarm alarmOpen={alarmOpen} setAlarmOpen={setAlarmOpen} />
 
-            <Profile
-              modalOpen={modalOpen}
-              setModalOpen={setModalOpen}
-              setAlarmOpen={setAlarmOpen}
-            />
+            <Profile modalOpen={modalOpen} setModalOpen={setModalOpen} />
           </>
         )}
       </HeaderStyle.Area>
