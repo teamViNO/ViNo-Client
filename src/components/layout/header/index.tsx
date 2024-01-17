@@ -1,4 +1,4 @@
-import * as HeaderStyle from '@/styles/layout/header/index';
+import * as HeaderStyle from '@/styles/layout/header';
 import { Link } from 'react-router-dom';
 import IconWithButton from './IconWithButton';
 import { useState } from 'react';
