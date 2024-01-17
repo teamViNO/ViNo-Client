@@ -195,6 +195,21 @@ const SvgIcons = {
       />
     </svg>
   ),
+  VideoIcon: ({ width = 40, height = 33 }: ISvgPropsType) => (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 60 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="20" y="20" width="21.6667" height="20" fill={theme.color.white} />
+      <path 
+        d="M6.66667 11.666H53.3333C54.2538 11.666 55 12.4122 55 13.3327V46.666C55 47.5865 54.2538 48.3327 53.3333 48.3327H6.66667C5.74619 48.3327 5 47.5865 5 46.666V13.3327C5 12.4122 5.74619 11.666 6.66667 11.666ZM23.75 38.6588L40 29.9985L23.75 21.3383L23.75 38.6588Z" 
+        fill={theme.color.gray500} 
+        />
+    </svg>
+  ),
 };
 
 export type KeyOfIcon = keyof typeof SvgIcons;
