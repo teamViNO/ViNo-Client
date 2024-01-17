@@ -12,6 +12,13 @@ const Container = styled.div`
     order: 0;
     flex-grow: 0;
 
+    & .tagify {
+        border : none ; import!;
+        --tag-text-color: #787878;
+        --tag-text-color--edit: black;
+        --tag-bg: #FFFFFF;
+    }
+
     & div.wrap {
         display: flex;
         flex-direction: column;
@@ -104,6 +111,8 @@ const Container = styled.div`
         height: 72px;
         background: #F3F3F3;
         border-radius: 12px;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     & div.inputwrap:hover {
@@ -115,13 +124,14 @@ const Container = styled.div`
         justify-content : space-between;
         width: 861.25px;
         height: 36px;
+        white-space: nowrap;
    }
 
    & div.input {
         display : flex;
         gap : 20px;
-        width : 661.25px;
-        hieght : 36px;
+        width : 770px;
+        height : 36px;
    }
 
    & img.icon {
@@ -131,26 +141,6 @@ const Container = styled.div`
         height: 36px;
         left: 0px;
         top: 0px;
-   }
-
-   & input[type=text] {
-        padding: 0px;
-        gap: 20px;
-        width: 716.5px;
-        height: 36px;
-
-        order : 1;
-        background: #F3F3F3;
-        border : 0;
-        outline : none;
-
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 160%;
-
-        color: #1E1E1E;
    }
 
    & input::placeholder {
@@ -163,7 +153,7 @@ const Container = styled.div`
         color: #BBBBBB;
    }
 
-   & button{
+   & button.search-btn {
         width: 90px;
         height: 36px;
 
@@ -227,6 +217,11 @@ const HashtagBox = styled.div`
     &:hover {
         box-shadow: 0.5px 0.5px 5px #ddd;
     }
+    &.toggle {
+        border : 1.3px solid #1E1E1E;
+        color : #1E1E1E;
+    }
+
 `
 
 

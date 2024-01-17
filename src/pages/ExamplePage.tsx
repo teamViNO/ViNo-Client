@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 
-import logoSrc from '@/assets/logo.png';
+//import logoSrc from '@/assets/logo.png';
 import UpIcon from '@/assets/icons/up.svg?react';
 
 import ExampleComponent from '@/components/example';
