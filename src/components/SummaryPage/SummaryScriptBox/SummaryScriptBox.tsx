@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 import PlayIcon from '@/assets/icons/play.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
+
+import { summaryBoxWidthState } from '@/stores/ui';
 
 import { ScriptBox } from '@/styles/SummaryPage';
 
@@ -50,7 +53,7 @@ const SummaryScriptBox = () => {
     },
   ];
 
-  const [width, setWidth] = useState(865);
+  const [width, setWidth] = useRecoilState(summaryBoxWidthState);
   const [focusId, setFocusId] = useState(1);
 
   return (
