@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { SearchForm, SearchInput, SearchButton, SearchIcon } from '@/styles/HomepageStyle';
-import SvgIcons from '../SvgIcons';
+import VideoIcon from '@/assets/icons/video.svg?react';
 
 interface SearchBarProps {
   onSearch: (value: string) => void;
@@ -21,7 +21,7 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <SearchForm onSubmit={handleSubmit}>
       <SearchIcon>
-        <SvgIcons.VideoIcon/>
+        <VideoIcon />
       </SearchIcon>
       <SearchInput
           type='text'
