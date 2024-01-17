@@ -1,29 +1,25 @@
 import { Container, HashtagBox } from '@/styles/SearchPage';
 import TooltipImg from '@/assets/tooltip.svg';
 import SearchIcon from '@/assets/search.svg';
-import { useRef } from 'react';
 
-import Tags from "@yaireo/tagify/dist/react.tagify"; // tagify library For React file
-import '../styles/tagify.css';
-
+import { useState } from 'react';
+import TagInput from '@/components/SearchPage/SearchComponent';
 
 const SearchPage = () => {
-    const baseTagifySetting = {
-        blacklist: ["xxx", "yyy", "zzz"],
-        maxTags: 2,
-        backspace: "edit",
-        placeholder: "검색하고 싶은 키워드를 입력해주세요",
-        pattern : /^#[\w\d가-힣]+$/
-    };
+    const [tags, setTags] = useState<string[]>([]);
+    const [input, setInput] = useState<string>('');
+    const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
+    const [userHashTag, SetUserHashTag] = useState<string[]>(["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]); // 사용자의 해시태그 데이터 10개 <임의 데이터>
+    const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
-    const tagifyRef = useRef();
-
-    const handleClick = (e : React.MouseEvent, value : string) => { // 해쉬태그 추가 구현
-        const tagify = tagifyRef.current; 
-        if (tagify) {
-          tagify.addTags('#'+value); 
-        }
-      };
+    const handleHashtagBox = (value : string) => {
+        const isSelected = selectedHashtags.includes(value);
+        setSelectedHashtags(prev =>
+            isSelected ? prev.filter(idx => idx !== value) : [...prev, value]
+        );
+        isSelected ? setTags(tags.filter((prev) => prev !== '#'+value)) : setTags([...tags, `#${value}`]);
+        setSearchType(false); // 박스를 클릭했을 때도 type 변경
+    }
 
     return (
             <Container>
@@ -34,32 +30,33 @@ const SearchPage = () => {
                                 <span className='header3' style={{width: '508px', height: '58px'}}>찾고 싶은 키워드가 있나요?</span>
                                 <span className='header5'>찾고자 하는 키워드를 검색하면 관련 영상을 찾아드릴게요</span>
                             </div>
+
                             <div className='inputwrap'>
                                 <div className='input-inner'>
                                     <div className='input'>
-                                        <img src={SearchIcon} alt='not IMG' 
-                                        style={{width: '36px', height: '36px',left: '0px', top: '0px'}}></img>
-                                        <Tags tagifyRef={tagifyRef} settings={baseTagifySetting}/>
+                                        <img src={SearchIcon} alt='not IMG Search Icon' 
+                                        style={{width: '36px', height: '36px',left: '0px', top: '0px'}}
+                                        />
+                                        <TagInput tags={tags} input={input} searchType={searchType} selectedHashtags={selectedHashtags}
+                                         setTags={setTags} setInput={setInput} setSearchType={setSearchType} setSelectedHashtags={setSelectedHashtags}/>
                                     </div>
-                                    <button>Search</button>
+                                    <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)}>Search</button>
                                 </div>
                             </div>
                             
                         </div>
-                        <img src={TooltipImg} alt='not IMG' style={true ? {visibility : 'visible'} : {visibility : 'hidden'}}/>
+                        {(input.length === 0 && tags.length === 0)? <img src={TooltipImg} alt='not IMG Tooltip'/> : ''}
                     </div>
 
                     <div className="hashtag">
-                            <HashtagBox># 기획</HashtagBox>
-                            <HashtagBox># 광고</HashtagBox>
-                            <HashtagBox># 마케팅</HashtagBox>
-                            <HashtagBox># 트렌드팅</HashtagBox>
-                            <HashtagBox># 기업</HashtagBox>
-                            <HashtagBox># 광고</HashtagBox>
-                            <HashtagBox># 마케팅팅</HashtagBox>
-                            <HashtagBox># 트렌드팅탕</HashtagBox>
-                            <HashtagBox># 기업팅팅탕</HashtagBox>
-                            <HashtagBox># 광고</HashtagBox>
+                            {
+                                userHashTag.map((value : string, idx : number) => {
+                                    return(<HashtagBox key={idx} onClick={() => handleHashtagBox(value)}
+                                    style={{
+                                        border: selectedHashtags.includes(value) ? '1.3px solid #000' : '' 
+                                    }}>{'#' + value}</HashtagBox>)
+                                })
+                            }
                     </div>
                 </div>
             </Container>
