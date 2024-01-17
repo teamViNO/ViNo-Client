@@ -2,6 +2,7 @@ import theme from '@/styles/theme';
 import styled from 'styled-components';
 
 const CommonButtonStyle = styled.button`
+  cursor: pointer;
   display: flex;
   align-items: center;
   padding: 10px 20px;
