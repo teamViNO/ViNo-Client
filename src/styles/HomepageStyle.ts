@@ -38,8 +38,8 @@ export const SearchForm = styled.form`
 `;
 
 export const SearchInput = styled.input`
-  width: 900px;
-  height: 70px;
+  width: 908px;
+  height: 72px;
   padding: 10px 40px 10px 70px;
   font-size: 1rem;
   border: none;
