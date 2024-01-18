@@ -1,5 +1,6 @@
 import LookSvg from '@/assets/icons/look.svg?react';
 import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
+import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -31,7 +32,16 @@ const UserMode = () => {
           selected={+href === folder.id}
           onClick={() => navigate(`/category/${folder.id}`)}
         >
-          <ClosedFileSvg key={`${folder.name}folder`} width={28} height={28} />
+          {+href === folder.id ? (
+            <OpenFileSvg key={`${folder.name}folder`} width={28} height={28} />
+          ) : (
+            <ClosedFileSvg
+              key={`${folder.name}folder`}
+              width={28}
+              height={28}
+            />
+          )}
+
           <UserModeStyle.CommonTitle key={`${folder.name}`}>
             {folder.name}
           </UserModeStyle.CommonTitle>
