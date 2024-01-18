@@ -25,7 +25,8 @@ const App = () => {
         <BrowserRouter>
           <Layout>
             <Routes>
-              <Route path="/category" element={<CategoryPage />} />
+              <Route path="/category/recent" element={<CategoryPage />} />
+              <Route path="/category/:id" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/sign-in" element={<SignInPage />} />
