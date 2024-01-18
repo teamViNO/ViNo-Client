@@ -3,6 +3,7 @@ import TooltipImg from '@/assets/tooltip.svg';
 import SearchIcon from '@/assets/search.svg';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TagInput from '@/components/SearchPage/SearchComponent';
 
 const SearchPage = () => {
@@ -11,7 +12,13 @@ const SearchPage = () => {
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
     const [userHashTag, SetUserHashTag] = useState<string[]>(["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]); // 사용자의 해시태그 데이터 10개 <임의 데이터>
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
-
+    const [query, SetQuery] = useState<string>('dasdas');
+    const searchNavigate = useNavigate();
+  
+    const handleSearch = (event) => {
+        event.preventDefault(true);
+        searchNavigate(`/search/result/${query}`);
+    }
     const handleHashtagBox = (value : string) => {
         const isSelected = selectedHashtags.includes(value);
         setSelectedHashtags(prev =>
@@ -40,7 +47,7 @@ const SearchPage = () => {
                                         <TagInput tags={tags} input={input} searchType={searchType} selectedHashtags={selectedHashtags}
                                          setTags={setTags} setInput={setInput} setSearchType={setSearchType} setSelectedHashtags={setSelectedHashtags}/>
                                     </div>
-                                    <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)}>Search</button>
+                                    <button className='search-btn' onClick={(e) => handleSearch(e)} disabled={(input.length === 0 && tags.length === 0)}>Search</button>
                                 </div>
                             </div>
                             

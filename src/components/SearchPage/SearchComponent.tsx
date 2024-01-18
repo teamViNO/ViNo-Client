@@ -5,16 +5,21 @@ import CustomTagInput from '@/styles/SearchComponent';
 
 const placeholder = '검색하고 싶은 키워드를 입력해주세요'
 
-interface TagInputProps {
-  tags : string[],
-  input : string,
-  searchType : boolean,
-  selectedHashtags: string[],
-  setTags : (tag: string[]) => void
-  setInput : (value : string) => void
-  setSearchType : (value : boolean) => void
-  setSelectedHashtags : (value : string[]) => void
+interface BaseTagInputProps {
+  tags: string[];
+  input: string;
+  searchType: boolean;
+  setTags: (tag: string[]) => void;
+  setInput: (value: string) => void;
+  setSearchType: (value: boolean) => void;
 };
+
+interface SelectedHashtagsProps {
+  selectedHashtags: string[];
+  setSelectedHashtags: (value: string[]) => void;
+}
+
+type TagInputProps = BaseTagInputProps & Partial<SelectedHashtagsProps>;
 
 const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
   const [isComposing, setIsComposing] = useState(false);
@@ -24,8 +29,7 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
   useEffect(() => {
     if (tags.length > 3) {
       const lastValue = tags[3]
-    
-      if(selectedHashtags.includes(lastValue.substring(1)))
+      if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
         setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
       const timer = setTimeout(() => {
         setTags(tags.slice(0, -1)); 
@@ -43,15 +47,14 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
         event.preventDefault(); 
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
-          if(!selectedHashtags.includes(input))
+          if(selectedHashtags && setSelectedHashtags && !selectedHashtags.includes(input))
             input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
           setInput('');
-          console.log(selectedHashtags)
         }
       } else if (event.key === 'Backspace' && !input) { 
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
-            if(selectedHashtags.includes(lastValue.substring(1)))
+            if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
               setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
             setRemovingTagIndex(tags.length - 1);
             setTimeout(() => {
@@ -71,7 +74,7 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
   const handleOnclick = (removeIndex : number) => {
     const lastValue = tags[removeIndex]
     
-    if(selectedHashtags.includes(lastValue.substring(1)))
+    if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
         setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
     setRemovingTagIndex(removeIndex);
     setTimeout(() => {

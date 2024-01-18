@@ -17,6 +17,8 @@ import SignUpPage from '@/pages/SignUpPage';
 import SummaryPage from '@/pages/SummaryPage';
 import Layout from './components/layout/Layout';
 
+import SearchResult from './pages/SearchResultPage';
+
 const App = () => {
   return (
     <RecoilRoot>
@@ -29,6 +31,7 @@ const App = () => {
               <Route path="/category" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/search/result/:query" element={<SearchResult />} />
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
               <Route path="/example" element={<ExamplePage />} />
