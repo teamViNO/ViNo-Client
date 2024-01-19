@@ -1,5 +1,9 @@
-import React, { useState, KeyboardEvent, useEffect } from 'react';
+import React, { KeyboardEvent, useEffect } from 'react';
 import CustomTagInput from '@/styles/SearchComponent';
+import useBoolean from '@/hooks/useBoolean';
+import useNumber from '@/hooks/useNumber';
+
+const placeholder = '검색하고 싶은 키워드를 입력해주세요'
 
 interface BaseTagInputProps {
   tags: string[];
@@ -19,22 +23,23 @@ type TagInputProps = BaseTagInputProps & Partial<SelectedHashtagsProps>;
 
 
 const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
-  const [isComposing, setIsComposing] = useState(false);
-  const [hoverdIndex, setHoveredIndex] = useState<Number | null>(null);
-  const [removingTagIndex, setRemovingTagIndex] = useState<Number | null>(null);
+  const [isComposing, , setIsComposingTrue, setIsComposingFalse] = useBoolean(false)
+  const [hoverdIndex, setHoveredIndex, setLeaveIndex] = useNumber(null);
+  const [tagIndex, setRemovingTagIndex, setNullTagIndex] = useNumber(null);
 
   useEffect(() => {
     if (tags.length > 3) {
       const lastValue = tags[3]
     
-      if(selectedHashtags.includes(lastValue.substring(1)))
+      if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
         setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
       const timer = setTimeout(() => {
-        setTags(tags.slice(0, -1)); 
+        setNullTagIndex();
+        setTags(tags.slice(0, -1));
       }, 500);
       
       return () => {
-        clearTimeout(timer); 
+        clearTimeout(timer);
       };
     }
   }, [tags, setTags]);
@@ -45,20 +50,20 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
         event.preventDefault(); 
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
-          if(!selectedHashtags.includes(input))
+          if(selectedHashtags && setSelectedHashtags && !selectedHashtags.includes(input))
             input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
           setInput('');
-          console.log(selectedHashtags)
         }
       } else if (event.key === 'Backspace' && !input) { 
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
-            if(selectedHashtags.includes(lastValue.substring(1)))
+            if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
               setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
             setRemovingTagIndex(tags.length - 1);
+            
             setTimeout(() => {
+              setNullTagIndex();
               setTags(tags.slice(0, tags.length - 1));
-              setRemovingTagIndex(null);
             }, 500)
           }
       }
@@ -73,36 +78,21 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
   const handleOnclick = (removeIndex : number) => {
     const lastValue = tags[removeIndex]
     
-    if(selectedHashtags.includes(lastValue.substring(1)))
+    if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
         setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
     setRemovingTagIndex(removeIndex);
     setTimeout(() => {
+      setNullTagIndex();
       setTags(tags.filter((_, index) => index !== removeIndex))
-      setRemovingTagIndex(null);
     }, 500)
   }
-  const handleCompositionStart = () => {
-    setIsComposing(true);
-  };
-
-  const handleCompositionEnd = () => {
-    setIsComposing(false);
-  };
-
-  const handleMouseEnter = (index: number) => {
-    setHoveredIndex(index); 
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
   
   return (
     <CustomTagInput className="tag-container">
       {tags.map((tag, index) => (
-        <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === removingTagIndex) ? 'exceed' : ''}`} key={index}>
+        <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === tagIndex) ? 'exceed' : ''}`} key={index}>
           <span className='tag-content'>{tag}</span>
-          <button className='tag-btn' onClick={()=> handleOnclick(index)} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>X</button>
+          <button className='tag-btn' onClick={()=> handleOnclick(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={setLeaveIndex}>X</button>
         </span>
       ))}
       <input
@@ -111,8 +101,8 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
         value={input}
         placeholder={tags.length === 0 ? placeholder : ''}
         onKeyDown={handleKeyDown}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
+        onCompositionStart={setIsComposingTrue}
+        onCompositionEnd={setIsComposingFalse}
         onChange={(e) => handleOnchage(e)}
       />
     </CustomTagInput>
