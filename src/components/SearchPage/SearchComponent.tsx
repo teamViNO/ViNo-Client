@@ -1,20 +1,22 @@
 import React, { useState, KeyboardEvent, useEffect } from 'react';
 import CustomTagInput from '@/styles/SearchComponent';
-//import '@/styles/tagify2.css'
 
-
-const placeholder = '검색하고 싶은 키워드를 입력해주세요'
-
-interface TagInputProps {
-  tags : string[],
-  input : string,
-  searchType : boolean,
-  selectedHashtags: string[],
-  setTags : (tag: string[]) => void
-  setInput : (value : string) => void
-  setSearchType : (value : boolean) => void
-  setSelectedHashtags : (value : string[]) => void
+interface BaseTagInputProps {
+  tags: string[];
+  input: string;
+  searchType: boolean;
+  setTags: (tag: string[]) => void;
+  setInput: (value: string) => void;
+  setSearchType: (value: boolean) => void;
 };
+
+interface SelectedHashtagsProps {
+  selectedHashtags: string[];
+  setSelectedHashtags: (value: string[]) => void;
+}
+
+type TagInputProps = BaseTagInputProps & Partial<SelectedHashtagsProps>;
+
 
 const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
   const [isComposing, setIsComposing] = useState(false);
