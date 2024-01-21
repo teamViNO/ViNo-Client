@@ -101,12 +101,12 @@ const SummaryScriptBox = () => {
   }, [scriptList, keyword]);
 
   useEffect(() => {
-    if (keyword === '') {
+    if (keyword === '' || !findKeywordCount) {
       setSearchIndex(-1);
     } else {
       setSearchIndex(0);
     }
-  }, [searchIsOpen, keyword]);
+  }, [searchIsOpen, keyword, findKeywordCount]);
 
   useEffect(() => {
     document.querySelectorAll('mark').forEach((markEl, i) => {
