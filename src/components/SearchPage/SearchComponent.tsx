@@ -22,7 +22,7 @@ interface SelectedHashtagsProps {
 type TagInputProps = BaseTagInputProps & Partial<SelectedHashtagsProps>;
 
 
-const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
+const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
   const [isComposing, , setIsComposingTrue, setIsComposingFalse] = useBoolean(false)
   const [hoverdIndex, setHoveredIndex, setLeaveIndex] = useNumber(null);
   const [tagIndex, setRemovingTagIndex, setNullTagIndex] = useNumber(null);
@@ -32,7 +32,7 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
       const lastValue = tags[3]
     
       if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
-        setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
+        setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
       const timer = setTimeout(() => {
         setNullTagIndex();
         setTags(tags.slice(0, -1));
@@ -58,7 +58,7 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
             if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
-              setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
+              setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
             setRemovingTagIndex(tags.length - 1);
             
             setTimeout(() => {
@@ -79,17 +79,17 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
     const lastValue = tags[removeIndex]
     
     if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
-        setSelectedHashtags(selectedHashtags.filter((prev) => prev !== lastValue.substring(1)));
+        setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
     setRemovingTagIndex(removeIndex);
     setTimeout(() => {
       setNullTagIndex();
-      setTags(tags.filter((_, index) => index !== removeIndex))
+      setTags(tags.filter((_ : string, index : number) => index !== removeIndex))
     }, 500)
   }
   
   return (
     <CustomTagInput className="tag-container">
-      {tags.map((tag, index) => (
+      {tags.map((tag : string, index : number) => (
         <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === tagIndex) ? 'exceed' : ''}`} key={index}>
           <span className='tag-content'>{tag}</span>
           <button className='tag-btn' onClick={()=> handleOnclick(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={setLeaveIndex}>X</button>
@@ -109,4 +109,4 @@ const TagInput : React.FC<TagInputProps> = ({tags, input, searchType, selectedHa
   );
 };
 
-export default TagInput;
+export default SearchComponent;
