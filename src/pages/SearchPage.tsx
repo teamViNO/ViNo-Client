@@ -1,6 +1,6 @@
 import { Container, HashtagBox } from '@/styles/SearchPage';
-import TooltipImg from '@/assets/tooltip.svg';
-import SearchIcon from '@/assets/search.svg';
+import TooltipImg from '@/assets/icons/tooltip.svg?react';
+import SearchIcon from '@/assets/icons/search.svg?react';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +12,9 @@ const SearchPage = () => {
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
     const [userHashTag, SetUserHashTag] = useState<string[]>(["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]); // 사용자의 해시태그 데이터 10개 <임의 데이터>
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
-    const [query, SetQuery] = useState<string>('dasdas');
     const searchNavigate = useNavigate();
+    const [query, SetQuery] = useState<string>('dasdas');
+    
   
     const handleSearch = (event) => {
         event.preventDefault(true);
@@ -41,7 +42,7 @@ const SearchPage = () => {
                             <div className='inputwrap'>
                                 <div className='input-inner'>
                                     <div className='input'>
-                                        <img src={SearchIcon} alt='not IMG Search Icon' 
+                                        <SearchIcon
                                         style={{width: '36px', height: '36px',left: '0px', top: '0px'}}
                                         />
                                         <TagInput tags={tags} input={input} searchType={searchType} selectedHashtags={selectedHashtags}
@@ -52,7 +53,7 @@ const SearchPage = () => {
                             </div>
                             
                         </div>
-                        {(input.length === 0 && tags.length === 0)? <img src={TooltipImg} alt='not IMG Tooltip'/> : ''}
+                        {(input.length === 0 && tags.length === 0)? <TooltipImg/> : ''}
                     </div>
 
                     <div className="hashtag">

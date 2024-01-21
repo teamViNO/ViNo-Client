@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import theme from "./theme";
 
 const Container = styled.div`
     width : 100vw;
@@ -49,15 +50,12 @@ const Container = styled.div`
         width: 508px;
         height: 26px;
 
-        /* Body1 */
         font-family: 'Pretendard';
         font-style: normal;
         font-weight: 500;
         font-size: 16px;
         line-height: 160%;
-        /* identical to box height, or 26px */
-
-        /* gray-300 */
+    
         color: #BBBBBB;
 
         order: 1;

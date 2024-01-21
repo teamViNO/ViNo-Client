@@ -1,7 +1,5 @@
 import React, { useState, KeyboardEvent, useEffect } from 'react';
 import CustomTagInput from '@/styles/SearchComponent';
-//import '@/styles/tagify2.css'
-
 
 const placeholder = '검색하고 싶은 키워드를 입력해주세요'
 
