@@ -8,6 +8,11 @@ export const summaryBoxWidthState = atom({
   effects_UNSTABLE: [localStorageEffect],
 });
 
+export const summarySearchIsOpenState = atom({
+  key: 'summary-search-is-open',
+  default: false,
+});
+
 export const isSideBarOpenState = atom({
   key: 'side-bar-is-open',
   default: false,
