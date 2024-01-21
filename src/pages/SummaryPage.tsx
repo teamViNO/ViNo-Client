@@ -5,7 +5,7 @@ import { Container } from '@/styles/SummaryPage';
 
 const SummaryPage = () => {
   return (
-    <Container>
+    <Container style={{ height: 'calc(100vh - 74px)' }}>
       <SummaryDetailBox />
       <SummaryScriptBox />
     </Container>

@@ -27,7 +27,13 @@ const SummaryDetailBox = () => {
   ];
 
   return (
-    <div style={{ height: '100vh', overflowY: 'auto', flex: '1 1 575px' }}>
+    <div
+      style={{
+        height: '100%',
+        overflowY: 'auto',
+        flex: '1 1 555px',
+      }}
+    >
       <DetailBox>
         <span className="created_at">2024년 1월 1일</span>
 
