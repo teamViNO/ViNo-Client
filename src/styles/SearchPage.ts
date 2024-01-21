@@ -1,23 +1,13 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-    width : 100vw;
-    height : 100vh;
-
     display : flex;
-    
+    flex-direction : row;
     justify-content: center;
     align-items: center;
     flex: none;
     order: 0;
     flex-grow: 0;
-
-    & .tagify {
-        border : none ; import!;
-        --tag-text-color: #787878;
-        --tag-text-color--edit: black;
-        --tag-bg: #FFFFFF;
-    }
 
     & div.wrap {
         display: flex;
@@ -25,41 +15,18 @@ const Container = styled.div`
         align-items: center;
         padding: 0px;
         gap: 60px;
-        
-        width: 908px;
-        height: 450px;
         left: calc(50% - 908px/2);
         top: 327px;
     }
 
     & span.header3 {
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 36px;
-        line-height: 160%;
-        // identical to box height, or 58px
-        text-transform: capitalize;
-
-        /* gray-500 */
-        color: #1E1E1E;
+        ${(props) => props.theme.typography.Header3};
+        color: ${(props) => props.theme.color.gray500};
     }
 
     & span.header5 {
-        width: 508px;
-        height: 26px;
-
-        /* Body1 */
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 160%;
-        /* identical to box height, or 26px */
-
-        /* gray-300 */
-        color: #BBBBBB;
-
+        ${(props) => props.theme.typography.Body1};
+        color : ${(props) => props.theme.color.gray300};
         order: 1;
     }
 
@@ -69,9 +36,6 @@ const Container = styled.div`
         align-items: center;
         padding: 0px;
         gap: 10px;
-
-        width: 908px;
-        height: 288px;
     }
 
     & div.search-inner {
@@ -81,9 +45,6 @@ const Container = styled.div`
         align-items: center;
         padding: 0px;
         gap: 40px;
-
-        width: 908px;
-        height: 204px;
     }
 
     & div.header {
@@ -94,9 +55,6 @@ const Container = styled.div`
         text-align: center;
         padding: 0px;
         gap: 8px;
-
-        width: 508px;
-        height: 92px;
     }
 
     & div.inputwrap {
@@ -107,71 +65,43 @@ const Container = styled.div`
         padding: 0px;
         gap: 20px;
 
-        width: 908px;
-        height: 72px;
-        background: #F3F3F3;
+        background: ${(props) => props.theme.color.gray100};
         border-radius: 12px;
         white-space: nowrap;
         overflow: hidden;
     }
 
     & div.inputwrap:hover {
-        box-shadow: 1px 1px 20px #ddd;
+        box-shadow: 1px 1px 20px ${(props) => props.theme.color.gray100};
     }
 
     & div.input-inner {
         display : flex;
         justify-content : space-between;
-        width: 861.25px;
-        height: 36px;
         white-space: nowrap;
    }
 
    & div.input {
         display : flex;
         gap : 20px;
-        width : 770px;
-        height : 36px;
-   }
-
-   & img.icon {
-        position: absolute;
-        visibility: hidden;
-        width: 36px;
-        height: 36px;
-        left: 0px;
-        top: 0px;
    }
 
    & input::placeholder {
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 160%;
-
-        color: #BBBBBB;
+        ${(props) => props.theme.typography.Subheader2};
+        color: ${(props) => props.theme.color.gray300};
    }
 
    & button.search-btn {
-        width: 90px;
-        height: 36px;
-
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 160%;
-
-        color: #FFFFFF;
-        background : #1E1E1E;
+        ${(props) => props.theme.typography.Body1};
+        color: ${(props) => props.theme.color.white};
+        background : ${(props) => props.theme.color.gray500};
         border-radius: 8px;
         order : 1;
         border : 0;
    }
 
    & button:disabled {
-        background: #BBBBBB; 
+        background: ${(props) => props.theme.color.gray300};
    }
 
    & div.hashtag {
@@ -182,9 +112,6 @@ const Container = styled.div`
         justify-content : center;
         padding: 0px;
         gap: 30px 5px;
-        
-        width: 572.52px;
-        height: 102px;
         order: 1;
    }
    
@@ -199,27 +126,21 @@ const HashtagBox = styled.div`
     padding: 8px 20px;
     gap: 12.9px;
    
-    height: 41px;
-
-    background: #FFFFFF;
-
-    border: 1.3px solid #E8E8E8;
+    background: ${(props) => props.theme.color.white}
+    ${(props) => props.theme.typography.Caption1};
+    border: 1.3px solid ${(props) => props.theme.color.gray200};
     border-radius: 8px;
 
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 160%;
+    
 
-    color: #787878;
+    color: ${(props) => props.theme.color.gray400};
 
     &:hover {
-        box-shadow: 0.5px 0.5px 5px #ddd;
+        box-shadow: 0.5px 0.5px 5px ${(props) => props.theme.color.gray100};
     }
     &.toggle {
-        border : 1.3px solid #1E1E1E;
-        color : #1E1E1E;
+        border : 1.3px solid ${(props) => props.theme.color.gray500};
+        color : ${(props) => props.theme.color.gray500};
     }
 
 `

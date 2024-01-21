@@ -1,6 +1,6 @@
 import { Container, HashtagBox } from '@/styles/SearchPage';
-import TooltipImg from '@/assets/tooltip.svg';
-import SearchIcon from '@/assets/search.svg';
+import TooltipImg from '@/assets/tooltip.svg?react';
+import SearchIcon from '@/assets/search.svg?react';
 
 import { useState } from 'react';
 import TagInput from '@/components/SearchPage/SearchComponent';
@@ -22,38 +22,37 @@ const SearchPage = () => {
     }
 
     return (
-            <Container>
-                <div className='wrap'>
-                    <div className="search">
-                        <div className="search-inner">
-                            <div className='header'>
+            <Container style={{width : '100vw', height : '100vh'}}>
+                <div className='wrap' style={{width : '908px', height : '450px'}}>
+                    <div className="search" style={{width : '908px', height : '288px'}}>
+                        <div className="search-inner" style={{width : '908px', height : '204px'}}>
+                            <div className='header' style={{width : '508px', height : '92px'}}>
                                 <span className='header3' style={{width: '508px', height: '58px'}}>찾고 싶은 키워드가 있나요?</span>
-                                <span className='header5'>찾고자 하는 키워드를 검색하면 관련 영상을 찾아드릴게요</span>
+                                <span className='header5' style={{width: '508px', height: '26px'}}>찾고자 하는 키워드를 검색하면 관련 영상을 찾아드릴게요</span>
                             </div>
 
-                            <div className='inputwrap'>
-                                <div className='input-inner'>
-                                    <div className='input'>
-                                        <img src={SearchIcon} alt='not IMG Search Icon' 
-                                        style={{width: '36px', height: '36px',left: '0px', top: '0px'}}
-                                        />
+                            <div className='inputwrap' style={{width : '908px', height : '72px'}}>
+                                <div className='input-inner' style={{width : '861px', height : '36px'}}>
+                                    <div className='input' style={{width : '770px', height : '36px'}}>
+                                        <SearchIcon width={36} height={36}/>
                                         <TagInput tags={tags} input={input} searchType={searchType} selectedHashtags={selectedHashtags}
                                          setTags={setTags} setInput={setInput} setSearchType={setSearchType} setSelectedHashtags={setSelectedHashtags}/>
                                     </div>
-                                    <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)}>Search</button>
+                                    <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)} style={{width : '90px', height : '36px'}}>Search</button>
                                 </div>
                             </div>
                             
                         </div>
-                        {(input.length === 0 && tags.length === 0)? <img src={TooltipImg} alt='not IMG Tooltip'/> : ''}
+                        {(input.length === 0 && tags.length === 0)? <TooltipImg/> : ''}
                     </div>
 
-                    <div className="hashtag">
+                    <div className="hashtag" style={{width : '572px', height : '102px'}}>
                             {
                                 userHashTag.map((value : string, idx : number) => {
                                     return(<HashtagBox key={idx} onClick={() => handleHashtagBox(value)}
                                     style={{
-                                        border: selectedHashtags.includes(value) ? '1.3px solid #000' : '' 
+                                        height : '40px',
+                                        border: selectedHashtags.includes(value) ? '1.3px solid #1E1E1E' : '' 
                                     }}>{'#' + value}</HashtagBox>)
                                 })
                             }
