@@ -78,3 +78,18 @@ export const SearchIcon = styled.div`
   z-index: 1;
 `;
 
+export const RecentVideosContainer = styled.section`
+  margin-top: 40px;   
+  padidng: 20px;   
+  background-color: ${theme.color.white};
+`;
+
+export const VideosTitle = styled.h2`
+  font-size: 1.5rem;  
+  color: ${theme.color.gray500};   
+  margin-bottom: 20px;
+`;
+
+export const VideosSubtitle = styled.h4  font-size: 1rem;   color: ${theme.color.gray200};   margin-bottom: 20px;;
+
+export const VideoButton = styled.button  padding: 12px 32px;   font-size: 1rem;   font-color: ${theme.color.white};   color: ${theme.color.gray500};   margin-bottom: 20px;;
