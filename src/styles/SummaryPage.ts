@@ -33,7 +33,6 @@ export const DetailBox = styled.div`
   & div.select-box {
     padding: 8px 16px;
     display: flex;
-    flex: 1 1 auto;
     align-items: center;
     justify-content: space-between;
     height: 40px;
@@ -51,6 +50,16 @@ export const DetailBox = styled.div`
     border-radius: 8px;
     background-color: ${(props) => props.theme.color.gray200};
     cursor: pointer;
+
+    &.disabled svg {
+      & path:nth-of-type(1) {
+        fill: ${(props) => props.theme.color.gray300};
+      }
+
+      & path:nth-of-type(2) {
+        fill: ${(props) => props.theme.color.gray400};
+      }
+    }
   }
 
   & span.title {
@@ -211,5 +220,58 @@ export const ScriptBox = styled.div`
     width: 5px;
     height: 100%;
     cursor: ew-resize;
+  }
+`;
+
+export const Dropdown = styled.div`
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 100%;
+  max-height: 276px;
+  border-radius: 12px;
+  border: solid 1px ${(props) => props.theme.color.gray100};
+  background-color: ${(props) => props.theme.color.white};
+  box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+
+  & > ul {
+    display: flex;
+    flex-direction: column;
+
+    & > li {
+      padding-left: 20px;
+      gap: 8px;
+      font-weight: bold;
+    }
+
+    & > ul {
+      transition: height 0.3s;
+      overflow: hidden;
+    }
+  }
+
+  & li {
+    padding-left: 46px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 46px;
+    color: ${(props) => props.theme.color.gray400};
+    transition: 0.1s;
+    cursor: pointer;
+    ${(props) => props.theme.typography.Body3}
+
+    &:hover {
+      background-color: ${(props) => props.theme.color.gray100};
+    }
+
+    & > svg {
+      transition: 0.3s;
+    }
+
+    & path {
+      fill: ${(props) => props.theme.color.gray400};
+    }
   }
 `;
