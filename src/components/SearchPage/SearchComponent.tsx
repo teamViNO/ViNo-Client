@@ -1,8 +1,8 @@
 import React, { KeyboardEvent, useEffect } from 'react';
-import CustomTagInput from '@/styles/SearchComponent';
+import Container from '@/styles/SearchComponent';
 import useBoolean from '@/hooks/useBoolean';
-import useNumber from '@/hooks/useNumber';
-
+import useIndex from '@/hooks/useIndex';
+import CloseIcon from '@/assets/icons/close-btn.svg?react'
 const placeholder = '검색하고 싶은 키워드를 입력해주세요'
 
 interface BaseTagInputProps {
@@ -23,9 +23,10 @@ type TagInputProps = BaseTagInputProps & Partial<SelectedHashtagsProps>;
 
 
 const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, selectedHashtags, setTags, setInput, setSearchType, setSelectedHashtags}) => {
-  const [isComposing, , setIsComposingTrue, setIsComposingFalse] = useBoolean(false)
-  const [hoverdIndex, setHoveredIndex, setLeaveIndex] = useNumber(null);
-  const [tagIndex, setRemovingTagIndex, setNullTagIndex] = useNumber(null);
+  const [isComposing, , setIsComposingTrue, setIsComposingFalse] = useBoolean(false);
+  const [hoverdIndex, setHoveredIndex, setLeaveIndex] = useIndex(null);
+  const [hoverBtnIndex, setHoverBtnIndex, setLeaveBtnIndex] = useIndex(null);
+  const [tagIndex, setRemovingTagIndex, setNullTagIndex] = useIndex(null);
 
   useEffect(() => {
     if (tags.length > 3) {
@@ -36,7 +37,7 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
       const timer = setTimeout(() => {
         setNullTagIndex();
         setTags(tags.slice(0, -1));
-      }, 500);
+      }, 500); 
       
       return () => {
         clearTimeout(timer);
@@ -46,7 +47,9 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if(!searchType){
-      if (event.key === 'Enter' && !isComposing) {
+      if(tags.length > 2 && event.key !== 'Backspace')
+        event.preventDefault();
+      else if (event.key === 'Enter' && !isComposing) {
         event.preventDefault(); 
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
@@ -86,13 +89,14 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
       setTags(tags.filter((_ : string, index : number) => index !== removeIndex))
     }, 500)
   }
+
   
   return (
-    <CustomTagInput className="tag-container">
+    <Container className="tag-container" style={{width : '700px', height : '36px'}}>
       {tags.map((tag : string, index : number) => (
-        <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === tagIndex) ? 'exceed' : ''}`} key={index}>
+        <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === tagIndex) ? 'exceed' : ''}`} key={index} onMouseEnter={() => setHoverBtnIndex(index)} onMouseLeave={setLeaveBtnIndex}>
           <span className='tag-content'>{tag}</span>
-          <button className='tag-btn' onClick={()=> handleOnclick(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={setLeaveIndex}>X</button>
+          {hoverBtnIndex === index && <button className='tag-btn' style={{width : '16px', height : '16px'}} onClick={()=> handleOnclick(index)} onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={setLeaveIndex}><CloseIcon height={16}/></button>}
         </span>
       ))}
       <input
@@ -105,7 +109,7 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
         onCompositionEnd={setIsComposingFalse}
         onChange={(e) => handleOnchage(e)}
       />
-    </CustomTagInput>
+    </Container>
   );
 };
 
