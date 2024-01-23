@@ -1,12 +1,12 @@
 import theme, { ColorKeyType, TypographyKeyType } from '@/styles/theme';
 import styled from 'styled-components';
 
-interface IChipContainerProps {
+interface IVideoTagContainerProps {
   typography: TypographyKeyType;
   color: ColorKeyType;
 }
 
-export const ChipContainer = styled.div<IChipContainerProps>`
+export const VideoTagContainer = styled.div<IVideoTagContainerProps>`
   margin-right: 18px;
   margin-bottom: 18px;
   padding: 3px 9.5px;

@@ -1,4 +1,4 @@
-import Chip from '../common/chip';
+import VideoTag from '../common/videoTag';
 import { categoryItems } from './dummy';
 import * as CardStyles from '@/styles/category/Card.style';
 
@@ -17,7 +17,7 @@ const Card = () => {
             </CardStyles.Summary>
             <CardStyles.ChipWrap key={`${categoryItem.title}-chip-wrap`}>
               {categoryItem.tags.map((tag) => (
-                <Chip
+                <VideoTag
                   content={`# ${tag}`}
                   color={'gray400'}
                   typography="Caption1"
