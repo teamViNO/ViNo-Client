@@ -12,7 +12,6 @@ const CategoryPage = () => {
   const [title, setTitle] = useState('');
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
   const menus = ['마케팅', '트렌드', '기업', '용어'];
-
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
 
@@ -30,7 +29,7 @@ const CategoryPage = () => {
     <CategoryPageStyles.Container>
       <CategoryTitle title={title} totalVideos={categoryItems.length} />
       <CategoryPageStyles.MenuWrap>
-        <div style={{}}>
+        <div>
           {menus.map((menu) => (
             <CategoryPageStyles.Menu key={menu}>{menu}</CategoryPageStyles.Menu>
           ))}
