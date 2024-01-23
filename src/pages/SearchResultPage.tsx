@@ -1,37 +1,47 @@
 import TagInput from "@/components/SearchPage/SearchComponent";
 import { useState } from "react";
 import SearchIcon from '@/assets/icons/search.svg?react'
+import Styled from "@/styles/SearchResult";
+import SearchResultBox from "@/components/SearchPage/SearchResultBox";
+import useBoolean from "@/hooks/useBoolean";
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [input, setInput] = useState('');
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
-
+    const [isScrolling, ,startScrolling, stopScrolling] = useBoolean(false);
+    
   return (
-    <div style={{width : '100wh', height : '100vh'}}>
-        <div className="inputContainer">
-            <div className='inputwrap'>
-                    <div className='input-inner'>
-                        <div className='input'>
+    <Styled.Container style={{width : '100vw', height : '100vh'}}>
+        <div className="inputContainer" 
+        style={{
+            height: '210px',
+            boxShadow: isScrolling ? '0px 4px 40px rgba(0, 0, 0, 0.5);' : ''
+          }}>
+            <div className='inputwrap' style={{width : '908px', height : '72px'}}>
+                    <div className='input-inner' style={{width : '860px', height : '36px'}}>
+                        <div className='input' style={{width : '770px', height : '36px'}}>
                             <SearchIcon width={36} height={36}/>
                             <TagInput tags={tags} input={input} searchType={searchType}
                             setTags={setTags} setInput={setInput} setSearchType={setSearchType}/>
                         </div>
-                        <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)}>Search</button>
+                        <button className='search-btn' style={{width : '90px', height : '36px'}} disabled={(input.length === 0 && tags.length === 0)}>Search</button>
                     </div>
             </div>
-            
         </div>
         
-        <div className="result">
-            <div className="filter">
+        <div className="result" onScroll={startScrolling}>
+            <div className="filter" style={{width : '910px', height : '24px'}}>
                 <span>총 0개의 영상이 발견되었어요!</span>
             </div>
             <div className="content">
-
+                <SearchResultBox/>
+                <SearchResultBox/>
+                <SearchResultBox/>
+                <SearchResultBox/>
             </div>
         </div>
-    </div>
+    </Styled.Container>
   );
 };
 
