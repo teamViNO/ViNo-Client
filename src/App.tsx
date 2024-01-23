@@ -14,6 +14,8 @@ import SearchPage from '@/pages/SearchPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import SummaryPage from '@/pages/SummaryPage';
+
+// Layouts
 import Layout from './components/layout/Layout';
 
 const App = () => {
@@ -23,18 +25,21 @@ const App = () => {
         <GlobalStyle />
 
         <BrowserRouter>
-          <Layout>
-            <Routes>
+          <Routes>
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/sign-up" element={<SignUpPage />} />
+
+            <Route element={<Layout />}>
+           
               <Route path="/category/recent" element={<CategoryPage />} />
               <Route path="/category/:id" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/sign-in" element={<SignInPage />} />
-              <Route path="/sign-up" element={<SignUpPage />} />
+
               <Route path="/summary" element={<SummaryPage />} />
               <Route path="/" element={<HomePage />} />
-            </Routes>
-          </Layout>
+            </Route>
+          </Routes>
         </BrowserRouter>
       </ThemeProvider>
     </RecoilRoot>

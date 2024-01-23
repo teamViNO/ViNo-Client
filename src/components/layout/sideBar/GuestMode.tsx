@@ -1,9 +1,11 @@
-import { sideBarState } from '@/stores/sideBar';
-import * as GuestModeStyle from '@/styles/layout/sideBar/GuestMode.style';
 import { useSetRecoilState } from 'recoil';
 
+import * as GuestModeStyle from '@/styles/layout/sideBar/GuestMode.style';
+
+import { isSideBarOpenState } from '@/stores/ui';
+
 const GuestMode = () => {
-  const setSideBarState = useSetRecoilState(sideBarState);
+  const setSideBarState = useSetRecoilState(isSideBarOpenState);
 
   const closeSideBar = () => setSideBarState(false);
   return (
