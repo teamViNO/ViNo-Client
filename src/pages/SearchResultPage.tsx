@@ -2,20 +2,19 @@ import TagInput from "@/components/SearchPage/SearchComponent";
 import { useState } from "react";
 import SearchIcon from '@/assets/icons/search.svg?react'
 import FilterIcon from '@/assets/icons/filter.svg?react'
-import Container from "@/styles/SearchResult";
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
-    const [input, setInput] = useState<string>('');
+    const [input, setInput] = useState('');
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
 
   return (
-    <Container style={{width : '100wh', height : '100vh'}}>
+    <div style={{width : '100wh', height : '100vh'}}>
         <div className="inputContainer">
             <div className='inputwrap'>
                     <div className='input-inner'>
                         <div className='input'>
-                            <SearchIcon width={36}/>
+                            <SearchIcon width={36} height={36}/>
                             <TagInput tags={tags} input={input} searchType={searchType}
                             setTags={setTags} setInput={setInput} setSearchType={setSearchType}/>
                         </div>
@@ -39,7 +38,7 @@ const SearchResult = () => {
 
             </div>
         </div>
-    </Container>
+    </div>
   );
 };
 
