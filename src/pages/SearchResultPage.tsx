@@ -1,7 +1,6 @@
 import TagInput from "@/components/SearchPage/SearchComponent";
 import { useState } from "react";
 import SearchIcon from '@/assets/icons/search.svg?react'
-import FilterIcon from '@/assets/icons/filter.svg?react'
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
@@ -27,12 +26,6 @@ const SearchResult = () => {
         <div className="result">
             <div className="filter">
                 <span>총 0개의 영상이 발견되었어요!</span>
-                <div className="select">
-                <select>
-                    <option>최근 등록순</option>
-                </select>
-                <FilterIcon/>
-                </div>
             </div>
             <div className="content">
 
