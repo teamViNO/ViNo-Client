@@ -3,8 +3,15 @@ import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { topCategoryModalState } from '@/stores/modal';
+import { BlurBackground } from '@/styles/modal';
+import useOutsideClick from '@/hooks/useOutsideClick';
 
 const UserMode = () => {
+  const [isTopCategoryModalOpen, setIsTopCategoryModalOpen] = useRecoilState(
+    topCategoryModalState,
+  );
   const folders = [
     { id: 1, name: '기획' },
     { id: 2, name: '디자인' },
@@ -16,51 +23,69 @@ const UserMode = () => {
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname;
+  const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(() =>
+    setIsTopCategoryModalOpen(false),
+  );
 
   return (
-    <div>
-      <UserModeStyle.RecentVideoButton
-        selected={href === 'recent'}
-        to={'/category/recent'}
-      >
-        <LookSvg width={28} height={28} />
-        <UserModeStyle.CommonTitle>최근 읽은 영상</UserModeStyle.CommonTitle>
-      </UserModeStyle.RecentVideoButton>
-      {folders.map((folder: { id: number; name: string }) => (
-        <>
-          <UserModeStyle.FolderButton
-            key={`${folder.name}button`}
-            selected={+href === folder.id}
-            to={`/category/${folder.id}`}
-          >
-            {+href === folder.id ? (
-              <OpenFileSvg
-                key={`${folder.name}folder`}
-                width={28}
-                height={28}
-              />
-            ) : (
-              <ClosedFileSvg
-                key={`${folder.name}folder`}
-                width={28}
-                height={28}
-              />
-            )}
+    <>
+      <div>
+        <UserModeStyle.RecentVideoButton
+          selected={href === 'recent'}
+          to={'/category/recent'}
+        >
+          <LookSvg width={28} height={28} />
+          <UserModeStyle.CommonTitle>최근 읽은 영상</UserModeStyle.CommonTitle>
+        </UserModeStyle.RecentVideoButton>
+        {folders.map((folder: { id: number; name: string }) => (
+          <div key={`${folder.name}-container`}>
+            <UserModeStyle.FolderButton
+              key={`${folder.name}-button`}
+              selected={+href === folder.id}
+              to={`/category/${folder.id}`}
+            >
+              {+href === folder.id ? (
+                <OpenFileSvg
+                  key={`${folder.name}-open-folder`}
+                  width={28}
+                  height={28}
+                />
+              ) : (
+                <ClosedFileSvg
+                  key={`${folder.name}-close-folder`}
+                  width={28}
+                  height={28}
+                />
+              )}
 
-            <UserModeStyle.CommonTitle key={`${folder.name}`}>
-              {folder.name}
-            </UserModeStyle.CommonTitle>
-          </UserModeStyle.FolderButton>
-          {+href === folder.id && (
-            <UserModeStyle.SubFolderWrap>
-              {menus.map((menu) => (
-                <UserModeStyle.SubFolder>{menu}</UserModeStyle.SubFolder>
-              ))}
-            </UserModeStyle.SubFolderWrap>
-          )}
-        </>
-      ))}
-    </div>
+              <UserModeStyle.CommonTitle key={folder.name}>
+                {folder.name}
+              </UserModeStyle.CommonTitle>
+            </UserModeStyle.FolderButton>
+            {+href === folder.id && (
+              <UserModeStyle.SubFolderWrap
+                key={`${folder.name}-sub-folder-container`}
+              >
+                {menus.map((menu) => (
+                  <UserModeStyle.SubFolder
+                    key={`${folder.name}-${menu}-sub-folder`}
+                  >
+                    {menu}
+                  </UserModeStyle.SubFolder>
+                ))}
+              </UserModeStyle.SubFolderWrap>
+            )}
+          </div>
+        ))}
+      </div>
+      {isTopCategoryModalOpen && (
+        <BlurBackground>
+          <div ref={topCategoryModalRef}>
+            <h1 style={{ color: 'white' }}>hello</h1>
+          </div>
+        </BlurBackground>
+      )}
+    </>
   );
 };
 

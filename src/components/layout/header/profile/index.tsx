@@ -1,9 +1,9 @@
 import * as HeaderStyle from '@/styles/layout/header';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import BlurBackground from '../../BlurBackground';
 import ProfileDetail from './ProfileDetail';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import { BlurBackground } from '@/styles/modal';
 
 interface IProfileProps {
   modalOpen: boolean;
@@ -24,8 +24,7 @@ const Profile = ({ modalOpen, setModalOpen }: IProfileProps) => {
 
   return (
     <>
-      {modalOpen &&
-        createPortal(<BlurBackground setModalOpen={setModalOpen} />, header!)}
+      {modalOpen && createPortal(<BlurBackground />, header!)}
       <div ref={profileRef}>
         <HeaderStyle.Button onClick={toggleModalState}>
           <img

@@ -15,6 +15,7 @@ export const Text = styled.span`
 `;
 
 export const Button = styled.button`
+  cursor: pointer;
   border: 0;
   background-color: ${theme.color.green400};
   border-radius: 100%;
