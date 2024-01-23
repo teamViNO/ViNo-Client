@@ -1,18 +1,25 @@
+import { Outlet } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+
+import { isSideBarOpenState } from '@/stores/ui';
+
 import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
-import { sideBarState } from '@/stores/sideBar';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const isSideBarOpen = useRecoilValue(sideBarState);
+const Layout = () => {
+  const isSideBarOpen = useRecoilValue(isSideBarOpenState);
+
   return (
     <>
       <Header />
+
       <div style={{ display: 'flex' }}>
         {isSideBarOpen && <SideBar />}
-        {children}
+
+        <Outlet />
       </div>
+
       <Footer />
     </>
   );
