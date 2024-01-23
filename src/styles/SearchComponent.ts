@@ -11,42 +11,39 @@ const Fadeout = keyframes`
     }
 `
 
-const CustomTagInput = styled.div`
+const Container = styled.div`
     display: inline-flex;
-    width: 700px;
-    height : 36px;
     flex-wrap: wrap;
     position: relative;
     padding: 0;
     gap: 3px;
     
-    font-family: 'Pretendard';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 160%;
-
-    color: #787878;
+    ${(props) => props.theme.typography.Body1};
     transition: all 0.3s ease;
 
     & span.tag {
+        box-sizing: border-box;
+
         display: inline-flex;
+        flex-direction: row;
+        justify-content: center;
         align-items: center;
-        gap: 5px;
+        padding: 8px 20px 8px 20px;
+        gap: 13px;
         max-width: calc(100% - 10px);
-        background: #FFFFFF;
         position: relative;
         z-index: 1;
-        padding: 0.3em 0.5em;
         outline: 0;
-        line-height: normal;
-        cursor: default;
-        font-size: 14px;
+        background : ${(props) => props.theme.color.white};
+        ${(props) => props.theme.typography.Body3};
+        color : ${(props) => props.theme.color.gray400};
         border-radius: 8px;
-        border : 1.3px solid #E8E8E8;
+        border : 1.5px solid ${(props) => props.theme.color.gray200};
+        font-size : 14px;
+        height : 40px;
         transition: transform all .3s ease;
         &:hover {
-            transform : scale(1.1);
+            border : 1.5px solid ${(props) => props.theme.color.gray400};
         }
         &.removing {
             with : 0;
@@ -62,29 +59,24 @@ const CustomTagInput = styled.div`
         position: relative;
         white-space: pre-wrap;
         box-sizing: inherit;
-        font-size: 18px;
+        ${(props) => props.theme.typography.Subheader2};
 
         border: none;
-        background: #F3F3F3;
+        background: ${(props) => props.theme.color.gray100};
         &:focus {
             outline : none;
         }
     }
 
     & button.tag-btn {
-        border-radius: 50%;
-        width : 16px;
-        height : 16px;
         padding: 0;
+        border : none;
         background: transparent;
-        color: #787878;
-        font-size: 10px;
-        border: 1px solid transparent;
-        transition: all 0.3s ease;
-
+        color: ${(props) => props.theme.color.gray400};
+        font-size :  16px;
+        padding : 0;
         &:hover {
-            background-color: #c77777;
-            color: #E8E8E8;
+            color: ${(props) => props.theme.color.green500};
         }
     }
 
@@ -94,4 +86,7 @@ const CustomTagInput = styled.div`
     }
 
 `
-    export default CustomTagInput;
+    export default Container;
+
+
+

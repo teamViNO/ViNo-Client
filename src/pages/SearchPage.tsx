@@ -50,10 +50,7 @@ const SearchPage = () => {
                             {
                                 userHashTag.map((value : string, idx : number) => {
                                     return(<HashtagBox key={idx} onClick={() => handleHashtagBox(value)}
-                                    style={{
-                                        height : '40px',
-                                        border: selectedHashtags.includes(value) ? '1.3px solid #1E1E1E' : '' 
-                                    }}>{'#' + value}</HashtagBox>)
+                                    className={selectedHashtags.includes(value) ? 'toggle' : ''}>{'#' + value}</HashtagBox>)
                                 })
                             }
                     </div>

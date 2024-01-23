@@ -128,7 +128,7 @@ const HashtagBox = styled.div`
    
     background: ${(props) => props.theme.color.white}
     ${(props) => props.theme.typography.Caption1};
-    border: 1.3px solid ${(props) => props.theme.color.gray200};
+    border: 1.5px solid ${(props) => props.theme.color.gray200};
     border-radius: 8px;
 
     
@@ -136,11 +136,11 @@ const HashtagBox = styled.div`
     color: ${(props) => props.theme.color.gray400};
 
     &:hover {
-        box-shadow: 0.5px 0.5px 5px ${(props) => props.theme.color.gray100};
+        border : 1.5px solid ${(props) => props.theme.color.gray400};
     }
     &.toggle {
-        border : 1.3px solid ${(props) => props.theme.color.gray500};
-        color : ${(props) => props.theme.color.gray500};
+        border : 1.5px solid ${(props) => props.theme.color.gray500};
+        color : ${(props) => props.theme.color.gray500}; 
     }
 
 `
