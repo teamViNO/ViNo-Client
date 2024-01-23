@@ -1,6 +1,6 @@
 import { Container, HashtagBox } from '@/styles/SearchPage';
-import TooltipImg from '@/assets/tooltip.svg?react';
-import SearchIcon from '@/assets/search.svg?react';
+import TooltipImg from '@/assets/icons/tooltip.svg?react'
+import SearchIcon from '@/assets/icons/search.svg?react'
 
 import { useState } from 'react';
 import TagInput from '@/components/SearchPage/SearchComponent';
