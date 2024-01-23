@@ -127,7 +127,6 @@ export const ScriptBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
-  height: 100vh;
   min-width: 555px;
   max-width: 865px;
   box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
@@ -207,9 +206,13 @@ export const ScriptBox = styled.div`
     & > mark {
       padding: 4px 8px;
       border-radius: 4px;
-      background-color: #a4de6b;
+      background-color: #d2f1b4;
       line-height: 1.6;
       color: ${(props) => props.theme.color.gray500};
+
+      &.active {
+        background-color: #a4de6b;
+      }
     }
   }
 
@@ -273,5 +276,55 @@ export const Dropdown = styled.div`
     & path {
       fill: ${(props) => props.theme.color.gray400};
     }
+  }
+`;
+
+export const KeywordSearchBox = styled.div`
+  position: relative;
+  display: flex;
+  height: 38px;
+  border-radius: 100px;
+  background-color: ${(props) => props.theme.color.gray100};
+  z-index: 1;
+  overflow: hidden;
+  transition: 0.5s;
+
+  & input {
+    padding: 0;
+    width: 157px;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: ${(props) => props.theme.color.gray500};
+    ${(props) => props.theme.typography.Body3};
+  }
+
+  & .count {
+    color: ${(props) => props.theme.color.gray300};
+    ${(props) => props.theme.typography.Body3};
+
+    & > .current {
+      color: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & .icon-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: 0.5s;
   }
 `;
