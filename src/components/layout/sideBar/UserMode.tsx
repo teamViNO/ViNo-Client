@@ -2,7 +2,7 @@ import LookSvg from '@/assets/icons/look.svg?react';
 import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const UserMode = () => {
   const folders = [
@@ -12,16 +12,15 @@ const UserMode = () => {
     { id: 4, name: '팁' },
     { id: 5, name: '방법론' },
   ];
-  const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname;
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <UserModeStyle.RecentVideoButton
         selected={href === 'recent'}
-        onClick={() => navigate('/category/recent')}
+        to={'/category/recent'}
       >
         <LookSvg width={28} height={28} />
         <UserModeStyle.CommonTitle>최근 읽은 영상</UserModeStyle.CommonTitle>
@@ -30,7 +29,7 @@ const UserMode = () => {
         <UserModeStyle.FolderButton
           key={`${folder.name}button`}
           selected={+href === folder.id}
-          onClick={() => navigate(`/category/${folder.id}`)}
+          to={`/category/${folder.id}`}
         >
           {+href === folder.id ? (
             <OpenFileSvg key={`${folder.name}folder`} width={28} height={28} />

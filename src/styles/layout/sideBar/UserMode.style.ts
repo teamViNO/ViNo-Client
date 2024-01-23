@@ -1,12 +1,14 @@
 import theme from '@/styles/theme';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const CommonButtonStyle = styled.button`
+const CommonButtonStyle = styled(Link)`
   cursor: pointer;
   display: flex;
   align-items: center;
   padding: 10px 20px;
   border-width: 0;
+  text-decoration: none;
 `;
 
 export const CommonTitle = styled.span`
