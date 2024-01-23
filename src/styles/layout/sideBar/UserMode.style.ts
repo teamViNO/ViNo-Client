@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const CommonButtonStyle = styled(Link)`
-  cursor: pointer;
   display: flex;
   align-items: center;
   padding: 10px 20px;
@@ -33,4 +32,22 @@ export const FolderButton = styled(CommonButtonStyle)<{ selected: boolean }>`
   /* 현재 폴더에 위치 따라 배경 색상 gray100으로 변경하기 */
   background-color: ${(props) =>
     props.selected ? theme.color.gray100 : theme.color.white};
+`;
+
+export const SubFolderWrap = styled.div`
+  margin-top: 12px;
+  padding-left: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+export const SubFolder = styled.button`
+  cursor: pointer;
+  border: 0;
+  background-color: white;
+  padding: 10px 0px;
+  margin-bottom: 4px;
+  color: ${theme.color.gray400};
+  ${theme.typography.Body3};
 `;

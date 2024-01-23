@@ -3,7 +3,6 @@ import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation } from 'react-router-dom';
-import theme from '@/styles/theme';
 
 const UserMode = () => {
   const folders = [
@@ -53,20 +52,11 @@ const UserMode = () => {
             </UserModeStyle.CommonTitle>
           </UserModeStyle.FolderButton>
           {+href === folder.id && (
-            <div style={{ marginTop: '12px', paddingLeft: '60px' }}>
+            <UserModeStyle.SubFolderWrap>
               {menus.map((menu) => (
-                <div
-                  style={{
-                    padding: '10px 0px',
-                    marginBottom: '4px',
-                    ...theme.typography.Body3,
-                    color: theme.color.gray400,
-                  }}
-                >
-                  {menu}
-                </div>
+                <UserModeStyle.SubFolder>{menu}</UserModeStyle.SubFolder>
               ))}
-            </div>
+            </UserModeStyle.SubFolderWrap>
           )}
         </>
       ))}
