@@ -1,11 +1,9 @@
-import * as FooterStyle from '@/styles/layout/Footer.style';
+import * as FooterStyle from '@/styles/layout/footer';
+import { useState } from 'react';
 
-interface ISendEmail {
-  feedback: string;
-  setFeedback: React.Dispatch<React.SetStateAction<string>>;
-}
+const SendEmail = () => {
+  const [feedback, setFeedback] = useState<string>('');
 
-const SendEmail = ({ feedback, setFeedback }: ISendEmail) => {
   const handleInputFeedback = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFeedback(e.target.value);
 
