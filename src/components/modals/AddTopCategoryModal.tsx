@@ -7,9 +7,21 @@ import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.sty
 import { useState } from 'react';
 import { CommonAddCategoryContainer } from '@/styles/modals/common.style';
 
-const AddTopCategoryModal = () => {
+interface IAddTopCategoryModalProps {
+  categoryName: string;
+  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
+  setIsSuccessAddCategoryModalOpen: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+}
+
+const AddTopCategoryModal = ({
+  categoryName,
+  setCategoryName,
+  setIsSuccessAddCategoryModalOpen,
+}: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
-  const [categoryName, setCategoryName] = useState('');
+
   const [isFocused, setIsFocused] = useState(false);
 
   const categoryNameRegex = /^[a-zA-Z0-9가-힣]*$/;
@@ -22,6 +34,13 @@ const AddTopCategoryModal = () => {
   const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 10) return;
     setCategoryName(e.target.value);
+  };
+
+  const addCategory = (e: React.MouseEvent) => {
+    // API 요청 로직 넣기
+    e.stopPropagation();
+    onCloseModal();
+    setIsSuccessAddCategoryModalOpen(true);
   };
   return (
     <CommonAddCategoryContainer ref={topCategoryModalRef}>
@@ -59,7 +78,11 @@ const AddTopCategoryModal = () => {
           *아쉽지만,이모티콘은 사용할 수 없어요
         </AddTopCategoryModalStyles.WarningMessage>
       )}
-      <AddTopCategoryModalStyles.AddButton add_enabled={addEnabled.toString()}>
+      <AddTopCategoryModalStyles.AddButton
+        onClick={addCategory}
+        disabled={!addEnabled}
+        add_enabled={addEnabled.toString()}
+      >
         추가하기
       </AddTopCategoryModalStyles.AddButton>
     </CommonAddCategoryContainer>

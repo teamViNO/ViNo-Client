@@ -7,9 +7,14 @@ import { useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
 import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
+import SuccessAddCategory from '@/components/modals/SuccessAddCategory';
+import { useState } from 'react';
 
 const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
+  const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
+    useState(false);
+  const [categoryName, setCategoryName] = useState('');
   const folders = [
     { id: 1, name: '기획' },
     { id: 2, name: '디자인' },
@@ -75,7 +80,19 @@ const UserMode = () => {
       </div>
       {isTopCategoryModalOpen && (
         <BlurBackground>
-          <AddTopCategoryModal />
+          <AddTopCategoryModal
+            categoryName={categoryName}
+            setCategoryName={setCategoryName}
+            setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
+          />
+        </BlurBackground>
+      )}
+      {isSuccessAddCategoryModalOpen && (
+        <BlurBackground>
+          <SuccessAddCategory
+            categoryName={categoryName}
+            setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
+          />
         </BlurBackground>
       )}
     </>

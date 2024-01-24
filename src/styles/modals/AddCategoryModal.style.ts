@@ -59,6 +59,7 @@ export const InputCategoryNameLength = styled.span<{
 `;
 
 export const AddButton = styled.button<{ add_enabled: string }>`
+  cursor: ${(props) => JSON.parse(props.add_enabled) && 'pointer'};
   width: 600px;
   padding: 15px 0px;
   border-radius: 12px;
