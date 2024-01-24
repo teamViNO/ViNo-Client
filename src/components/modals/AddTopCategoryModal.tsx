@@ -20,7 +20,7 @@ const AddTopCategoryModal = ({
 
   const [isFocused, setIsFocused] = useState(false);
 
-  const categoryNameRegex = /^[a-zA-Z0-9가-힣]*$/;
+  const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
   const testCategoryNameRegex = categoryNameRegex.test(categoryName);
   const addEnabled = categoryName.length > 0 && testCategoryNameRegex;
 

@@ -1,6 +1,7 @@
 import LookSvg from '@/assets/icons/look.svg?react';
 import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
+import MoreOptionsSvg from '@/assets/icons/more-options.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -33,6 +34,7 @@ const UserMode = () => {
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname;
 
+  // todo 상위 카테고리 추가 모달 구현
   return (
     <>
       <div>
@@ -40,34 +42,48 @@ const UserMode = () => {
           selected={href === 'recent'}
           to={'/category/recent'}
         >
-          <LookSvg width={28} height={28} />
-          <UserModeStyle.CommonTitle>최근 읽은 영상</UserModeStyle.CommonTitle>
+          <UserModeStyle.ImageTextWrap>
+            <LookSvg width={28} height={28} />
+            <UserModeStyle.CommonTitle>
+              최근 읽은 영상
+            </UserModeStyle.CommonTitle>
+          </UserModeStyle.ImageTextWrap>
         </UserModeStyle.RecentVideoButton>
         {folders.map((folder: { id: number; name: string }) => (
           <div key={`${folder.name}-container`}>
-            <UserModeStyle.FolderButton
-              key={`${folder.name}-button`}
+            <UserModeStyle.ButtonsWrap
               selected={+href === folder.id}
-              to={`/category/${folder.id}`}
+              style={{ display: 'flex' }}
             >
-              {+href === folder.id ? (
-                <OpenFileSvg
-                  key={`${folder.name}-open-folder`}
-                  width={28}
-                  height={28}
-                />
-              ) : (
-                <ClosedFileSvg
-                  key={`${folder.name}-close-folder`}
-                  width={28}
-                  height={28}
-                />
+              <UserModeStyle.FolderButton
+                key={`${folder.name}-button`}
+                to={`/category/${folder.id}`}
+              >
+                <UserModeStyle.ImageTextWrap>
+                  {+href === folder.id ? (
+                    <OpenFileSvg
+                      key={`${folder.name}-open-folder`}
+                      width={28}
+                      height={28}
+                    />
+                  ) : (
+                    <ClosedFileSvg
+                      key={`${folder.name}-close-folder`}
+                      width={28}
+                      height={28}
+                    />
+                  )}
+                  <UserModeStyle.CommonTitle key={folder.name}>
+                    {folder.name}
+                  </UserModeStyle.CommonTitle>
+                </UserModeStyle.ImageTextWrap>
+              </UserModeStyle.FolderButton>
+              {+href === folder.id && (
+                <UserModeStyle.ShowOptionButton>
+                  <MoreOptionsSvg />
+                </UserModeStyle.ShowOptionButton>
               )}
-
-              <UserModeStyle.CommonTitle key={folder.name}>
-                {folder.name}
-              </UserModeStyle.CommonTitle>
-            </UserModeStyle.FolderButton>
+            </UserModeStyle.ButtonsWrap>
             {+href === folder.id && (
               <UserModeStyle.SubFolderWrap
                 key={`${folder.name}-sub-folder-container`}

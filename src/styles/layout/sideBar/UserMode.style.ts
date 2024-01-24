@@ -8,12 +8,26 @@ const CommonButtonStyle = styled(Link)`
   padding: 10px 20px;
   border-width: 0;
   text-decoration: none;
+  justify-content: space-between;
 `;
 
 export const CommonTitle = styled.span`
   color: ${theme.color.gray500};
   margin-left: 10px;
   ${theme.typography.Subheader3};
+`;
+
+export const ImageTextWrap = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ShowOptionButton = styled.button`
+  display: none;
+  cursor: pointer;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  margin-right: 12px;
 `;
 
 export const RecentVideoButton = styled(CommonButtonStyle)<{
@@ -25,13 +39,23 @@ export const RecentVideoButton = styled(CommonButtonStyle)<{
   border-radius: 100px;
 `;
 
-export const FolderButton = styled(CommonButtonStyle)<{ selected: boolean }>`
+export const ButtonsWrap = styled.div<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
   width: 100%;
   border-radius: 100px;
   margin-top: 12px;
-  /* 현재 폴더에 위치 따라 배경 색상 gray100으로 변경하기 */
   background-color: ${(props) =>
     props.selected ? theme.color.gray100 : theme.color.white};
+  &:hover {
+    ${ShowOptionButton} {
+      display: block;
+    }
+  }
+`;
+
+export const FolderButton = styled(CommonButtonStyle)`
+  width: 100%;
 `;
 
 export const SubFolderWrap = styled.div`
