@@ -4,6 +4,7 @@ import SearchIcon from '@/assets/icons/search.svg?react';
 
 import { useState } from 'react';
 import TagInput from '@/components/SearchPage/SearchComponent';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const SearchPage = () => {
     const [tags, setTags] = useState<string[]>([]);
@@ -11,6 +12,9 @@ const SearchPage = () => {
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
     const [userHashTag, SetUserHashTag] = useState<string[]>(["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]); // 사용자의 해시태그 데이터 10개 <임의 데이터>
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
+    const searchNav = useNavigate();
+    
+
     const handleHashtagBox = (value : string) => {
         const isSelected = selectedHashtags.includes(value);
         setSelectedHashtags(prev =>
@@ -19,7 +23,17 @@ const SearchPage = () => {
         isSelected ? setTags(tags.filter((prev) => prev !== '#'+value)) : setTags([...tags, `#${value}`]);
         setSearchType(false); // 박스를 클릭했을 때도 type 변경
     }
+    const handleSearch = () => {
+        const params = {
+            type : searchType === true ? 'keyword' : 'hashtag',
+            value: searchType ? input : tags.join('&')
+        };
 
+        searchNav({
+            pathname : '/search/result',
+            search : `?${createSearchParams(params)}`
+        })
+    }
     return (
             <Container style={{width : '100vw', height : '100vh'}}>
                 <div className='wrap' style={{width : '908px', height : '450px'}}>
@@ -37,7 +51,7 @@ const SearchPage = () => {
                                         <TagInput tags={tags} input={input} searchType={searchType} selectedHashtags={selectedHashtags}
                                          setTags={setTags} setInput={setInput} setSearchType={setSearchType} setSelectedHashtags={setSelectedHashtags}/>
                                     </div>
-                                    <button className='search-btn' disabled={(input.length === 0 && tags.length === 0)} style={{width : '90px', height : '36px'}}>Search</button>
+                                    <button className='search-btn' onClick={handleSearch} disabled={(input.length === 0 && tags.length === 0)} style={{width : '90px', height : '36px'}}>Search</button>
                                 </div>
                             </div>
                             
