@@ -7,22 +7,28 @@ import { useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
 import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
-import SuccessAddCategory from '@/components/modals/SuccessAddCategory';
+import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useState } from 'react';
+
+interface IFolderProps {
+  id: number;
+  name: string;
+}
 
 const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
   const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
     useState(false);
   const [categoryName, setCategoryName] = useState('');
-  const folders = [
+  const [folders, setFolders] = useState<IFolderProps[]>([
     { id: 1, name: '기획' },
     { id: 2, name: '디자인' },
     { id: 3, name: '개발' },
     { id: 4, name: '팁' },
     { id: 5, name: '방법론' },
-  ];
+  ]);
   const menus = ['마케팅', '트렌드', '기업', '용어'];
+
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname;
@@ -89,8 +95,11 @@ const UserMode = () => {
       )}
       {isSuccessAddCategoryModalOpen && (
         <BlurBackground>
-          <SuccessAddCategory
+          <SuccessAddCategoryModal
+            folders={folders}
+            setFolders={setFolders}
             categoryName={categoryName}
+            setCategoryName={setCategoryName}
             setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
           />
         </BlurBackground>
