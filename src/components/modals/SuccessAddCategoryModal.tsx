@@ -5,20 +5,16 @@ import {
 } from '@/styles/modals/common.style';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryModal.style';
+import { ICommonModalProps } from 'types/modal';
 
 interface IFolderProps {
   id: number;
   name: string;
 }
 
-interface ISuccessAddCategory {
+interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
   setFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
-  categoryName: string;
-  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
-  setIsSuccessAddCategoryModalOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
 }
 
 const SuccessAddCategoryModal = ({

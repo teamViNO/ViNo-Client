@@ -9,20 +9,13 @@ import {
   CommonAddCategoryContainer,
   CommonCloseButton,
 } from '@/styles/modals/common.style';
-
-interface IAddTopCategoryModalProps {
-  categoryName: string;
-  setCategoryName: React.Dispatch<React.SetStateAction<string>>;
-  setIsSuccessAddCategoryModalOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-}
+import { ICommonModalProps } from 'types/modal';
 
 const AddTopCategoryModal = ({
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-}: IAddTopCategoryModalProps) => {
+}: ICommonModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
 
   const [isFocused, setIsFocused] = useState(false);
