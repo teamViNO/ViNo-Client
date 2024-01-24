@@ -3,15 +3,13 @@ import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
-import { BlurBackground } from '@/styles/modal';
-import useOutsideClick from '@/hooks/useOutsideClick';
+import { BlurBackground } from '@/styles/modals/common.style';
+import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
 
 const UserMode = () => {
-  const [isTopCategoryModalOpen, setIsTopCategoryModalOpen] = useRecoilState(
-    topCategoryModalState,
-  );
+  const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
   const folders = [
     { id: 1, name: '기획' },
     { id: 2, name: '디자인' },
@@ -23,9 +21,6 @@ const UserMode = () => {
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname;
-  const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(() =>
-    setIsTopCategoryModalOpen(false),
-  );
 
   return (
     <>
@@ -80,9 +75,7 @@ const UserMode = () => {
       </div>
       {isTopCategoryModalOpen && (
         <BlurBackground>
-          <div ref={topCategoryModalRef}>
-            <h1 style={{ color: 'white' }}>hello</h1>
-          </div>
+          <AddTopCategoryModal />
         </BlurBackground>
       )}
     </>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ProfileDetail from './ProfileDetail';
 import useOutsideClick from '@/hooks/useOutsideClick';
-import { BlurBackground } from '@/styles/modal';
+import { BlurBackground } from '@/styles/modals/common.style';
 
 interface IProfileProps {
   modalOpen: boolean;
