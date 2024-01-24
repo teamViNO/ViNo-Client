@@ -108,6 +108,9 @@ const theme = {
 };
 
 export type TypographyType = typeof typography;
+export type TypographyKeyType = keyof typeof typography;
+
 export type ColorType = typeof color;
+export type ColorKeyType = keyof typeof color;
 
 export default theme;
