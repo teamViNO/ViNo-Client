@@ -5,7 +5,10 @@ import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.style';
 import { useState } from 'react';
-import { CommonAddCategoryContainer } from '@/styles/modals/common.style';
+import {
+  CommonAddCategoryContainer,
+  CommonCloseButton,
+} from '@/styles/modals/common.style';
 
 interface IAddTopCategoryModalProps {
   categoryName: string;
@@ -44,9 +47,9 @@ const AddTopCategoryModal = ({
   };
   return (
     <CommonAddCategoryContainer ref={topCategoryModalRef}>
-      <AddTopCategoryModalStyles.CloseButton onClick={onCloseModal}>
+      <CommonCloseButton onClick={onCloseModal}>
         <CloseSvg width={21.42} height={21.42} />
-      </AddTopCategoryModalStyles.CloseButton>
+      </CommonCloseButton>
       <OpenFileSvg width={56} height={56} />
       <AddTopCategoryModalStyles.Title>
         상위 카테고리 추가

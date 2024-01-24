@@ -22,3 +22,10 @@ export const CommonAddCategoryContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+export const CommonCloseButton = styled.button`
+  align-self: flex-end;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+`;

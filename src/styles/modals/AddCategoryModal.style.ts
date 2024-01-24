@@ -1,13 +1,6 @@
 import styled from 'styled-components';
 import theme from '../theme';
 
-export const CloseButton = styled.button`
-  align-self: flex-end;
-  border: 0;
-  background-color: rgba(0, 0, 0, 0);
-  cursor: pointer;
-`;
-
 export const Title = styled.h1`
   ${theme.typography.Header6};
   color: ${theme.color.gray500};
