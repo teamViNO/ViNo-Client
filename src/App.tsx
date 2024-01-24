@@ -18,6 +18,9 @@ import SummaryPage from '@/pages/SummaryPage';
 // Layouts
 import Layout from './components/layout/Layout';
 
+// Components
+import { ToastList } from './components/common';
+
 const App = () => {
   return (
     <RecoilRoot>
@@ -31,7 +34,6 @@ const App = () => {
             <Route path="/sign-up" element={<SignUpPage />} />
 
             <Route element={<Layout />}>
-           
               <Route path="/category/recent" element={<CategoryPage />} />
               <Route path="/category/:id" element={<CategoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -41,6 +43,8 @@ const App = () => {
             </Route>
           </Routes>
         </BrowserRouter>
+
+        <ToastList />
       </ThemeProvider>
     </RecoilRoot>
   );
