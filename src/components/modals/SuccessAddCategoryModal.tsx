@@ -15,17 +15,24 @@ interface IFolderProps {
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
   setFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
+  menus: IFolderProps[];
+  setMenus: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
+  isSubAdded: boolean;
+  setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SuccessAddCategoryModal = ({
   folders,
   setFolders,
+  menus,
+  setMenus,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
+  isSubAdded,
+  setIsSubAdded,
 }: ISuccessAddCategory) => {
   const onCloseModal = () => {
-    //  모달 창 닫을 때 공백으로 바꿔주기
     setIsSuccessAddCategoryModalOpen(false);
     setCategoryName('');
   };
@@ -34,7 +41,13 @@ const SuccessAddCategoryModal = ({
     useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleGoToCategory = () => {
-    setFolders([...folders, { id: folders.length + 1, name: categoryName }]);
+    isSubAdded
+      ? setMenus([...menus, { id: menus.length + 1, name: categoryName }])
+      : setFolders([
+          ...folders,
+          { id: folders.length + 1, name: categoryName },
+        ]);
+    setIsSubAdded(false);
     onCloseModal();
   };
   return (
@@ -53,7 +66,11 @@ const SuccessAddCategoryModal = ({
         생성 완료!
       </SuccessAddCategoryStyles.Title>
       <SuccessAddCategoryStyles.GoToCategoryButton
-        to={`/category/${folders.length + 1}`}
+        to={
+          isSubAdded
+            ? `/category/${folders.length}/${menus.length + 1}`
+            : `/category/${folders.length + 1}`
+        }
         onClick={handleGoToCategory}
       >
         보러가기

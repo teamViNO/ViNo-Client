@@ -30,6 +30,35 @@ export const ShowOptionButton = styled.button`
   margin-right: 12px;
 `;
 
+export const OptionsContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 48px;
+`;
+
+export const OptionsWrap = styled.div`
+  background-color: ${theme.color.white};
+  position: absolute;
+  margin-left: 36px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+`;
+
+export const OptionButton = styled.button`
+  cursor: pointer;
+  background-color: ${theme.color.white};
+  padding: 12px 71.25px;
+  border: 0;
+  color: ${theme.color.gray400};
+  ${theme.typography.Body3}
+  &:hover {
+    background-color: ${theme.color.gray100};
+  }
+`;
+
 export const RecentVideoButton = styled(CommonButtonStyle)<{
   selected: boolean;
 }>`
@@ -60,18 +89,28 @@ export const FolderButton = styled(CommonButtonStyle)`
 
 export const SubFolderWrap = styled.div`
   margin-top: 12px;
-  padding-left: 60px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 `;
 
-export const SubFolder = styled.button`
-  cursor: pointer;
-  border: 0;
-  background-color: white;
-  padding: 10px 0px;
+export const SubFolder = styled(Link)<{ selected: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0px 10px 60px;
   margin-bottom: 4px;
+  text-decoration: none;
+  border-radius: 100px;
   color: ${theme.color.gray400};
+  background-color: ${(props) =>
+    props.selected ? theme.color.gray100 : theme.color.white};
   ${theme.typography.Body3};
+
+  &:hover {
+    ${ShowOptionButton} {
+      display: block;
+    }
+  }
 `;

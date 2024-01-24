@@ -11,11 +11,20 @@ import {
 } from '@/styles/modals/common.style';
 import { ICommonModalProps } from 'types/modal';
 
+interface IAddTopCategoryModalProps extends ICommonModalProps {
+  isTopCategoryModalOpen: boolean;
+  setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const AddTopCategoryModal = ({
+  isTopCategoryModalOpen,
+  setIsSubCategoryModalOpen,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-}: ICommonModalProps) => {
+  setIsSubAdded,
+}: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -24,7 +33,13 @@ const AddTopCategoryModal = ({
   const testCategoryNameRegex = categoryNameRegex.test(categoryName);
   const addEnabled = categoryName.length > 0 && testCategoryNameRegex;
 
-  const onCloseModal = () => setIsTopCategoryModalOpen(false);
+  const onCloseModal = () => {
+    isTopCategoryModalOpen
+      ? setIsTopCategoryModalOpen(false)
+      : setIsSubCategoryModalOpen(false);
+    !isTopCategoryModalOpen && setIsSubAdded(true);
+  };
+
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +60,7 @@ const AddTopCategoryModal = ({
       </CommonCloseButton>
       <OpenFileSvg width={56} height={56} />
       <AddTopCategoryModalStyles.Title>
-        상위 카테고리 추가
+        {isTopCategoryModalOpen ? '상위' : '하위'} 카테고리 추가
       </AddTopCategoryModalStyles.Title>
       <AddTopCategoryModalStyles.SubTitle>
         만들고 싶은 카테고리의 이름을 작성해주세요
