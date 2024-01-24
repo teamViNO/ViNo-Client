@@ -5,6 +5,7 @@ import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.style';
 import { useState } from 'react';
+import { CommonAddCategoryContainer } from '@/styles/modals/common.style';
 
 const AddTopCategoryModal = () => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
@@ -23,7 +24,7 @@ const AddTopCategoryModal = () => {
     setCategoryName(e.target.value);
   };
   return (
-    <AddTopCategoryModalStyles.Container ref={topCategoryModalRef}>
+    <CommonAddCategoryContainer ref={topCategoryModalRef}>
       <AddTopCategoryModalStyles.CloseButton onClick={onCloseModal}>
         <CloseSvg width={21.42} height={21.42} />
       </AddTopCategoryModalStyles.CloseButton>
@@ -61,7 +62,7 @@ const AddTopCategoryModal = () => {
       <AddTopCategoryModalStyles.AddButton add_enabled={addEnabled.toString()}>
         추가하기
       </AddTopCategoryModalStyles.AddButton>
-    </AddTopCategoryModalStyles.Container>
+    </CommonAddCategoryContainer>
   );
 };
 

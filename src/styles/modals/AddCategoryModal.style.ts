@@ -1,15 +1,6 @@
 import styled from 'styled-components';
 import theme from '../theme';
 
-export const Container = styled.div`
-  padding: 40px 61px;
-  background-color: ${theme.color.white};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
 export const CloseButton = styled.button`
   align-self: flex-end;
   border: 0;

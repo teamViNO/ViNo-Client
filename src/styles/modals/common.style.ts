@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../theme';
 
 export const BlurBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.16);
@@ -11,4 +12,13 @@ export const BlurBackground = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const CommonAddCategoryContainer = styled.div`
+  padding: 40px 61px;
+  background-color: ${theme.color.white};
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
