@@ -2,6 +2,7 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import { topCategoryModalState } from '@/stores/modal';
 import { useSetRecoilState } from 'recoil';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
+import CloseSvg from '@/assets/icons/close.svg?react';
 import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.style';
 import { useState } from 'react';
 
@@ -9,13 +10,13 @@ const AddTopCategoryModal = () => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
   const [categoryName, setCategoryName] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(() =>
-    setIsTopCategoryModalOpen(false),
-  );
 
   const categoryNameRegex = /^[a-zA-Z0-9가-힣]*$/;
   const testCategoryNameRegex = categoryNameRegex.test(categoryName);
   const addEnabled = categoryName.length > 0 && testCategoryNameRegex;
+
+  const onCloseModal = () => setIsTopCategoryModalOpen(false);
+  const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 10) return;
@@ -23,6 +24,9 @@ const AddTopCategoryModal = () => {
   };
   return (
     <AddTopCategoryModalStyles.Container ref={topCategoryModalRef}>
+      <AddTopCategoryModalStyles.CloseButton onClick={onCloseModal}>
+        <CloseSvg width={21.42} height={21.42} />
+      </AddTopCategoryModalStyles.CloseButton>
       <OpenFileSvg width={56} height={56} />
       <AddTopCategoryModalStyles.Title>
         상위 카테고리 추가
