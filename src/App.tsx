@@ -20,6 +20,9 @@ import SummaryPage from '@/pages/SummaryPage';
 // Layouts
 import Layout from './components/layout/Layout';
 
+// Components
+import { ToastList } from './components/common';
+
 const App = () => {
   return (
     <RecoilRoot>
@@ -46,6 +49,8 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
+
+        <ToastList />
       </ThemeProvider>
     </RecoilRoot>
   );
