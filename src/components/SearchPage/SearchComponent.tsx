@@ -49,7 +49,6 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
         if (event.key === 'Enter' && !isComposing) {
         event.preventDefault(); 
         if (input) {
-          console.log(event.target);
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
           if(selectedHashtags && setSelectedHashtags && !selectedHashtags.includes(input))
             input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
