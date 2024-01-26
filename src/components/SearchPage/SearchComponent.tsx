@@ -31,7 +31,6 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
   useEffect(() => {
     if (tags.length > 3) {
       const lastValue = tags[3]
-    
       if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
         setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
       const timer = setTimeout(() => {
@@ -47,9 +46,7 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if(!searchType){
-      if(tags.length > 2 && event.key !== 'Backspace')
-        event.preventDefault();
-      else if (event.key === 'Enter' && !isComposing) {
+        if (event.key === 'Enter' && !isComposing) {
         event.preventDefault(); 
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
@@ -57,23 +54,26 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
             input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
           setInput('');
         }
-      } else if (event.key === 'Backspace' && !input) { 
+        } else if (event.key === 'Backspace' && !input) { 
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
             if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
               setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
             setRemovingTagIndex(tags.length - 1);
-            
+    
             setTimeout(() => {
               setNullTagIndex();
               setTags(tags.slice(0, tags.length - 1));
             }, 500)
           }
-      }
+        }
     }
   };
   
   const handleOnchage = (event : React.ChangeEvent<HTMLInputElement>) => {
+    if(tags.length > 2){
+      event.target.value = event.target.value.replace(/./g, '');
+    }
     setInput(event.target.value);
     if(tags.length === 0)
       event.target.value.startsWith('#') ? setSearchType(false) : setSearchType(true)
