@@ -87,11 +87,16 @@ export const FolderButton = styled(CommonButtonStyle)`
   width: 100%;
 `;
 
-export const SubFolderWrap = styled.div`
+export const SubFolderContainer = styled.div`
   margin-top: 12px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+export const SubFolderWrap = styled.div`
+  display: flex;
+  width: 100%;
 `;
 
 export const SubFolder = styled(Link)<{ selected: boolean }>`

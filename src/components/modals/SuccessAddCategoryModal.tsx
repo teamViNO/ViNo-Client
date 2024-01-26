@@ -15,8 +15,8 @@ interface IFolderProps {
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
   setFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
-  menus: IFolderProps[];
-  setMenus: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
+  subFolders: IFolderProps[];
+  setSubFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
   isSubAdded: boolean;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -24,8 +24,8 @@ interface ISuccessAddCategory extends ICommonModalProps {
 const SuccessAddCategoryModal = ({
   folders,
   setFolders,
-  menus,
-  setMenus,
+  subFolders,
+  setSubFolders,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
@@ -42,7 +42,10 @@ const SuccessAddCategoryModal = ({
 
   const handleGoToCategory = () => {
     isSubAdded
-      ? setMenus([...menus, { id: menus.length + 1, name: categoryName }])
+      ? setSubFolders([
+          ...subFolders,
+          { id: subFolders.length + 1, name: categoryName },
+        ])
       : setFolders([
           ...folders,
           { id: folders.length + 1, name: categoryName },
@@ -68,7 +71,7 @@ const SuccessAddCategoryModal = ({
       <SuccessAddCategoryStyles.GoToCategoryButton
         to={
           isSubAdded
-            ? `/category/${folders.length}/${menus.length + 1}`
+            ? `/category/${folders.length}/${subFolders.length + 1}`
             : `/category/${folders.length + 1}`
         }
         onClick={handleGoToCategory}
