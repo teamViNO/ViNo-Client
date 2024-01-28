@@ -8,6 +8,7 @@ import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useEffect, useState } from 'react';
 import TopCategory from './TopCategory';
+import DeleteCategory from './DeleteCategory';
 
 interface ISubFolderProps {
   categoryID: number;
@@ -26,6 +27,7 @@ const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
   const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
     useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [folders, setFolders] = useState<IFolderProps[]>([
@@ -41,6 +43,7 @@ const UserMode = () => {
     { categoryID: 7, name: '트렌드', topCategoryID: 2 },
     { categoryID: 8, name: '기업', topCategoryID: 3 },
     { categoryID: 9, name: '용어', topCategoryID: 3 },
+    { categoryID: 10, name: '영화', topCategoryID: 3 },
   ];
 
   useEffect(() => {
@@ -58,6 +61,21 @@ const UserMode = () => {
   const href = pathname === 'recent' ? 'recent' : pathname.split('/');
   const topId = Number(href[0]);
   const subId = Number(href[1]);
+
+  const handleDeleteCategory = () => {
+    if (!isNaN(subId)) {
+      const index = folders.findIndex((folder) => folder.categoryID === topId);
+      const preSubFolders = [...folders[index].subFolders];
+      const filteredSubFolders = preSubFolders.filter(
+        (preSubFolder) => preSubFolder.categoryID !== subId,
+      );
+      folders[index].subFolders = filteredSubFolders;
+    } else {
+      const newData = folders.filter((folder) => folder.categoryID !== topId);
+      setFolders([...newData]);
+    }
+    setIsDeleteModalOpen(false);
+  };
   return (
     <>
       <div>
@@ -80,6 +98,7 @@ const UserMode = () => {
             name={folder.name}
             subFolders={folder.subFolders}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
             key={folder.name}
           />
         ))}
@@ -93,6 +112,14 @@ const UserMode = () => {
             setCategoryName={setCategoryName}
             setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
             setIsSubAdded={setIsSubAdded}
+          />
+        </BlurBackground>
+      )}
+      {isDeleteModalOpen && (
+        <BlurBackground>
+          <DeleteCategory
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+            onDeleteClick={handleDeleteCategory}
           />
         </BlurBackground>
       )}

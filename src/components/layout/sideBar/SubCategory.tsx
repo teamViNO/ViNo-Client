@@ -10,9 +10,16 @@ interface ISubCategoryProps {
   subId: number;
   categoryID: number;
   name: string;
+  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SubCategory = ({ topId, subId, categoryID, name }: ISubCategoryProps) => {
+const SubCategory = ({
+  topId,
+  subId,
+  categoryID,
+  name,
+  setIsDeleteModalOpen,
+}: ISubCategoryProps) => {
   const [subFolderOptionModalOpen, setSubFolderOptionModalOpen] =
     useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -31,8 +38,10 @@ const SubCategory = ({ topId, subId, categoryID, name }: ISubCategoryProps) => {
     e.stopPropagation();
     if (option === '수정') {
       setIsEditing(true);
-      setSubFolderOptionModalOpen(false);
+    } else if (option === '삭제') {
+      setIsDeleteModalOpen(true);
     }
+    setSubFolderOptionModalOpen(false);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
