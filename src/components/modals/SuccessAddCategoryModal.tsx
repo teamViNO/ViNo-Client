@@ -7,30 +7,36 @@ import CloseSvg from '@/assets/icons/close.svg?react';
 import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryModal.style';
 import { ICommonModalProps } from 'types/modal';
 
-interface IFolderProps {
-  id: number;
+interface ISubFolderProps {
+  categoryID: number;
   name: string;
+  topCategoryID: number;
+}
+
+interface IFolderProps {
+  categoryID: number;
+  name: string;
+  topCategoryID: null;
+  subFolders: ISubFolderProps[];
 }
 
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
   setFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
-  subFolders: IFolderProps[];
-  setSubFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
   isSubAdded: boolean;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
+  topId: number;
 }
 
 const SuccessAddCategoryModal = ({
   folders,
   setFolders,
-  subFolders,
-  setSubFolders,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
   isSubAdded,
   setIsSubAdded,
+  topId,
 }: ISuccessAddCategory) => {
   const onCloseModal = () => {
     setIsSuccessAddCategoryModalOpen(false);
@@ -41,15 +47,24 @@ const SuccessAddCategoryModal = ({
     useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleGoToCategory = () => {
-    isSubAdded
-      ? setSubFolders([
-          ...subFolders,
-          { id: subFolders.length + 1, name: categoryName },
-        ])
-      : setFolders([
-          ...folders,
-          { id: folders.length + 1, name: categoryName },
-        ]);
+    if (isSubAdded) {
+      const index = folders.findIndex((folder) => folder.categoryID === topId);
+      folders[index].subFolders.push({
+        name: categoryName,
+        categoryID: folders[index].categoryID,
+        topCategoryID: topId,
+      });
+    } else {
+      setFolders([
+        ...folders,
+        {
+          categoryID: folders.length + 1,
+          name: categoryName,
+          topCategoryID: null,
+          subFolders: [],
+        },
+      ]);
+    }
     setIsSubAdded(false);
     onCloseModal();
   };
@@ -70,9 +85,7 @@ const SuccessAddCategoryModal = ({
       </SuccessAddCategoryStyles.Title>
       <SuccessAddCategoryStyles.GoToCategoryButton
         to={
-          isSubAdded
-            ? `/category/${folders.length}/${subFolders.length + 1}`
-            : `/category/${folders.length + 1}`
+          isSubAdded ? `/category/${topId}` : `/category/${folders.length + 1}`
         }
         onClick={handleGoToCategory}
       >

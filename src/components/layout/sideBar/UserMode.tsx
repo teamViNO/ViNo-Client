@@ -6,12 +6,20 @@ import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
 import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopCategory from './TopCategory';
 
-interface IFolderProps {
-  id: number;
+interface ISubFolderProps {
+  categoryID: number;
   name: string;
+  topCategoryID: number;
+}
+
+interface IFolderProps {
+  categoryID: number;
+  name: string;
+  topCategoryID: null;
+  subFolders: ISubFolderProps[];
 }
 
 const UserMode = () => {
@@ -21,19 +29,29 @@ const UserMode = () => {
   const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [folders, setFolders] = useState<IFolderProps[]>([
-    { id: 1, name: '기획' },
-    { id: 2, name: '디자인' },
-    { id: 3, name: '개발' },
-    { id: 4, name: '팁' },
-    { id: 5, name: '방법론' },
+    { categoryID: 1, name: '기획', topCategoryID: null, subFolders: [] },
+    { categoryID: 2, name: '디자인', topCategoryID: null, subFolders: [] },
+    { categoryID: 3, name: '개발', topCategoryID: null, subFolders: [] },
+    { categoryID: 4, name: '팁', topCategoryID: null, subFolders: [] },
+    { categoryID: 5, name: '방법론', topCategoryID: null, subFolders: [] },
   ]);
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
-  const [subFolders, setSubFolders] = useState<IFolderProps[]>([
-    { id: 1, name: '마케팅' },
-    { id: 2, name: '트렌드' },
-    { id: 3, name: '기업' },
-    { id: 4, name: '용어' },
-  ]);
+  const subFolders: ISubFolderProps[] = [
+    { categoryID: 6, name: '마케팅', topCategoryID: 1 },
+    { categoryID: 7, name: '트렌드', topCategoryID: 2 },
+    { categoryID: 8, name: '기업', topCategoryID: 3 },
+    { categoryID: 9, name: '용어', topCategoryID: 3 },
+  ];
+
+  useEffect(() => {
+    folders.forEach((folder: IFolderProps) => {
+      subFolders.forEach((subFolder: ISubFolderProps) => {
+        if (subFolder.topCategoryID === folder.categoryID) {
+          folder.subFolders.push(subFolder);
+        }
+      });
+    });
+  }, []);
 
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
@@ -54,13 +72,13 @@ const UserMode = () => {
             </UserModeStyle.CommonTitle>
           </UserModeStyle.ImageTextWrap>
         </UserModeStyle.RecentVideoButton>
-        {folders.map((folder: { id: number; name: string }) => (
+        {folders.map((folder: IFolderProps) => (
           <TopCategory
             topId={topId}
             subId={subId}
-            id={folder.id}
+            categoryID={folder.categoryID}
             name={folder.name}
-            subFolders={subFolders}
+            subFolders={folder.subFolders}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             key={folder.name}
           />
@@ -83,13 +101,12 @@ const UserMode = () => {
           <SuccessAddCategoryModal
             folders={folders}
             setFolders={setFolders}
-            subFolders={subFolders}
-            setSubFolders={setSubFolders}
             categoryName={categoryName}
             setCategoryName={setCategoryName}
             setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
             isSubAdded={isSubAdded}
             setIsSubAdded={setIsSubAdded}
+            topId={topId}
           />
         </BlurBackground>
       )}
