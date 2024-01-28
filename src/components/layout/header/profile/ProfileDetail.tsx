@@ -1,4 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+
+import { userTokenState } from '@/stores/user';
 
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
 
@@ -8,13 +11,17 @@ type Props = {
 
 const ProfileDetail = ({ onClose }: Props) => {
   const navigate = useNavigate();
+  const setUserToken = useSetRecoilState(userTokenState);
 
   const handleClickProfileButton = () => {
     navigate('/profile');
     onClose();
   };
 
-  const handleClickLogoutButton = () => {};
+  const handleClickLogoutButton = () => {
+    setUserToken(null);
+    onClose();
+  };
 
   return (
     <ProfileDetailStyle.Layout>
