@@ -11,7 +11,7 @@ export const OptionsWrap = styled.div`
   background-color: ${theme.color.white};
   position: absolute;
   margin-left: 36px;
-  z-index: 1;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   border-radius: 12px;

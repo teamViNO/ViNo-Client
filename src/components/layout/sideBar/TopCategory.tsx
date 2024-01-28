@@ -10,16 +10,16 @@ import Option from './Option';
 interface ITopCategoryProps {
   topId: number;
   subId: number;
-  id: number;
+  categoryID: number;
   name: string;
-  subFolders: { id: number; name: string }[];
+  subFolders: { categoryID: number; name: string }[];
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TopCategory = ({
   topId,
   subId,
-  id,
+  categoryID,
   name,
   subFolders,
   setIsSubCategoryModalOpen,
@@ -40,10 +40,10 @@ const TopCategory = ({
   };
   return (
     <>
-      <TopCategoryStyles.Container selected={topId === id && !subId}>
-        <TopCategoryStyles.FolderButton to={`/category/${id}`}>
+      <TopCategoryStyles.Container selected={topId === categoryID && !subId}>
+        <TopCategoryStyles.FolderButton to={`/category/${categoryID}`}>
           <TopCategoryStyles.ImageTextWrap>
-            {topId === id ? (
+            {topId === categoryID ? (
               <OpenFileSvg width={28} height={28} />
             ) : (
               <ClosedFileSvg width={28} height={28} />
@@ -53,7 +53,7 @@ const TopCategory = ({
             </TopCategoryStyles.CommonTitle>
           </TopCategoryStyles.ImageTextWrap>
         </TopCategoryStyles.FolderButton>
-        {topId === id && !subId && (
+        {topId === categoryID && !subId && (
           <TopCategoryStyles.ShowOptionButton
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
@@ -63,7 +63,7 @@ const TopCategory = ({
             <MoreOptionsSvg />
           </TopCategoryStyles.ShowOptionButton>
         )}
-        {folderOptionModalOpen && topId === id && (
+        {folderOptionModalOpen && topId === categoryID && (
           <Option
             options={options}
             handleOptionClick={handleOptionClick}
@@ -71,13 +71,13 @@ const TopCategory = ({
           />
         )}
       </TopCategoryStyles.Container>
-      {topId === id && (
+      {topId === categoryID && (
         <TopCategoryStyles.SubFolderContainer>
           {subFolders.map((subFolder) => (
             <SubCategory
               topId={topId}
               subId={subId}
-              id={subFolder.id}
+              categoryID={subFolder.categoryID}
               name={subFolder.name}
               handleOptionClick={handleOptionClick}
               key={subFolder.name}

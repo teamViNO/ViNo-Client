@@ -7,7 +7,7 @@ import Option from './Option';
 interface ISubCategoryProps {
   topId: number;
   subId: number;
-  id: number;
+  categoryID: number;
   name: string;
   handleOptionClick: (e: React.MouseEvent, option: string) => void;
 }
@@ -15,7 +15,7 @@ interface ISubCategoryProps {
 const SubCategory = ({
   topId,
   subId,
-  id,
+  categoryID,
   name,
   handleOptionClick,
 }: ISubCategoryProps) => {
@@ -30,11 +30,11 @@ const SubCategory = ({
   return (
     <SubCategoryStyles.Container>
       <SubCategoryStyles.SubFolder
-        selected={subId === id}
-        to={`/category/${topId}/${id}`}
+        selected={subId === categoryID}
+        to={`/category/${topId}/${categoryID}`}
       >
         {name}
-        {subId === id && (
+        {subId === categoryID && (
           <SubCategoryStyles.ShowOptionButton
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
@@ -46,7 +46,7 @@ const SubCategory = ({
           </SubCategoryStyles.ShowOptionButton>
         )}
       </SubCategoryStyles.SubFolder>
-      {subFolderOptionModalOpen && subId === id && (
+      {subFolderOptionModalOpen && subId === categoryID && (
         <Option
           options={options}
           handleOptionClick={handleOptionClick}
