@@ -1,6 +1,6 @@
-import { useState } from 'react';
-
 import PlusIcon from '@/assets/icons/plus.svg?react';
+
+import useIndex from '@/hooks/useIndex';
 
 import NoteItem from './NoteItem';
 
@@ -20,32 +20,45 @@ const NoteBox = () => {
     },
   ];
 
-  const [updateId, setUpdateId] = useState(-1);
+  const [editableIndex, setEditableIndex, setDisableIndex] = useIndex();
+
+  const handleActiveEditable = (index: number) => {
+    if (index > noteList.length - 1) {
+      setEditableIndex(-1);
+    } else {
+      setEditableIndex(index);
+    }
+  };
 
   return (
     <div style={{ position: 'relative', marginTop: 40 }}>
       <div className="note-box">
-        {noteList.map((note) => (
+        {noteList.map((note, index) => (
           <NoteItem
             key={note.id}
             note={note}
-            updateId={updateId}
-            onChangeUpdateId={setUpdateId}
+            isEditable={editableIndex === index}
+            onDisableEditable={setDisableIndex}
+            onActiveEditable={() => handleActiveEditable(index)}
+            onActiveNextEditable={() => handleActiveEditable(index + 1)}
           />
         ))}
 
         {/* 추가 */}
-        {updateId === 0 && (
+        {editableIndex === -1 && (
           <NoteItem
             note={{ id: 0, text: '' }}
-            updateId={updateId}
-            onChangeUpdateId={setUpdateId}
+            isEditable={editableIndex === -1}
+            onDisableEditable={setDisableIndex}
           />
         )}
 
         {/* 추가 버튼 */}
-        {updateId === -1 && (
-          <button className="create-button" onClick={() => setUpdateId(0)}>
+        {editableIndex === null && (
+          <button
+            className="create-button"
+            onClick={() => setEditableIndex(-1)}
+          >
             <PlusIcon width={28} height={28} />
           </button>
         )}

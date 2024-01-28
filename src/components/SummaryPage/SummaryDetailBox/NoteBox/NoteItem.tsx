@@ -10,28 +10,31 @@ interface Item {
 
 type Props = {
   note: Item;
-  updateId: number;
-  onChangeUpdateId: (updateId: number) => void;
+  isEditable: boolean;
+  onDisableEditable: () => void;
+  onActiveEditable?: () => void;
+  onActiveNextEditable?: () => void;
 };
 
-const NoteItem = ({ note, updateId, onChangeUpdateId }: Props) => {
+const NoteItem = ({
+  note,
+  isEditable,
+  onDisableEditable,
+  onActiveEditable,
+  onActiveNextEditable,
+}: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [noteText, setNoteText] = useState(note.text);
-  const isEditable = note.id === updateId;
-
-  const handleDoubleClick = () => {
-    if (updateId > -1) return;
-
-    onChangeUpdateId(note.id);
-  };
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (
     e,
   ) => {
     if (e.key === 'Escape') {
-      onChangeUpdateId(-1);
+      onDisableEditable();
     } else if (e.key === 'Enter') {
       e.preventDefault();
+
+      onActiveNextEditable && onActiveNextEditable();
     }
   };
 
@@ -50,7 +53,7 @@ const NoteItem = ({ note, updateId, onChangeUpdateId }: Props) => {
   return (
     <div
       className={`note-item ${isEditable && 'editable'}`}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={onActiveEditable}
     >
       <span className="note-icon">✏️</span>
 
@@ -66,7 +69,7 @@ const NoteItem = ({ note, updateId, onChangeUpdateId }: Props) => {
             />
           </div>
 
-          <button className="close-button" onClick={() => onChangeUpdateId(-1)}>
+          <button className="close-button" onClick={onDisableEditable}>
             <CloseIcon width={16} height={16} />
           </button>
         </div>
