@@ -1,39 +1,38 @@
-import * as HeaderStyle from '@/styles/layout/header';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import ProfileDetail from './ProfileDetail';
+
 import useOutsideClick from '@/hooks/useOutsideClick';
+
+import * as HeaderStyle from '@/styles/layout/header';
 import { BlurBackground } from '@/styles/modals/common.style';
 
-interface IProfileProps {
-  modalOpen: boolean;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import ProfileDetail from './ProfileDetail';
 
-const Profile = ({ modalOpen, setModalOpen }: IProfileProps) => {
-  const [header, setHeader] = useState<Element | null>(null);
-  const [profileRef] = useOutsideClick<HTMLDivElement>(() =>
-    setModalOpen(false),
-  );
-
-  useEffect(() => {
-    setHeader(document.querySelector('#header'));
-  }, []);
-
-  const toggleModalState = () => setModalOpen(!modalOpen);
+const Profile = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [profileRef] = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
 
   return (
     <>
-      {modalOpen && createPortal(<BlurBackground />, header!)}
       <div ref={profileRef}>
-        <HeaderStyle.Button onClick={toggleModalState}>
+        <HeaderStyle.Button onClick={() => setIsOpen(!isOpen)}>
           <img
             id="profile"
             src="/src/assets/default-profile-circle.png"
             alt="원형 프로필 이미지"
           />
         </HeaderStyle.Button>
-        {modalOpen && <ProfileDetail />}
+
+        {isOpen && (
+          <>
+            {createPortal(
+              <BlurBackground />,
+              document.getElementById('header')!,
+            )}
+
+            <ProfileDetail onClose={() => setIsOpen(false)} />
+          </>
+        )}
       </div>
     </>
   );

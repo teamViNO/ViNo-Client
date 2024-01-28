@@ -1,6 +1,21 @@
+import { useNavigate } from 'react-router-dom';
+
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
 
-const ProfileDetail = () => {
+type Props = {
+  onClose: () => void;
+};
+
+const ProfileDetail = ({ onClose }: Props) => {
+  const navigate = useNavigate();
+
+  const handleClickProfileButton = () => {
+    navigate('/profile');
+    onClose();
+  };
+
+  const handleClickLogoutButton = () => {};
+
   return (
     <ProfileDetailStyle.Layout>
       <ProfileDetailStyle.Container>
@@ -18,15 +33,19 @@ const ProfileDetail = () => {
             </ProfileDetailStyle.InformationEmail>
           </ProfileDetailStyle.InformationWrap>
         </ProfileDetailStyle.InformationContainer>
+
         <ProfileDetailStyle.ButtonWrap>
-          <ProfileDetailStyle.Button>
-            <img src="/src/assets/information.png" alt="내 정보 이미지" />
+          <ProfileDetailStyle.Button onClick={handleClickProfileButton}>
+            <img src="/src/assets/information.png" alt="icon" />
+
             <ProfileDetailStyle.ButtonName>
               내 정보
             </ProfileDetailStyle.ButtonName>
           </ProfileDetailStyle.Button>
-          <ProfileDetailStyle.Button>
-            <img src="/src/assets/key.png" alt="내 정보 이미지" />
+
+          <ProfileDetailStyle.Button onClick={handleClickLogoutButton}>
+            <img src="/src/assets/key.png" alt="icon" />
+
             <ProfileDetailStyle.ButtonName>
               로그아웃
             </ProfileDetailStyle.ButtonName>
