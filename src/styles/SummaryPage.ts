@@ -342,7 +342,6 @@ export const SearchKeywordBox = styled.div`
   height: 38px;
   border-radius: 100px;
   background-color: ${(props) => props.theme.color.gray100};
-  z-index: 1;
   overflow: hidden;
   transition: 0.5s;
 

@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import theme from '../../../theme';
 
 export const Layout = styled.div`
   display: flex;
@@ -34,12 +34,12 @@ export const InformationWrap = styled.div`
 `;
 
 export const InformationNickname = styled.span`
-  ${theme.typography.Body1};
+  ${(props) => props.theme.typography.Body1};
 `;
 
 export const InformationEmail = styled.span`
-  color: ${theme.color.gray300};
-  ${theme.typography.Caption1};
+  color: ${(props) => props.theme.color.gray300};
+  ${(props) => props.theme.typography.Caption1};
 `;
 
 export const ButtonWrap = styled.div`
@@ -52,16 +52,18 @@ export const Button = styled.button`
   justify-content: flex-start;
   align-items: center;
   padding: 12px 26px;
-  border: 0;
-  background-color: ${theme.color.white};
+  border: none;
+  background-color: ${(props) => props.theme.color.white};
   cursor: pointer;
+  transition: 0.1s;
+
   &:hover {
-    background-color: ${theme.color.gray100};
+    background-color: ${(props) => props.theme.color.gray100};
   }
 `;
 
 export const ButtonName = styled.span`
-  color: ${theme.color.gray400};
+  color: ${(props) => props.theme.color.gray400};
   margin-left: 16px;
-  ${theme.typography.Body3};
+  ${(props) => props.theme.typography.Body3};
 `;

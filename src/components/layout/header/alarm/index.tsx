@@ -1,22 +1,37 @@
-import AlarmList from './AlarmList';
-import IconWithButton from '../IconWithButton';
+import { useState } from 'react';
+
+import NotifyOffIcon from '@/assets/icons/notify-off.svg?react';
+import NotifyOnIcon from '@/assets/icons/notify-on.svg?react';
+
 import useOutsideClick from '@/hooks/useOutsideClick';
 
-interface IAlarmProps {
-  alarmOpen: boolean;
-  setAlarmOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import * as HeaderStyle from '@/styles/layout/header';
 
-const Alarm = ({ alarmOpen, setAlarmOpen }: IAlarmProps) => {
-  const toggleOpenState = () => setAlarmOpen(!alarmOpen);
-  const [alarmRef] = useOutsideClick<HTMLDivElement>(() => setAlarmOpen(false));
+import AlarmList from './AlarmList';
+
+type Props = {
+  isDark: boolean;
+};
+
+const Alarm = ({ isDark }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [alarmRef] = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
+  const hasAlarm = true;
 
   return (
     <div ref={alarmRef}>
-      <section>
-        <IconWithButton name="NotifyOff" onClick={toggleOpenState} />
-      </section>
-      {alarmOpen && <AlarmList />}
+      <HeaderStyle.Button
+        color={isDark ? 'gray400' : 'gray500'}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {hasAlarm ? (
+          <NotifyOnIcon width={28} height={28} />
+        ) : (
+          <NotifyOffIcon width={28} height={28} />
+        )}
+      </HeaderStyle.Button>
+
+      {isOpen && <AlarmList />}
     </div>
   );
 };
