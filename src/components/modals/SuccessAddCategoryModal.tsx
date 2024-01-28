@@ -1,6 +1,6 @@
 import useOutsideClick from '@/hooks/useOutsideClick';
 import {
-  CommonAddCategoryContainer,
+  CommonCategoryContainer,
   CommonCloseButton,
 } from '@/styles/modals/common.style';
 import CloseSvg from '@/assets/icons/close.svg?react';
@@ -69,7 +69,7 @@ const SuccessAddCategoryModal = ({
     onCloseModal();
   };
   return (
-    <CommonAddCategoryContainer ref={successAddCategoryModalRef}>
+    <CommonCategoryContainer ref={successAddCategoryModalRef}>
       <CommonCloseButton onClick={onCloseModal}>
         <CloseSvg width={21.42} height={21.42} />
       </CommonCloseButton>
@@ -91,7 +91,7 @@ const SuccessAddCategoryModal = ({
       >
         보러가기
       </SuccessAddCategoryStyles.GoToCategoryButton>
-    </CommonAddCategoryContainer>
+    </CommonCategoryContainer>
   );
 };
 
