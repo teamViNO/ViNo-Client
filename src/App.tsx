@@ -39,7 +39,11 @@ const App = () => {
 
             <Route element={<Layout />}>
               <Route path="/category/recent" element={<CategoryPage />} />
-              <Route path="/category/:id" element={<CategoryPage />} />
+              <Route path="/category/:top_folder" element={<CategoryPage />} />
+              <Route
+                path="/category/:top_folder/:sub_folder"
+                element={<CategoryPage />}
+              />
               <Route path="/profile" element={<ProfilePage />} />
 
               <Route path="/summary" element={<SummaryPage />} />
