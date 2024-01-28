@@ -9,16 +9,15 @@ import SearchIcon from '@/assets/icons/search-light.svg?react';
 import * as HeaderStyle from '@/styles/layout/header';
 
 import { isSideBarOpenState } from '@/stores/ui';
-import { userState } from '@/stores/user';
+import { userTokenState } from '@/stores/user';
 
 import Alarm from './alarm';
 import Profile from './profile';
-import LoginButton from './LoginButton';
 
 const Header = () => {
   const { pathname } = useLocation();
+  const userToken = useRecoilValue(userTokenState);
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(isSideBarOpenState);
-  const isUser = useRecoilValue(userState);
   const [isDarkSection, setIsDarkSection] = useState(false);
 
   const isDark = ['/'].includes(pathname) && isDarkSection;
@@ -73,7 +72,7 @@ const Header = () => {
       </HeaderStyle.Area>
 
       <HeaderStyle.Area>
-        {isUser ? (
+        {userToken ? (
           <>
             <HeaderStyle.IconLink
               to="/search"
@@ -87,7 +86,13 @@ const Header = () => {
             <Profile />
           </>
         ) : (
-          <LoginButton />
+          <HeaderStyle.LoginButton
+            to="/sign-in"
+            background={isDark ? 'green400' : 'gray500'}
+            text={isDark ? 'gray500' : 'white'}
+          >
+            로그인/회원가입
+          </HeaderStyle.LoginButton>
         )}
       </HeaderStyle.Area>
     </HeaderStyle.Container>

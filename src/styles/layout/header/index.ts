@@ -46,3 +46,17 @@ export const IconLink = styled(Link)<{ color: ColorKeyType }>`
     fill: ${(props) => props.color && props.theme.color[props.color]};
   }
 `;
+
+export const LoginButton = styled(Link)<{
+  background: ColorKeyType;
+  text: ColorKeyType;
+}>`
+  border: none;
+  background-color: ${(props) => props.theme.color[props.background]};
+  padding: 7px 24px;
+  border-radius: 100px;
+  text-decoration: none;
+  color: ${(props) => props.theme.color[props.text]};
+  margin: 2px 0px;
+  ${(props) => props.theme.typography.Body3};
+`;
