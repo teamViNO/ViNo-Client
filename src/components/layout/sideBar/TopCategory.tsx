@@ -15,6 +15,7 @@ interface ITopCategoryProps {
   name: string;
   subFolders: { categoryID: number; name: string }[];
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TopCategory = ({
@@ -24,6 +25,7 @@ const TopCategory = ({
   name,
   subFolders,
   setIsSubCategoryModalOpen,
+  setIsDeleteModalOpen,
 }: ITopCategoryProps) => {
   const [folderOptionModalOpen, setFolderOptionModalOpen] = useState(false);
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -46,7 +48,9 @@ const TopCategory = ({
       setIsSubCategoryModalOpen(true);
     } else if (option === '수정') {
       setIsEditing(true);
+    } else if (option === '삭제') {
       setFolderOptionModalOpen(false);
+      setIsDeleteModalOpen(true);
     }
   };
 
@@ -109,6 +113,7 @@ const TopCategory = ({
               subId={subId}
               categoryID={subFolder.categoryID}
               name={subFolder.name}
+              setIsDeleteModalOpen={setIsDeleteModalOpen}
               key={subFolder.name}
             />
           ))}

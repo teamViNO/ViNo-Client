@@ -6,7 +6,7 @@ import CloseSvg from '@/assets/icons/close.svg?react';
 import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.style';
 import { useState } from 'react';
 import {
-  CommonAddCategoryContainer,
+  CommonCategoryContainer,
   CommonCloseButton,
 } from '@/styles/modals/common.style';
 import { ICommonModalProps } from 'types/modal';
@@ -54,7 +54,7 @@ const AddTopCategoryModal = ({
     setIsSuccessAddCategoryModalOpen(true);
   };
   return (
-    <CommonAddCategoryContainer ref={topCategoryModalRef}>
+    <CommonCategoryContainer ref={topCategoryModalRef}>
       <CommonCloseButton onClick={onCloseModal}>
         <CloseSvg width={21.42} height={21.42} />
       </CommonCloseButton>
@@ -96,7 +96,7 @@ const AddTopCategoryModal = ({
       >
         추가하기
       </AddTopCategoryModalStyles.AddButton>
-    </CommonAddCategoryContainer>
+    </CommonCategoryContainer>
   );
 };
 

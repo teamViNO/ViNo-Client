@@ -14,7 +14,7 @@ export const BlurBackground = styled.div`
   justify-content: center;
 `;
 
-export const CommonAddCategoryContainer = styled.div`
+export const CommonCategoryContainer = styled.div`
   padding: 40px 61px;
   background-color: ${theme.color.white};
   border-radius: 20px;
