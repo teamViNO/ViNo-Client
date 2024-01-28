@@ -97,7 +97,6 @@ export const DetailBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 40px;
     padding: 20px;
     width: 100%;
     border-radius: 16px;
@@ -106,8 +105,16 @@ export const DetailBox = styled.div`
 
   & div.note-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
+    cursor: text;
+    transition: 0.2s;
+
+    &.editable {
+      padding: 12px;
+      border-radius: 8px;
+      background-color: ${(props) => props.theme.color.gray200};
+    }
   }
 
   & span.note-icon {
@@ -119,6 +126,54 @@ export const DetailBox = styled.div`
     font-weight: 600;
     line-height: 1.6;
     color: ${(props) => props.theme.color.gray400};
+  }
+
+  & textarea.note-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: ${(props) => props.theme.color.gray400};
+    resize: none;
+    ${(props) => props.theme.typography.Body1};
+  }
+
+  & button.create-button {
+    align-self: flex-end;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background-color: ${(props) => props.theme.color.gray200};
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & button.close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background-color: ${(props) => props.theme.color.gray100};
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray300};
+    }
+  }
+
+  & div.note-box-tooltip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(calc(100% + 24px));
   }
 `;
 
