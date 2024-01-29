@@ -11,9 +11,12 @@ const CategoryPage = () => {
   const params = useParams();
   const [title, setTitle] = useState('');
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
+
+  const [userSelectMode, setUserSelectMode] = useState(false); // checkbox 클릭 시 변경
   const menus = ['마케팅', '트렌드', '기업', '용어'];
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
+
 
   useEffect(() => {
     if (!params.id) {
@@ -24,16 +27,19 @@ const CategoryPage = () => {
       setTitle(params.id);
     }
   }, [params.id]);
-
+ 
   return (
     <CategoryPageStyles.Container>
       <CategoryTitle title={title} totalVideos={categoryItems.length} />
       <CategoryPageStyles.MenuWrap>
+
+        {userSelectMode ? 
         <div>
           {menus.map((menu) => (
             <CategoryPageStyles.Menu key={menu}>{menu}</CategoryPageStyles.Menu>
           ))}
-        </div>
+        </div> : ''}
+            
         <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
           <CategoryPageStyles.Mode>
             {recentRegisterMode ? '최근등록순' : '최근영상순'}
@@ -45,7 +51,8 @@ const CategoryPage = () => {
           )}
         </CategoryPageStyles.ModeWrap>
       </CategoryPageStyles.MenuWrap>
-      <Card />
+
+      <Card userSelectMode={userSelectMode} setUserSelectMode={setUserSelectMode}/>
     </CategoryPageStyles.Container>
   );
 };
