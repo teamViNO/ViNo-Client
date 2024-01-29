@@ -1,34 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import VideoTag from '../common/videoTag';
-import { categoryItems } from './dummy';
 import * as CardStyles from '@/styles/category/Card.style';
 
-interface cardInputProps {
-  userSelectMode : boolean;
-  setUserSelectMode : (value: boolean) => void;
+interface cardDummy {
+  imageURL: string;
+  title: string;
+  summary: string;
+  tags: string[];
 }
 
-const Card : React.FC<cardInputProps> = ({userSelectMode, setUserSelectMode}) => {
-  const [isShadow,setIsShadow] = useState<boolean[]>(new Array(10).fill(false));
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(10).fill(false));
+interface CardInputProps {
+  categoryItems : Array<cardDummy>;
+  checkedItems : boolean[];
+  setCheckedItems : (value : boolean[]) => void;
+}
 
+const Card : React.FC<CardInputProps> = ({ categoryItems, checkedItems, setCheckedItems}) => {
+  const [isShadow,setIsShadow] = useState<boolean[]>(new Array(10).fill(false));
+  
   useEffect(() => {
-    if(checkedItems.includes(true)){
+    if(checkedItems.includes(true)){ // 1개 이상 클릭 시 모든 hover event 활성화 
       setIsShadow(isShadow.map(() => true))
-      setUserSelectMode(!userSelectMode)
-    } else if(!isShadow.includes(false)){
+    } else if(!isShadow.includes(false)){ 
+      //모든 hover 활성화, 모든 체크 비활성화 시 모든 hover 활성화 제거
       setIsShadow(isShadow.map(() => false))
-      setUserSelectMode(!userSelectMode)
     }
   }, [checkedItems])
 
   const handleMouseEnter = (id : number) => {
-      let prev = [...isShadow];
+      let prev = checkedItems.includes(true) ? [...isShadow] : new Array(isShadow.length).fill(false);
+      // 체크박스 미선택 이동 시 isshadow 중복 작동으로 인해 방식 변경
       prev[id] = true;
       setIsShadow(prev);
   }
+
   const handleMouseLeave = (id : number) => {
-      if(!checkedItems.includes(true)){
+      if(!checkedItems.includes(true)){ // 선택되면 유지
         let prev = [...isShadow];
         prev[id] = false;
         setIsShadow(prev);
