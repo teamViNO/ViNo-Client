@@ -30,6 +30,7 @@ const UserMode = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
+  const [myFolders, setMyFolders] = useState<IFolderProps[]>([]);
   const [folders, setFolders] = useState<IFolderProps[]>([
     { categoryID: 1, name: '기획', topCategoryID: null, subFolders: [] },
     { categoryID: 2, name: '디자인', topCategoryID: null, subFolders: [] },
@@ -54,6 +55,7 @@ const UserMode = () => {
         }
       });
     });
+    setMyFolders(folders);
   }, []);
 
   const location = useLocation();
@@ -90,7 +92,7 @@ const UserMode = () => {
             </UserModeStyle.CommonTitle>
           </UserModeStyle.ImageTextWrap>
         </UserModeStyle.RecentVideoButton>
-        {folders.map((folder: IFolderProps) => (
+        {myFolders.map((folder: IFolderProps) => (
           <TopCategory
             topId={topId}
             subId={subId}
@@ -126,7 +128,7 @@ const UserMode = () => {
       {isSuccessAddCategoryModalOpen && (
         <BlurBackground>
           <SuccessAddCategoryModal
-            folders={folders}
+            folders={myFolders}
             setFolders={setFolders}
             categoryName={categoryName}
             setCategoryName={setCategoryName}
