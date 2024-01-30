@@ -270,6 +270,8 @@ const SignUp: React.FC<SignUpProps> = () => {
                   onChange={onChangeDate}
                   readOnly
                 ></BirthInputBox>
+                <CalendarContainer><Calendar/></CalendarContainer>
+                
                 <img src={calendar} alt="달력 이미지" />
               </BirthInputSection>
             </Label>
@@ -373,6 +375,72 @@ const SignUp: React.FC<SignUpProps> = () => {
 };
 
 export default SignUp;
+
+const CalendarContainer =  styled.div`
+  position : absolute;
+  border : 1px solid black;
+  width : 494px;
+  .react-datepicker {
+    /* !importan는 CSS의 우선순위를 높여주는 키워드입니다 */
+    border: 1px solid white !important;
+    box-shadow: 2.5px 2.5px 2.5px 2.5px #0000001a;
+    .react-datepicker__month-container {
+        .react-datepicker__header {
+            background-color: white;
+            border: none;
+        }
+        .react-datepicker__day-name {
+            margin: 0px 7px 0px 7px;
+        }
+        .react-datepicker__month {
+            .react-datepicker__day {
+                margin: 5px 7px 5px 7px;
+                &:hover {
+                    border-radius: 18px;
+                    background-color: #fff2b4;
+                }
+            }
+            .react-datepicker__day--today,
+            .react-datepicker__day--keyboard-selected {
+                border-radius: 18px;
+                background-color: #fff2b4;
+                font-weight: 400;
+            }
+            .react-datepicker__day--selected,
+            .react-datepicker__day--in-range,
+            .react-datepicker__day--in-selecting-range {
+                border-radius: 18px;
+                background-color: #ffe457;
+                color: black;
+            }
+        }
+    }
+}
+
+.react-datepicker__aria-live,
+.react-datepicker__time-list-item--disabled,
+.react-datepicker-time__header {
+    display: none;
+}
+
+.react-datepicker__time-container {
+    overflow-y: scroll;
+    height: 100px;
+    cursor: pointer;
+}
+.react-datepicker__input-container > input,
+.react-datepicker__time-container {
+    width: 80px;
+    background-color: #f9f9f9;
+    outline: none;
+    text-align: center;
+    overflow-x: hidden;
+}
+.react-datepicker__time-list-item--selected {
+    background-color: #fff2b4 !important;
+    color: black !important;
+}
+`
 
 const Wrapper = styled.div`
   display: flex;

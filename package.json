@@ -13,8 +13,9 @@
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.9",
     "axios": "^1.6.4",
+    "date-fns": "^3.3.1",
     "react": "^18.2.0",
-    "react-calendar": "^4.8.0",
+    "react-datepicker": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.2",
     "recoil": "^0.7.7",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.48",
+    "@types/react-datepicker": "^4.19.5",
     "@types/react-dom": "^18.2.18",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.34",
