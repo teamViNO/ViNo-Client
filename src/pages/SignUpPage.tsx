@@ -5,6 +5,7 @@ import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
 import calendar from "../assets/calendar.png";
 import axios from "axios";
+import Calendar from "react-calendar";
 
 interface SignUpProps {}
 
