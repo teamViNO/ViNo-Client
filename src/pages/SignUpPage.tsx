@@ -1,11 +1,15 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, forwardRef } from "react";
 import styled from "styled-components";
 import { Link } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
-import calendar from "../assets/calendar.png";
+import CalendarSvg from '@/assets/icons/calendar.svg?react'
 import axios from "axios";
-import Calendar from "react-calendar";
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ko } from 'date-fns/locale';
+// picker import 
 
 interface SignUpProps {}
 
@@ -30,6 +34,15 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [passwordMessage, setPasswordMessage] = useState<string>("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
   const [errMessage, setErrMessage] = useState('');
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const CustomCalendar = forwardRef(({ onClick } : React.DOMAttributes<HTMLButtonElement> , ref? : React.ForwardedRef<HTMLButtonElement> | undefined) => (
+    <CustomButton className={selectedDate === null ? '' : 'custom-inputSelected'} onClick={onClick} ref={ref}>
+      <CalendarSvg width={36} height={36}/>
+    </CustomButton>
+  ));
+  // react date-picker 필수 state
 
   const handleSexSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e)
@@ -66,6 +79,16 @@ const SignUp: React.FC<SignUpProps> = () => {
     },
     []
   );
+  
+  const onChangeCalendar = useCallback(
+    (date : Date | null) => {
+      if(date !== null){
+        setSelectedDate(date);
+        setYear(date.getFullYear().toString());
+        setMonth((date.getMonth() + 1).toString());
+        setDate(date.getDate().toString())
+    }
+    }, []);
 
   const onChangePhonenumber = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -270,9 +293,19 @@ const SignUp: React.FC<SignUpProps> = () => {
                   onChange={onChangeDate}
                   readOnly
                 ></BirthInputBox>
-                <CalendarContainer><Calendar/></CalendarContainer>
+                <CalendarContainer>
+                <DatePicker
+                    dateFormat='yyyy.MM.dd' // 날짜 형태
+                    shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
+                    minDate={new Date('1900-01-01')} // minDate 이전 날짜 선택 불가
+                    maxDate={new Date()} // maxDate 이후 날짜 선택 불가
+                    selected={selectedDate}
+                    locale={ko}
+                    onChange={(date) => onChangeCalendar(date)}
+                    customInput={<CustomCalendar />}
+                />
+                </CalendarContainer>
                 
-                <img src={calendar} alt="달력 이미지" />
               </BirthInputSection>
             </Label>
             <Label>
@@ -375,71 +408,78 @@ const SignUp: React.FC<SignUpProps> = () => {
 };
 
 export default SignUp;
-
+const CustomButton = styled.button`
+    width : 54px;
+    height : 54px;
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    background : #1E1E1E;
+    border : none;
+    border-radius : 12px;
+`
 const CalendarContainer =  styled.div`
-  position : absolute;
-  border : 1px solid black;
-  width : 494px;
+  .custom-inputSelected {
+    background : #BBBBBB !important;
+  }
   .react-datepicker {
-    /* !importan는 CSS의 우선순위를 높여주는 키워드입니다 */
-    border: 1px solid white !important;
-    box-shadow: 2.5px 2.5px 2.5px 2.5px #0000001a;
-    .react-datepicker__month-container {
-        .react-datepicker__header {
-            background-color: white;
-            border: none;
-        }
-        .react-datepicker__day-name {
-            margin: 0px 7px 0px 7px;
-        }
-        .react-datepicker__month {
-            .react-datepicker__day {
-                margin: 5px 7px 5px 7px;
-                &:hover {
-                    border-radius: 18px;
-                    background-color: #fff2b4;
-                }
-            }
-            .react-datepicker__day--today,
-            .react-datepicker__day--keyboard-selected {
-                border-radius: 18px;
-                background-color: #fff2b4;
-                font-weight: 400;
-            }
-            .react-datepicker__day--selected,
-            .react-datepicker__day--in-range,
-            .react-datepicker__day--in-selecting-range {
-                border-radius: 18px;
-                background-color: #ffe457;
-                color: black;
-            }
-        }
+
+      .react-datepicker__month-container {
+          .react-datepicker__header {
+              background-color: white;
+              border: none;
+          }
+          .react-datepicker__day-name {
+              margin: 0px 7px 0px 7px;
+          }
+          .react-datepicker__month {
+              .react-datepicker__day {
+                  margin: 5px 7px 5px 7px;
+                  &:hover {
+                      border-radius: 18px;
+                      background-color: #FBFFCC
+                  }
+              }
+              .react-datepicker__day--today,
+              .react-datepicker__day--keyboard-selected {
+                  border-radius: 18px;
+                  background-color: #E9FF3F;
+                  font-weight: 400;
+              }
+              .react-datepicker__day--selected,
+              .react-datepicker__day--in-range,
+              .react-datepicker__day--in-selecting-range {
+                  border-radius: 18px;
+                  background-color: #E9FF3F;
+                  color: black;
+              }
+          }
+      }
+  }
+
+    .react-datepicker__aria-live,
+    .react-datepicker__time-list-item--disabled,
+    .react-datepicker-time__header {
+        display: none;
     }
-}
 
-.react-datepicker__aria-live,
-.react-datepicker__time-list-item--disabled,
-.react-datepicker-time__header {
-    display: none;
-}
-
-.react-datepicker__time-container {
-    overflow-y: scroll;
-    height: 100px;
-    cursor: pointer;
-}
-.react-datepicker__input-container > input,
-.react-datepicker__time-container {
-    width: 80px;
-    background-color: #f9f9f9;
-    outline: none;
-    text-align: center;
-    overflow-x: hidden;
-}
-.react-datepicker__time-list-item--selected {
-    background-color: #fff2b4 !important;
-    color: black !important;
-}
+    .react-datepicker__time-container {
+        overflow-y: scroll;
+        height: 100px;
+        cursor: pointer;
+    }
+    .react-datepicker__input-container > input,
+    .react-datepicker__time-container {
+        width: 80px;
+        background-color: #f9f9f9;
+        outline: none;
+        text-align: center;
+        overflow-x: hidden;
+    }
+    .react-datepicker__time-list-item--selected {
+        background-color: #fff2b4 !important;
+        color: black !important;
+    }
 `
 
 const Wrapper = styled.div`
