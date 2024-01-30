@@ -249,6 +249,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   value={year}
                   placeholder="YYYY"
                   onChange={onChangeYear}
+                  readOnly
                 ></BirthInputBox>
                 <BirthInputBox
                   type="text"
@@ -257,6 +258,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   value={month}
                   placeholder="MM"
                   onChange={onChangeMonth}
+                  readOnly
                 ></BirthInputBox>
                 <BirthInputBox
                   type="text"
@@ -265,6 +267,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   value={date}
                   placeholder="DD"
                   onChange={onChangeDate}
+                  readOnly
                 ></BirthInputBox>
                 <img src={calendar} alt="달력 이미지" />
               </BirthInputSection>
@@ -575,6 +578,8 @@ const BirthInputBox = styled.input`
   border: 1.5px solid #e8e8e8;
   color: var(--Main, #1E1E1E);
   background: #fff;
+  outline : none;
+  cursor: default;
   &::placeholder {
     color: #bbb;
 
@@ -584,6 +589,9 @@ const BirthInputBox = styled.input`
     font-style: normal;
     font-weight: 500;
     line-height: 160%; /* 25.6px */
+  }
+  & :hover {
+    
   }
 `;
 
