@@ -16,7 +16,7 @@ interface CardInputProps {
 }
 
 const Card : React.FC<CardInputProps> = ({ categoryItems, checkedItems, setCheckedItems}) => {
-  const [isShadow,setIsShadow] = useState<boolean[]>(new Array(10).fill(false));
+  const [isShadow,setIsShadow] = useState<boolean[]>(new Array(6).fill(false));
   
   useEffect(() => {
     if(checkedItems.includes(true)){ // 1개 이상 클릭 시 모든 hover event 활성화 
