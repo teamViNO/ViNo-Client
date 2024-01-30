@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { getAlarm } from '@/apis/user';
 
 import NotifyOffIcon from '@/assets/icons/notify-off.svg?react';
 import NotifyOnIcon from '@/assets/icons/notify-on.svg?react';
 
 import useOutsideClick from '@/hooks/useOutsideClick';
+
+import { IAlarm } from '@/models/alarm';
 
 import * as HeaderStyle from '@/styles/layout/header';
 
@@ -14,9 +18,20 @@ type Props = {
 };
 
 const Alarm = ({ isDark }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [alarmRef] = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
-  const hasAlarm = true;
+  const [isOpen, setIsOpen] = useState(false);
+  const [alarmList, setAlarmList] = useState<IAlarm[]>([]);
+  const hasNotReadAlarm = alarmList.find((item) => !item.is_confirm);
+
+  const callAPI = async () => {
+    const { alarms } = (await getAlarm()).data.result;
+
+    setAlarmList(alarms);
+  };
+
+  useEffect(() => {
+    callAPI();
+  }, []);
 
   return (
     <div ref={alarmRef}>
@@ -24,14 +39,14 @@ const Alarm = ({ isDark }: Props) => {
         color={isDark ? 'gray400' : 'gray500'}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {hasAlarm ? (
+        {hasNotReadAlarm ? (
           <NotifyOnIcon width={28} height={28} />
         ) : (
           <NotifyOffIcon width={28} height={28} />
         )}
       </HeaderStyle.Button>
 
-      {isOpen && <AlarmList />}
+      {isOpen && <AlarmList alarmList={alarmList} />}
     </div>
   );
 };

@@ -5,5 +5,5 @@ export interface APIBaseResponse {
 }
 
 export interface APIResponse<T> extends APIBaseResponse {
-  data: T;
+  result: T;
 }
