@@ -7,6 +7,7 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
+import { ISubFolderProps } from './UserMode';
 
 interface ITopCategoryProps {
   topId: number;
@@ -14,7 +15,7 @@ interface ITopCategoryProps {
   categoryID: number;
   name: string;
   subFolders: { categoryID: number; name: string }[];
-  grabedCategory: React.MutableRefObject<number | undefined>;
+  grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
   dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -67,7 +68,15 @@ const TopCategory = ({
     <>
       <TopCategoryStyles.Container
         className={`${topId}`}
-        onDragEnter={() => (dropedCategory.current = categoryID)}
+        onDragEnter={() => {
+          if (grabedCategory.current !== undefined) {
+            grabedCategory.current = {
+              ...grabedCategory.current,
+              topCategoryID: categoryID,
+            };
+          }
+          dropedCategory.current = categoryID;
+        }}
         selected={topId === categoryID && !subId}
       >
         {isEditing ? (

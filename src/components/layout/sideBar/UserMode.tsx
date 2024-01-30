@@ -9,14 +9,15 @@ import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal
 import { useEffect, useRef, useState } from 'react';
 import TopCategory from './TopCategory';
 import DeleteCategory from './DeleteCategory';
+import handleCategory from '@/utils/handleCategory';
 
-interface ISubFolderProps {
+export interface ISubFolderProps {
   categoryID: number;
   name: string;
   topCategoryID: number;
 }
 
-interface IFolderProps {
+export interface IFolderProps {
   categoryID: number;
   name: string;
   topCategoryID: null;
@@ -46,8 +47,9 @@ const UserMode = () => {
     { categoryID: 9, name: '용어', topCategoryID: 3 },
     { categoryID: 10, name: '영화', topCategoryID: 3 },
   ];
-  const grabedCategory = useRef<number | undefined>(undefined);
+  const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
+  const { deleteCategory, insertCategory } = handleCategory();
 
   useEffect(() => {
     folders.forEach((folder: IFolderProps) => {
@@ -68,20 +70,30 @@ const UserMode = () => {
 
   const handleDeleteCategory = () => {
     if (!isNaN(subId)) {
-      const index = folders.findIndex((folder) => folder.categoryID === topId);
-      const preSubFolders = [...folders[index].subFolders];
-      const filteredSubFolders = preSubFolders.filter(
-        (preSubFolder) => preSubFolder.categoryID !== subId,
-      );
-      folders[index].subFolders = filteredSubFolders;
+      setMyFolders([...deleteCategory(myFolders, topId, subId)]);
     } else {
-      const newData = folders.filter((folder) => folder.categoryID !== topId);
-      setFolders([...newData]);
+      const newData = myFolders.filter(
+        (myFolder) => myFolder.categoryID !== topId,
+      );
+      setMyFolders([...newData]);
     }
     setIsDeleteModalOpen(false);
   };
 
   const putCategoryFolder = async () => {
+    // 삭제
+    const deleteResponse = deleteCategory(
+      myFolders,
+      topId,
+      grabedCategory.current?.categoryID,
+    );
+    //  삽입
+    const insertResponse = insertCategory(
+      deleteResponse,
+      grabedCategory.current?.topCategoryID,
+      grabedCategory.current!,
+    );
+    setMyFolders([...insertResponse]);
     // try {
     //   const data = await moveAPI(
     //     grabedCategory.current!,
