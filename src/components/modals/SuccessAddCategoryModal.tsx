@@ -22,7 +22,7 @@ interface IFolderProps {
 
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
-  setFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
+  setMyFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
   isSubAdded: boolean;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
   topId: number;
@@ -30,7 +30,7 @@ interface ISuccessAddCategory extends ICommonModalProps {
 
 const SuccessAddCategoryModal = ({
   folders,
-  setFolders,
+  setMyFolders,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
@@ -55,7 +55,7 @@ const SuccessAddCategoryModal = ({
         topCategoryID: topId,
       });
     } else {
-      setFolders([
+      setMyFolders([
         ...folders,
         {
           categoryID: folders.length + 1,

@@ -32,13 +32,13 @@ const UserMode = () => {
   const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [myFolders, setMyFolders] = useState<IFolderProps[]>([]);
-  const [folders, setFolders] = useState<IFolderProps[]>([
+  const folders: IFolderProps[] = [
     { categoryID: 1, name: '기획', topCategoryID: null, subFolders: [] },
     { categoryID: 2, name: '디자인', topCategoryID: null, subFolders: [] },
     { categoryID: 3, name: '개발', topCategoryID: null, subFolders: [] },
     { categoryID: 4, name: '팁', topCategoryID: null, subFolders: [] },
     { categoryID: 5, name: '방법론', topCategoryID: null, subFolders: [] },
-  ]);
+  ];
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const subFolders: ISubFolderProps[] = [
     { categoryID: 6, name: '마케팅', topCategoryID: 1 },
@@ -161,7 +161,7 @@ const UserMode = () => {
         <BlurBackground>
           <SuccessAddCategoryModal
             folders={myFolders}
-            setFolders={setFolders}
+            setMyFolders={setMyFolders}
             categoryName={categoryName}
             setCategoryName={setCategoryName}
             setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
