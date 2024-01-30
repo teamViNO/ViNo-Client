@@ -6,7 +6,7 @@ import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
 import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TopCategory from './TopCategory';
 import DeleteCategory from './DeleteCategory';
 
@@ -46,6 +46,8 @@ const UserMode = () => {
     { categoryID: 9, name: '용어', topCategoryID: 3 },
     { categoryID: 10, name: '영화', topCategoryID: 3 },
   ];
+  const grabedCategory = useRef<number | undefined>(undefined);
+  const dropedCategory = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     folders.forEach((folder: IFolderProps) => {
@@ -78,6 +80,21 @@ const UserMode = () => {
     }
     setIsDeleteModalOpen(false);
   };
+
+  const putCategoryFolder = async () => {
+    // try {
+    //   const data = await moveAPI(
+    //     grabedCategory.current!,
+    //     dropedCategory.current!,
+    //   );
+    //   console.log(data);
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    // 잡은 카테고리, 놓은 카테고리 초기화
+    grabedCategory.current = undefined;
+    dropedCategory.current = undefined;
+  };
   return (
     <>
       <div>
@@ -99,8 +116,11 @@ const UserMode = () => {
             categoryID={folder.categoryID}
             name={folder.name}
             subFolders={folder.subFolders}
+            grabedCategory={grabedCategory}
+            dropedCategory={dropedCategory}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
+            putCategoryFolder={putCategoryFolder}
             key={folder.name}
           />
         ))}

@@ -2,12 +2,11 @@ import ClosedFileSvg from '@/assets/icons/close-file.svg?react';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import MoreOptionsSvg from '@/assets/icons/more-options.svg?react';
 import * as TopCategoryStyles from '@/styles/layout/sideBar/TopCategory.style';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
-import { moveAPI } from '@/apis/category';
 
 interface ITopCategoryProps {
   topId: number;
@@ -15,8 +14,11 @@ interface ITopCategoryProps {
   categoryID: number;
   name: string;
   subFolders: { categoryID: number; name: string }[];
+  grabedCategory: React.MutableRefObject<number | undefined>;
+  dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  putCategoryFolder: () => void;
 }
 
 const TopCategory = ({
@@ -25,8 +27,11 @@ const TopCategory = ({
   categoryID,
   name,
   subFolders,
+  grabedCategory,
+  dropedCategory,
   setIsSubCategoryModalOpen,
   setIsDeleteModalOpen,
+  putCategoryFolder,
 }: ITopCategoryProps) => {
   const [folderOptionModalOpen, setFolderOptionModalOpen] = useState(false);
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -34,8 +39,6 @@ const TopCategory = ({
   );
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
-  const grabedCategory = useRef<number | undefined>(undefined);
-  const dropedCategory = useRef<number | undefined>(undefined);
 
   const options = ['추가', '수정', '삭제', '이동'];
 
@@ -59,21 +62,6 @@ const TopCategory = ({
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
-
-  const putCategoryFolder = async () => {
-    try {
-      const data = await moveAPI(
-        grabedCategory.current!,
-        dropedCategory.current!,
-      );
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
-    // 잡은 카테고리, 놓은 카테고리 초기화
-    grabedCategory.current = undefined;
-    dropedCategory.current = undefined;
-  };
 
   return (
     <>
