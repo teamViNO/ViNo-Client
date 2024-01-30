@@ -6,40 +6,76 @@ import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
 import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopCategory from './TopCategory';
+import DeleteCategory from './DeleteCategory';
+
+interface ISubFolderProps {
+  categoryID: number;
+  name: string;
+  topCategoryID: number;
+}
 
 interface IFolderProps {
-  id: number;
+  categoryID: number;
   name: string;
+  topCategoryID: null;
+  subFolders: ISubFolderProps[];
 }
 
 const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
   const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
     useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [folders, setFolders] = useState<IFolderProps[]>([
-    { id: 1, name: '기획' },
-    { id: 2, name: '디자인' },
-    { id: 3, name: '개발' },
-    { id: 4, name: '팁' },
-    { id: 5, name: '방법론' },
+    { categoryID: 1, name: '기획', topCategoryID: null, subFolders: [] },
+    { categoryID: 2, name: '디자인', topCategoryID: null, subFolders: [] },
+    { categoryID: 3, name: '개발', topCategoryID: null, subFolders: [] },
+    { categoryID: 4, name: '팁', topCategoryID: null, subFolders: [] },
+    { categoryID: 5, name: '방법론', topCategoryID: null, subFolders: [] },
   ]);
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
-  const [subFolders, setSubFolders] = useState<IFolderProps[]>([
-    { id: 1, name: '마케팅' },
-    { id: 2, name: '트렌드' },
-    { id: 3, name: '기업' },
-    { id: 4, name: '용어' },
-  ]);
+  const subFolders: ISubFolderProps[] = [
+    { categoryID: 6, name: '마케팅', topCategoryID: 1 },
+    { categoryID: 7, name: '트렌드', topCategoryID: 2 },
+    { categoryID: 8, name: '기업', topCategoryID: 3 },
+    { categoryID: 9, name: '용어', topCategoryID: 3 },
+    { categoryID: 10, name: '영화', topCategoryID: 3 },
+  ];
+
+  useEffect(() => {
+    folders.forEach((folder: IFolderProps) => {
+      subFolders.forEach((subFolder: ISubFolderProps) => {
+        if (subFolder.topCategoryID === folder.categoryID) {
+          folder.subFolders.push(subFolder);
+        }
+      });
+    });
+  }, []);
 
   const location = useLocation();
   const pathname = location.pathname.replace('/category/', '');
   const href = pathname === 'recent' ? 'recent' : pathname.split('/');
   const topId = Number(href[0]);
   const subId = Number(href[1]);
+
+  const handleDeleteCategory = () => {
+    if (!isNaN(subId)) {
+      const index = folders.findIndex((folder) => folder.categoryID === topId);
+      const preSubFolders = [...folders[index].subFolders];
+      const filteredSubFolders = preSubFolders.filter(
+        (preSubFolder) => preSubFolder.categoryID !== subId,
+      );
+      folders[index].subFolders = filteredSubFolders;
+    } else {
+      const newData = folders.filter((folder) => folder.categoryID !== topId);
+      setFolders([...newData]);
+    }
+    setIsDeleteModalOpen(false);
+  };
   return (
     <>
       <div>
@@ -54,14 +90,15 @@ const UserMode = () => {
             </UserModeStyle.CommonTitle>
           </UserModeStyle.ImageTextWrap>
         </UserModeStyle.RecentVideoButton>
-        {folders.map((folder: { id: number; name: string }) => (
+        {folders.map((folder: IFolderProps) => (
           <TopCategory
             topId={topId}
             subId={subId}
-            id={folder.id}
+            categoryID={folder.categoryID}
             name={folder.name}
-            subFolders={subFolders}
+            subFolders={folder.subFolders}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
             key={folder.name}
           />
         ))}
@@ -78,18 +115,25 @@ const UserMode = () => {
           />
         </BlurBackground>
       )}
+      {isDeleteModalOpen && (
+        <BlurBackground>
+          <DeleteCategory
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+            onDeleteClick={handleDeleteCategory}
+          />
+        </BlurBackground>
+      )}
       {isSuccessAddCategoryModalOpen && (
         <BlurBackground>
           <SuccessAddCategoryModal
             folders={folders}
             setFolders={setFolders}
-            subFolders={subFolders}
-            setSubFolders={setSubFolders}
             categoryName={categoryName}
             setCategoryName={setCategoryName}
             setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
             isSubAdded={isSubAdded}
             setIsSubAdded={setIsSubAdded}
+            topId={topId}
           />
         </BlurBackground>
       )}

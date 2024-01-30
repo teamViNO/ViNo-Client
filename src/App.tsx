@@ -31,13 +31,13 @@ const App = () => {
 
         <BrowserRouter>
           <Routes>
-            <Route path="/search" element={<SearchPage />} />
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/sign-up" element={<SignUpPage />} />
             <Route path="/find-email" element={<FindEmailPage />} />
             <Route path="/find-password" element={<FindPasswordPage />} />
 
             <Route element={<Layout />}>
+              <Route path="/search" element={<SearchPage />} />
               <Route path="/category/recent" element={<CategoryPage />} />
               <Route path="/category/:top_folder" element={<CategoryPage />} />
               <Route

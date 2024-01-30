@@ -1,31 +1,37 @@
+import { AxiosError } from 'axios';
 import React, { useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
+import { loginAPI } from '@/apis/user';
+
+import CloseIcon from '@/assets/icons/close.svg?react';
 import smallLogo from '@/assets/logo-dark.png';
 import lineImg from '@/assets/line_img.png';
 import firstImg from '@/assets/first.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
-import closeImg from '@/assets/icons/close.svg';
 
-interface LoginInfo {
-  email: string;
-  password: string;
-}
+import { APIBaseResponse } from '@/models/config/axios';
+import { LoginRequest } from '@/models/user';
+
+import { userTokenState } from '@/stores/user';
+
+import { BlurBackground } from '@/styles/modals/common.style';
 
 const SignInPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-  const [openErrorModal] = useState(false);
-  const [openSignUpModal] = useState(false);
+  const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
+  const [isOpenSignUpModal, setIsOpenSignUpModal] = useState(false);
+  const setUserToken = useSetRecoilState(userTokenState);
 
-  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+  const [loginInfo, setLoginInfo] = useState<LoginRequest>({
     email: '',
     password: '',
   });
-
-  const { email, password } = loginInfo;
 
   const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
@@ -37,11 +43,7 @@ const SignInPage: React.FC = () => {
       email: emailCurrent,
     });
 
-    if (!emailRegex.test(emailCurrent)) {
-      setIsEmail(false);
-    } else {
-      setIsEmail(true);
-    }
+    setIsEmail(emailRegex.test(emailCurrent));
   };
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,10 +54,25 @@ const SignInPage: React.FC = () => {
       password: passwordCurrent,
     });
 
-    if (passwordCurrent !== '') {
-      setIsPassword(true);
-    } else {
-      setIsPassword(false);
+    setIsPassword(passwordCurrent.length >= 5);
+  };
+
+  const handleClickLoginButton = async () => {
+    try {
+      const { token } = (await loginAPI(loginInfo)).data.data;
+
+      setUserToken(token);
+      navigate('/');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data as APIBaseResponse;
+
+        if (message.indexOf('비밀번호') > -1) {
+          setIsOpenErrorModal(true);
+        } else if (message.indexOf('이메일') > -1) {
+          setIsOpenSignUpModal(true);
+        }
+      }
     }
   };
 
@@ -70,7 +87,7 @@ const SignInPage: React.FC = () => {
   return (
     <PageComponent>
       <LoginTotalComponent>
-        <Image src={smallLogo} alt="logo" />
+        <Image src={smallLogo} alt="logo" width={'auto'} height={20} />
         <TextDiv>로그인</TextDiv>
         <TextDiv
           style={{
@@ -134,7 +151,7 @@ const SignInPage: React.FC = () => {
           type="text"
           placeholder="abcd@email.com"
           name="email"
-          value={email}
+          value={loginInfo.email}
         />
 
         <TextDiv
@@ -156,34 +173,16 @@ const SignInPage: React.FC = () => {
           type="password"
           placeholder="비밀번호를 입력해주세요."
           name="password"
-          value={password}
+          value={loginInfo.password}
         />
 
-        {isEmail && isPassword ? (
-          <LoginButton
-            /*onClick={login}*/
-            style={{
-              margin: '20px 0px 0px 0px',
-              color: '#fff',
-              backgroundColor: '#1E1E1E',
-              lineHeight: '1.6',
-            }}
-          >
-            로그인
-          </LoginButton>
-        ) : (
-          <LoginButton
-            /*onClick={login}*/
-            style={{
-              margin: '20px 0px 0px 0px',
-              color: '#bbb',
-              backgroundColor: '#F3F3F3',
-              lineHeight: '1.6',
-            }}
-          >
-            로그인
-          </LoginButton>
-        )}
+        <Button
+          disabled={!(isEmail && isPassword)}
+          style={{ marginTop: 20 }}
+          onClick={handleClickLoginButton}
+        >
+          로그인
+        </Button>
 
         <TextTotalComponent style={{ marginTop: 40 }}>
           <TextDiv
@@ -218,87 +217,75 @@ const SignInPage: React.FC = () => {
 
       <Image src={firstImg} alt="firstImg" width="auto" height="840px" />
 
-      {openErrorModal && (
-        <ModalDiv>
-          <CloseImage src={closeImg} alt="X" width="28px" height="28px" />
-          <Image
-            src={errorImg}
-            alt="error"
-            style={{
-              margin: '68px 0px 0px 0px',
-              width: '56px',
-              height: '56px',
-            }}
-          />
-          <TextDiv style={{ margin: '12px 0px 0px 0px', fontSize: '24px' }}>
-            로그인 오류
-          </TextDiv>
-          <TextDiv
-            style={{
-              margin: '12px 0px 0px 0px',
-              textTransform: 'none',
-              fontSize: '16px',
-              color: '#BBB',
-            }}
-          >
-            아이디 혹은 비밀번호를 다시 확인해주세요!
-          </TextDiv>
-          <LoginButton
-            style={{
-              margin: '48px 0px 0px 0px',
-              color: '#fff',
-              backgroundColor: '#1E1E1E',
-              width: '600px',
-              height: '58px',
-            }}
-          >
-            다시 입력하기
-          </LoginButton>
-        </ModalDiv>
+      {isOpenErrorModal && (
+        <BlurBackground>
+          <ModalDiv>
+            <CloseIcon
+              width={28}
+              height={28}
+              style={{ alignSelf: 'flex-end', cursor: 'pointer' }}
+              onClick={() => setIsOpenErrorModal(false)}
+            />
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 12,
+              }}
+            >
+              <img src={errorImg} alt="error" width={56} height={56} />
+              <h1 className="title">로그인 오류</h1>
+              <span className="description">
+                아이디 혹은 비밀번호를 다시 확인해주세요!
+              </span>
+            </div>
+
+            <Button
+              style={{ marginTop: 48 }}
+              onClick={() => setIsOpenErrorModal(false)}
+            >
+              다시 입력하기
+            </Button>
+          </ModalDiv>
+        </BlurBackground>
       )}
 
-      {openSignUpModal && (
-        <ModalDiv style={{ height: '384px' }}>
-          <CloseImage src={closeImg} alt="X" width="28px" height="28px" />
-          <Image
-            src={signupImg}
-            alt="signup"
-            style={{
-              margin: '68px 0px 0px 0px',
-              width: '56px',
-              height: '56px',
-            }}
-          />
-          <TextDiv style={{ margin: '12px 0px 0px 0px', fontSize: '24px' }}>
-            아직 비회원이시네요!
-          </TextDiv>
-          <TextDiv
-            style={{
-              margin: '12px 0px 0px 0px',
-              textTransform: 'none',
-              fontSize: '16px',
-              color: '#BBB',
-            }}
-          >
-            앗, 아직 회원이 아니시군요!
-          </TextDiv>
-          <TextDiv
-            style={{ textTransform: 'none', fontSize: '16px', color: '#BBB' }}
-          >
-            회원가입으로 우리 함께해요
-          </TextDiv>
-          <LoginButton
-            style={{
-              margin: '48px 0px 0px 0px',
-              color: '#fff',
-              backgroundColor: '#1E1E1E',
-              width: '600px',
-              height: '58px',
-            }}
-          >
-            다시 입력하기
-          </LoginButton>
-        </ModalDiv>
+      {isOpenSignUpModal && (
+        <BlurBackground>
+          <ModalDiv style={{ height: '384px' }}>
+            <CloseIcon
+              width={28}
+              height={28}
+              style={{ alignSelf: 'flex-end', cursor: 'pointer' }}
+              onClick={() => setIsOpenSignUpModal(false)}
+            />
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 12,
+              }}
+            >
+              <img src={signupImg} alt="signup" width={56} height={56} />
+              <h1 className="title">아직 비회원이시네요!</h1>
+              <span className="description">
+                앗, 아직 회원이 아니시군요!
+                <br /> 회원가입으로 우리 함께해요
+              </span>
+            </div>
+
+            <Button
+              style={{ marginTop: 48 }}
+              onClick={() => navigate('/sign-up')}
+            >
+              회원가입 하기
+            </Button>
+          </ModalDiv>
+        </BlurBackground>
       )}
     </PageComponent>
   );
@@ -333,14 +320,6 @@ const LoginTotalComponent = styled.div`
 const Image = styled.img`
   width: ${(props) => props.width || '68px'};
   height: ${(props) => props.height || '39.667px'};
-  object-fit: contain;
-  margin: 0px;
-`;
-
-const CloseImage = styled(Image)`
-  position: absolute;
-  top: 40px;
-  right: 61px;
 `;
 
 const TextTotalComponent = styled.div`
@@ -403,43 +382,40 @@ const LoginInput = styled.input`
   }
 `;
 
-const LoginButton = styled.button`
-  display: flex;
-  padding: 16px 24px;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-family: 'Pretendard';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 160%; /* 25.6px */
-  margin: 20px 0px 0px 0px;
-  border: none;
-  width: 100%;
-  height: 56px;
-  color: ${(props) => props.color || '#bbb'};
-  background-color: #f3f3f3;
-  margin: 0px;
-`;
+const Button = styled.button((props) => ({
+  width: '100%',
+  height: 56,
+  border: 'none',
+  borderRadius: 12,
+  backgroundColor: props.disabled
+    ? props.theme.color.gray100
+    : props.theme.color.gray500,
+  textAlign: 'center',
+  color: props.disabled ? props.theme.color.gray300 : props.theme.color.white,
+  cursor: props.disabled ? 'not-allowed' : 'pointer',
+  transition: '0.2s',
+  ...props.theme.typography.Body1,
+}));
 
 const ModalDiv = styled.div`
-  position: fixed;
-  top: 33%;
-  left: 33%;
-  z-index: 2;
+  padding: 40px 50px;
   display: flex;
-  width: 700px;
-  height: 358px;
   flex-direction: column;
   align-items: center;
+  width: 700px;
   border-radius: 20px;
-  background: var(--White, #fff);
-
-  /* dropdown */
+  background: ${(props) => props.theme.color.white};
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.1);
+
+  & h1.title {
+    color: ${(props) => props.theme.color.gray500};
+    ${(props) => props.theme.typography.Header6};
+  }
+
+  & span.description {
+    color: ${(props) => props.theme.color.gray300};
+    ${(props) => props.theme.typography.Body1};
+  }
 `;
 
 const StyledLink = styled(Link)`

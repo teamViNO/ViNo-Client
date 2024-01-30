@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { BlurBackground } from './modals/common.style';
+
 export const Container = styled.div`
   display: flex;
   width: 100%;
@@ -97,7 +99,6 @@ export const DetailBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 40px;
     padding: 20px;
     width: 100%;
     border-radius: 16px;
@@ -106,8 +107,16 @@ export const DetailBox = styled.div`
 
   & div.note-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
+    cursor: text;
+    transition: 0.2s;
+
+    &.editable {
+      padding: 12px;
+      border-radius: 8px;
+      background-color: ${(props) => props.theme.color.gray200};
+    }
   }
 
   & span.note-icon {
@@ -119,6 +128,54 @@ export const DetailBox = styled.div`
     font-weight: 600;
     line-height: 1.6;
     color: ${(props) => props.theme.color.gray400};
+  }
+
+  & textarea.note-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: ${(props) => props.theme.color.gray400};
+    resize: none;
+    ${(props) => props.theme.typography.Body1};
+  }
+
+  & button.create-button {
+    align-self: flex-end;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background-color: ${(props) => props.theme.color.gray200};
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & button.close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background-color: ${(props) => props.theme.color.gray100};
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray300};
+    }
+  }
+
+  & div.note-box-tooltip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(calc(100% + 24px));
   }
 `;
 
@@ -279,13 +336,12 @@ export const Dropdown = styled.div`
   }
 `;
 
-export const KeywordSearchBox = styled.div`
+export const SearchKeywordBox = styled.div`
   position: relative;
   display: flex;
   height: 38px;
   border-radius: 100px;
   background-color: ${(props) => props.theme.color.gray100};
-  z-index: 1;
   overflow: hidden;
   transition: 0.5s;
 
@@ -326,5 +382,110 @@ export const KeywordSearchBox = styled.div`
     top: 0;
     right: 0;
     transition: 0.5s;
+  }
+`;
+
+export const ModalContainer = styled(BlurBackground)`
+  & > div.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 52px 50px;
+    width: 700px;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.1);
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  & h1.title {
+    margin-top: 4px;
+    color: ${(props) => props.theme.color.gray500};
+    ${(props) => props.theme.typography.Header6};
+  }
+
+  & span.description {
+    margin-top: 12px;
+    color: ${(props) => props.theme.color.gray300};
+    ${(props) => props.theme.typography.Body1};
+  }
+
+  & div.group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+  & span.group-title {
+    color: ${(props) => props.theme.color.gray500};
+    ${(props) => props.theme.typography.Body1};
+  }
+
+  & div.input-box {
+    padding: 16px 20px;
+    display: flex;
+    flex: 1 1 auto;
+    border-radius: 12px;
+    background-color: ${(props) => props.theme.color.gray100};
+
+    & input {
+      width: 100%;
+      height: 26px;
+      border: none;
+      outline: none;
+      background-color: rgba(0, 0, 0, 0);
+      color: ${(props) => props.theme.color.gray500};
+      ${(props) => props.theme.typography.Body1};
+
+      &::placeholder {
+        color: ${(props) => props.theme.color.gray300};
+      }
+    }
+  }
+
+  & .count {
+    color: ${(props) => props.theme.color.gray300};
+    ${(props) => props.theme.typography.Body3};
+
+    & > .current {
+      color: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+
+    & path {
+      fill: ${(props) => props.theme.color.gray400};
+    }
+  }
+
+  & button.transform {
+    width: 100%;
+    height: 58px;
+    border: none;
+    border-radius: 12px;
+    background-color: ${(props) => props.theme.color.gray500};
+    color: white;
+    cursor: pointer;
+    ${(props) => props.theme.typography.Body1};
+
+    &.all {
+      background-color: white;
+      border: solid 1.5px ${(props) => props.theme.color.gray200};
+      color: ${(props) => props.theme.color.gray400};
+    }
   }
 `;

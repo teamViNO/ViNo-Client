@@ -6,7 +6,7 @@ export const BlurBackground = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   left: 0;
   top: 0;
   display: flex;
@@ -14,7 +14,7 @@ export const BlurBackground = styled.div`
   justify-content: center;
 `;
 
-export const CommonAddCategoryContainer = styled.div`
+export const CommonCategoryContainer = styled.div`
   padding: 40px 61px;
   background-color: ${theme.color.white};
   border-radius: 20px;

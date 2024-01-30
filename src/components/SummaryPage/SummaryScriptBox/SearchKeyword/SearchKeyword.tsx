@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import DownIcon from '@/assets/icons/down.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
@@ -7,9 +7,10 @@ import UpIcon from '@/assets/icons/up.svg?react';
 
 import useDebounce from '@/hooks/useDebounce';
 
+import { summaryTransformModalState } from '@/stores/modal';
 import { summarySearchIsOpenState } from '@/stores/ui';
 
-import { KeywordSearchBox } from '@/styles/SummaryPage';
+import { SearchKeywordBox } from '@/styles/SummaryPage';
 
 type Props = {
   searchIndex: number;
@@ -18,7 +19,7 @@ type Props = {
   onChangeSearchIndex: (index: number) => void;
 };
 
-const KeywordSearch = ({
+const SearchKeyword = ({
   searchIndex,
   totalCount,
   onChange,
@@ -26,6 +27,7 @@ const KeywordSearch = ({
 }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useRecoilState(summarySearchIsOpenState);
+  const modalIsOpen = useRecoilValue(summaryTransformModalState);
   const [keyword, setKeyword] = useState('');
 
   const dynamicStyles = {
@@ -41,7 +43,12 @@ const KeywordSearch = ({
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'f' && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
+      if (
+        !modalIsOpen &&
+        e.key === 'f' &&
+        (e.ctrlKey || e.metaKey) &&
+        !e.shiftKey
+      ) {
         e.preventDefault();
 
         setIsOpen(true);
@@ -59,7 +66,7 @@ const KeywordSearch = ({
         onChangeSearchIndex(searchIndex + 1);
       }
     },
-    [searchIndex, setIsOpen, onChangeSearchIndex],
+    [searchIndex, modalIsOpen, setIsOpen, onChangeSearchIndex],
   );
 
   useEffect(() => {
@@ -75,7 +82,7 @@ const KeywordSearch = ({
   }, keyword);
 
   return (
-    <KeywordSearchBox style={dynamicStyles.box}>
+    <SearchKeywordBox style={dynamicStyles.box}>
       <div style={{ flex: '1 1 auto' }}>
         <input
           ref={inputRef}
@@ -116,8 +123,8 @@ const KeywordSearch = ({
       >
         <SearchIcon width={18} height={18} />
       </span>
-    </KeywordSearchBox>
+    </SearchKeywordBox>
   );
 };
 
-export default KeywordSearch;
+export default SearchKeyword;

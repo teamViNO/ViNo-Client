@@ -3,8 +3,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 import PlayIcon from '@/assets/icons/play.svg?react';
-import TransformationIcon from '@/assets/icons/transformation.svg?react';
 
+import { summaryTransformModalState } from '@/stores/modal';
 import { summaryBoxWidthState, summarySearchIsOpenState } from '@/stores/ui';
 
 import { ScriptBox } from '@/styles/SummaryPage';
@@ -13,7 +13,8 @@ import { escapeHTML } from '@/utils/string';
 
 import Indicator from './Indicator';
 import ResizeThumb from './ResizeThumb';
-import { KeywordSearch } from './KeywordSearch';
+import { SearchKeyword } from './SearchKeyword';
+import { ChangeKeyword } from './ChangeKeyword';
 
 const SummaryScriptBox = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -56,13 +57,16 @@ const SummaryScriptBox = () => {
   ]);
 
   const searchIsOpen = useRecoilValue(summarySearchIsOpenState);
+  const transformModalIsOpen = useRecoilValue(summaryTransformModalState);
   const [width, setWidth] = useRecoilState(summaryBoxWidthState);
   const [focusId, setFocusId] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [searchIndex, setSearchIndex] = useState(0);
 
   const handleChangeSearchIndex = (index: number) => {
-    if (index < 0) {
+    if (findKeywordCount === 0) {
+      setSearchIndex(-1);
+    } else if (index < 0) {
       setSearchIndex(findKeywordCount - 1);
     } else if (index >= findKeywordCount) {
       setSearchIndex(0);
@@ -73,7 +77,7 @@ const SummaryScriptBox = () => {
 
   const formattedScriptList = useMemo(() => {
     return scriptList.map(({ content, ...others }) => {
-      if (searchIsOpen && keyword.trim() !== '') {
+      if ((searchIsOpen || transformModalIsOpen) && keyword.trim() !== '') {
         content = content
           .split(keyword)
           .map((s) => escapeHTML(s))
@@ -89,7 +93,7 @@ const SummaryScriptBox = () => {
         ...others,
       };
     });
-  }, [scriptList, keyword, searchIsOpen]);
+  }, [scriptList, keyword, searchIsOpen, transformModalIsOpen]);
 
   const findKeywordCount = useMemo(() => {
     if (keyword === '') return 0;
@@ -106,7 +110,7 @@ const SummaryScriptBox = () => {
     } else {
       setSearchIndex(0);
     }
-  }, [searchIsOpen, keyword, findKeywordCount]);
+  }, [searchIsOpen, transformModalIsOpen, keyword, findKeywordCount]);
 
   useEffect(() => {
     document.querySelectorAll('mark').forEach((markEl, i) => {
@@ -123,7 +127,7 @@ const SummaryScriptBox = () => {
         markEl.className = '';
       }
     });
-  }, [searchIsOpen, keyword, searchIndex]);
+  }, [searchIsOpen, transformModalIsOpen, keyword, searchIndex]);
 
   return (
     <ScriptBox style={{ width }}>
@@ -131,16 +135,19 @@ const SummaryScriptBox = () => {
         <Indicator list={scriptList} focusId={focusId} onChange={setFocusId} />
 
         <div style={{ display: 'flex', gap: 8 }}>
-          <KeywordSearch
+          <SearchKeyword
             searchIndex={searchIndex}
             totalCount={findKeywordCount}
             onChange={setKeyword}
             onChangeSearchIndex={handleChangeSearchIndex}
           />
 
-          <span className="icon-button">
-            <TransformationIcon width={18} height={18} />
-          </span>
+          <ChangeKeyword
+            searchIndex={searchIndex}
+            totalCount={findKeywordCount}
+            onChange={setKeyword}
+            onChangeSearchIndex={handleChangeSearchIndex}
+          />
 
           <span className="icon-button">
             <ModifyIcon width={18} height={18} />
