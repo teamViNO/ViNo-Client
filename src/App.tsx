@@ -13,6 +13,7 @@ import FindPasswordPage from '@/pages/FindPasswordPage';
 import HomePage from '@/pages/HomePage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
+import SearchResult from './pages/SearchResultPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import SummaryPage from '@/pages/SummaryPage';
@@ -45,10 +46,12 @@ const App = () => {
           )}
 
           <Route element={<Layout />}>
-            {userToken && (
+            {!userToken && (
               <>
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/search/result" element={<SearchResult />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                
               </>
             )}
 
