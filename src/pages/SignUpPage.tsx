@@ -1,13 +1,9 @@
-import React, { useState, useCallback, useEffect, forwardRef } from "react";
+import React, { useState, useCallback, useEffect} from "react";
 import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
-import CalendarSvg from '@/assets/icons/calendar.svg?react'
 import axios from "axios";
 import * as Styled from '@/styles/SignUpPage'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale';
-// picker import 
+import Calendar from "@/components/Calendar"; // Calendar 컴포넌트 추가
 
 interface SignUpProps {}
 
@@ -33,15 +29,6 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
   const [errMessage, setErrMessage] = useState('');
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  const CustomCalendar = forwardRef(({ onClick } : React.DOMAttributes<HTMLButtonElement> , ref? : React.ForwardedRef<HTMLButtonElement> | undefined) => (
-    <Styled.CustomButton className={selectedDate === null ? '' : 'custom-inputSelected'} onClick={onClick} ref={ref}>
-      <CalendarSvg width={36} height={36}/>
-    </Styled.CustomButton>
-  ));
-  // react date-picker 필수 state
-
   const handleSexSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e)
     e.preventDefault();
@@ -56,16 +43,6 @@ const SignUp: React.FC<SignUpProps> = () => {
     setName(e.target.value);
     console.log(name);
   }, []);
-
-  const onChangeCalendar = useCallback(
-    (date : Date | null) => {
-      if(date !== null){
-        setSelectedDate(date);
-        setYear(date.getFullYear().toString());
-        setMonth((date.getMonth() + 1).toString());
-        setDate(date.getDate().toString())
-    }
-    }, []);
 
   const onChangePhonenumber = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -267,19 +244,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   placeholder="DD"
                   readOnly
                 ></Styled.BirthInputBox>
-                <Styled.CalendarContainer>
-                <DatePicker
-                    dateFormat='yyyy.MM.dd' // 날짜 형태
-                    shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                    minDate={new Date('1900-01-01')} // minDate 이전 날짜 선택 불가
-                    maxDate={new Date()} // maxDate 이후 날짜 선택 불가
-                    selected={selectedDate}
-                    locale={ko}
-                    onChange={(date) => onChangeCalendar(date)}
-                    customInput={<CustomCalendar />}
-                />
-                </Styled.CalendarContainer>
-                
+                <Calendar setYear={setYear} setMonth={setMonth} setDate={setDate}/> 
               </Styled.BirthInputSection>
             </Styled.Label>
             <Styled.Label>

@@ -16,8 +16,16 @@ export const CalendarContainer =  styled.div`
     background : #BBBBBB !important;
   }
   .react-datepicker {
-
-      .react-datepicker__month-container {
+    & select {
+        border : none;
+        color : #1E1E1E;
+        font-weight: bold;
+    }
+    & button {
+        border : none;
+        border-radius : 8px;
+    }
+    .react-datepicker__month-container {
           .react-datepicker__header {
               background-color: white;
               border: none;
