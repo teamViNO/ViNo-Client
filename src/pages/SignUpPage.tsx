@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
 import { Link } from 'react-router-dom';
@@ -48,51 +48,41 @@ const SignUp: React.FC<SignUpProps> = () => {
     console.log(selectedSex);
   }, [selectedSex]);
 
-  const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     console.log(name);
-  }, []);
+  };
 
-  const onChangeYear = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeYear = (e: React.ChangeEvent<HTMLInputElement>) => {
     setYear(e.target.value);
     console.log(year);
-  }, []);
+  };
 
-  const onChangeMonth = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setMonth(e.target.value);
-      console.log(month);
-    },
-    []
-  );
+  const onChangeMonth = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMonth(e.target.value);
+    console.log(month);
+  };
 
-  const onChangeDate = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setDate(e.target.value);
-      console.log(date);
-    },
-    []
-  );
+  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(e.target.value);
+    console.log(date);
+  };
+  
+  const onChangePhonenumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const phonenumberRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
+    const phonenumberCurrent = e.target.value;
+    setPhonenumber(phonenumberCurrent);
+    console.log(phonenumber);
+    if (!phonenumberRegex.test(phonenumberCurrent)) {
+      setErrMessage('올바른 전화번호 형식이 아닙니다.');
+      setIsPhonenumber(false);
+    } else {
+      setErrMessage('');
+      setIsPhonenumber(true);
+    }
+  };
 
-  const onChangePhonenumber = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const phonenumberRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-      const phonenumberCurrent = e.target.value;
-      setPhonenumber(e.target.value);
-      console.log(phonenumber);
-      setPhonenumber(phonenumberCurrent);
-      if (!phonenumberRegex.test(phonenumberCurrent)) {
-        setErrMessage('올바른 전화번호 형식이 아닙니다.');
-        setIsPhonenumber(false);
-      } else {
-        setErrMessage('');
-        setIsPhonenumber(true);
-      }
-    },
-    [phonenumber],
-  );
-
-  const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
       /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     const emailCurrent = e.target.value;
@@ -105,41 +95,34 @@ const SignUp: React.FC<SignUpProps> = () => {
       setIsEmail(true);
     }
     console.log(email);
-  }, []);
+  };
 
-  const onChangePassword = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const passwordRegex = /^[A-Za-z0-9]{8,16}$/;
-      const passwordCurrent = e.target.value;
-      setPassword(passwordCurrent);
-      if (!passwordRegex.test(passwordCurrent)) {
-        setPasswordMessage("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
-        setIsPassword(false);
-      } else {
-        setPasswordMessage("");
-        setIsPassword(true);
-      }
-    },
-    [passwordCheck]
-  );
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const passwordRegex = /^[A-Za-z0-9]{8,16}$/;
+    const passwordCurrent = e.target.value;
+    setPassword(passwordCurrent);
+    if (!passwordRegex.test(passwordCurrent)) {
+      setPasswordMessage("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
+      setIsPassword(false);
+    } else {
+      setPasswordMessage("");
+      setIsPassword(true);
+    }
+  };
 
-  const onChangePasswordCheck = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPasswordCheck(e.target.value);
-      if (e.target.value === "") {
-        setPasswordCheckMessage("비밀번호를 재입력해주세요");
-      } else if (password && e.target.value !== password) {
-        setMismatchError(true);
-        setPasswordCheckMessage("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
-      } else {
-        setMismatchError(false);
-        setPasswordCheckMessage("비밀번호가 일치합니다.");
-      }
-      //setMismatchError(e.target.value !== password);
-      console.log(passwordCheck);
-    },
-    [password]
-  );
+  const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordCheck(e.target.value);
+    if (e.target.value === "") {
+      setPasswordCheckMessage("비밀번호를 재입력해주세요");
+    } else if (password && e.target.value !== password) {
+      setMismatchError(true);
+      setPasswordCheckMessage("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+    } else {
+      setMismatchError(false);
+      setPasswordCheckMessage("비밀번호가 일치합니다.");
+    }
+    console.log(passwordCheck);
+  };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
