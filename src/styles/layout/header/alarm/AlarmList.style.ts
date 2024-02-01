@@ -12,34 +12,43 @@ export const Container = styled.div`
   position: absolute;
   margin-top: 25px;
   border-radius: 8px;
-  padding: 36px 28px;
+  padding: 36px 0;
   display: flex;
   flex-direction: column;
+  gap: 36px;
   z-index: 99;
+  box-shadow: 4px 4px 30px 0 rgba(0, 0, 0, 0.16);
 `;
 
 export const NoticeWrap = styled.div`
+  padding: 0 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 36px;
+
+  & .notice-count {
+    display: flex;
+    width: 26px;
+    height: 26px;
+    background-color: ${(props) => props.theme.color.gray100};
+    color: ${(props) => props.theme.color.gray300};
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    ${theme.typography.Caption1};
+
+    &.active {
+      background-color: ${(props) => props.theme.color.green400};
+      color: ${(props) => props.theme.color.gray500};
+    }
+  }
 `;
 
-export const NoticeAbsenceMessage = styled.span`
+export const NoticeAbsenceMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
   text-align: center;
   color: ${theme.color.gray300};
-`;
-
-export const NoticeCount = styled.div<{ length: number }>`
-  display: flex;
-  width: 26px;
-  height: 26px;
-  background-color: ${(props) =>
-    props.length ? theme.color.green400 : theme.color.gray100};
-  color: ${(props) =>
-    props.length ? theme.color.gray500 : theme.color.gray300};
-  border-radius: 8px;
-  justify-content: center;
-  align-items: center;
-  ${theme.typography.Caption1};
 `;

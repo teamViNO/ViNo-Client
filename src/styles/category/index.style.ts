@@ -34,3 +34,58 @@ export const Mode = styled.span`
   ${theme.typography.Body3};
   color: ${theme.color.gray400};
 `;
+
+export const CardManagement = styled.div`
+  display : flex;
+  flex-direction : row;
+  gap : 10px;
+`
+export const SelectManagement = styled.select`
+  width : 202px;
+  height : 34px;
+  padding : 0px 10px;
+  border : 1px solid ${theme.color.gray200};
+  border-radius : 8px;
+  ${theme.typography.Body3};
+  color : ${theme.color.gray400};
+`
+
+export const ManagementBoxGray = styled.div`
+  width : 36px;
+  height : 34px;
+  border-radius : 8px;
+
+  display : flex;
+  align-items : center;
+  justify-content: center;
+  background : ${theme.color.gray100};
+`
+
+export const ManagementBox = styled.div`
+  width : 36px;
+  height : 34px;
+  border-radius : 8px;
+
+  display : flex;
+  align-items : center;
+  justify-content: center;
+  background : ${theme.color.white};
+`
+
+export const AllSelectBtn = styled.button`
+  width : 90px;
+  height : 28px;
+  background : ${theme.color.gray500};
+  border : none;
+  border-radius : 100px;
+  ${theme.typography.Caption1};
+  color : ${theme.color.white};
+`
+
+export const SelectedCount = styled.span`
+  width : 98px;
+  height : 34px;
+  ${theme.typography.Body3};
+  padding : 0px 10px;
+  color : ${theme.color.gray400};
+`

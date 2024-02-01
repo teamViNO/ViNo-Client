@@ -1,12 +1,19 @@
 import axios from 'axios';
 
 const baseURL = 'https://backend.vi-no.site';
-const token = localStorage.token;
 
-export const axiosInstance = axios.create({ baseURL });
+const axiosInstance = axios.create({ baseURL });
 
-// 추후 변경 필요
-export const axiosAuthInstance = axios.create({
-  baseURL,
-  headers: { Authorization: `Bearer ${token}` },
+axiosInstance.interceptors.request.use((config) => {
+  if (localStorage.vino) {
+    const storage = JSON.parse(localStorage.vino);
+
+    if (storage['user-token']) {
+      config.headers.Authorization = `Bearer ${storage['user-token']}`;
+    }
+  }
+
+  return config;
 });
+
+export default axiosInstance;

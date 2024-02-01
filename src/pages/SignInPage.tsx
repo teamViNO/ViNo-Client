@@ -60,7 +60,7 @@ const SignInPage: React.FC = () => {
 
   const handleClickLoginButton = async () => {
     try {
-      const { token } = (await loginAPI(loginInfo)).data.data;
+      const { token } = (await loginAPI(loginInfo)).data.result;
 
       setUserToken(token);
       navigate('/');
