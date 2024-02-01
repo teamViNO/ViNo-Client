@@ -1,16 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
+import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
 import { Link } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
+import errorImg from '@/assets/Error.png';
 import calendar from "../assets/calendar.png";
-import axios from "axios";
+import CloseIcon from '@/assets/icons/close.svg?react';
+import axios, { AxiosError } from "axios";
+import { checkEmailAPI } from "@/apis/user";
+
+import { BlurBackground } from '@/styles/modals/common.style';
 
 interface SignUpProps {}
 
 const SignUp: React.FC<SignUpProps> = () => {
   const [selectedSex, setSelectedSex] = useState<string | undefined>();
-
   const [name, setName] = useState<string>("");
   const [phonenumber, setPhonenumber] = useState<string>("");
   const [year, setYear] = useState<string>("");
@@ -26,9 +31,12 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [isPassword, setIsPassword] = useState<boolean | string>("");
 
   const [emailMessage, setEmailMessage] = useState<string>("");
+  const [avaMessage, setAvaMessage] = useState<string>("");
   const [passwordMessage, setPasswordMessage] = useState<string>("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
   const [errMessage, setErrMessage] = useState('');
+
+  const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
 
   const handleSexSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e)
@@ -99,31 +107,6 @@ const SignUp: React.FC<SignUpProps> = () => {
     console.log(email);
   }, []);
 
- /* //이메일 중복검사
-   
-    function checkEmail(): void {
-    const email: string = $('#email').val() as string; // email 값은 "id"인 입력란의 값을 저장
-
-    $.ajax({
-        url: '/email/emailCheckProcess', // Controller에서 요청 받을 주소
-        type: 'POST', // POST 방식으로 전달
-        data: {
-            "email": email
-        },
-
-        success: function(cnt: number): void { // 컨트롤러에서 넘어온 cnt 값을 받는다
-            if (cnt === 0) { // cnt가 1이 아니면(0일 경우) -> 사용 가능한 아이디
-                $("#vaildEmail").text("사용할 수 있는 아이디 입니다.").css("color", "green");
-                console.log(email);
-            } else { // cnt가 1일 경우 -> 이미 존재하는 아이디
-                $("#vaildEmail").text("이미 존재하는 이메일 입니다.").css("color", "red");
-                alert("아이디를 다시 입력해주세요");
-                $('#email').val('');
-            }
-        }
-    });
-}*/
-
   const onChangePassword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const passwordRegex = /^[A-Za-z0-9]{8,16}$/;
@@ -158,25 +141,31 @@ const SignUp: React.FC<SignUpProps> = () => {
     [password]
   );
 
-  const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log(email, password, passwordCheck, name, phonenumber);
-      if (!mismatchError) {
-        console.log("서버로 회원가입하기");
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(name, year, month, date, selectedSex, phonenumber, email, password, passwordCheck);
+    if (!mismatchError) {
+      console.log("서버로 회원가입하기");
+    }
+  };
+
+  const id_overlap_check: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    try {
+      const { code } = (await checkEmailAPI({ email })).data;
+      console.log(code)
+      setAvaMessage('사용 가능한 이메일이에요!');
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e.response?.data.code)
+        setIsOpenOverlapModal(true)
       }
-    },
-    [email, password, passwordCheck, name, phonenumber, mismatchError]
-  );
+    }
+  }
 
   const onApply = () => {
-    if (phonenumber && email && password && passwordCheck && !mismatchError) {
+    if (name && year && month && date && selectedSex && phonenumber && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
-      console.log("유저 정보 등록 완료");
-      if (name && selectedSex && year && month && date) {
-        onRegisterPetInfo();
-      }
       console.log("정보 등록 완료");
       // navigate("/signedup");
     } else {
@@ -189,24 +178,11 @@ const SignUp: React.FC<SignUpProps> = () => {
       const res = await axios.post(
         "",
         {
-          email: email,
-          password: password,
-          name: phonenumber,
-        }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const onRegisterPetInfo = async () => {
-    try {
-      const res = await axios.post(
-        "",
-        {
           name: name,
           birth: year + ":" + month + ":" + date,
+          email: email,
+          password: password,
+          phonenumber: phonenumber,
         }
       );
       console.log(res);
@@ -216,506 +192,201 @@ const SignUp: React.FC<SignUpProps> = () => {
   };
 
   return (
-    <Wrapper>
-      <LogoSection>
+    <SignupPageStyles.Wrapper>
+      <SignupPageStyles.LogoSection>
         <img src={firstImg} alt="로고 이미지" />
-      </LogoSection>
-      <MainSection>
-        <InputSection>
-          <Intro>
+      </SignupPageStyles.LogoSection>
+      <SignupPageStyles.MainSection>
+        <SignupPageStyles.InputSection>
+          <SignupPageStyles.Intro>
             <img src={logo} alt="로고 이미지" />
             <h3>회원가입</h3>
             <p>새로운 계정을 생성하고 나만의 영상 아카이빙을 시작해요</p>
-          </Intro>
-          <Form onSubmit={onSubmit}>
-            <Label>
+          </SignupPageStyles.Intro>
+          <SignupPageStyles.Form onSubmit={onSubmit}>
+            <SignupPageStyles.Label>
               <span>이름</span>
-              <InputBox
+              <SignupPageStyles.InputBox
                 type="text"
                 id="name"
                 name="name"
                 value={name}
                 placeholder="홍길동"
                 onChange={onChangeName}
-              ></InputBox>
-            </Label>
-            <Label>
+              ></SignupPageStyles.InputBox>
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
               <span>생년월일</span>
-              <BirthInputSection>
-                <BirthInputBox
+              <SignupPageStyles.BirthInputSection>
+                <SignupPageStyles.BirthInputBox
                   type="text"
                   id="year"
                   name="year"
                   value={year}
                   placeholder="YYYY"
                   onChange={onChangeYear}
-                ></BirthInputBox>
-                <BirthInputBox
+                ></SignupPageStyles.BirthInputBox>
+                <SignupPageStyles.BirthInputBox
                   type="text"
                   id="month"
                   name="month"
                   value={month}
                   placeholder="MM"
                   onChange={onChangeMonth}
-                ></BirthInputBox>
-                <BirthInputBox
+                ></SignupPageStyles.BirthInputBox>
+                <SignupPageStyles.BirthInputBox
                   type="text"
                   id="date"
                   name="date"
                   value={date}
                   placeholder="DD"
                   onChange={onChangeDate}
-                ></BirthInputBox>
+                ></SignupPageStyles.BirthInputBox>
                 <img src={calendar} alt="달력 이미지" />
-              </BirthInputSection>
-            </Label>
-            <Label>
+              </SignupPageStyles.BirthInputSection>
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
               <span>성별</span>
-              <SexSelectBox>
-                <SexButton
+              <SignupPageStyles.SexSelectBox>
+                <SignupPageStyles.SexButton
                   value="미표기"
                   onClick={handleSexSelect}
                   selected={selectedSex === "미표기"}
                 >
                   미표기
-                </SexButton>
-                <SexButton value="남자" onClick={handleSexSelect} selected={selectedSex === "남자"}>
+                </SignupPageStyles.SexButton>
+                <SignupPageStyles.SexButton value="남자" onClick={handleSexSelect} selected={selectedSex === "남자"}>
                   남자
-                </SexButton>
-                <SexButton value="여자" onClick={handleSexSelect} selected={selectedSex === "여자"}>
+                </SignupPageStyles.SexButton>
+                <SignupPageStyles.SexButton value="여자" onClick={handleSexSelect} selected={selectedSex === "여자"}>
                   여자
-                </SexButton>
-              </SexSelectBox>
-            </Label>
-            <Label>
+                </SignupPageStyles.SexButton>
+              </SignupPageStyles.SexSelectBox>
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
               <span>전화번호</span>
-              <InputBox
+              <SignupPageStyles.InputBox
                 type="text"
                 id="phonenumber"
                 name="phonenumber"
                 value={phonenumber}
                 placeholder="휴대폰 번호 입력 (-제외)"
                 onChange={onChangePhonenumber}
-              ></InputBox>
-              {!isPhonenumber && <Error>{errMessage}</Error>}
-            </Label>
-            <Label>
+              ></SignupPageStyles.InputBox>
+              {!isPhonenumber && <SignupPageStyles.Error>{errMessage}</SignupPageStyles.Error>}
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
               <span>이메일 주소</span>
-              <TwoLabel>
-              <EmailInputBox
+              <SignupPageStyles.TwoLabel>
+              <SignupPageStyles.EmailInputBox
                 type="text"
                 id="email"
                 name="email"
                 value={email}
                 placeholder="abcd@email.com"
                 onChange={onChangeEmail}
-              ></EmailInputBox>
+              ></SignupPageStyles.EmailInputBox>
               {isEmail  ? (
-              <DupSucButton>
+              <SignupPageStyles.DupSucButton id ="overlap_button" onClick={id_overlap_check}>
               중복 확인하기
-              </DupSucButton>
+              </SignupPageStyles.DupSucButton>
               ) : (
-              <DupButton type="submit" onClick={onApply}>
+              <SignupPageStyles.DupButton>
                중복 확인하기
-              </DupButton>
+              </SignupPageStyles.DupButton>
               )}
-              </TwoLabel>
-              {!isEmail && <Error>{emailMessage}</Error>}
-            </Label>
-            <Label>
+              </SignupPageStyles.TwoLabel>
+              {!isEmail && <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>}
+              <SignupPageStyles.Avail>{avaMessage}</SignupPageStyles.Avail>
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
               <span>비밀번호</span>
-              <InputBox
+              <SignupPageStyles.InputBox
                 type="password"
                 id="password"
                 name="password"
                 value={password}
                 onChange={onChangePassword}
-              ></InputBox>
-              {!isPassword && <Error>{passwordMessage}</Error>}
-            </Label>
-            <Label>
+              ></SignupPageStyles.InputBox>
+              {!isPassword && <SignupPageStyles.Error>{passwordMessage}</SignupPageStyles.Error>}
+            </SignupPageStyles.Label>
+            <SignupPageStyles.Label>
             <span>비밀번호 재입력</span>
-            <InputBox
+            <SignupPageStyles.InputBox
               type="password"
               id="passwordCheck"
               name="passwordCheck"
               value={passwordCheck}
               onChange={onChangePasswordCheck}
-            ></InputBox>
+            ></SignupPageStyles.InputBox>
             {(passwordCheck || passwordCheck === "") && (
               mismatchError ? (
-                <Error>{passwordcheckMessage}</Error>
+                <SignupPageStyles.Error>{passwordcheckMessage}</SignupPageStyles.Error>
               ) : (
-                <PwDiv>{passwordcheckMessage}</PwDiv>
+                <SignupPageStyles.PwDiv>{passwordcheckMessage}</SignupPageStyles.PwDiv>
               )
             )}
-          </Label>
-          </Form>
-        </InputSection>
-          <ButtonSection>
-            <Button type="submit" onClick={onApply}>
+          </SignupPageStyles.Label>
+          </SignupPageStyles.Form>
+        </SignupPageStyles.InputSection>
+          <SignupPageStyles.ButtonSection>
+          {name && year && month && date && selectedSex && isPhonenumber && isEmail && avaMessage && isPassword && passwordCheck && !mismatchError  ? (
+            <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
-            </Button>
-            <TextTotalComponent>
-            <TextDiv>
+            </SignupPageStyles.SucButton>
+            ) : (
+            <SignupPageStyles.Button>
+              가입하기
+            </SignupPageStyles.Button>)}
+            <SignupPageStyles.TextTotalComponent>
+            <SignupPageStyles.TextDiv>
              이미 계정이 있으신가요? 
-            </TextDiv>
+            </SignupPageStyles.TextDiv>
             <StyledLink to="/sign-in">로그인</StyledLink>
-            </TextTotalComponent>
-          </ButtonSection>
-        </MainSection>
-    </Wrapper>
+            </SignupPageStyles.TextTotalComponent>
+          </SignupPageStyles.ButtonSection>
+        </SignupPageStyles.MainSection>
+        {isOpenOverlapModal && (
+        <BlurBackground>
+          <SignupPageStyles.ModalDiv>
+            <CloseIcon
+              width={28}
+              height={28}
+              style={{ alignSelf: 'flex-end', cursor: 'pointer' }}
+              onClick={() => setIsOpenOverlapModal(false)}
+            />
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 12,
+              }}
+            >
+              <img src={errorImg} alt="error" width={56} height={56} />
+              <h1 className="title">이미 가입된 이메일</h1>
+              <span className="description">
+                이미 가입되어있는 이메일 입니다!
+              </span>
+            </div>
+
+            <SignupPageStyles.RetryButton
+              style={{ marginTop: 48 }}
+              onClick={() => setIsOpenOverlapModal(false)}
+            >
+              다시 입력하기
+            </SignupPageStyles.RetryButton>
+          </SignupPageStyles.ModalDiv>
+        </BlurBackground>
+      )}  
+    </SignupPageStyles.Wrapper>
   );
 };
 
 export default SignUp;
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 1440px;
-  width: 100%;
-  min-height: 100vh;
-  gap: 124px;
-`;
-
-const LogoSection = styled.div`
-  img{
-    display: flex;
-    width: auto;
-    height: 840px;
-  }
-`;
-
-const MainSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 580px;
-  height: 896px;
-  margin-top: 128px;
-`;
-const InputSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 580px;
-  height: auto;
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  &::-webkit-scrollbar-thumb{
-    height: 200px;
-    background-color:#f3f3f3;
-    border-radius: 100px;
-  }
-  &::-webkit-scrollbar-track{
-    background-color:#ffffff;
-  }
-`;
-
-const Intro = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 60px;
-  img {
-    width: 64.55px;
-    height: 20px;
-    margin-bottom: 4px;
-  }
-  h3 {
-    color: #1e1e1e;
-    font-family: Pretendard;
-    font-size: 36px;
-    font-weight: bold;
-    line-height: 160%;
-    margin: 0;
-  }
-  p {
-    color: #bbb;
-    font-size: 16px;
-    font-weight: 500;
-    margin-top: 8px;
-    line-height: 160%;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 494px;
-  height: auto;
-  margin-bottom: 24px;
-`;
-
-const Label = styled.label`
-  margin-bottom: 40px;
-  span {
-    font-size: 16px;
-    color: #787878;
-    font-family: Pretendard;
-    margin-bottom: 8px;
-    font-weight: 500;
-    line-height: 160%;
-  }
-`;
-
-const TwoLabel = styled.label`
-  display: flex;
-  flex-direction: row;
-`;
-
-const InputBox = styled.input`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 494px;
-  height: 56px;
-  padding: 0px 0px 0px 20px;
-  gap: 20px;
-  flex: 1 0 0;
-  font-size: 16px;
-  font-style: normal;
-  color: var(--Main, #1E1E1E);
-  font-family: Pretendard;
-  font-weight: 500;
-  line-height: 160%;
-  border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top: 8px;
-  outline: none;
-  &:hover {
-    border: 1.5px solid #1e1e1e;
-  }
-  &:focus {
-    border: 1.5px solid #1e1e1e;
-    border-color: #1e1e1e;
-  }
-  &::placeholder {
-    color: #bbb;
-
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
-  }
-`;
-
-const EmailInputBox = styled.input`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 326px;
-  height: 56px;
-  padding: 0px 0px 0px 20px;
-  gap: 20px;
-  flex: 1 0 0;
-  font-size: 16px;
-  font-style: normal;
-  color: var(--Main, #1E1E1E);
-  font-family: Pretendard;
-  font-weight: 500;
-  line-height: 160%;
-  border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8) ;
-  margin-top: 8px;
-  outline: none;
-  &:hover {
-    border: 1.5px solid #1e1e1e;
-  }
-  &:focus {
-    outline: none;
-  }
-  &::placeholder {
-    color: #bbb;
-
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
-  }
-`;
-
-const BirthInputSection = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 8px;
-  img {
-    width: 56px;
-    height: 56px;
-  }
-`;
-
-const BirthInputBox = styled.input`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 138px;
-  height: 56px;
-  padding: 24px 20px;
-  gap: 20px;
-  flex: 1 0 0;
-  font-size: 16px;
-  font-style: normal;
-  color: var(--Main, #1E1E1E);
-  font-family: Pretendard;
-  font-weight: 500;
-  line-height: 160%;
-  margin-right: 8px;
-  border-radius: 12px;
-  border: 1.5px solid #e8e8e8;
-  color: var(--Main, #1E1E1E);
-  background: #fff;
-  &::placeholder {
-    color: #bbb;
-
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
-  }
-`;
-
-
-const SexSelectBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 8px;
-`;
-
-const SexButton = styled.button<{ selected: boolean }>`
-  width: 158px;
-  height: 54px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  border: 1.5px solid #e8e8e8;
-  background: #fff;
-  color: #787878;
-  font-family: Pretendard;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 160%;
-  margin-right: 10px;
-  ${(props) => props.selected &&
-    `
-      background: #1e1e1e;
-      color: #fff;
-      border: none;
-    `}
-`;
-
-
-const Error = styled.p`
-  color: #eb5353;
-  font-size: 14px;
-  font-weight: 500;
-  margin-top: 8px;
-  padding-left: 16px;
-  line-height: 160%;
-`;
-
-const ButtonSection = styled.div`
-  width: 494px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 24px 0px 52px 0px;
-`;
-
-const Button = styled.button`
-  border-radius: 12px;
-  background: #f3f3f3;
-  color: #bbb;
-  display: flex;
-  width: 494px;
-  height: 56px;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: Pretendard;
-  padding: 16px 24px;
-  line-height: 160%;
-  justify-content: center;
-  align-items: center;
-  border: none;
-`;
-
-const DupSucButton = styled.button`
-  border-radius: 12px;
-  background: #E9FF3F;
-  color: #1E1E1E;
-  display: flex;
-  margin-top: 8px;
-  margin-left: 8px;
-  width: 160px;
-  height: 56px;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: Pretendard;
-  padding: 16px 24px;
-  line-height: 160%;
-  justify-content: center;
-  align-items: center;
-  border: none;
-`;
-
-const DupButton = styled.button`
-  border-radius: 12px;
-  background: #f3f3f3;
-  color: #bbb;
-  display: flex;
-  margin-top: 8px;
-  margin-left: 8px;
-  width: 160px;
-  height: 56px;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: Pretendard;
-  padding: 16px 24px;
-  line-height: 160%;
-  justify-content: center;
-  align-items: center;
-  border: none;
-`;
-
-const PwDiv = styled.div`
-   font-size: 14px;
-   margin-top: 8px;
-   color:#3681FE;
-   font-weight: 500;
-   line-height: 160%;
-   padding-left: 16px;
-`;
-
-
-const TextTotalComponent = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin: 20px 0px 0px 0px;
-`;
-
-const TextDiv = styled.div`
-   font-size: 14px;
-   color:#BBB;
-   font-weight: 500;
-   line-height: 160%;
-`;
-
-const StyledLink = styled(Link)`
+export const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
   text-align: center;
   text-decoration: none;
