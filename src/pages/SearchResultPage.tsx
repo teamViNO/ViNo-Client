@@ -1,43 +1,48 @@
 
 import { useState, useEffect } from "react";
 import SearchIcon from '@/assets/icons/search.svg?react'
-
 import useBoolean from "@/hooks/useBoolean";
 import { useLocation } from "react-router-dom";
 import Styled from "@/styles/SearchResult";
-
 import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
-import SearchResultBox from "@/components/SearchPage/SearchResultBox";
+import { axiosInstance } from "@/apis/config/instance";
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [input, setInput] = useState('');
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
     const [isScrolling, ,startScrolling,,] = useBoolean(false);
+    const [loading, setLoading] = useState(Boolean);
+    
     const location = useLocation();
 
     useEffect(() => {
-        const fetchData = () => {
+        const fetchApiData = async () => {
             try {
-                const searchParams = new URLSearchParams(location.search);
-                const type = searchParams.get('type');
-                const data = searchParams.get('value');
-
-                if (type === 'keyword' && data) {
-                    setInput(data);
-                    setSearchType(true);
-                } else if (type === 'hashtag' && data) {
-                    const initialTagList = data.split('&');
-                    setTags(initialTagList)
-                    setSearchType(false);
-                }
-            } catch (error) {
-                console.error('Error:', error);
+                setLoading(true);
+                const response = await axiosInstance.get('/search/keyword', {
+                    data : {
+                        "keywords" : ['dasdas']
+                    }
+                })
+                setLoading(false);
+                return response.data;
+            } catch (notFound) {
+                setLoading(false);
+                return notFound;
             }
-        };
-        fetchData();
-    }, [location])
+        }
+        fetchApiData().then((data) => {
+            console.log(data);
+        });
+    }, [])
+
+  if(loading){
+    return (
+        <div>스켈레톤 페이지</div>
+    )
+  }
   return (
     <Styled.Container style={{width : '100vw', height : '100vh'}}>
         <div className="inputContainer" 

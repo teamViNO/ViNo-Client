@@ -46,7 +46,7 @@ const App = () => {
           )}
 
           <Route element={<Layout />}>
-            {!userToken && (
+            {userToken && (
               <>
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/search/result" element={<SearchResult />} />
