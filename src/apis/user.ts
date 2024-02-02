@@ -13,3 +13,17 @@ export const loginAPI = (data: LoginRequest) => {
 export const getAlarm = () => {
   return axios.get<APIResponse<AlarmResponse>>(PREFIX + '/alarm');
 };
+
+export const checkEmailAPI = (data: CheckEmailRequest) => {
+  return axios.post<APIResponse<CheckEmailResponse>>(
+    PREFIX + '/checkemail',
+    data,
+  );
+};
+
+export const joinAPI = (data: JoinRequest) => {
+  return axios.post<APIResponse<JoinResponse>>(
+    PREFIX + '/join',
+    data,
+  );
+};
