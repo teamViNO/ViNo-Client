@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
 import { BlurBackground } from '@/styles/modals/common.style';
-import AddTopCategoryModal from '@/components/modals/AddTopCategoryModal';
+import AddCategoryModal from '@/components/modals/AddCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useEffect, useRef, useState } from 'react';
 import TopCategory from './TopCategory';
@@ -172,7 +172,7 @@ const UserMode = () => {
       </>
       {(isTopCategoryModalOpen || isSubCategoryModalOpen) && (
         <BlurBackground>
-          <AddTopCategoryModal
+          <AddCategoryModal
             isTopCategoryModalOpen={isTopCategoryModalOpen}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             categoryName={categoryName}

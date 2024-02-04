@@ -17,7 +17,7 @@ interface IAddTopCategoryModalProps extends ICommonModalProps {
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddTopCategoryModal = ({
+const AddCategoryModal = ({
   isTopCategoryModalOpen,
   setIsSubCategoryModalOpen,
   categoryName,
@@ -100,4 +100,4 @@ const AddTopCategoryModal = ({
   );
 };
 
-export default AddTopCategoryModal;
+export default AddCategoryModal;
