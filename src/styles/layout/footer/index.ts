@@ -5,6 +5,8 @@ export const Container = styled.footer`
   padding: 60px 145px;
   background-color: ${theme.color.gray100};
   ${theme.typography.Body1};
+  position: relative;
+  z-index: 1;
 `;
 
 export const SendEmailWrap = styled.div`

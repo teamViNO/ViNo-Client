@@ -6,11 +6,13 @@ export const Container = styled.div`
   flex-direction: column;
   margin: 60px 0px 0px 60px;
   width: 288px;
+  box-shadow: 4px 0px 40px 0px rgba(0, 0, 0, 0.05);
+  z-index: 0;
 `;
 
 export const StickySection = styled.div`
   position: sticky;
-  top: 72.39;
+  top: 72px;
 `;
 
 export const CommonWrapStyle = styled.div`
