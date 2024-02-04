@@ -24,7 +24,6 @@ export const Container = styled.div<{ selected: boolean }>`
   align-items: center;
   width: 100%;
   border-radius: 100px;
-  margin-top: 12px;
   background-color: ${(props) =>
     props.selected ? theme.color.gray100 : theme.color.white};
   &:hover {

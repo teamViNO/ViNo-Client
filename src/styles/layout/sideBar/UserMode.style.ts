@@ -66,6 +66,7 @@ export const RecentVideoButton = styled(CommonButtonStyle)<{
     props.selected ? theme.color.gray100 : theme.color.white};
   width: 100%;
   border-radius: 100px;
+  margin-bottom: 12px;
 `;
 
 export const ButtonsWrap = styled.div<{ selected: boolean }>`

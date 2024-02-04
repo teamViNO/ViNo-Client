@@ -141,6 +141,17 @@ const TopCategory = ({
           ))}
         </TopCategoryStyles.SubFolderContainer>
       )}
+      <div
+        style={{ height: '12px', backgroundColor: 'white' }}
+        onDragEnter={(e) => {
+          const target = e.target as HTMLElement;
+          target.style.backgroundColor = 'black';
+        }}
+        onDragLeave={(e) => {
+          const target = e.target as HTMLElement;
+          target.style.backgroundColor = 'white';
+        }}
+      />
     </>
   );
 };
