@@ -6,3 +6,10 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
 }
+
+export interface CheckEmailRequest {
+  email: string;
+}
+
+export interface CheckEmailResponse {
+}

@@ -1,5 +1,12 @@
 import { APIResponse } from '@/models/config/axios';
-import { LoginRequest, LoginResponse } from '@/models/user';
+import {
+  CheckEmailRequest,
+  CheckEmailResponse,
+  JoinRequest,
+  JoinResponse,
+  LoginRequest,
+  LoginResponse,
+} from '@/models/user';
 import {
   AlarmResponse,
   DeleteAlarmRequest,
@@ -25,4 +32,15 @@ export const deleteSelectAlarmAPI = (data: DeleteAlarmRequest) => {
       data,
     },
   );
+};
+
+export const checkEmailAPI = (data: CheckEmailRequest) => {
+  return axios.post<APIResponse<CheckEmailResponse>>(
+    PREFIX + '/checkemail',
+    data,
+  );
+};
+
+export const joinAPI = (data: JoinRequest) => {
+  return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };
