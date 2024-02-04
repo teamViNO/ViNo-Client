@@ -24,6 +24,12 @@ export const EditNameInput = styled.input`
   ${theme.typography.Body3}
 `;
 
+export const SubFolderWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ShowOptionButton = styled.button`
   display: none;
   cursor: pointer;

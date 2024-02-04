@@ -22,7 +22,7 @@ const handleCategory = () => {
   };
   const insertCategory = (
     myFolders: IFolderProps[],
-    insertTarget: number | undefined,
+    insertTarget: number | null | undefined,
     insertData: ISubFolderProps,
   ) => {
     const newFolders = [...myFolders];

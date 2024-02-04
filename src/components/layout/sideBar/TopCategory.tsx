@@ -55,40 +55,58 @@ const TopCategory = ({
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
     if (option === '추가') {
-      setFolderOptionModalOpen(false);
       setIsSubCategoryModalOpen(true);
     } else if (option === '수정') {
       setIsEditing(true);
     } else if (option === '삭제') {
-      setFolderOptionModalOpen(false);
       setIsDeleteModalOpen(true);
     }
+    setFolderOptionModalOpen(false);
+  };
+
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFolderOptionModalOpen(true);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+
+  const handleDragStart = () =>
+    (grabedCategory.current = {
+      categoryID: categoryID,
+      name,
+      topCategoryID: null,
+    });
+
+  const handleDragEnter = () => {
+    dropedCategory.current = categoryID;
+    if (grabedCategory.current?.topCategoryID === null) return;
+    if (grabedCategory.current !== undefined) {
+      grabedCategory.current = {
+        ...grabedCategory.current,
+        topCategoryID: categoryID,
+      };
+    }
+  };
+
+  const handleDropZoneDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    dropedCategory.current = index;
     dragEnter(e);
+    if (grabedCategory.current?.topCategoryID === null) return;
     grabedCategory.current = {
       categoryID: grabedCategory.current!.categoryID,
       name: grabedCategory.current!.name,
       topCategoryID: -1,
     };
-    dropedCategory.current = index;
   };
   return (
     <>
       <TopCategoryStyles.Container
         className={`${topId}`}
-        onDragEnter={() => {
-          if (grabedCategory.current !== undefined) {
-            grabedCategory.current = {
-              ...grabedCategory.current,
-              topCategoryID: categoryID,
-            };
-          }
-          dropedCategory.current = categoryID;
-        }}
+        onDragStart={handleDragStart}
+        onDragEnter={handleDragEnter}
+        onDragEnd={putCategoryFolder}
         selected={topId === categoryID && !subId}
       >
         {isEditing ? (
@@ -118,12 +136,7 @@ const TopCategory = ({
               </TopCategoryStyles.ImageTextWrap>
             </TopCategoryStyles.FolderButton>
             {topId === categoryID && !subId && (
-              <TopCategoryStyles.ShowOptionButton
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  setFolderOptionModalOpen(true);
-                }}
-              >
+              <TopCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
                 <MoreOptionsSvg />
               </TopCategoryStyles.ShowOptionButton>
             )}
@@ -154,7 +167,7 @@ const TopCategory = ({
         </TopCategoryStyles.SubFolderContainer>
       )}
       <TopCategoryStyles.Drop
-        onDragEnter={handleDragEnter}
+        onDragEnter={handleDropZoneDragEnter}
         onDragLeave={dragLeave}
       />
     </>

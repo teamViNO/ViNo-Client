@@ -50,17 +50,29 @@ const SubCategory = ({
     setSubFolderOptionModalOpen(false);
   };
 
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSubFolderOptionModalOpen(true);
+  };
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
+
+  const handleDragStart = () =>
+    (grabedCategory.current = {
+      categoryID: categoryID,
+      name,
+      topCategoryID: null,
+    });
+
+  const handleDropZoneDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    dragEnter(e);
+    if (grabedCategory.current?.topCategoryID === null) return;
+  };
   return (
     <SubCategoryStyles.Container
-      onDragStart={() =>
-        (grabedCategory.current = {
-          categoryID: categoryID,
-          name,
-          topCategoryID: topId,
-        })
-      }
+      onDragStart={handleDragStart}
       onDragEnd={putCategoryFolder}
     >
       {isEditing ? (
@@ -71,9 +83,7 @@ const SubCategory = ({
           />
         </SubCategoryStyles.EditNameInputWrap>
       ) : (
-        <div
-          style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
-        >
+        <SubCategoryStyles.SubFolderWrap>
           <div style={{ display: 'flex' }}>
             <SubCategoryStyles.SubFolder
               selected={subId === categoryID}
@@ -81,13 +91,7 @@ const SubCategory = ({
             >
               {edit}
               {subId === categoryID && (
-                <SubCategoryStyles.ShowOptionButton
-                  onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setSubFolderOptionModalOpen(true);
-                  }}
-                >
+                <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
                   <MoreOptionsSvg width={16} height={16} />
                 </SubCategoryStyles.ShowOptionButton>
               )}
@@ -101,10 +105,10 @@ const SubCategory = ({
             )}
           </div>
           <SubCategoryStyles.Drop
-            onDragEnter={dragEnter}
+            onDragEnter={handleDropZoneDragEnter}
             onDragLeave={dragLeave}
           />
-        </div>
+        </SubCategoryStyles.SubFolderWrap>
       )}
     </SubCategoryStyles.Container>
   );
