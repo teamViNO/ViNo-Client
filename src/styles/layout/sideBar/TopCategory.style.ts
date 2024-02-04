@@ -75,4 +75,5 @@ export const SubFolderContainer = styled.div`
 
 export const Drop = styled.div`
   height: 12px;
+  border-radius: 3px;
 `;

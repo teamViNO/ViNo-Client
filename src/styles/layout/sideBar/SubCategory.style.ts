@@ -54,4 +54,5 @@ export const SubFolder = styled(Link)<{ selected: boolean }>`
 
 export const Drop = styled.div`
   height: 4px;
+  border-radius: 1px;
 `;
