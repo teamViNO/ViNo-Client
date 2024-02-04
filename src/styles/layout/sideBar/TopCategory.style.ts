@@ -40,6 +40,9 @@ export const EditNameInputWrap = styled.div`
   width: 100%;
   background-color: ${theme.color.white};
   border-radius: 100px;
+  &.warning {
+    border: 1px solid ${theme.color.red};
+  }
 `;
 
 export const EditNameInput = styled.input`

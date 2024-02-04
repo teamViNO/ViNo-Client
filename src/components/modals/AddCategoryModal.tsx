@@ -10,6 +10,7 @@ import {
   CommonCloseButton,
 } from '@/styles/modals/common.style';
 import { ICommonModalProps } from 'types/modal';
+import handleEdit from '@/utils/handleEdit';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
@@ -42,10 +43,8 @@ const AddCategoryModal = ({
 
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
-  const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 10) return;
-    setCategoryName(e.target.value);
-  };
+  const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) =>
+    handleEdit(e, setCategoryName);
 
   const addCategory = (e: React.MouseEvent) => {
     // API 요청 로직 넣기

@@ -44,10 +44,16 @@ const TopCategory = ({
   const { dragEnter, dragLeave } = handleDrag();
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
+  const [beforeEdit, setBeforeEdit] = useState(edit);
 
+  const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
+  const [nameRegex, setNameRegex] = useState(true);
   const options = ['추가', '수정', '삭제', '이동'];
 
   const finishEdit = () => {
+    if (!edit.length) {
+      setEdit(beforeEdit);
+    }
     setIsEditing(false);
   };
   const [editNameRef] = useOutsideClick<HTMLDivElement>(finishEdit);
@@ -58,6 +64,7 @@ const TopCategory = ({
       setIsSubCategoryModalOpen(true);
     } else if (option === '수정') {
       setIsEditing(true);
+      setBeforeEdit(edit);
     } else if (option === '삭제') {
       setIsDeleteModalOpen(true);
     }
@@ -69,9 +76,14 @@ const TopCategory = ({
     setFolderOptionModalOpen(true);
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!categoryNameRegex.test(e.target.value)) {
+      setNameRegex(false);
+      return;
+    }
+    setNameRegex(true);
     handleEdit(e, setEdit);
-
+  };
   const handleDragStart = () =>
     (grabedCategory.current = {
       categoryID: categoryID,
@@ -110,7 +122,10 @@ const TopCategory = ({
         selected={topId === categoryID && !subId}
       >
         {isEditing ? (
-          <TopCategoryStyles.EditNameInputWrap ref={editNameRef}>
+          <TopCategoryStyles.EditNameInputWrap
+            ref={editNameRef}
+            className={`${(!nameRegex || !edit.length) && 'warning'}`}
+          >
             <OpenFileSvg width={28} height={28} />
             <TopCategoryStyles.EditNameInput
               value={edit}
