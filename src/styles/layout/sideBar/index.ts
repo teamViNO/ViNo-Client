@@ -8,6 +8,11 @@ export const Container = styled.div`
   width: 288px;
 `;
 
+export const StickySection = styled.div`
+  position: sticky;
+  top: 72.39;
+`;
+
 export const CommonWrapStyle = styled.div`
   display: flex;
   align-items: center;
