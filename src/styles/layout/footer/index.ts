@@ -28,7 +28,7 @@ export const SendEmailInput = styled.input`
   outline: none;
   margin: 0px 20px;
   color: ${theme.color.gray500};
-  ${theme.typography.Subheader2};
+  ${theme.typography.Body1};
 
   &::placeholder {
     color: ${theme.color.gray300};
@@ -52,7 +52,7 @@ export const AboutViNOWrap = styled.div`
 `;
 
 export const AboutViNO = styled.p`
-  color: ${theme.color.gray400};
+  color: ${theme.color.gray300};
   margin-right: 40px;
 `;
 
