@@ -4,6 +4,7 @@ import { useState } from 'react';
 import * as SubCategoryStyles from '@/styles/layout/sideBar/SubCategory.style';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
+import { ISubFolderProps } from './UserMode';
 
 interface ISubCategoryProps {
   topId: number;
@@ -11,6 +12,8 @@ interface ISubCategoryProps {
   categoryID: number;
   name: string;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
+  putCategoryFolder: () => void;
 }
 
 const SubCategory = ({
@@ -19,6 +22,8 @@ const SubCategory = ({
   categoryID,
   name,
   setIsDeleteModalOpen,
+  grabedCategory,
+  putCategoryFolder,
 }: ISubCategoryProps) => {
   const [subFolderOptionModalOpen, setSubFolderOptionModalOpen] =
     useState(false);
@@ -47,7 +52,16 @@ const SubCategory = ({
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
   return (
-    <SubCategoryStyles.Container>
+    <SubCategoryStyles.Container
+      onDragStart={() =>
+        (grabedCategory.current = {
+          categoryID: categoryID,
+          name,
+          topCategoryID: topId,
+        })
+      }
+      onDragEnd={putCategoryFolder}
+    >
       {isEditing ? (
         <SubCategoryStyles.EditNameInputWrap ref={editNameRef}>
           <SubCategoryStyles.EditNameInput

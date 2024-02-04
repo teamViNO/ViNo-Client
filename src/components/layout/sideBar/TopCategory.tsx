@@ -7,6 +7,7 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
+import { ISubFolderProps } from './UserMode';
 
 interface ITopCategoryProps {
   topId: number;
@@ -14,8 +15,11 @@ interface ITopCategoryProps {
   categoryID: number;
   name: string;
   subFolders: { categoryID: number; name: string }[];
+  grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
+  dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  putCategoryFolder: () => void;
 }
 
 const TopCategory = ({
@@ -24,8 +28,11 @@ const TopCategory = ({
   categoryID,
   name,
   subFolders,
+  grabedCategory,
+  dropedCategory,
   setIsSubCategoryModalOpen,
   setIsDeleteModalOpen,
+  putCategoryFolder,
 }: ITopCategoryProps) => {
   const [folderOptionModalOpen, setFolderOptionModalOpen] = useState(false);
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -56,9 +63,22 @@ const TopCategory = ({
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
+
   return (
     <>
-      <TopCategoryStyles.Container selected={topId === categoryID && !subId}>
+      <TopCategoryStyles.Container
+        className={`${topId}`}
+        onDragEnter={() => {
+          if (grabedCategory.current !== undefined) {
+            grabedCategory.current = {
+              ...grabedCategory.current,
+              topCategoryID: categoryID,
+            };
+          }
+          dropedCategory.current = categoryID;
+        }}
+        selected={topId === categoryID && !subId}
+      >
         {isEditing ? (
           <TopCategoryStyles.EditNameInputWrap ref={editNameRef}>
             <OpenFileSvg width={28} height={28} />
@@ -114,6 +134,8 @@ const TopCategory = ({
               categoryID={subFolder.categoryID}
               name={subFolder.name}
               setIsDeleteModalOpen={setIsDeleteModalOpen}
+              grabedCategory={grabedCategory}
+              putCategoryFolder={putCategoryFolder}
               key={subFolder.name}
             />
           ))}
