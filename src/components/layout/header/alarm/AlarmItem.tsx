@@ -1,6 +1,6 @@
 import { IAlarm } from '@/models/alarm';
 
-import CheckIcon from '@/assets/icons/check.svg?react';
+import CheckIcon from '@/assets/icons/checked.svg?react';
 import EmptyFileImage from '@/assets/empty-file.png';
 import FileImage from '@/assets/file.png';
 import FileReadImage from '@/assets/file-read.png';
@@ -11,9 +11,12 @@ import { diffTime } from '@/utils/date';
 
 type Props = {
   alarm: IAlarm;
+  selectIdList: number[];
+  onUpdateSelectIdList: (list: number[]) => void;
 };
 
-const AlarmItem = ({ alarm }: Props) => {
+const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
+  const isSelected = selectIdList.indexOf(alarm.alarm_id) > -1;
   const type = alarm.type === 'video' ? '영상 변환' : '환영인사';
 
   const image = () => {
@@ -37,6 +40,14 @@ const AlarmItem = ({ alarm }: Props) => {
     return `${second}초`;
   };
 
+  const handleClickRemoveButton = () => {
+    if (selectIdList.indexOf(alarm.alarm_id) < 0) {
+      onUpdateSelectIdList([...selectIdList, alarm.alarm_id]);
+    } else {
+      onUpdateSelectIdList(selectIdList.filter((id) => id !== alarm.alarm_id));
+    }
+  };
+
   return (
     <Container className={`${alarm.is_confirm && 'read'}`}>
       <div className="top">
@@ -48,8 +59,13 @@ const AlarmItem = ({ alarm }: Props) => {
           <span className="time">{time()} 전</span>
         </div>
 
-        <button className="remove-button">
-          <CheckIcon width={24} height={24} />
+        <button
+          className={`remove-button ${selectIdList.length && 'show'} ${
+            isSelected && 'selected'
+          }`}
+          onClick={handleClickRemoveButton}
+        >
+          <CheckIcon width={16} height={16} />
         </button>
       </div>
 

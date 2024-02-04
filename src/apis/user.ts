@@ -1,6 +1,10 @@
 import { APIResponse } from '@/models/config/axios';
 import { LoginRequest, LoginResponse } from '@/models/user';
-import { AlarmResponse } from '@/models/alarm';
+import {
+  AlarmResponse,
+  DeleteAlarmRequest,
+  DeleteAlarmResponse,
+} from '@/models/alarm';
 
 import axios from './config/instance';
 
@@ -10,6 +14,15 @@ export const loginAPI = (data: LoginRequest) => {
   return axios.post<APIResponse<LoginResponse>>(PREFIX + '/login', data);
 };
 
-export const getAlarm = () => {
+export const getAlarmAPI = () => {
   return axios.get<APIResponse<AlarmResponse>>(PREFIX + '/alarm');
+};
+
+export const deleteSelectAlarmAPI = (data: DeleteAlarmRequest) => {
+  return axios.delete<APIResponse<DeleteAlarmResponse>>(
+    PREFIX + '/alarm/selectDelete',
+    {
+      data,
+    },
+  );
 };
