@@ -14,7 +14,7 @@ import handleCategory from '@/utils/handleCategory';
 export interface ISubFolderProps {
   categoryID: number;
   name: string;
-  topCategoryID: number;
+  topCategoryID: number | null;
 }
 
 export interface IFolderProps {
@@ -50,8 +50,12 @@ const UserMode = () => {
   ];
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
-  const { deleteCategory, insertCategory, insertSubToTopCategory } =
-    handleCategory();
+  const {
+    deleteSubCategory,
+    deleteTopCategory,
+    insertCategory,
+    insertSubToTopCategory,
+  } = handleCategory();
 
   useEffect(() => {
     folders.forEach((folder: IFolderProps) => {
@@ -72,7 +76,7 @@ const UserMode = () => {
 
   const handleDeleteCategory = () => {
     if (!isNaN(subId)) {
-      setMyFolders([...deleteCategory(myFolders, topId, subId)]);
+      setMyFolders([...deleteSubCategory(myFolders, topId, subId)]);
     } else {
       const newData = myFolders.filter(
         (myFolder) => myFolder.categoryID !== topId,
@@ -85,26 +89,44 @@ const UserMode = () => {
   const putCategoryFolder = async () => {
     if (grabedCategory.current?.topCategoryID === -1) {
       // 하위에 있는 폴더를 상위로 올리는 기능
-      const insertResponse = insertSubToTopCategory(
+      // 카테고리 이동2
+      const deleteResponse = deleteSubCategory(
         myFolders,
+        topId,
+        grabedCategory.current?.categoryID,
+      );
+      const insertResponse = insertSubToTopCategory(
+        deleteResponse,
         dropedCategory.current,
         grabedCategory.current!,
       );
-      const deleteResponse = deleteCategory(
-        insertResponse,
-        topId,
-        grabedCategory.current?.categoryID,
+      setMyFolders([...insertResponse]);
+    } else if (grabedCategory.current?.topCategoryID === null) {
+      // 상위에 있는 폴더를 다른 상위 폴더로 넣는 기능
+      // 카테고리 이동3
+      const deleteResponse = deleteTopCategory(
+        myFolders,
+        grabedCategory.current.categoryID,
       );
-      setMyFolders([...deleteResponse]);
+      const insertResponse = insertCategory(
+        deleteResponse,
+        dropedCategory.current!,
+        {
+          categoryID: grabedCategory.current.categoryID,
+          name: grabedCategory.current.name,
+          topCategoryID: dropedCategory.current!,
+        },
+      );
+      setMyFolders(insertResponse);
+      navigate(`/category/${dropedCategory.current}`);
     } else {
       // 하위에 있는 폴더를 다른 상위 폴더로 이동하는 기능
-      // 삭제
-      const deleteResponse = deleteCategory(
+      // 카테고리 이동1
+      const deleteResponse = deleteSubCategory(
         myFolders,
         topId,
         grabedCategory.current?.categoryID,
       );
-      //  삽입
       const insertResponse = insertCategory(
         deleteResponse,
         grabedCategory.current?.topCategoryID,
@@ -113,15 +135,6 @@ const UserMode = () => {
       setMyFolders([...insertResponse]);
       navigate(`/category/${grabedCategory.current?.topCategoryID}`);
     }
-    // try {
-    //   const data = await moveAPI(
-    //     grabedCategory.current!,
-    //     dropedCategory.current!,
-    //   );
-    //   console.log(data);
-    // } catch (err) {
-    //   console.log(err);
-    // }
     // 잡은 카테고리, 놓은 카테고리 초기화
     grabedCategory.current = undefined;
     dropedCategory.current = undefined;

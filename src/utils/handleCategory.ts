@@ -4,7 +4,7 @@ import {
 } from '@/components/layout/sideBar/UserMode';
 
 const handleCategory = () => {
-  const deleteCategory = (
+  const deleteSubCategory = (
     myFolders: IFolderProps[],
     topId: number,
     deleteTarget: number | undefined,
@@ -20,14 +20,22 @@ const handleCategory = () => {
     newFolders[deleteIndex].subFolders = filteredSubFolders;
     return newFolders;
   };
+
+  const deleteTopCategory = (myFolders: IFolderProps[], categoryID: number) => {
+    const newFolders = myFolders.filter(
+      (folder) => folder.categoryID !== categoryID,
+    );
+    return newFolders;
+  };
+
   const insertCategory = (
     myFolders: IFolderProps[],
-    insertTarget: number | null | undefined,
+    insertedCategoryID: number | null | undefined,
     insertData: ISubFolderProps,
   ) => {
     const newFolders = [...myFolders];
     const insertIndex = newFolders.findIndex(
-      (newFolder) => newFolder.categoryID === insertTarget,
+      (newFolder) => newFolder.categoryID === insertedCategoryID,
     );
     newFolders[insertIndex].subFolders.push(insertData);
     return newFolders;
@@ -35,22 +43,27 @@ const handleCategory = () => {
 
   const insertSubToTopCategory = (
     myFolders: IFolderProps[],
-    insertTarget: number | undefined,
+    insertedCategoryID: number | undefined,
     insertData: ISubFolderProps,
   ) => {
     const newFolders = [
-      ...myFolders.slice(0, insertTarget! + 1),
+      ...myFolders.slice(0, insertedCategoryID! + 1),
       {
         categoryID: insertData.categoryID,
         name: insertData.name,
         topCategoryID: null,
         subFolders: [],
       },
-      ...myFolders.slice(insertTarget! + 1),
+      ...myFolders.slice(insertedCategoryID! + 1),
     ];
     return newFolders;
   };
 
-  return { deleteCategory, insertCategory, insertSubToTopCategory };
+  return {
+    deleteSubCategory,
+    deleteTopCategory,
+    insertCategory,
+    insertSubToTopCategory,
+  };
 };
 export default handleCategory;

@@ -63,7 +63,7 @@ const SubCategory = ({
     (grabedCategory.current = {
       categoryID: categoryID,
       name,
-      topCategoryID: null,
+      topCategoryID: topId,
     });
 
   const handleDropZoneDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
