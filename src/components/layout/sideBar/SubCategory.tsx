@@ -70,7 +70,7 @@ const SubCategory = ({
           />
         </SubCategoryStyles.EditNameInputWrap>
       ) : (
-        <>
+        <div style={{ width: '100%' }}>
           <SubCategoryStyles.SubFolder
             selected={subId === categoryID}
             to={`/category/${topId}/${categoryID}`}
@@ -95,7 +95,21 @@ const SubCategory = ({
               optionWrapRef={subFolderOptionModalRef}
             />
           )}
-        </>
+          <div
+            style={{
+              height: '4px',
+              width: '100%',
+            }}
+            onDragEnter={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.backgroundColor = 'black';
+            }}
+            onDragLeave={(e) => {
+              const target = e.target as HTMLElement;
+              target.style.backgroundColor = 'white';
+            }}
+          />
+        </div>
       )}
     </SubCategoryStyles.Container>
   );

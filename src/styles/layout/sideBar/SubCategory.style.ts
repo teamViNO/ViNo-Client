@@ -38,7 +38,6 @@ export const SubFolder = styled(Link)<{ selected: boolean }>`
   justify-content: space-between;
   width: 100%;
   padding: 10px 0px 10px 60px;
-  margin-bottom: 4px;
   text-decoration: none;
   border-radius: 100px;
   color: ${theme.color.gray400};
