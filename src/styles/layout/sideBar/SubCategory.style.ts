@@ -24,6 +24,12 @@ export const EditNameInput = styled.input`
   ${theme.typography.Body3}
 `;
 
+export const SubFolderWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ShowOptionButton = styled.button`
   display: none;
   cursor: pointer;
@@ -38,7 +44,6 @@ export const SubFolder = styled(Link)<{ selected: boolean }>`
   justify-content: space-between;
   width: 100%;
   padding: 10px 0px 10px 60px;
-  margin-bottom: 4px;
   text-decoration: none;
   border-radius: 100px;
   color: ${theme.color.gray400};
@@ -51,4 +56,9 @@ export const SubFolder = styled(Link)<{ selected: boolean }>`
       display: block;
     }
   }
+`;
+
+export const Drop = styled.div`
+  height: 4px;
+  border-radius: 1px;
 `;
