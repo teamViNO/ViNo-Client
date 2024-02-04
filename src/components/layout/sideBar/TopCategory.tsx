@@ -8,10 +8,12 @@ import SubCategory from './SubCategory';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
 import { ISubFolderProps } from './UserMode';
+import handleDrag from '@/utils/handleDrag';
 
 interface ITopCategoryProps {
   topId: number;
   subId: number;
+  index: number;
   categoryID: number;
   name: string;
   subFolders: { categoryID: number; name: string }[];
@@ -25,6 +27,7 @@ interface ITopCategoryProps {
 const TopCategory = ({
   topId,
   subId,
+  index,
   categoryID,
   name,
   subFolders,
@@ -38,6 +41,7 @@ const TopCategory = ({
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
     setFolderOptionModalOpen(false),
   );
+  const { dragEnter, dragLeave } = handleDrag();
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
 
@@ -63,7 +67,15 @@ const TopCategory = ({
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleEdit(e, setEdit);
-
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    dragEnter(e);
+    grabedCategory.current = {
+      categoryID: grabedCategory.current!.categoryID,
+      name: grabedCategory.current!.name,
+      topCategoryID: -1,
+    };
+    dropedCategory.current = index;
+  };
   return (
     <>
       <TopCategoryStyles.Container
@@ -141,16 +153,9 @@ const TopCategory = ({
           ))}
         </TopCategoryStyles.SubFolderContainer>
       )}
-      <div
-        style={{ height: '12px', backgroundColor: 'white' }}
-        onDragEnter={(e) => {
-          const target = e.target as HTMLElement;
-          target.style.backgroundColor = 'black';
-        }}
-        onDragLeave={(e) => {
-          const target = e.target as HTMLElement;
-          target.style.backgroundColor = 'white';
-        }}
+      <TopCategoryStyles.Drop
+        onDragEnter={handleDragEnter}
+        onDragLeave={dragLeave}
       />
     </>
   );

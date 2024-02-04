@@ -5,6 +5,7 @@ import * as SubCategoryStyles from '@/styles/layout/sideBar/SubCategory.style';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
 import { ISubFolderProps } from './UserMode';
+import handleDrag from '@/utils/handleDrag';
 
 interface ISubCategoryProps {
   topId: number;
@@ -36,7 +37,7 @@ const SubCategory = ({
   const [subFolderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
     setSubFolderOptionModalOpen(false),
   );
-
+  const { dragEnter, dragLeave } = handleDrag();
   const options = ['수정', '삭제', '이동'];
 
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
@@ -70,44 +71,38 @@ const SubCategory = ({
           />
         </SubCategoryStyles.EditNameInputWrap>
       ) : (
-        <div style={{ width: '100%' }}>
-          <SubCategoryStyles.SubFolder
-            selected={subId === categoryID}
-            to={`/category/${topId}/${categoryID}`}
-          >
-            {edit}
-            {subId === categoryID && (
-              <SubCategoryStyles.ShowOptionButton
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setSubFolderOptionModalOpen(true);
-                }}
-              >
-                <MoreOptionsSvg width={16} height={16} />
-              </SubCategoryStyles.ShowOptionButton>
+        <div
+          style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
+        >
+          <div style={{ display: 'flex' }}>
+            <SubCategoryStyles.SubFolder
+              selected={subId === categoryID}
+              to={`/category/${topId}/${categoryID}`}
+            >
+              {edit}
+              {subId === categoryID && (
+                <SubCategoryStyles.ShowOptionButton
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setSubFolderOptionModalOpen(true);
+                  }}
+                >
+                  <MoreOptionsSvg width={16} height={16} />
+                </SubCategoryStyles.ShowOptionButton>
+              )}
+            </SubCategoryStyles.SubFolder>
+            {subFolderOptionModalOpen && subId === categoryID && (
+              <Option
+                options={options}
+                handleOptionClick={handleOptionClick}
+                optionWrapRef={subFolderOptionModalRef}
+              />
             )}
-          </SubCategoryStyles.SubFolder>
-          {subFolderOptionModalOpen && subId === categoryID && (
-            <Option
-              options={options}
-              handleOptionClick={handleOptionClick}
-              optionWrapRef={subFolderOptionModalRef}
-            />
-          )}
-          <div
-            style={{
-              height: '4px',
-              width: '100%',
-            }}
-            onDragEnter={(e) => {
-              const target = e.target as HTMLElement;
-              target.style.backgroundColor = 'black';
-            }}
-            onDragLeave={(e) => {
-              const target = e.target as HTMLElement;
-              target.style.backgroundColor = 'white';
-            }}
+          </div>
+          <SubCategoryStyles.Drop
+            onDragEnter={dragEnter}
+            onDragLeave={dragLeave}
           />
         </div>
       )}

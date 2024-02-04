@@ -51,3 +51,7 @@ export const SubFolder = styled(Link)<{ selected: boolean }>`
     }
   }
 `;
+
+export const Drop = styled.div`
+  height: 4px;
+`;

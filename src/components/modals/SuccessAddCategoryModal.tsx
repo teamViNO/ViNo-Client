@@ -6,19 +6,7 @@ import {
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryModal.style';
 import { ICommonModalProps } from 'types/modal';
-
-interface ISubFolderProps {
-  categoryID: number;
-  name: string;
-  topCategoryID: number;
-}
-
-interface IFolderProps {
-  categoryID: number;
-  name: string;
-  topCategoryID: null;
-  subFolders: ISubFolderProps[];
-}
+import { IFolderProps } from '../layout/sideBar/UserMode';
 
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];

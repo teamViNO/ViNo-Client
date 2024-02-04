@@ -72,3 +72,7 @@ export const SubFolderContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
 `;
+
+export const Drop = styled.div`
+  height: 12px;
+`;

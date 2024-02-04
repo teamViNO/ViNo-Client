@@ -33,6 +33,24 @@ const handleCategory = () => {
     return newFolders;
   };
 
-  return { deleteCategory, insertCategory };
+  const insertSubToTopCategory = (
+    myFolders: IFolderProps[],
+    insertTarget: number | undefined,
+    insertData: ISubFolderProps,
+  ) => {
+    const newFolders = [
+      ...myFolders.slice(0, insertTarget! + 1),
+      {
+        categoryID: insertData.categoryID,
+        name: insertData.name,
+        topCategoryID: null,
+        subFolders: [],
+      },
+      ...myFolders.slice(insertTarget! + 1),
+    ];
+    return newFolders;
+  };
+
+  return { deleteCategory, insertCategory, insertSubToTopCategory };
 };
 export default handleCategory;
