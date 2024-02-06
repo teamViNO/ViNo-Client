@@ -133,7 +133,6 @@ export const RecentVideosContainer = styled.div`
   margin-bottom: 100px;
   background-color: ${theme.color.white};
   width: 100%;
-  // height: 1714px;
   display: flex;
   justify-content: center;
   border-top-left-radius: 50px; 
@@ -141,7 +140,6 @@ export const RecentVideosContainer = styled.div`
 
   .container {
     width: 910px;
-    // height: 1591.26px;
   }
   
   .empty-video img {
@@ -202,7 +200,6 @@ export const VideoButton = styled.button`
 export const InsightVideosContainer = styled.div`
   display: flex;
   justify-content: center;
-  /* margin-top: 160px; */
   background-color: ${theme.color.white};
   width: 100%;
   padding: 100px 265px;
