@@ -1,52 +1,89 @@
-import theme from '@/styles/theme';
 import styled from 'styled-components';
 
-export const StateWrap = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${theme.color.gray300};
-`;
-
-export const StateColor = styled.div<{ background: string | undefined }>`
-  width: 8px;
-  height: 8px;
-  background-color: ${(props) => props.background};
-  border-radius: 100%;
-  margin-right: 8px;
-`;
-
-export const StateType = styled.span`
-  ${theme.typography.Caption1};
-  color: ${theme.color.gray400};
-`;
-
-export const Divide = styled.span`
-  margin: 0px 8px;
-  height: 10px;
-  border: 0.5px solid ${theme.color.gray300};
-`;
-
-export const ContentContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid ${theme.color.gray200};
-  padding-bottom: 28px;
-  margin-top: 12px;
-  margin-bottom: 28px;
-  &:last-child {
-    border-bottom: 0;
-    margin-bottom: 0;
-  }
-`;
-
-export const Image = styled.img`
-  width: 56px;
-  height: 56px;
-  margin-right: 12px;
-`;
-
-export const ContentWrap = styled.div`
+export const Container = styled.div`
+  padding: 28px 0;
   display: flex;
   flex-direction: column;
-  color: ${theme.color.gray500};
-  ${theme.typography.Body1};
+  gap: 12px;
+  width: 100%;
+
+  &:first-of-type {
+    padding: 0 0 28px;
+  }
+
+  &:not(:last-of-type) {
+    border-bottom: solid 1px ${(props) => props.theme.color.gray200};
+  }
+
+  &.read {
+    & div.color {
+      background-color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.type {
+      color: ${(props) => props.theme.color.gray400};
+    }
+
+    & div.content {
+      color: ${(props) => props.theme.color.gray300};
+    }
+  }
+
+  & div.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    & div.color {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: ${(props) => props.theme.color.green400};
+    }
+
+    & span.type {
+      color: ${(props) => props.theme.color.gray400};
+      ${(props) => props.theme.typography.Caption1};
+    }
+
+    & div.line {
+      width: 1px;
+      height: 10px;
+      background-color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.time {
+      color: ${(props) => props.theme.color.gray300};
+      ${(props) => props.theme.typography.Caption2};
+    }
+
+    & button.remove-button {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: ${(props) => props.theme.color.gray200};
+
+      & path {
+        stroke: ${(props) => props.theme.color.gray300};
+      }
+    }
+  }
+
+  & div.bottom {
+    display: flex;
+    gap: 12px;
+
+    & div.content {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      color: ${(props) => props.theme.color.gray500};
+      ${(props) => props.theme.typography.Body1};
+
+      & h1 {
+        font-weight: bold;
+      }
+    }
+  }
 `;

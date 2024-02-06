@@ -1,4 +1,4 @@
-import { RecoilRoot } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -10,7 +10,7 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import CategoryPage from '@/pages/CategoryPage';
 import FindEmailPage from '@/pages/FindEmailPage';
 import FindPasswordPage from '@/pages/FindPasswordPage';
-// import HomePage from '@/pages/HomePage';
+import HomePage from '@/pages/HomePage';
 import GuestPage from './pages/GuestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
@@ -24,40 +24,51 @@ import Layout from './components/layout/Layout';
 // Components
 import { ToastList } from './components/common';
 
+// Store
+import { userTokenState } from './stores/user';
+
 const App = () => {
+  const userToken = useRecoilValue(userTokenState);
+
   return (
-    <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
 
-        <BrowserRouter>
-          <Routes>
-            <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/sign-up" element={<SignUpPage />} />
-            <Route path="/find-email" element={<FindEmailPage />} />
-            <Route path="/find-password" element={<FindPasswordPage />} />
+      <BrowserRouter>
+        <Routes>
+          {!userToken && (
+            <>
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/find-email" element={<FindEmailPage />} />
+              <Route path="/find-password" element={<FindPasswordPage />} />
+            </>
+          )}
 
-            <Route element={<Layout />}>
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/category/recent" element={<CategoryPage />} />
-              <Route path="/category/:top_folder" element={<CategoryPage />} />
-              <Route
-                path="/category/:top_folder/:sub_folder"
-                element={<CategoryPage />}
-              />
-              <Route path="/profile" element={<ProfilePage />} />
+          <Route element={<Layout />}>
+            {userToken && (
+              <>
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </>
+            )}
 
-              <Route path="/summary" element={<SummaryPage />} />
-              <Route path="/" element={<GuestPage />} />
-            </Route>
+            <Route path="/category/recent" element={<CategoryPage />} />
+            <Route path="/category/:top_folder" element={<CategoryPage />} />
+            <Route
+              path="/category/:top_folder/:sub_folder"
+              element={<CategoryPage />}
+            />
+            <Route path="/summary" element={<SummaryPage />} />
+            <Route path="/" element={<HomePage />} />
+          </Route>
 
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </BrowserRouter>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </BrowserRouter>
 
-        <ToastList />
-      </ThemeProvider>
-    </RecoilRoot>
+      <ToastList />
+    </ThemeProvider>
   );
 };
 

@@ -1,66 +1,67 @@
-import theme from '@/styles/theme';
-import * as AlarmItemStyle from '@/styles/layout/header/alarm/AlarmItem.style';
+import { IAlarm } from '@/models/alarm';
 
-interface IAlarmContainerProps {
-  type: 'convert' | 'error' | 'welcome';
-  title?: string;
-  nickname?: string;
-}
+import CheckIcon from '@/assets/icons/check.svg?react';
+import EmptyFileImage from '@/assets/empty-file.png';
+import FileImage from '@/assets/file.png';
+import FileReadImage from '@/assets/file-read.png';
 
-interface IDatas {
-  color: string;
-  image: string;
-  title?: string;
-  content: string;
-}
+import { Container } from '@/styles/layout/header/alarm/AlarmItem.style';
 
-const AlarmItem = ({ type, title, nickname }: IAlarmContainerProps) => {
-  let datas: IDatas | null = null;
-  switch (type) {
-    case 'convert':
-      datas = {
-        color: theme.color.green400,
-        image: 'success-file',
-        title: `[${title}]`,
-        content:
-          '영상이 모두 변환되었어요! 이제 정리 된 영상을 확인하러 가볼까요?',
-      };
-      break;
-    case 'error':
-      datas = {
-        color: theme.color.red,
-        image: 'Error',
-        title: `[${title}]`,
-        content: '영상 변환도중 오류가 생겼어요 ㅠ 어떤 문제인지 확인해보세요!',
-      };
-      break;
-    case 'welcome':
-      datas = {
-        color: theme.color.gray300,
-        image: 'file',
-        title: `${nickname}님 반가워요!`,
-        content: '이제부터 어떻게 vino를 사용하면 좋을지 소개해드릴게요:)',
-      };
-      break;
-    default:
-      console.log('something went wrong!');
-  }
+import { diffTime } from '@/utils/date';
+
+type Props = {
+  alarm: IAlarm;
+};
+
+const AlarmItem = ({ alarm }: Props) => {
+  const type = alarm.type === 'video' ? '영상 변환' : '환영인사';
+
+  const image = () => {
+    switch (alarm.type) {
+      case 'video':
+        return EmptyFileImage;
+      case 'notice':
+        return alarm.is_confirm ? FileReadImage : FileImage;
+    }
+  };
+
+  const time = () => {
+    const { second, minute, hour, day } = diffTime(
+      Date.now(),
+      new Date(alarm.updated_at).getTime(),
+    );
+
+    if (day > 0) return `${day}일`;
+    if (hour > 0) return `${hour}시간`;
+    if (minute > 0) return `${minute}분`;
+    return `${second}초`;
+  };
+
   return (
-    <>
-      <AlarmItemStyle.StateWrap>
-        <AlarmItemStyle.StateColor background={datas?.color} />
-        <AlarmItemStyle.StateType>영상 변환</AlarmItemStyle.StateType>
-        <AlarmItemStyle.Divide />
-        <span style={theme.typography.Caption2}>10분 전</span>
-      </AlarmItemStyle.StateWrap>
-      <AlarmItemStyle.ContentContainer>
-        <AlarmItemStyle.Image src={`src/assets/${datas?.image}.png`} />
-        <AlarmItemStyle.ContentWrap>
-          <span>{datas?.title}</span>
-          <span>{datas?.content}</span>
-        </AlarmItemStyle.ContentWrap>
-      </AlarmItemStyle.ContentContainer>
-    </>
+    <Container className={`${alarm.is_confirm && 'read'}`}>
+      <div className="top">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="color" />
+
+          <span className="type">{type}</span>
+          <div className="line" />
+          <span className="time">{time()} 전</span>
+        </div>
+
+        <button className="remove-button">
+          <CheckIcon width={24} height={24} />
+        </button>
+      </div>
+
+      <div className="bottom">
+        <img src={image()} alt="image" width={56} height={56} />
+
+        <div className="content">
+          {alarm.title && <h1>{alarm.title}</h1>}
+          <span>{alarm.content}</span>
+        </div>
+      </div>
+    </Container>
   );
 };
 
