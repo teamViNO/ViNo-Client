@@ -8,39 +8,6 @@ import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
 import { escapeHTML } from "@/utils/string";
 
-
-const apiSample = {
-    isSuccess : true,
-    code : 200,
-    message : "success!",
-    result : {
-        videos : [
-            {
-            videoid : 9,
-            title : "",
-            image : "link",
-            created_at : new Date,
-            name : "",
-            content : "",
-            user : "",
-            tag : [
-                {
-                    "name": "부동산"
-                },
-                {
-                    "name": "재건축"
-                },
-                {
-                    "name": "경제"
-                },
-                {
-                    "name": "정부정책"
-                }
-            ]
-        }
-        ]
-    }
-}
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [input, setInput] = useState('');
@@ -50,23 +17,6 @@ const SearchResult = () => {
     const [data, setData] = useState([]);
     const location = useLocation();
 
-    const formattedScriptList = useMemo(() => {
-        return apiSample.result.videos.map(({ content, ...others }) => {
-          if (input.trim() !== '') {
-            content = content
-              .split(input)
-              .map((s) => escapeHTML(s))
-              .join(`<mark>${escapeHTML(input)}</mark>`);
-          } else {
-            content = escapeHTML(content);
-          }
-          content = content.replace(/\n/g, '<br>');
-          return {
-            content,
-            ...others,
-          };
-        });
-      }, []);
 
     useEffect(() => {
         const crollLoc = () => {
@@ -84,19 +34,14 @@ const SearchResult = () => {
                 }
             } catch (error) {
                 console.error('Error:', error);
-                // 사용자에게 오류를 알리는 로직을 추가할 수 있습니다.
             }
         }
         const fetchApiData = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get('/dummies/dummyProgressFail', {
-                    /*data : {
-                        "keywords" : ['dasdas']
-                    }*/
-                })
+                
                 setLoading(false);
-                return response.data;
+                return undefined;
             } catch (notFound) {
                 setLoading(false);
                 return notFound;
@@ -104,11 +49,6 @@ const SearchResult = () => {
         }
 
         crollLoc();
-        fetchApiData().then((data) => {
-            if(apiSample.isSuccess){
-                
-            }
-        });
     }, [location])
 
 
