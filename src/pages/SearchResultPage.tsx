@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 import Styled from "@/styles/SearchResult";
 import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
-import { axiosInstance } from "@/apis/config/instance";
 import { escapeHTML } from "@/utils/string";
 
 

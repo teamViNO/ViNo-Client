@@ -2,8 +2,9 @@ export interface APIBaseResponse {
   status: number;
   success: boolean;
   message: string;
+  code: string;
 }
 
 export interface APIResponse<T> extends APIBaseResponse {
-  data: T;
+  result: T;
 }

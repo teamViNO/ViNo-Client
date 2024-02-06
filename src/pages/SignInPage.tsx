@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import React, { useState, ChangeEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
@@ -59,7 +60,7 @@ const SignInPage: React.FC = () => {
 
   const handleClickLoginButton = async () => {
     try {
-      const { token } = (await loginAPI(loginInfo)).data.data;
+      const { token } = (await loginAPI(loginInfo)).data.result;
 
       setUserToken(token);
       navigate('/');
