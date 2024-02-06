@@ -6,50 +6,76 @@ import { useLocation } from "react-router-dom";
 import Styled from "@/styles/SearchResult";
 import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
-import { escapeHTML } from "@/utils/string";
+import axios, { AxiosError } from "axios";
+import { IVideo } from "@/models/search";
+
+import SearchResultBox from "@/components/SearchPage/SearchResultBox";
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [input, setInput] = useState('');
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
-    const [isScrolling, ,startScrolling,,] = useBoolean(false);
-    const [loading, setLoading] = useState(Boolean);
-    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [data, setData] = useState<IVideo[]>([]);
+    const [count, setCount] = useState(0);
     const location = useLocation();
 
-
+    const dataDuplicateHandler = (videos : IVideo[]) => {
+        const newData = videos.filter((value) => {
+            return !data.some((item) => item.video_id === value.video_id);
+          });
+        
+          setData(data.concat(newData));
+    }
     useEffect(() => {
-        const crollLoc = () => {
-            try {
-                const searchParams = new URLSearchParams(location.search);
-                const type = searchParams.get('type');
-                const data = searchParams.get('value');
-                if (type === 'keyword' && data) {
-                    setInput(data);
+            const searchParams = new URLSearchParams(location.search);
+            setLoading(true);
+            switch(searchParams.get('type')) {
+                case 'keyword':
                     setSearchType(true);
-                } else if (type === 'hashtag' && data) {
-                    const initialTagList = data.split('&');
-                    setTags(initialTagList)
+                    const inputValues = searchParams.get('value') as string;
+                    setInput(inputValues);
+                    
+                    const handleSearchAPI = async () => {
+                            try {
+                                const storage = JSON.parse(localStorage.vino);
+                                const keywords = inputValues.split('+');
+                            
+                                const requests = keywords.map((value) => {
+                                  return axios.get('https://backend.vi-no.site/search/keyword/', {
+                                    params: {
+                                      keywordName: value
+                                    },
+                                    headers: {
+                                      Authorization: `Bearer ${storage['user-token']}`
+                                    }
+                                  });
+                                });
+                                const responses = await Promise.all(requests);
+                                responses.forEach((response) => {
+                                    dataDuplicateHandler(response.data.result.videos)
+                                    setCount((prev) => prev + 1);
+                                })
+                        } catch (error) {
+                            if (error instanceof AxiosError) {
+                                setCount(0);
+                                setError(true);
+                            }
+                        }
+                      };
+                    handleSearchAPI();
+                    setLoading(false);
+                    break;
+                case 'hashtag':
+                    const tagValues = searchParams.get('value') as string;
+                    setTags(tagValues.split('&'))
                     setSearchType(false);
-                }
-            } catch (error) {
-                console.error('Error:', error);
+                    break;
+                default:
+                    // 기타 에러
             }
-        }
-        const fetchApiData = async () => {
-            try {
-                setLoading(true);
-                
-                setLoading(false);
-                return undefined;
-            } catch (notFound) {
-                setLoading(false);
-                return notFound;
-            }
-        }
-
-        crollLoc();
-    }, [location])
+    }, [])
 
 
   if(loading){
@@ -61,8 +87,7 @@ const SearchResult = () => {
     <Styled.Container style={{width : '100vw', height : '100vh'}}>
         <div className="inputContainer" 
         style={{
-            height: '210px',
-            boxShadow: isScrolling ? '0px 4px 40px rgba(0, 0, 0, 0.05)' : ''
+            height: '210px'
           }}>
             <div className='inputwrap' style={{width : '908px', height : '72px'}}>
                     <div className='input-inner' style={{width : '860px', height : '36px'}}>
@@ -76,12 +101,16 @@ const SearchResult = () => {
             </div>
         </div>
         
-        <div className="result" onScroll={startScrolling}>
+        <div className="result">
             <div className="filter" style={{width : '910px', height : '24px'}}>
-                <span>총 0개의 영상이 발견되었어요!</span>
+                {(count !== 0) ?  <span>총 {count}개의 영상이 발견되었어요!</span> : ''}
             </div>
             <div className="content">
-                <SearchNotFound input="dasdd"></SearchNotFound>
+                {error ? 
+                <SearchNotFound input={input}></SearchNotFound> :
+                data.map((item, index) =>
+                <SearchResultBox key={index} video={item}/>)
+                }
             </div>
         </div>
     </Styled.Container>

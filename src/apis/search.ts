@@ -4,6 +4,12 @@ import { SearchKeywordRequest, SearchResponse } from '@/models/search';
 
 const PREFIX = '/search';
 
-export const searchKeyowrdAPI = (data: SearchKeywordRequest) => {
-    return axios.post<APIResponse<SearchResponse>>(PREFIX + '/keyword', data);
-  };
+export const searchKeyowrdAPI = (keyword : string) => {
+    return axios.get<APIResponse<never>>(PREFIX + '/keyword/', {
+        params : {keyName : keyword}
+    });
+};
+
+export const searchHashtagAPI = () => {
+    return axios.get<APIResponse<never>>(PREFIX + '/hashtag');
+}
