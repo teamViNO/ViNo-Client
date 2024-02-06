@@ -14,7 +14,7 @@ export interface Video {
   thumbnailUrl: string; 
 }
 
-const HomePage: React.FC = () => {
+const GuestPage: React.FC = () => {
   const handleSearch = (value: string) => {
     console.log(value);
   };
@@ -22,10 +22,10 @@ const HomePage: React.FC = () => {
   return (
     <HomePageContainer>
       <SearchYoutube onSearch={handleSearch} />
-      <RecentVideos />
       <InsightVideos username="여울" popularHashtags={['디자인', '진로', '브랜딩']} />
+      <RecentVideos />
     </HomePageContainer>
   );
 };
 
-export default HomePage;
+export default GuestPage;
