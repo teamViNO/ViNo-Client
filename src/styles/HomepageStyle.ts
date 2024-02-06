@@ -33,6 +33,12 @@ export const SearchForm = styled.form`
     align-items: center;
   }
 
+  .valid-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .search-title {
     margin-top: 120px;
     color: white;
@@ -43,10 +49,26 @@ export const SearchForm = styled.form`
     height: 58px;
   }
 
+  .non-valid-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.6em;
+}
+
   .search-subtitle {
     color: ${theme.color.gray300}; 
     width: 436px;
     height: 26px;
+  }
+
+  .search-subtitle-wrapper {
+    width: 301px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
   .input-container {
@@ -96,8 +118,6 @@ export const SearchInput = styled.input`
 export const SearchButton = styled.button`
   padding: 10px 20px;
   font-size: 1rem;
-  color: ${theme.color.gray300};
-  background-color: ${theme.color.gray100};
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -228,8 +248,8 @@ export const InsightVideosContainer = styled.div`
     padding: 6px 16px;
     border-radius: 8px;
     margin-right: 8px;
-    color: ${theme.color.gray400}
-    border: 1px solid ${theme.color.gray200}
+    color: ${theme.color.gray400};
+    border: 1px solid ${theme.color.gray200};
   }
 
   .category-icon {
