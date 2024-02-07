@@ -33,6 +33,12 @@ export const SearchForm = styled.form`
     align-items: center;
   }
 
+  .valid-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .search-title {
     margin-top: 120px;
     color: white;
@@ -43,10 +49,26 @@ export const SearchForm = styled.form`
     height: 58px;
   }
 
+  .non-valid-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.6em;
+}
+
   .search-subtitle {
     color: ${theme.color.gray300}; 
     width: 436px;
     height: 26px;
+  }
+
+  .search-subtitle-wrapper {
+    width: 301px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
   .input-container {
@@ -96,8 +118,6 @@ export const SearchInput = styled.input`
 export const SearchButton = styled.button`
   padding: 10px 20px;
   font-size: 1rem;
-  color: ${theme.color.gray300};
-  background-color: ${theme.color.gray100};
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -109,10 +129,10 @@ export const SearchButton = styled.button`
 `;
 
 export const RecentVideosContainer = styled.div`
-  margin-top: 100px;  
+  margin-top: 60px;
+  margin-bottom: 100px;
   background-color: ${theme.color.white};
   width: 100%;
-  // height: 1714px;
   display: flex;
   justify-content: center;
   border-top-left-radius: 50px; 
@@ -120,7 +140,6 @@ export const RecentVideosContainer = styled.div`
 
   .container {
     width: 910px;
-    // height: 1591.26px;
   }
   
   .empty-video img {
@@ -181,9 +200,9 @@ export const VideoButton = styled.button`
 export const InsightVideosContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 160px;
   background-color: ${theme.color.white};
   width: 100%;
+  padding: 100px 265px;
   
   .insight-container {
     display: flex;
@@ -191,13 +210,13 @@ export const InsightVideosContainer = styled.div`
   }
   
   .text-container {
-    
     color: ${theme.color.gray500};   
     padding: 10px;
     text-align: left;
     width: 910px;
     height: 87px;
     line-height: 2;
+    margin-bottom: 40px;
   }
 
   .insight-title {
@@ -228,8 +247,8 @@ export const InsightVideosContainer = styled.div`
     padding: 6px 16px;
     border-radius: 8px;
     margin-right: 8px;
-    color: ${theme.color.gray400}
-    border: 1px solid ${theme.color.gray200}
+    color: ${theme.color.gray400};
+    border: 1px solid ${theme.color.gray200};
   }
 
   .category-icon {
@@ -253,70 +272,5 @@ export const InsightVideosContainer = styled.div`
   
   .video-card:hover .category-container {
     display: block;
-  }
-`;
-
-export const VideosContainer = styled.div`
-  margin-top: 40px;
-  display: flex;
-  justify-content: left;
-  height: 367px;
-
-  .video-card {
-    display: flex;
-    flex-direction: column;
-    // align-items: start;
-    margin-right: 20px;
-    width: 290px;
-    // border: solid black; // 카드 테두리 참고용
-
-  }
-
-  .video-card img {
-    height: 163.13px;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
-
-  }
-  
-  .card-text {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    text-align: left;
-  }
-  .card {
-    padding: 24px 20px;
-    
-  }
-
-  .video-card h3 {
-    min-height: 26px;
-    margin-bottom: 16px;
-    color: ${theme.color.gray500};
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 1.6em;
-    
-  }
-
-  .video-card h4 {
-    height: 44px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    color: ${theme.color.gray300};
-  }
-
-  .hashtag {
-    height: 31px;
-    font-size: 12px;
-    color: ${theme.color.gray400};
-  }
-
-  .hashtag span {
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-right: 8px;
-    background-color: ${theme.color.gray100};
   }
 `;

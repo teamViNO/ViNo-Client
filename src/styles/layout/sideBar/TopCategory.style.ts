@@ -24,7 +24,6 @@ export const Container = styled.div<{ selected: boolean }>`
   align-items: center;
   width: 100%;
   border-radius: 100px;
-  margin-top: 12px;
   background-color: ${(props) =>
     props.selected ? theme.color.gray100 : theme.color.white};
   &:hover {
@@ -41,6 +40,9 @@ export const EditNameInputWrap = styled.div`
   width: 100%;
   background-color: ${theme.color.white};
   border-radius: 100px;
+  &.warning {
+    border: 1px solid ${theme.color.red};
+  }
 `;
 
 export const EditNameInput = styled.input`
@@ -72,4 +74,9 @@ export const SubFolderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+export const Drop = styled.div`
+  height: 12px;
+  border-radius: 3px;
 `;
