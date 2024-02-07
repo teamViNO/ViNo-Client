@@ -1,5 +1,5 @@
 import { APIResponse } from '@/models/config/axios';
-import { LoginRequest, LoginResponse } from '@/models/user';
+import { CheckEmailRequest, CheckEmailResponse, JoinRequest, JoinResponse, LoginRequest, LoginResponse } from '@/models/user';
 import { AlarmResponse } from '@/models/alarm';
 
 import axios from './config/instance';

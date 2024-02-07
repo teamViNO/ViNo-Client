@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
 import errorImg from '@/assets/Error.png';
@@ -84,7 +85,7 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     const emailCurrent = e.target.value;
     setEmail(emailCurrent);
     if (!emailRegex.test(emailCurrent)) {
@@ -98,7 +99,7 @@ const SignUp: React.FC<SignUpProps> = () => {
   };
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const passwordRegex = /^[A-Za-z0-9]{8,16}$/;
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const passwordCurrent = e.target.value;
     setPassword(passwordCurrent);
     if (!passwordRegex.test(passwordCurrent)) {
@@ -145,12 +146,13 @@ const SignUp: React.FC<SignUpProps> = () => {
     }
   }
 
+  const navigate = useNavigate();
   const onApply = () => {
     if (name && year && month && date && selectedSex && phonenumber && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
       console.log("정보 등록 완료");
-      // navigate("/signedup");
+      navigate("/sign-up-suc");
     } else {
       alert("입력값을 확인해주세요.");
     }

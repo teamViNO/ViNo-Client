@@ -77,13 +77,32 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  /*let login:any = new window.naver.LoginWithNaverId("http://localhost:5173/sign-in/", "http://localhost:5173/sign-in");
+  const Rest_api_key='77ddf1baeb87f4a9752ed437db43cd96' //kakao REST API KEY
+  const redirect_uri = 'https://localhost:5173/sign-up-suc' //Redirect URI
+  const NAVER_CLIENT_ID ='qR4Npp1ui69SCF6nAJd2'
+  const STATE = 'flase'
+  // oauth 요청 URL
+  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
+  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${redirect_uri}`
+  
+  const handleKakaoLogin = ()=>{
+      window.location.href = kakaoURL
+  }
+
+  const handleNaverLogin = ()=>{
+    window.location.href = naverURL
+}
+  
+  
+
+
+  /* let login:any = new window.naver.LoginWithNaverId("http://localhost:5173/sign-in/", "http://localhost:5173/sign-in");
 	let state = login.getUniqState();
 	login.setButton("white", 2,40);
 	login.setDomain(".service.com");
 	login.setState(state);
 	login.isPopup(false);
-	login.LoginWithNaverId();*/
+	login.LoginWithNaverId(); */
 
   return (
     <PageComponent>
@@ -102,7 +121,7 @@ const SignInPage: React.FC = () => {
           계정에 로그인하고 나만의 영상 아카이빙을 시작해요
         </TextDiv>
 
-        <NaverSection>
+        <NaverSection type='button' onClick={handleNaverLogin}>
           <img
             src="src/assets/naver-logo.png"
             alt="naver-logo"
@@ -111,7 +130,7 @@ const SignInPage: React.FC = () => {
           네이버로 시작하기
         </NaverSection>
 
-        <KakaoSection>
+        <KakaoSection type='button' onClick={handleKakaoLogin}>
           <img src="src/assets/kakao-logo.png" alt="kakao-logo" />
           카카오로 시작하기
         </KakaoSection>
