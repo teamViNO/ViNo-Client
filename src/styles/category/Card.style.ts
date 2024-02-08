@@ -7,7 +7,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, auto);
   column-gap: 20px;
-  row-gap: 36px;
+  row-gap: 40px;
 `;
 
 export const Wrap = styled.div`

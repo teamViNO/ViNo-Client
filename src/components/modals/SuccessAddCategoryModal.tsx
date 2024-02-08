@@ -8,6 +8,8 @@ import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryMod
 import { ICommonModalProps } from 'types/modal';
 import { IFolderProps } from '../layout/sideBar/UserMode';
 
+import FileImage from '@/assets/file.png';
+
 interface ISuccessAddCategory extends ICommonModalProps {
   folders: IFolderProps[];
   setMyFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
@@ -61,10 +63,7 @@ const SuccessAddCategoryModal = ({
       <CommonCloseButton onClick={onCloseModal}>
         <CloseSvg width={21.42} height={21.42} />
       </CommonCloseButton>
-      <SuccessAddCategoryStyles.Image
-        src="/src/assets/file.png"
-        alt="완료 이미지"
-      />
+      <SuccessAddCategoryStyles.Image src={FileImage} alt="완료 이미지" />
       <SuccessAddCategoryStyles.Title>
         <SuccessAddCategoryStyles.HighlightTitle>
           '{categoryName}'

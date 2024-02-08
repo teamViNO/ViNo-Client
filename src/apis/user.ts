@@ -1,6 +1,18 @@
 import { APIResponse } from '@/models/config/axios';
-import { LoginRequest, LoginResponse, CheckEmailRequest, CheckEmailResponse, } from '@/models/user';
-import { AlarmResponse } from '@/models/alarm';
+import {
+  CheckEmailRequest,
+  CheckEmailResponse,
+  JoinRequest,
+  JoinResponse,
+  LoginRequest,
+  LoginResponse,
+} from '@/models/user';
+import {
+  AlarmResponse,
+  ConfirmAlarmRequest,
+  DeleteAlarmRequest,
+  DeleteAlarmResponse,
+} from '@/models/alarm';
 
 import axios from './config/instance';
 
@@ -10,8 +22,21 @@ export const loginAPI = (data: LoginRequest) => {
   return axios.post<APIResponse<LoginResponse>>(PREFIX + '/login', data);
 };
 
-export const getAlarm = () => {
+export const getAlarmAPI = () => {
   return axios.get<APIResponse<AlarmResponse>>(PREFIX + '/alarm');
+};
+
+export const deleteSelectAlarmAPI = (data: DeleteAlarmRequest) => {
+  return axios.delete<APIResponse<DeleteAlarmResponse>>(
+    PREFIX + '/alarm/selectDelete',
+    {
+      data,
+    },
+  );
+};
+
+export const confirmSelectAlarmAPI = (data: ConfirmAlarmRequest) => {
+  return axios.patch(PREFIX + '/alarm/selectedConfirm', data);
 };
 
 export const checkEmailAPI = (data: CheckEmailRequest) => {
@@ -20,11 +45,6 @@ export const checkEmailAPI = (data: CheckEmailRequest) => {
     data,
   );
 };
-/*
 export const joinAPI = (data: JoinRequest) => {
-  return axios.post<APIResponse<JoinResponse>>(
-    PREFIX + '/join',
-    data,
-  );
+  return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };
-*/ // joinRequest, joinResponse가 없음

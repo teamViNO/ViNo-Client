@@ -13,3 +13,16 @@ export interface CheckEmailRequest {
 
 export interface CheckEmailResponse {
 }
+
+export interface JoinRequest {
+  name: string;
+  email: string;
+  password: string;
+	check_password: string;
+  birth_date: string;
+  gender: string;
+  phone_number: string;
+}
+
+export interface JoinResponse {
+}
