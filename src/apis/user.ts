@@ -45,6 +45,11 @@ export const checkEmailAPI = (data: CheckEmailRequest) => {
     data,
   );
 };
+
 export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
+};
+
+export const socialAccountAPI = (code: string) => {
+  return axios.get(`/sign-up/success?code=${code}`);
 };
