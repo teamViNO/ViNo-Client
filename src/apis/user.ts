@@ -1,6 +1,7 @@
 import { APIResponse } from '@/models/config/axios';
 import { LoginRequest, LoginResponse } from '@/models/user';
 import { AlarmResponse } from '@/models/alarm';
+import { getNicknameResponse } from '@/models/user';
 
 import axios from './config/instance';
 
@@ -27,3 +28,8 @@ export const joinAPI = (data: JoinRequest) => {
     data,
   );
 };
+
+export const getNicknameAPI = () => {
+    return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
+};
+

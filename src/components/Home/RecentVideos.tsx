@@ -1,6 +1,6 @@
 import React from 'react'
 import { RecentVideosContainer, VideoButton, VideosSubtitle, VideosTitle } from '@/styles/HomepageStyle';
-import Card from '../category/Card';
+// import Card from '../category/Card';
 
 const RecentVideos: React.FC = () => {
   return (

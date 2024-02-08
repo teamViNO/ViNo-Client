@@ -13,3 +13,7 @@ export interface CheckEmailRequest {
 
 export interface CheckEmailResponse {
 }
+
+export interface getNicknameResponse {
+  nickname: string;
+}
