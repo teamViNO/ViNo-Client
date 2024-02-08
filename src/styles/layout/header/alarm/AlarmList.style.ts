@@ -15,7 +15,6 @@ export const Container = styled.div`
   padding: 36px 0;
   display: flex;
   flex-direction: column;
-  gap: 36px;
   z-index: 99;
   box-shadow: 4px 4px 30px 0 rgba(0, 0, 0, 0.16);
 `;
@@ -51,4 +50,18 @@ export const NoticeAbsenceMessage = styled.div`
   height: 140px;
   text-align: center;
   color: ${theme.color.gray300};
+`;
+
+export const NoticeToolWrap = styled.div`
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  & > span {
+    color: ${(props) => props.theme.color.gray400};
+    cursor: pointer;
+    ${(props) => props.theme.typography.Caption1};
+  }
 `;
