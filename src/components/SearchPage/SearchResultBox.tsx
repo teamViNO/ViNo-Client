@@ -1,6 +1,6 @@
 import { IVideo } from '@/models/search';
 import Styled from '@/styles/SearchResult';
-import React, { ImgHTMLAttributes } from 'react';
+import React from 'react';
 
 interface SearchResultBoxProp {
     video : IVideo

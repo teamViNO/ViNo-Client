@@ -10,7 +10,7 @@ const SearchPage = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [input, setInput] = useState<string>('');
     const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
-    const [userHashTag, SetUserHashTag] = useState<string[]>(["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]); // 사용자의 해시태그 데이터 10개 <임의 데이터>
+    const userHashTag = ["기획", "광고", "마케팅", "트렌드", "기업", "광고", "마케팅", "트렌드", "기업", "광고"]; // 사용자의 해시태그 데이터 10개 <임의 데이터>
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
     const searchNav = useNavigate();
 
