@@ -45,7 +45,6 @@ export const checkEmailAPI = (data: CheckEmailRequest) => {
     data,
   );
 };
-
 export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };

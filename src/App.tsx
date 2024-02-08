@@ -14,6 +14,7 @@ import HomePage from '@/pages/HomePage';
 // import GuestPage from './pages/GuestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
+import SearchResult from './pages/SearchResultPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import SignUpSuccessPage from '@/pages/SignUpSuccessPage';
@@ -51,7 +52,9 @@ const App = () => {
             {userToken && (
               <>
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/search/result" element={<SearchResult />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                
               </>
             )}
 

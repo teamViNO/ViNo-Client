@@ -32,7 +32,6 @@ const Container = styled.div`
         gap: 13px;
         max-width: calc(100% - 10px);
         position: relative;
-        z-index: 1;
         outline: 0;
         background : ${(props) => props.theme.color.white};
         ${(props) => props.theme.typography.Body3};
