@@ -14,8 +14,11 @@ import HomePage from '@/pages/HomePage';
 // import GuestPage from './pages/GuestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
+import SearchResult from './pages/SearchResultPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
+import SignUpSuccessPage from '@/pages/SignUpSuccessPage';
+import SocialAccountPage from '@/pages/SocialAccountPage';
 import SummaryPage from '@/pages/SummaryPage';
 
 // Layouts
@@ -40,8 +43,10 @@ const App = () => {
             <>
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/sign-up/success" element={<SignUpSuccessPage />} />
               <Route path="/find-email" element={<FindEmailPage />} />
               <Route path="/find-password" element={<FindPasswordPage />} />
+              <Route path="/social-account" element={<SocialAccountPage />} />
             </>
           )}
 
@@ -49,6 +54,7 @@ const App = () => {
             {userToken && (
               <>
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/search/result" element={<SearchResult />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </>
             )}

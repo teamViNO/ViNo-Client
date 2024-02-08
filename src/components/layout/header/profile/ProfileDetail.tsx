@@ -1,6 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 
+import ProfileImage from '@/assets/default-profile-rect.png';
+import InformationImage from '@/assets/information.png';
+import KeyImage from '@/assets/key.png';
+
 import { userTokenState } from '@/stores/user';
 
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
@@ -27,10 +31,7 @@ const ProfileDetail = ({ onClose }: Props) => {
     <ProfileDetailStyle.Layout>
       <ProfileDetailStyle.Container>
         <ProfileDetailStyle.InformationContainer>
-          <img
-            src="/src/assets/default-profile-rect.png"
-            alt="사각 프로필 이미지"
-          />
+          <img src={ProfileImage} alt="사각 프로필 이미지" />
           <ProfileDetailStyle.InformationWrap>
             <ProfileDetailStyle.InformationNickname>
               여울
@@ -43,7 +44,7 @@ const ProfileDetail = ({ onClose }: Props) => {
 
         <ProfileDetailStyle.ButtonWrap>
           <ProfileDetailStyle.Button onClick={handleClickProfileButton}>
-            <img src="/src/assets/information.png" alt="icon" />
+            <img src={InformationImage} alt="icon" />
 
             <ProfileDetailStyle.ButtonName>
               내 정보
@@ -51,7 +52,7 @@ const ProfileDetail = ({ onClose }: Props) => {
           </ProfileDetailStyle.Button>
 
           <ProfileDetailStyle.Button onClick={handleClickLogoutButton}>
-            <img src="/src/assets/key.png" alt="icon" />
+            <img src={KeyImage} alt="icon" />
 
             <ProfileDetailStyle.ButtonName>
               로그아웃

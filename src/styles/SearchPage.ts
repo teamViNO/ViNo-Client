@@ -5,7 +5,7 @@ const Container = styled.div`
     flex-direction : row;
     justify-content: center;
     align-items: center;
-    flex: none;
+    flex: 1 1 auto;
     order: 0;
     flex-grow: 0;
 

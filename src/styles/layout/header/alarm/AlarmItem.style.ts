@@ -8,24 +8,33 @@ export const Container = styled.div`
   width: 100%;
 
   &:first-of-type {
-    padding: 0 0 28px;
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 0;
   }
 
   &:not(:last-of-type) {
     border-bottom: solid 1px ${(props) => props.theme.color.gray200};
   }
 
+  &:hover button.remove-button {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
   &.read {
     & div.color {
-      background-color: ${(props) => props.theme.color.gray300};
+      background-color: ${(props) => props.theme.color.gray300} !important;
     }
 
     & span.type {
-      color: ${(props) => props.theme.color.gray400};
+      color: ${(props) => props.theme.color.gray400} !important;
     }
 
     & div.content {
-      color: ${(props) => props.theme.color.gray300};
+      color: ${(props) => props.theme.color.gray300} !important;
     }
   }
 
@@ -59,10 +68,33 @@ export const Container = styled.div`
     }
 
     & button.remove-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
       width: 24px;
       height: 24px;
+      border: none;
+      outline: none;
       border-radius: 50%;
       background-color: ${(props) => props.theme.color.gray200};
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.1s;
+      cursor: pointer;
+
+      &.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      &.selected {
+        background-color: ${(props) => props.theme.color.gray500};
+
+        & path {
+          stroke: ${(props) => props.theme.color.gray200};
+        }
+      }
 
       & path {
         stroke: ${(props) => props.theme.color.gray300};

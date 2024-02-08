@@ -1,0 +1,35 @@
+name: Vi.No Client Build Test
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 우분투 최신 버전으로 실행
+
+    strategy:
+      matrix:
+        node-version: ['18.x'] # 노드 버전 지정! 여러 개도 가능! ['18.x', '14.x'] 요렇게
+
+    steps:
+      # build 할 코드를 가져옴 (코드 checkout - github에서 제공해주는 checkout@v3 사용)
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Node.js 세팅
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # dependencies 설치, test and build
+      - name: Install dependencies
+        run: yarn install # dependencies 설치 npm ci, npm install 모두 다 됨!
+
+      - name: Run Build
+        run: yarn build # 빌드
