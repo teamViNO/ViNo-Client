@@ -16,6 +16,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
+import SignUpSuccessPage from '@/pages/SignUpSuccessPage';
 import SummaryPage from '@/pages/SummaryPage';
 
 // Layouts
@@ -40,6 +41,7 @@ const App = () => {
             <>
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/sign-up/success" element={<SignUpSuccessPage />} />
               <Route path="/find-email" element={<FindEmailPage />} />
               <Route path="/find-password" element={<FindPasswordPage />} />
             </>

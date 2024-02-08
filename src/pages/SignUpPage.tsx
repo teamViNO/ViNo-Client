@@ -184,7 +184,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       // 서버에 데이터 전송
       onRegisterUserInfo();
       console.log('정보 등록 완료');
-      navigate('/sign-up-suc');
+      navigate('/sign-up/success');
     } else {
       alert('입력값을 확인해주세요.');
     }
