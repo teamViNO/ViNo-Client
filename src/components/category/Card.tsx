@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import VideoTag from '../common/videoTag';
 import * as CardStyles from '@/styles/category/Card.style';
 
-interface cardDummy {
+export interface cardDummy {
   imageURL: string;
   title: string;
   summary: string;

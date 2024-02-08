@@ -26,3 +26,8 @@ export interface JoinRequest {
 
 export interface JoinResponse {
 }
+
+
+export interface getNicknameResponse {
+  nickname: string;
+}

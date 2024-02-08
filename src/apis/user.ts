@@ -13,7 +13,7 @@ import {
   DeleteAlarmRequest,
   DeleteAlarmResponse,
 } from '@/models/alarm';
-
+import { getNicknameResponse } from '@/models/user';
 import axios from './config/instance';
 
 const PREFIX = '/user';
@@ -53,3 +53,8 @@ export const joinAPI = (data: JoinRequest) => {
 export const socialAccountAPI = (code: string) => {
   return axios.get(`/sign-up/success?code=${code}`);
 };
+
+export const getNicknameAPI = () => {
+    return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
+};
+

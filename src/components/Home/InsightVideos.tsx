@@ -1,17 +1,17 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
+import Card from '../category/Card';
+import { cardDummy } from '../category/Card';
 
 interface InsightVideosProps {
   username: string;
   popularHashtags: string[];
 }
 
-const InsightVideos: React.FC<InsightVideosProps> = ({
-  username,
-  popularHashtags,
-}) => {
-  const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
+const InsightVideos: React.FC<InsightVideosProps> = ({ username, popularHashtags }) => {
+    const formattedHashtags = popularHashtags.map(tag => '#' + tag);
+    const [categoryItems] = useState<cardDummy[]>([]); 
+    const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
 
   return (
     <InsightVideosContainer>
@@ -23,10 +23,16 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
             콘텐츠에요!
           </h4>
         </div>
-        <div className="insight-videos">{/* <Card /> */}</div>
+        <div className='insight-videos'>
+          <Card 
+          categoryItems={categoryItems} 
+          checkedItems={checkedItems} 
+          setCheckedItems={setCheckedItems} 
+        />
+        </div>
       </div>
     </InsightVideosContainer>
   );
-};
+ };
 
 export default InsightVideos;
