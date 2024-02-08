@@ -1,12 +1,12 @@
 import { escapeHTML } from "@/utils/string";
 import { useState, useEffect} from "react";
-import SearchIcon from '@/assets/icons/search.svg?react'
 import { createSearchParams, useLocation } from "react-router-dom";
 import Styled from "@/styles/SearchResult";
 import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
-import axios, { AxiosError } from "axios";
+import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from "@/models/search";
+import { searchAPI } from "@/apis/search";
 import { useNavigate } from "react-router-dom";
 
 import SearchResultBox from "@/components/SearchPage/SearchResultBox";
@@ -24,73 +24,28 @@ const SearchResult = () => {
 
     useEffect(() => {
             const searchParams = new URLSearchParams(location.search);
-            const storage = JSON.parse(localStorage.vino);
+
             setLoading(true);
+
             switch(searchParams.get('type')) {
                 case 'keyword':
                     setSearchType(true);
                     const inputValues = searchParams.get('value') as string;
+                    const keywordtype = searchParams.get('type') as string
+
                     setInput(inputValues);
-                    
-                    const handleSearchKeyAPI = async () => {
-                            try {
-                                const keywords = inputValues.split(' ');
-                                const requests = keywords.map((value) => {
-                                  return axios.get('https://backend.vi-no.site/search/keyword/', {
-                                    params: {
-                                      keywordName: value
-                                    },
-                                    headers: {
-                                      Authorization: `Bearer ${storage['user-token']}`
-                                    }
-                                  });
-                                });
-                                const responses = await Promise.all(requests);
-                                responses.forEach((response) => {
-                                    dataDuplicateHandler(response.data.result.videos, inputValues)
-                                })
-                                
-                        } catch (error) {
-                            
-                        } finally {
-                            setLoading(false);
-                        }
-                      };
-                    handleSearchKeyAPI();
+                    handleSearchAPI(inputValues, keywordtype, ' ');
                     if(data.length === 0){
                         setErrormsg(inputValues)
                     }
                     break;
                 case 'hashtag':
                     const tagValues = searchParams.get('value') as string;
+                    const tagtype = searchParams.get('type') as string
+
                     setTags(tagValues.split('&'))
                     setSearchType(false);
-
-                    const handleSearchTagAPI = async () => {
-                        try {
-                            const requests = tagValues.split('&').map((value) => {
-                              return axios.get('https://backend.vi-no.site/search/hashtag/', {
-                                params: {
-                                    hashtagName : value.replace('#','')
-                                },
-                                headers: {
-                                    Authorization: `Bearer ${storage['user-token']}`
-                                }
-                              });
-                            });
-
-                            const responses = await Promise.all(requests);
-                            responses.forEach((response) => {
-                                dataDuplicateHandler(response.data.result.videos, tagValues.replace('#', ''))
-                            })
-                            
-                    } catch (error) {
-                        
-                    } finally {
-                        setLoading(false);
-                    }
-                    }
-                    handleSearchTagAPI();
+                    handleSearchAPI(tagValues, tagtype, '&');
                     if(data.length === 0){
                         setErrormsg(tagValues.replace('&', ' '))
                     }
@@ -100,6 +55,29 @@ const SearchResult = () => {
                     // 기타 에러
             }
     }, [location.search])
+
+    const handleSearchAPI = async (inputValues : string, type : string, splittype : string) => {
+        try {
+            const keywords = inputValues.split(splittype);
+
+            const requests = keywords.map((value) => {
+                if (type === 'hashtag') {
+                    value = value.replace('#', ''); 
+                }
+                const searchData = (searchAPI(type, value));
+                return searchData.then(value => value.data.result);
+            })
+            const responses = await Promise.all(requests);
+            responses.forEach((response) => {
+                const ivideos = response.videos as IVideo[];
+                dataDuplicateHandler(ivideos, inputValues);
+            })
+        } catch (error) {
+
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const formatContent = (content : string, keyword : string) => {
         if (keyword.trim() !== '') {
@@ -120,7 +98,6 @@ const SearchResult = () => {
         const newData = videos.filter((value) => {
         return !data.some((item) => item.video_id === value.video_id);
     }).map((video) => {
-        // video의 content 부분을 formatContent 함수를 이용해 변형
         const formattedContent = formatContent(video.content, check);
         const formattedTitle = formatContent(video.title, check);
         const formattedDescription = formatContent(video.description, check)
@@ -149,7 +126,7 @@ const SearchResult = () => {
 
   if(loading){
     return (
-        <div style={{width : '100%', height : '100%'}}>스켈레톤 페이지</div>
+        <div style={{width : '100%', height : '100vh'}}>스켈레톤 페이지</div>
     )
   }
   return (
