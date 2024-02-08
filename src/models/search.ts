@@ -14,3 +14,7 @@ export interface IVideo {
     user : string;
     tag : IName[];
 }
+
+export interface ResponseSearch {
+    videos : IVideo[];
+}
