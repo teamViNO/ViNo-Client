@@ -37,7 +37,6 @@ const CategoryPage = () => {
         await axiosInstance
           .get(`/videos/${params.top_folder}`)
           .then((res) => {
-            console.log(res);
             const index = categories.findIndex(
               (category) => category.categoryId === Number(params.top_folder),
             );
@@ -90,7 +89,14 @@ const CategoryPage = () => {
         ) : (
           <div>
             {menus.map((menu) => (
-              <CategoryPageStyles.Menu key={menu.name}>
+              <CategoryPageStyles.Menu
+                to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
+                className={`${
+                  params.sub_folder === menu.categoryId.toString() &&
+                  'activated'
+                }`}
+                key={menu.name}
+              >
                 {menu.name}
               </CategoryPageStyles.Menu>
             ))}

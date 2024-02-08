@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import theme from '../theme';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
   padding: 60px 60px 0px 120px;
@@ -13,13 +14,16 @@ export const MenuWrap = styled.div`
   margin-bottom: 40px;
 `;
 
-export const Menu = styled.button`
+export const Menu = styled(Link)`
+  text-decoration: none;
   ${theme.typography.Subheader2};
   color: ${theme.color.gray300};
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0;
   margin-right: 20px;
+
+  &.activated {
+    color: ${theme.color.gray500};
+    ${theme.typography.Subheader1};
+  }
 `;
 
 export const ModeWrap = styled.button`
