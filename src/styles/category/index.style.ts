@@ -3,6 +3,7 @@ import theme from '../theme';
 
 export const Container = styled.div`
   padding: 60px 60px 0px 120px;
+  width: 100%;
 `;
 
 export const MenuWrap = styled.div`
@@ -36,56 +37,56 @@ export const Mode = styled.span`
 `;
 
 export const CardManagement = styled.div`
-  display : flex;
-  flex-direction : row;
-  gap : 10px;
-`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+`;
 export const SelectManagement = styled.select`
-  width : 202px;
-  height : 34px;
-  padding : 0px 10px;
-  border : 1px solid ${theme.color.gray200};
-  border-radius : 8px;
+  width: 202px;
+  height: 34px;
+  padding: 0px 10px;
+  border: 1px solid ${theme.color.gray200};
+  border-radius: 8px;
   ${theme.typography.Body3};
-  color : ${theme.color.gray400};
-`
+  color: ${theme.color.gray400};
+`;
 
 export const ManagementBoxGray = styled.div`
-  width : 36px;
-  height : 34px;
-  border-radius : 8px;
+  width: 36px;
+  height: 34px;
+  border-radius: 8px;
 
-  display : flex;
-  align-items : center;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  background : ${theme.color.gray100};
-`
+  background: ${theme.color.gray100};
+`;
 
 export const ManagementBox = styled.div`
-  width : 36px;
-  height : 34px;
-  border-radius : 8px;
+  width: 36px;
+  height: 34px;
+  border-radius: 8px;
 
-  display : flex;
-  align-items : center;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  background : ${theme.color.white};
-`
+  background: ${theme.color.white};
+`;
 
 export const AllSelectBtn = styled.button`
-  width : 90px;
-  height : 28px;
-  background : ${theme.color.gray500};
-  border : none;
-  border-radius : 100px;
+  width: 90px;
+  height: 28px;
+  background: ${theme.color.gray500};
+  border: none;
+  border-radius: 100px;
   ${theme.typography.Caption1};
-  color : ${theme.color.white};
-`
+  color: ${theme.color.white};
+`;
 
 export const SelectedCount = styled.span`
-  width : 98px;
-  height : 34px;
+  width: 98px;
+  height: 34px;
   ${theme.typography.Body3};
-  padding : 0px 10px;
-  color : ${theme.color.gray400};
-`
+  padding: 0px 10px;
+  color: ${theme.color.gray400};
+`;

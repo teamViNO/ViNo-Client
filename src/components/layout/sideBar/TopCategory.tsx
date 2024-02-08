@@ -7,16 +7,16 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
-import { ISubFolderProps } from './UserMode';
 import handleDrag from '@/utils/handleDrag';
+import { ISubFolderProps } from 'types/category';
 
 interface ITopCategoryProps {
   topId: number;
   subId: number;
   index: number;
-  categoryID: number;
+  categoryId: number;
   name: string;
-  subFolders: { categoryID: number; name: string }[];
+  subFolders: { categoryId: number; name: string }[];
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
   dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,7 +28,7 @@ const TopCategory = ({
   topId,
   subId,
   index,
-  categoryID,
+  categoryId,
   name,
   subFolders,
   grabedCategory,
@@ -86,18 +86,18 @@ const TopCategory = ({
   };
   const handleDragStart = () =>
     (grabedCategory.current = {
-      categoryID: categoryID,
+      categoryId: categoryId,
       name,
-      topCategoryID: null,
+      topCategoryId: null,
     });
 
   const handleDragEnter = () => {
-    dropedCategory.current = categoryID;
-    if (grabedCategory.current?.topCategoryID === null) return;
+    dropedCategory.current = categoryId;
+    if (grabedCategory.current?.topCategoryId === null) return;
     if (grabedCategory.current !== undefined) {
       grabedCategory.current = {
         ...grabedCategory.current,
-        topCategoryID: categoryID,
+        topCategoryId: categoryId,
       };
     }
   };
@@ -105,11 +105,11 @@ const TopCategory = ({
   const handleDropZoneDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     dropedCategory.current = index;
     dragEnter(e);
-    if (grabedCategory.current?.topCategoryID === null) return;
+    if (grabedCategory.current?.topCategoryId === null) return;
     grabedCategory.current = {
-      categoryID: grabedCategory.current!.categoryID,
+      categoryId: grabedCategory.current!.categoryId,
       name: grabedCategory.current!.name,
-      topCategoryID: -1,
+      topCategoryId: -1,
     };
   };
   return (
@@ -119,7 +119,7 @@ const TopCategory = ({
         onDragStart={handleDragStart}
         onDragEnter={handleDragEnter}
         onDragEnd={putCategoryFolder}
-        selected={topId === categoryID && !subId}
+        selected={topId === categoryId && !subId}
       >
         {isEditing ? (
           <TopCategoryStyles.EditNameInputWrap
@@ -134,9 +134,9 @@ const TopCategory = ({
           </TopCategoryStyles.EditNameInputWrap>
         ) : (
           <>
-            <TopCategoryStyles.FolderButton to={`/category/${categoryID}`}>
+            <TopCategoryStyles.FolderButton to={`/category/${categoryId}`}>
               <TopCategoryStyles.ImageTextWrap>
-                {topId === categoryID ? (
+                {topId === categoryId ? (
                   <OpenFileSvg width={28} height={28} />
                 ) : (
                   <ClosedFileSvg width={28} height={28} />
@@ -150,12 +150,12 @@ const TopCategory = ({
                 )}
               </TopCategoryStyles.ImageTextWrap>
             </TopCategoryStyles.FolderButton>
-            {topId === categoryID && !subId && (
+            {topId === categoryId && !subId && (
               <TopCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
                 <MoreOptionsSvg />
               </TopCategoryStyles.ShowOptionButton>
             )}
-            {folderOptionModalOpen && topId === categoryID && (
+            {folderOptionModalOpen && topId === categoryId && (
               <Option
                 options={options}
                 handleOptionClick={handleOptionClick}
@@ -165,13 +165,13 @@ const TopCategory = ({
           </>
         )}
       </TopCategoryStyles.Container>
-      {topId === categoryID && (
+      {topId === categoryId && (
         <TopCategoryStyles.SubFolderContainer>
           {subFolders.map((subFolder) => (
             <SubCategory
               topId={topId}
               subId={subId}
-              categoryID={subFolder.categoryID}
+              categoryId={subFolder.categoryId}
               name={subFolder.name}
               setIsDeleteModalOpen={setIsDeleteModalOpen}
               grabedCategory={grabedCategory}

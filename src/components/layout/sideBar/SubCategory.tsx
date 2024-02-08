@@ -4,13 +4,13 @@ import { useState } from 'react';
 import * as SubCategoryStyles from '@/styles/layout/sideBar/SubCategory.style';
 import Option from './Option';
 import handleEdit from '@/utils/handleEdit';
-import { ISubFolderProps } from './UserMode';
 import handleDrag from '@/utils/handleDrag';
+import { ISubFolderProps } from 'types/category';
 
 interface ISubCategoryProps {
   topId: number;
   subId: number;
-  categoryID: number;
+  categoryId: number;
   name: string;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
@@ -20,7 +20,7 @@ interface ISubCategoryProps {
 const SubCategory = ({
   topId,
   subId,
-  categoryID,
+  categoryId,
   name,
   setIsDeleteModalOpen,
   grabedCategory,
@@ -61,14 +61,14 @@ const SubCategory = ({
 
   const handleDragStart = () =>
     (grabedCategory.current = {
-      categoryID: categoryID,
+      categoryId: categoryId,
       name,
-      topCategoryID: topId,
+      topCategoryId: topId,
     });
 
   const handleDropZoneDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     dragEnter(e);
-    if (grabedCategory.current?.topCategoryID === null) return;
+    if (grabedCategory.current?.topCategoryId === null) return;
   };
   return (
     <SubCategoryStyles.Container
@@ -86,17 +86,17 @@ const SubCategory = ({
         <SubCategoryStyles.SubFolderWrap>
           <div style={{ display: 'flex' }}>
             <SubCategoryStyles.SubFolder
-              selected={subId === categoryID}
-              to={`/category/${topId}/${categoryID}`}
+              selected={subId === categoryId}
+              to={`/category/${topId}/${categoryId}`}
             >
               {edit}
-              {subId === categoryID && (
+              {subId === categoryId && (
                 <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
                   <MoreOptionsSvg width={16} height={16} />
                 </SubCategoryStyles.ShowOptionButton>
               )}
             </SubCategoryStyles.SubFolder>
-            {subFolderOptionModalOpen && subId === categoryID && (
+            {subFolderOptionModalOpen && subId === categoryId && (
               <Option
                 options={options}
                 handleOptionClick={handleOptionClick}

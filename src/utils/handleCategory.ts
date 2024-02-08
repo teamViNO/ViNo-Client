@@ -1,29 +1,48 @@
-import {
-  IFolderProps,
-  ISubFolderProps,
-} from '@/components/layout/sideBar/UserMode';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { IFolderProps, ISubFolderProps } from 'types/category';
 
 const handleCategory = () => {
+  const initializeCategory = (res: any) => {
+    const responseCategories = res.sort(
+      (prev: { topCategoryId: number }, next: { topCategoryId: number }) => {
+        if (prev.topCategoryId > next.topCategoryId) return 1;
+        else return -1;
+      },
+    );
+    const initializeCategories: IFolderProps[] = [];
+    responseCategories.map((category: IFolderProps) => {
+      if (!category.topCategoryId) {
+        initializeCategories.push({ ...category, subFolders: [] });
+      } else {
+        const index = initializeCategories.findIndex(
+          ({ categoryId }) => categoryId === category.topCategoryId,
+        );
+        initializeCategories[index].subFolders.push(category);
+      }
+    });
+    return initializeCategories;
+  };
+
   const deleteSubCategory = (
     myFolders: IFolderProps[],
     topId: number,
     deleteTarget: number | undefined,
   ) => {
-    const newFolders = [...myFolders];
+    const newFolders = JSON.parse(JSON.stringify(myFolders));
     const deleteIndex = newFolders.findIndex(
-      (newFolder) => newFolder.categoryID === topId,
+      (newFolder: IFolderProps) => newFolder.categoryId === topId,
     );
     const preSubFolders = [...newFolders[deleteIndex].subFolders];
     const filteredSubFolders = preSubFolders.filter(
-      (preSubFolder) => preSubFolder.categoryID !== deleteTarget,
+      (preSubFolder) => preSubFolder.categoryId !== deleteTarget,
     );
     newFolders[deleteIndex].subFolders = filteredSubFolders;
     return newFolders;
   };
 
-  const deleteTopCategory = (myFolders: IFolderProps[], categoryID: number) => {
+  const deleteTopCategory = (myFolders: IFolderProps[], categoryId: number) => {
     const newFolders = myFolders.filter(
-      (folder) => folder.categoryID !== categoryID,
+      (folder) => folder.categoryId !== categoryId,
     );
     return newFolders;
   };
@@ -33,9 +52,9 @@ const handleCategory = () => {
     insertedCategoryID: number | null | undefined,
     insertData: ISubFolderProps,
   ) => {
-    const newFolders = [...myFolders];
+    const newFolders = JSON.parse(JSON.stringify(myFolders));
     const insertIndex = newFolders.findIndex(
-      (newFolder) => newFolder.categoryID === insertedCategoryID,
+      (newFolder: IFolderProps) => newFolder.categoryId === insertedCategoryID,
     );
     newFolders[insertIndex].subFolders.push(insertData);
     return newFolders;
@@ -49,9 +68,9 @@ const handleCategory = () => {
     const newFolders = [
       ...myFolders.slice(0, insertedCategoryID! + 1),
       {
-        categoryID: insertData.categoryID,
+        categoryId: insertData.categoryId,
         name: insertData.name,
-        topCategoryID: null,
+        topCategoryId: null,
         subFolders: [],
       },
       ...myFolders.slice(insertedCategoryID! + 1),
@@ -60,6 +79,7 @@ const handleCategory = () => {
   };
 
   return {
+    initializeCategory,
     deleteSubCategory,
     deleteTopCategory,
     insertCategory,

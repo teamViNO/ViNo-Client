@@ -6,19 +6,16 @@ import {
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryModal.style';
 import { ICommonModalProps } from 'types/modal';
-import { IFolderProps } from '../layout/sideBar/UserMode';
+import { useRecoilState } from 'recoil';
+import { categoryState } from '@/stores/category';
 
 interface ISuccessAddCategory extends ICommonModalProps {
-  folders: IFolderProps[];
-  setMyFolders: React.Dispatch<React.SetStateAction<IFolderProps[]>>;
   isSubAdded: boolean;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
   topId: number;
 }
 
 const SuccessAddCategoryModal = ({
-  folders,
-  setMyFolders,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
@@ -30,25 +27,28 @@ const SuccessAddCategoryModal = ({
     setIsSuccessAddCategoryModalOpen(false);
     setCategoryName('');
   };
+  const [categories, setCategories] = useRecoilState(categoryState);
 
   const [successAddCategoryModalRef] =
     useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleGoToCategory = () => {
     if (isSubAdded) {
-      const index = folders.findIndex((folder) => folder.categoryID === topId);
-      folders[index].subFolders.push({
+      const index = categories.findIndex(
+        (folder) => folder.categoryId === topId,
+      );
+      categories[index].subFolders.push({
         name: categoryName,
-        categoryID: folders[index].categoryID,
-        topCategoryID: topId,
+        categoryId: categories[index].categoryId,
+        topCategoryId: topId,
       });
     } else {
-      setMyFolders([
-        ...folders,
+      setCategories([
+        ...categories,
         {
-          categoryID: folders.length + 1,
+          categoryId: categories.length + 1,
           name: categoryName,
-          topCategoryID: null,
+          topCategoryId: null,
           subFolders: [],
         },
       ]);
@@ -73,7 +73,9 @@ const SuccessAddCategoryModal = ({
       </SuccessAddCategoryStyles.Title>
       <SuccessAddCategoryStyles.GoToCategoryButton
         to={
-          isSubAdded ? `/category/${topId}` : `/category/${folders.length + 1}`
+          isSubAdded
+            ? `/category/${topId}`
+            : `/category/${categories.length + 1}`
         }
         onClick={handleGoToCategory}
       >
