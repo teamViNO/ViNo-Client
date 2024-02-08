@@ -65,7 +65,7 @@ const App = () => {
               path="/category/:top_folder/:sub_folder"
               element={<CategoryPage />}
             />
-            <Route path="/summary" element={<SummaryPage />} />
+            <Route path="/summary/:videoId" element={<SummaryPage />} />
             <Route path="/" element={<HomePage />} />
           </Route>
 
