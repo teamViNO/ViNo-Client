@@ -79,12 +79,12 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  const Rest_api_key = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
-  const redirect_uri = 'https://localhost:5173/sign-up-suc'; //Redirect URI
+  const redirect_uri = `${location.origin}/sign-up/success`; //Redirect URI
+  const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
   const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
   const STATE = 'flase';
   // oauth 요청 URL
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_KEY}&redirect_uri=${redirect_uri}&response_type=code`;
   const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${redirect_uri}`;
 
   const handleKakaoLogin = () => {
@@ -94,14 +94,6 @@ const SignInPage: React.FC = () => {
   const handleNaverLogin = () => {
     window.location.href = naverURL;
   };
-
-  /* let login:any = new window.naver.LoginWithNaverId("http://localhost:5173/sign-in/", "http://localhost:5173/sign-in");
-	let state = login.getUniqState();
-	login.setButton("white", 2,40);
-	login.setDomain(".service.com");
-	login.setState(state);
-	login.isPopup(false);
-	login.LoginWithNaverId(); */
 
   return (
     <PageComponent>
