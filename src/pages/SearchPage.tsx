@@ -5,7 +5,6 @@ import SearchIcon from '@/assets/icons/search.svg?react';
 import { useState } from 'react';
 import TagInput from '@/components/SearchPage/SearchComponent';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-const baseURL = 'https://backend.vi-no.site';
 
 const SearchPage = () => {
     const [tags, setTags] = useState<string[]>([]);

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
      display : flex;
+     flex : 1 1 auto;
      flex-direction : column;
 
     & mark {
@@ -132,7 +133,7 @@ const VideoCard = styled.div`
           flex-direction: row;
           justify-content: center;
           align-items: center;
-          padding: 0px;
+          padding: 0px 0px 0px 24px;
           gap: 8px;
 
           flex: none;
@@ -141,7 +142,7 @@ const VideoCard = styled.div`
      }
 
      & span.userName {
-          
+
           ${(props) => props.theme.typography.Caption1};
           color: ${(props) => props.theme.color.gray300};
           flex: none;
@@ -234,6 +235,10 @@ const VideoCard = styled.div`
           order: 1;
           align-self: stretch;
           flex-grow: 0;
+     }
+     & img {
+          border : none;
+          border-radius : 0px 16px 16px 0px;
      }
 `
 const hashtagBox = styled.div`
