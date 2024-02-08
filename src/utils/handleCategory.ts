@@ -1,18 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IFolderProps, ISubFolderProps } from 'types/category';
 
 const handleCategory = () => {
-  const initializeCategory = (res: any) => {
+  const initializeCategory = (res: ISubFolderProps[]) => {
     const responseCategories = res.sort(
-      (prev: { topCategoryId: number }, next: { topCategoryId: number }) => {
-        if (prev.topCategoryId > next.topCategoryId) return 1;
+      (
+        prev: { topCategoryId: number | null },
+        next: { topCategoryId: number | null },
+      ) => {
+        if (prev.topCategoryId === null && next.topCategoryId === null)
+          return 0;
+        if (prev.topCategoryId !== null && next.topCategoryId === null)
+          return 1;
+        if (prev.topCategoryId === null && next.topCategoryId !== null)
+          return -1;
+        if (prev.topCategoryId! > next.topCategoryId!) return 1;
         else return -1;
       },
     );
+
     const initializeCategories: IFolderProps[] = [];
-    responseCategories.map((category: IFolderProps) => {
+    responseCategories.map((category: ISubFolderProps) => {
       if (!category.topCategoryId) {
-        initializeCategories.push({ ...category, subFolders: [] });
+        initializeCategories.push({
+          name: category.name,
+          topCategoryId: category.topCategoryId as null,
+          categoryId: category.categoryId,
+          subFolders: [],
+        });
       } else {
         const index = initializeCategories.findIndex(
           ({ categoryId }) => categoryId === category.topCategoryId,
