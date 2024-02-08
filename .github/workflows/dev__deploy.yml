@@ -50,7 +50,7 @@ jobs:
           cp package-lock.json dist/package-lock.json
           cp yarn.lock dist/yarn.lock
           cp Procfile dist/Procfile
-          cd dist
+          cp -R dist
           zip -r deploy.zip .
       
       # 생성한 deploy.zip 파일 내부 확인용!
