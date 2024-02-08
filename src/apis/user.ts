@@ -9,6 +9,7 @@ import {
 } from '@/models/user';
 import {
   AlarmResponse,
+  ConfirmAlarmRequest,
   DeleteAlarmRequest,
   DeleteAlarmResponse,
 } from '@/models/alarm';
@@ -32,6 +33,10 @@ export const deleteSelectAlarmAPI = (data: DeleteAlarmRequest) => {
       data,
     },
   );
+};
+
+export const confirmSelectAlarmAPI = (data: ConfirmAlarmRequest) => {
+  return axios.patch(PREFIX + '/alarm/selectedConfirm', data);
 };
 
 export const checkEmailAPI = (data: CheckEmailRequest) => {

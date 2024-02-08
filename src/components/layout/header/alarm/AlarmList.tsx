@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { deleteSelectAlarmAPI } from '@/apis/user';
+import { deleteSelectAlarmAPI, confirmSelectAlarmAPI } from '@/apis/user';
 
 import { IAlarm } from '@/models/alarm';
 
@@ -37,6 +37,17 @@ const AlarmList = ({ alarmList, onRefresh }: Props) => {
     handleRemove(selectIdList);
   };
 
+  const handleClickReadSelected = async () => {
+    try {
+      await confirmSelectAlarmAPI({ alarms: selectIdList });
+
+      setSelectIdList([]);
+      onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <AlarmListStyle.Layout>
       <AlarmListStyle.Container style={{ gap: selectIdList.length ? 20 : 36 }}>
@@ -49,12 +60,12 @@ const AlarmList = ({ alarmList, onRefresh }: Props) => {
         {Boolean(selectIdList.length) && (
           <AlarmListStyle.NoticeToolWrap>
             <span onClick={handleClickRemoveAll}>모두 삭제</span>
-            <span>읽음</span>
+            <span onClick={handleClickReadSelected}>읽음</span>
             <span onClick={handleClickRemoveSelected}>삭제</span>
           </AlarmListStyle.NoticeToolWrap>
         )}
 
-        {count ? (
+        {alarmList.length ? (
           <div style={{ padding: '0 28px', maxHeight: 480, overflowY: 'auto' }}>
             {alarmList.map((alarm) => (
               <AlarmItem

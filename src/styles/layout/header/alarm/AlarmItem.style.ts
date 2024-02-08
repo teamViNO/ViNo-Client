@@ -26,15 +26,15 @@ export const Container = styled.div`
 
   &.read {
     & div.color {
-      background-color: ${(props) => props.theme.color.gray300};
+      background-color: ${(props) => props.theme.color.gray300} !important;
     }
 
     & span.type {
-      color: ${(props) => props.theme.color.gray400};
+      color: ${(props) => props.theme.color.gray400} !important;
     }
 
     & div.content {
-      color: ${(props) => props.theme.color.gray300};
+      color: ${(props) => props.theme.color.gray300} !important;
     }
   }
 

@@ -21,3 +21,7 @@ export interface DeleteAlarmRequest {
 export interface DeleteAlarmResponse {
   status: string;
 }
+
+export interface ConfirmAlarmRequest {
+  alarms: number[];
+}
