@@ -44,13 +44,14 @@ jobs:
       # 배포 패키지 생성
       - name: Generate deployment package
         run: |
-          cp -R .platform dist
-          cp -R .ebextensions dist
-          cp package.json dist/package.json
-          cp package-lock.json dist/package-lock.json
-          cp yarn.lock dist/yarn.lock
-          cp Procfile dist/Procfile
-          cp -R dist
+          cp -R .platform build
+          cp -R .ebextensions build
+          cp -R dist build
+          cp package.json build/package.json
+          cp package-lock.json build/package-lock.json
+          cp yarn.lock build/yarn.lock
+          cp Procfile build/Procfile
+          cd build
           zip -r deploy.zip .
       
       # 생성한 deploy.zip 파일 내부 확인용!
