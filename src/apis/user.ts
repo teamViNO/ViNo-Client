@@ -13,7 +13,7 @@ import {
   DeleteAlarmRequest,
   DeleteAlarmResponse,
 } from '@/models/alarm';
-
+import { getNicknameResponse } from '@/models/user';
 import axios from './config/instance';
 
 const PREFIX = '/user';
@@ -45,6 +45,16 @@ export const checkEmailAPI = (data: CheckEmailRequest) => {
     data,
   );
 };
+
 export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };
+
+export const socialAccountAPI = (code: string) => {
+  return axios.get(`/sign-up/success?code=${code}`);
+};
+
+export const getNicknameAPI = () => {
+    return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
+};
+

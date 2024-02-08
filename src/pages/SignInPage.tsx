@@ -79,13 +79,12 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  const redirect_uri = `${location.origin}/sign-up/success`; //Redirect URI
+  const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
   const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
-  const STATE = 'flase';
   // oauth 요청 URL
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_KEY}&redirect_uri=${redirect_uri}&response_type=code`;
-  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${redirect_uri}`;
+  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
   const handleKakaoLogin = () => {
     window.location.href = kakaoURL;

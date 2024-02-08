@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import theme from '@/styles/theme';
 import ProgressBar from './ProgressBar';
+import { useSetRecoilState } from 'recoil';
+import { recommendationModalState } from '@/stores/modal';
 
 import {
   SearchForm,
@@ -22,13 +24,16 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [isTextValid, setIsTextValid] = useState(true);
   const [isConverting, setIsConverting] = useState(false);
 
+  const setModalOpen = useSetRecoilState(recommendationModalState);
+
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (isValidYoutubeLink(inputLink)) {
-      setIsButtonValid(true);
-      setIsTextValid(true);
-      setIsConverting(true);
-      onSearch(inputLink);
+        setIsButtonValid(true);
+        setIsTextValid(true);
+        setIsConverting(true);
+        onSearch(inputLink);
+        setModalOpen(true);
     } else {
       setIsButtonValid(false);
       setIsTextValid(false);
@@ -103,13 +108,12 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
               placeholder="https://youtube.com/..."
             />
           </div>
-          <SearchButton
+          <SearchButton 
             type="submit"
-            style={{
-              color: isButtonValid ? 'white' : theme.color.gray300,
-              backgroundColor: isButtonValid
-                ? theme.color.gray500
-                : theme.color.gray100,
+            // onClick={ handleClick } 
+            style={{ 
+                color: isButtonValid ? 'white' : theme.color.gray300,
+                backgroundColor: isButtonValid ? theme.color.gray500 : theme.color.gray100
             }}
           >
             변환하기
