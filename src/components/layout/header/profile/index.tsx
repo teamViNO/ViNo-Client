@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import ProfileImage from '@/assets/default-profile-circle.png';
+
 import useOutsideClick from '@/hooks/useOutsideClick';
 
 import * as HeaderStyle from '@/styles/layout/header';
@@ -16,11 +18,7 @@ const Profile = () => {
     <>
       <div ref={profileRef}>
         <HeaderStyle.Button onClick={() => setIsOpen(!isOpen)}>
-          <img
-            id="profile"
-            src="/src/assets/default-profile-circle.png"
-            alt="원형 프로필 이미지"
-          />
+          <img id="profile" src={ProfileImage} alt="원형 프로필 이미지" />
         </HeaderStyle.Button>
 
         {isOpen && (

@@ -5,6 +5,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import MenuIcon from '@/assets/icons/menu.svg?react';
 import SearchIcon from '@/assets/icons/search-light.svg?react';
+import DarkLogoImage from '@/assets/logo-dark.png';
+import LightLogoImage from '@/assets/logo-light.png';
 
 import * as HeaderStyle from '@/styles/layout/header';
 
@@ -64,10 +66,7 @@ const Header = () => {
         </HeaderStyle.Button>
 
         <Link to="/">
-          <img
-            src={`/src/assets/logo-${isDark ? 'light' : 'dark'}.png`}
-            alt="Logo"
-          />
+          <img src={isDark ? LightLogoImage : DarkLogoImage} alt="Logo" />
         </Link>
       </HeaderStyle.Area>
 

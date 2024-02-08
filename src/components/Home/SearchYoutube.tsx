@@ -25,19 +25,19 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (isValidYoutubeLink(inputLink)) {
-        setIsButtonValid(true);
-        setIsTextValid(true);
-        setIsConverting(true);
-        onSearch(inputLink);
+      setIsButtonValid(true);
+      setIsTextValid(true);
+      setIsConverting(true);
+      onSearch(inputLink);
     } else {
-        setIsButtonValid(false);
-        setIsTextValid(false);
+      setIsButtonValid(false);
+      setIsTextValid(false);
     }
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputLink(event.target.value);
-    if (isValidYoutubeLink(event.target.value)) { 
+    if (isValidYoutubeLink(event.target.value)) {
       setIsButtonValid(true);
       setIsTextValid(true);
     } else {
@@ -45,37 +45,51 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
       setIsTextValid(true);
     }
   };
-  
+
   const isValidYoutubeLink = (link: string) => {
-    const pattern = new RegExp(
-        '^(https?://)?(www.youtube.com|youtu.?be)/.+'
-    );
+    const pattern = new RegExp('^(https?://)?(www.youtube.com|youtu.?be)/.+');
     return pattern.test(link);
   };
 
   return (
     <SearchContainer className="dark-section">
       <SearchForm onSubmit={handleSubmit}>
-      <div className="search-text">
-        {isTextValid ? (
-            <div className='valid-text' >
-                <h1 className="search-title" style={{ width: isConverting ? '449px' : '441px' }}>
-                    { isConverting ? "읽기 편한 영상을 만들고 있어요!" : "어떤 영상을 정리해볼까요?" }
-                </h1>
-                <h4 className="search-subtitle" style={{ color: theme.color.gray300 }}>
-                { isConverting ? "열심히 영상을 변환 중이에요" : "영상에서 글로 변환하고 싶은 YouTube 영상의 링크를 붙여넣어주세요" }
+        <div className="search-text">
+          {isTextValid ? (
+            <div className="valid-text">
+              <h1
+                className="search-title"
+                style={{ width: isConverting ? '449px' : '441px' }}
+              >
+                {isConverting
+                  ? '읽기 편한 영상을 만들고 있어요!'
+                  : '어떤 영상을 정리해볼까요?'}
+              </h1>
+              <h4
+                className="search-subtitle"
+                style={{ color: theme.color.gray300 }}
+              >
+                {isConverting
+                  ? '열심히 영상을 변환 중이에요'
+                  : '영상에서 글로 변환하고 싶은 YouTube 영상의 링크를 붙여넣어주세요'}
+              </h4>
+            </div>
+          ) : (
+            <div className="non-valid-text">
+              <h1 className="search-title" style={{ width: 441 }}>
+                영상 주소를 다시 확인해주세요!
+              </h1>
+              <div className="search-subtitle-wrapper">
+                <WarningIcon width={24} height={24} />
+                <h4
+                  className="search-subtitle"
+                  style={{ width: 265, color: 'red', marginLeft: 12 }}
+                >
+                  Youtube 영상의 링크만 변환이 가능해요!
                 </h4>
+              </div>
             </div>
-        ) : (
-            <div className='non-valid-text' >
-                <h1 className="search-title" style={{ width: 441 }}>영상 주소를 다시 확인해주세요!</h1>
-                <div className='search-subtitle-wrapper'>
-                    <WarningIcon width={24} height={24} />
-                    <h4 className="search-subtitle" style={{ width: 265, color: 'red', marginLeft: 12}}>Youtube 영상의 링크만 변환이 가능해요!</h4>
-                </div>
-                
-            </div>
-        )}
+          )}
         </div>
         <div className="input-container">
           <div className="link-container">
@@ -89,17 +103,19 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
               placeholder="https://youtube.com/..."
             />
           </div>
-          <SearchButton 
-            type="submit" 
-            style={{ 
-                color: isButtonValid ? 'white' : theme.color.gray300,
-                backgroundColor: isButtonValid ? theme.color.gray500 : theme.color.gray100
+          <SearchButton
+            type="submit"
+            style={{
+              color: isButtonValid ? 'white' : theme.color.gray300,
+              backgroundColor: isButtonValid
+                ? theme.color.gray500
+                : theme.color.gray100,
             }}
-            >
+          >
             변환하기
-            </SearchButton>
+          </SearchButton>
         </div>
-            {isConverting && <ProgressBar />}
+        {isConverting && <ProgressBar />}
       </SearchForm>
     </SearchContainer>
   );
