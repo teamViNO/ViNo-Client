@@ -3,7 +3,6 @@ import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
-import { BlurBackground } from '@/styles/modals/common.style';
 import AddCategoryModal from '@/components/modals/AddCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useRef, useState } from 'react';
@@ -91,36 +90,30 @@ const UserMode = () => {
         ))}
       </>
       {(isTopCategoryModalOpen || isSubCategoryModalOpen) && (
-        <BlurBackground>
-          <AddCategoryModal
-            isTopCategoryModalOpen={isTopCategoryModalOpen}
-            setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
-            categoryName={categoryName}
-            setCategoryName={setCategoryName}
-            setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-            setIsSubAdded={setIsSubAdded}
-          />
-        </BlurBackground>
+        <AddCategoryModal
+          isTopCategoryModalOpen={isTopCategoryModalOpen}
+          setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
+          categoryName={categoryName}
+          setCategoryName={setCategoryName}
+          setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
+          setIsSubAdded={setIsSubAdded}
+        />
       )}
       {isDeleteModalOpen && (
-        <BlurBackground>
-          <DeleteCategory
-            setIsDeleteModalOpen={setIsDeleteModalOpen}
-            onDeleteClick={handleDeleteCategory}
-          />
-        </BlurBackground>
+        <DeleteCategory
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          onDeleteClick={handleDeleteCategory}
+        />
       )}
       {isSuccessAddCategoryModalOpen && (
-        <BlurBackground>
-          <SuccessAddCategoryModal
-            categoryName={categoryName}
-            setCategoryName={setCategoryName}
-            setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-            isSubAdded={isSubAdded}
-            setIsSubAdded={setIsSubAdded}
-            topId={topId}
-          />
-        </BlurBackground>
+        <SuccessAddCategoryModal
+          categoryName={categoryName}
+          setCategoryName={setCategoryName}
+          setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
+          isSubAdded={isSubAdded}
+          setIsSubAdded={setIsSubAdded}
+          topId={topId}
+        />
       )}
     </>
   );

@@ -20,9 +20,7 @@ const CategoryPage = () => {
   const [menus, setMenus] = useState<ISubFolderProps[]>([]);
   const [videos, setVideos] = useState([]);
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
-  const [checkedVideos, setCheckedVideos] = useState<boolean[]>(
-    new Array(6).fill(false),
-  );
+  const [checkedVideos, setCheckedVideos] = useState<boolean[]>([]);
   const categories = useRecoilValue(categoryState);
 
   const toggleRecentRegisterMode = () =>
@@ -46,7 +44,6 @@ const CategoryPage = () => {
           })
           .catch((err) => console.log(err)))();
     }
-    setCheckedVideos(new Array(6).fill(false));
   }, [categories, params.top_folder]);
 
   const allCheckBtnHandler = () => {
@@ -78,64 +75,65 @@ const CategoryPage = () => {
       <CategoryTitle name={name} totalVideos={videos.length} />
       <CategoryPageStyles.MenuWrap>
         {checkedVideos.includes(true) ? (
-          <div>
-            <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-              {!checkedVideos.includes(false) ? '모두 삭제' : '모두 선택'}
-            </CategoryPageStyles.AllSelectBtn>
-            <CategoryPageStyles.SelectedCount>
-              {checkedVideos.filter((bool) => bool === true).length}개 선택
-            </CategoryPageStyles.SelectedCount>
-          </div>
+          <>
+            <div>
+              <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
+                {!checkedVideos.includes(false) ? '모두 삭제' : '모두 선택'}
+              </CategoryPageStyles.AllSelectBtn>
+              <CategoryPageStyles.SelectedCount>
+                {checkedVideos.filter((bool) => bool === true).length}개 선택
+              </CategoryPageStyles.SelectedCount>
+            </div>
+            <CategoryPageStyles.CardManagement>
+              <CategoryPageStyles.SelectManagement>
+                {menus.map((menu) => (
+                  <option key={menu.name}>{menu.name}</option>
+                ))}
+              </CategoryPageStyles.SelectManagement>
+              <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
+                <FolderSvg width={28} height={28} />
+              </CategoryPageStyles.ManagementBoxGray>
+              <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}>
+                <GarbageSvg width={28} height={28} />
+              </CategoryPageStyles.ManagementBoxGray>
+              <CategoryPageStyles.ManagementBox>
+                <CloseSvg
+                  width={28}
+                  height={28}
+                  onClick={() => {
+                    setCheckedVideos(checkedVideos.map(() => false));
+                  }}
+                />
+              </CategoryPageStyles.ManagementBox>
+            </CategoryPageStyles.CardManagement>
+          </>
         ) : (
-          <div>
-            {menus.map((menu) => (
-              <CategoryPageStyles.Menu
-                to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
-                className={`${
-                  params.sub_folder === menu.categoryId.toString() &&
-                  'activated'
-                }`}
-                key={`${menu.name}-${menu.categoryId}`}
-              >
-                {menu.name}
-              </CategoryPageStyles.Menu>
-            ))}
-          </div>
-        )}
-        {checkedVideos.includes(true) ? (
-          <CategoryPageStyles.CardManagement>
-            <CategoryPageStyles.SelectManagement>
+          <>
+            <div>
               {menus.map((menu) => (
-                <option key={menu.name}>{menu.name}</option>
+                <CategoryPageStyles.Menu
+                  to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
+                  className={`${
+                    params.sub_folder === menu.categoryId.toString() &&
+                    'activated'
+                  }`}
+                  key={`${menu.name}-${menu.categoryId}`}
+                >
+                  {menu.name}
+                </CategoryPageStyles.Menu>
               ))}
-            </CategoryPageStyles.SelectManagement>
-            <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
-              <FolderSvg width={28} height={28} />
-            </CategoryPageStyles.ManagementBoxGray>
-            <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}>
-              <GarbageSvg width={28} height={28} />
-            </CategoryPageStyles.ManagementBoxGray>
-            <CategoryPageStyles.ManagementBox>
-              <CloseSvg
-                width={28}
-                height={28}
-                onClick={() => {
-                  setCheckedVideos(checkedVideos.map(() => false));
-                }}
-              />
-            </CategoryPageStyles.ManagementBox>
-          </CategoryPageStyles.CardManagement>
-        ) : (
-          <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
-            <CategoryPageStyles.Mode>
-              {recentRegisterMode ? '최근등록순' : '최근영상순'}
-            </CategoryPageStyles.Mode>
-            {recentRegisterMode ? (
-              <ChangeBottomSvg width={24} height={24} />
-            ) : (
-              <ChangeTopSvg width={24} height={24} />
-            )}
-          </CategoryPageStyles.ModeWrap>
+            </div>
+            <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
+              <CategoryPageStyles.Mode>
+                {recentRegisterMode ? '최근등록순' : '최근영상순'}
+              </CategoryPageStyles.Mode>
+              {recentRegisterMode ? (
+                <ChangeBottomSvg width={24} height={24} />
+              ) : (
+                <ChangeTopSvg width={24} height={24} />
+              )}
+            </CategoryPageStyles.ModeWrap>
+          </>
         )}
       </CategoryPageStyles.MenuWrap>
 

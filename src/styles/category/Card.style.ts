@@ -42,32 +42,36 @@ export const ChipWrap = styled.div`
   flex-wrap: wrap;
 `;
 
-
 export const CheckBox = styled.input`
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  width : 24px;
-  height : 24px;
-  border-radius : 50%;
-  background-color : ${theme.color.gray300};
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: ${theme.color.gray300};
   background-image: url(${checkIcon});
   background-repeat: no-repeat;
   background-position: center;
   border: 1.5px solid ${theme.color.white};
-  color : ${theme.color.white};
+  color: ${theme.color.white};
 
   position: absolute;
-  margin-left : 252px;
-  margin-top : 13px;
+  margin-left: 252px;
+  margin-top: 13px;
 
-
-  &:checked { 
+  &:checked {
     border: 1.5px solid ${theme.color.green300};
-    background-color : ${theme.color.green300};
+    background-color: ${theme.color.green300};
     background-image: url(${checkedIcon});
     background-repeat: no-repeat;
     background-position: center;
+  }
+`;
+
+export const Image = styled.img`
+  &:hover {
+    filter: brightness(50%);
   }
 `;

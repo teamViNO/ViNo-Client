@@ -69,10 +69,10 @@ const Card: React.FC<ICardProps> = ({
           onMouseEnter={() => handleMouseEnter(idx)}
           onMouseLeave={() => handleMouseLeave(idx)}
         >
-          <img
+          <CardStyles.Image
             src={video.image}
             alt="썸네일 이미지"
-            style={{ filter: isShadow[idx] ? 'brightness(50%)' : '' }}
+            key={`${video.title}-image`}
           />
           {isShadow[idx] && (
             <CardStyles.CheckBox
