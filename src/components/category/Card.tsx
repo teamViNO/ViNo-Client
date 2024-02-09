@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import VideoTag from '../common/videoTag';
 import * as CardStyles from '@/styles/category/Card.style';
 
-interface IVideoProps {
+export interface cardDummy {
   video_id: number;
   category_id: number;
   title: string;
@@ -15,7 +15,7 @@ interface IVideoProps {
 }
 
 interface ICardProps {
-  videos: IVideoProps[];
+  videos: cardDummy[];
   checkedVideos: boolean[];
   setCheckedVideos: (value: boolean[]) => void;
 }

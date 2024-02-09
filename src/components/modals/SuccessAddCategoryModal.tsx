@@ -10,6 +10,8 @@ import { ICommonModalProps } from 'types/modal';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '@/stores/category';
 
+import FileImage from '@/assets/file.png';
+
 interface ISuccessAddCategory extends ICommonModalProps {
   isSubAdded: boolean;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,10 +65,7 @@ const SuccessAddCategoryModal = ({
         <CommonCloseButton onClick={onCloseModal}>
           <CloseSvg width={21.42} height={21.42} />
         </CommonCloseButton>
-        <SuccessAddCategoryStyles.Image
-          src="/src/assets/file.png"
-          alt="완료 이미지"
-        />
+        <SuccessAddCategoryStyles.Image src={FileImage} alt="완료 이미지" />
         <SuccessAddCategoryStyles.Title>
           <SuccessAddCategoryStyles.HighlightTitle>
             '{categoryName}'

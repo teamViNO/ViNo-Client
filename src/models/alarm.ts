@@ -13,3 +13,15 @@ export interface IAlarm {
 export interface AlarmResponse {
   alarms: IAlarm[];
 }
+
+export interface DeleteAlarmRequest {
+  alarms: number[];
+}
+
+export interface DeleteAlarmResponse {
+  status: string;
+}
+
+export interface ConfirmAlarmRequest {
+  alarms: number[];
+}

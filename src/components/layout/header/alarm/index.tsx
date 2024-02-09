@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getAlarm } from '@/apis/user';
+import { getAlarmAPI } from '@/apis/user';
 
 import NotifyOffIcon from '@/assets/icons/notify-off.svg?react';
 import NotifyOnIcon from '@/assets/icons/notify-on.svg?react';
@@ -24,7 +24,7 @@ const Alarm = ({ isDark }: Props) => {
   const hasNotReadAlarm = alarmList.find((item) => !item.is_confirm);
 
   const callAPI = async () => {
-    const { alarms } = (await getAlarm()).data.result;
+    const { alarms } = (await getAlarmAPI()).data.result;
 
     setAlarmList(alarms);
   };
@@ -46,7 +46,7 @@ const Alarm = ({ isDark }: Props) => {
         )}
       </HeaderStyle.Button>
 
-      {isOpen && <AlarmList alarmList={alarmList} />}
+      {isOpen && <AlarmList alarmList={alarmList} onRefresh={callAPI} />}
     </div>
   );
 };

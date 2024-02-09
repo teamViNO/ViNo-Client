@@ -7,6 +7,8 @@ import CloseSvg from '@/assets/icons/close.svg?react';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import * as DeleteCategoryStyles from '@/styles/layout/sideBar/DeleteCategory.style';
 
+import WastebasketImage from '@/assets/wastebasket.png';
+
 interface IDeleteCategoryProps {
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onDeleteClick: () => void;
@@ -27,7 +29,7 @@ const DeleteCategory = ({
         <CommonCloseButton onClick={onCloseModal}>
           <CloseSvg width={21.42} height={21.42} />
         </CommonCloseButton>
-        <img src="/src/assets/wastebasket.png" alt="삭제 아이콘" />
+        <img src={WastebasketImage} alt="삭제 아이콘" />
         <DeleteCategoryStyles.ModalTitle>
           카테고리 삭제
         </DeleteCategoryStyles.ModalTitle>

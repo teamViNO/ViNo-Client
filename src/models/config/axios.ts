@@ -1,8 +1,11 @@
 export interface APIBaseResponse {
-  status: number;
+  isSuccess: boolean;
   success: boolean;
+
   message: string;
+
   code: string;
+  status: number;
 }
 
 export interface APIResponse<T> extends APIBaseResponse {
