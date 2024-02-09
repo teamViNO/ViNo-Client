@@ -1,16 +1,18 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { socialAccountAPI } from '@/apis/user';
+import { kakaoLoginAPI } from '@/apis/social-account';
 
 const SocialAccountPage = () => {
+  const navigate = useNavigate();
   const { search } = useLocation();
 
   const callAPI = async (code: string) => {
     try {
-      console.log(await socialAccountAPI(code));
+      console.log(await kakaoLoginAPI(code));
     } catch (e) {
       console.error(e);
+      navigate('/sign-in');
     }
   };
 
@@ -19,11 +21,12 @@ const SocialAccountPage = () => {
     const code = params.get('code');
 
     if (!code) {
+      navigate('/sign-in');
       return;
     }
 
     callAPI(code);
-  }, [search]);
+  });
 
   return <div />;
 };
