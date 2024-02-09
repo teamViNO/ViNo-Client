@@ -13,6 +13,9 @@ export const EditNameInputWrap = styled.div`
   border: 1px solid ${theme.color.gray200};
   width: 100%;
   border-radius: 100px;
+  &.warning {
+    border: 1px solid ${theme.color.red};
+  }
 `;
 
 export const EditNameInput = styled.input`

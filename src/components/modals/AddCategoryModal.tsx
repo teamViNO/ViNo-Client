@@ -33,6 +33,7 @@ const AddCategoryModal = ({
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
   const { updateCategories } = useUpdateCategories();
+  const { editText } = handleEdit();
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -49,7 +50,7 @@ const AddCategoryModal = ({
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleEdit(e, setCategoryName);
+    editText(e, setCategoryName);
 
   const addCategory = async (e: React.MouseEvent) => {
     const response = isTopCategoryModalOpen

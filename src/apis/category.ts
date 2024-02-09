@@ -60,3 +60,9 @@ export const deleteCategory = async (category_id: number) => {
   const response = await axiosInstance.delete(`/category/${category_id}`);
   return response.data;
 };
+
+// 카테고리 이름 수정 API
+export const updateCategoryName = async (name: string, categoryId: number) => {
+  const response = await axiosInstance.put(`/category/${categoryId}`, { name });
+  return response.data;
+};
