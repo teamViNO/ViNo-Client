@@ -13,12 +13,13 @@ import {
 import { ICommonModalProps } from 'types/modal';
 import handleEdit from '@/utils/handleEdit';
 import { postSubCategroy, postTopCategroy } from '@/apis/category';
+import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
   topCategoryId: number;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const AddCategoryModal = ({
@@ -27,10 +28,12 @@ const AddCategoryModal = ({
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-  setIsSubAdded,
   topCategoryId,
+  setCategoryId,
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
+  const { updateCategories } = useUpdateCategories();
+  const { editText } = handleEdit();
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -42,19 +45,28 @@ const AddCategoryModal = ({
     isTopCategoryModalOpen
       ? setIsTopCategoryModalOpen(false)
       : setIsSubCategoryModalOpen(false);
-    !isTopCategoryModalOpen && setIsSubAdded(true);
   };
 
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
   const handleInputCategoryName = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleEdit(e, setCategoryName);
+    editText(e, setCategoryName);
 
-  const addCategory = (e: React.MouseEvent) => {
-    isTopCategoryModalOpen ? postTopCategroy() : postSubCategroy(topCategoryId);
+  const addCategory = async (e: React.MouseEvent) => {
+    const response = isTopCategoryModalOpen
+      ? await postTopCategroy(categoryName)
+      : await postSubCategroy(categoryName, topCategoryId);
+    if (response.isSuccess) {
+      updateCategories();
+      setCategoryId(
+        isTopCategoryModalOpen
+          ? response.result.categoryId
+          : response.result.topCategoryId,
+      );
+      setIsSuccessAddCategoryModalOpen(true);
+    }
     e.stopPropagation();
     onCloseModal();
-    setIsSuccessAddCategoryModalOpen(true);
   };
   return (
     <BlurBackground>

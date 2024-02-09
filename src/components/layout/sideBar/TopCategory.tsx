@@ -21,6 +21,7 @@ interface ITopCategoryProps {
   dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
   putCategoryFolder: () => void;
 }
 
@@ -36,6 +37,7 @@ const TopCategory = ({
   setIsSubCategoryModalOpen,
   setIsDeleteModalOpen,
   putCategoryFolder,
+  setCategoryId,
 }: ITopCategoryProps) => {
   const [folderOptionModalOpen, setFolderOptionModalOpen] = useState(false);
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -45,18 +47,22 @@ const TopCategory = ({
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
   const [beforeEdit, setBeforeEdit] = useState(edit);
+  const { editText, finishEdit } = handleEdit();
 
-  const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
   const [nameRegex, setNameRegex] = useState(true);
   const options = ['추가', '수정', '삭제', '이동'];
 
-  const finishEdit = () => {
-    if (!edit.length) {
-      setEdit(beforeEdit);
-    }
-    setIsEditing(false);
-  };
-  const [editNameRef] = useOutsideClick<HTMLDivElement>(finishEdit);
+  const [editNameRef] = useOutsideClick<HTMLDivElement>(() =>
+    finishEdit(
+      edit,
+      setEdit,
+      beforeEdit,
+      setIsEditing,
+      nameRegex,
+      setNameRegex,
+      categoryId,
+    ),
+  );
 
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
@@ -66,6 +72,7 @@ const TopCategory = ({
       setIsEditing(true);
       setBeforeEdit(edit);
     } else if (option === '삭제') {
+      setCategoryId(categoryId);
       setIsDeleteModalOpen(true);
     }
     setFolderOptionModalOpen(false);
@@ -76,14 +83,8 @@ const TopCategory = ({
     setFolderOptionModalOpen(true);
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!categoryNameRegex.test(e.target.value)) {
-      setNameRegex(false);
-      return;
-    }
-    setNameRegex(true);
-    handleEdit(e, setEdit);
-  };
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
+    editText(e, setEdit, setNameRegex);
   const handleDragStart = () =>
     (grabedCategory.current = {
       categoryId: categoryId,
@@ -176,6 +177,7 @@ const TopCategory = ({
               setIsDeleteModalOpen={setIsDeleteModalOpen}
               grabedCategory={grabedCategory}
               putCategoryFolder={putCategoryFolder}
+              setCategoryId={setCategoryId}
               key={`${subFolder.name}-${subFolder.categoryId}`}
             />
           ))}

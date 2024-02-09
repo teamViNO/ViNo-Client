@@ -15,6 +15,7 @@ interface ISubCategoryProps {
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
   putCategoryFolder: () => void;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const SubCategory = ({
@@ -25,14 +26,26 @@ const SubCategory = ({
   setIsDeleteModalOpen,
   grabedCategory,
   putCategoryFolder,
+  setCategoryId,
 }: ISubCategoryProps) => {
   const [subFolderOptionModalOpen, setSubFolderOptionModalOpen] =
     useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
+  const [beforeEdit, setBeforeEdit] = useState(edit);
+  const { editText, finishEdit } = handleEdit();
   const [editNameRef] = useOutsideClick<HTMLDivElement>(() =>
-    setIsEditing(false),
+    finishEdit(
+      edit,
+      setEdit,
+      beforeEdit,
+      setIsEditing,
+      nameRegex,
+      setNameRegex,
+      categoryId,
+    ),
   );
+  const [nameRegex, setNameRegex] = useState(true);
 
   const [subFolderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
     setSubFolderOptionModalOpen(false),
@@ -44,7 +57,9 @@ const SubCategory = ({
     e.stopPropagation();
     if (option === '수정') {
       setIsEditing(true);
+      setBeforeEdit(edit);
     } else if (option === '삭제') {
+      setCategoryId(categoryId);
       setIsDeleteModalOpen(true);
     }
     setSubFolderOptionModalOpen(false);
@@ -57,7 +72,7 @@ const SubCategory = ({
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleEdit(e, setEdit);
+    editText(e, setEdit, setNameRegex);
 
   const handleDragStart = () =>
     (grabedCategory.current = {
@@ -76,7 +91,10 @@ const SubCategory = ({
       onDragEnd={putCategoryFolder}
     >
       {isEditing ? (
-        <SubCategoryStyles.EditNameInputWrap ref={editNameRef}>
+        <SubCategoryStyles.EditNameInputWrap
+          ref={editNameRef}
+          className={`${(!nameRegex || !edit.length) && 'warning'}`}
+        >
           <SubCategoryStyles.EditNameInput
             value={edit}
             onChange={handleInput}

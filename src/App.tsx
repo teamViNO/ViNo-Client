@@ -1,4 +1,4 @@
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -30,22 +30,14 @@ import { ToastList } from './components/common';
 // Store
 import { userTokenState } from './stores/user';
 import { useEffect } from 'react';
-import { categoryState } from './stores/category';
-import { getCategories } from './apis/category';
-import handleCategory from './utils/handleCategory';
+import useUpdateCategories from './hooks/useUpdateCategories';
 
 const App = () => {
-  const setCategories = useSetRecoilState(categoryState);
   const userToken = useRecoilValue(userTokenState);
-  const { initializeCategory } = handleCategory();
+  const { updateCategories } = useUpdateCategories();
   useEffect(() => {
-    userToken &&
-      getCategories()
-        .then((res) => {
-          setCategories(initializeCategory(res));
-        })
-        .catch((err) => console.log(err));
-  }, [userToken]);
+    userToken && updateCategories();
+  }, [updateCategories, userToken]);
 
   return (
     <ThemeProvider theme={theme}>
