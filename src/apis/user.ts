@@ -50,11 +50,6 @@ export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };
 
-export const socialAccountAPI = (code: string) => {
-  return axios.get(`/sign-up/success?code=${code}`);
-};
-
 export const getNicknameAPI = () => {
-    return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
+  return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
 };
-
