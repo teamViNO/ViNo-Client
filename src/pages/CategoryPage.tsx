@@ -1,5 +1,4 @@
 import CategoryTitle from '@/components/category/CategoryTitle';
-import { categoryItems } from '@/components/category/dummy';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ChangeBottomSvg from '@/assets/icons/change-bottom.svg?react';
@@ -9,97 +8,143 @@ import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
 import Card from '@/components/category/Card';
+import axiosInstance from '@/apis/config/instance';
+import { useRecoilValue } from 'recoil';
+import { categoryState } from '@/stores/category';
+import { ISubFolderProps } from 'types/category';
+import EmptyCard from '@/components/category/EmptyCard';
 
 const CategoryPage = () => {
   const params = useParams();
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
+  const [menus, setMenus] = useState<ISubFolderProps[]>([]);
+  const [videos, setVideos] = useState([]);
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
+  const [checkedVideos, setCheckedVideos] = useState<boolean[]>([]);
+  const categories = useRecoilValue(categoryState);
 
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(6).fill(false));
-
-  const menus = ['마케팅', '트렌드', '기업', '용어'];
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
 
   useEffect(() => {
-    if (!params.id) {
+    if (!params.top_folder) {
       // 최근 동영상 가져오는 로직
-      setTitle('최근 읽은 영상');
+      setName('최근 읽은 영상');
     } else {
-      // params.id 값에 따라 가져오는 로직
-      setTitle(params.id);
+      (async () =>
+        await axiosInstance
+          .get(`/videos/${params.top_folder}`)
+          .then((res) => {
+            const index = categories.findIndex(
+              (category) => category.categoryId === Number(params.top_folder),
+            );
+            setVideos(res.data.result.videos);
+            setName(categories[index].name);
+            setMenus(categories[index].subFolders);
+          })
+          .catch((err) => console.log(err)))();
     }
-  }, [params.id]);
+  }, [categories, params.top_folder]);
 
   const allCheckBtnHandler = () => {
-    if(checkedItems.includes(false)){
-      setCheckedItems(checkedItems.map(() => true));
-    }
-    else { 
+    if (checkedVideos.includes(false)) {
+      setCheckedVideos(checkedVideos.map(() => true));
+    } else {
       // 모두 삭제
     }
-  }
+  };
 
   const dirMoveHanlder = () => {
-    checkedItems.map((value, id) => {
-      if(value === true){
-        console.log('이동해야할 index : ', id)
+    checkedVideos.map((value, id) => {
+      if (value === true) {
+        console.log('이동해야할 index : ', id);
       }
-    })
-  }
+    });
+  };
 
   const garbageHandler = () => {
-    checkedItems.map((value, id) => {
-      if(value === true){
-        console.log('삭제해야할 index : ', id)
+    checkedVideos.map((value, id) => {
+      if (value === true) {
+        console.log('삭제해야할 index : ', id);
       }
-    })
-  }
-
+    });
+  };
 
   return (
     <CategoryPageStyles.Container>
-      <CategoryTitle title={title} totalVideos={categoryItems.length} />
+      <CategoryTitle name={name} totalVideos={videos.length} />
       <CategoryPageStyles.MenuWrap>
-        {checkedItems.includes(true) ? 
-        <div>
-          <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>{!checkedItems.includes(false) ? '모두 삭제' : '모두 선택'}</CategoryPageStyles.AllSelectBtn>
-          <CategoryPageStyles.SelectedCount>{(checkedItems.filter((bool) => bool === true)).length}개 선택</CategoryPageStyles.SelectedCount>  
-        </div>
-        : 
-        <div>
-        {menus.map((menu) => (
-          <CategoryPageStyles.Menu key={menu}>{menu}</CategoryPageStyles.Menu>
-        ))}
-        </div> 
-        } 
-        {checkedItems.includes(true) ? 
-        <CategoryPageStyles.CardManagement>
-          <CategoryPageStyles.SelectManagement>
-          {menus.map((menu) => (
-          <option key={menu}>{menu}</option>
-          ))}
-          </CategoryPageStyles.SelectManagement>
-          <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}><FolderSvg width = {28} height = {28} /></CategoryPageStyles.ManagementBoxGray>
-          <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}><GarbageSvg width = {28} height = {28} /></CategoryPageStyles.ManagementBoxGray>
-          <CategoryPageStyles.ManagementBox><CloseSvg width = {28} height = {28} onClick = {() => {setCheckedItems(checkedItems.map(() => false))}}/></CategoryPageStyles.ManagementBox>
-        </CategoryPageStyles.CardManagement>
-        : 
-        <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
-          <CategoryPageStyles.Mode>
-            {recentRegisterMode ? '최근등록순' : '최근영상순'}
-          </CategoryPageStyles.Mode>
-          {recentRegisterMode ? (
-            <ChangeBottomSvg width = {24} height = {24} />
-          ) : (
-            <ChangeTopSvg width = {24} height = {24} />
-          )}
-           
-        </CategoryPageStyles.ModeWrap>
-        }
+        {checkedVideos.includes(true) ? (
+          <>
+            <div>
+              <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
+                {!checkedVideos.includes(false) ? '모두 삭제' : '모두 선택'}
+              </CategoryPageStyles.AllSelectBtn>
+              <CategoryPageStyles.SelectedCount>
+                {checkedVideos.filter((bool) => bool === true).length}개 선택
+              </CategoryPageStyles.SelectedCount>
+            </div>
+            <CategoryPageStyles.CardManagement>
+              <CategoryPageStyles.SelectManagement>
+                {menus.map((menu) => (
+                  <option key={menu.name}>{menu.name}</option>
+                ))}
+              </CategoryPageStyles.SelectManagement>
+              <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
+                <FolderSvg width={28} height={28} />
+              </CategoryPageStyles.ManagementBoxGray>
+              <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}>
+                <GarbageSvg width={28} height={28} />
+              </CategoryPageStyles.ManagementBoxGray>
+              <CategoryPageStyles.ManagementBox>
+                <CloseSvg
+                  width={28}
+                  height={28}
+                  onClick={() => {
+                    setCheckedVideos(checkedVideos.map(() => false));
+                  }}
+                />
+              </CategoryPageStyles.ManagementBox>
+            </CategoryPageStyles.CardManagement>
+          </>
+        ) : (
+          <>
+            <div>
+              {menus.map((menu) => (
+                <CategoryPageStyles.Menu
+                  to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
+                  className={`${
+                    params.sub_folder === menu.categoryId.toString() &&
+                    'activated'
+                  }`}
+                  key={`${menu.name}-${menu.categoryId}`}
+                >
+                  {menu.name}
+                </CategoryPageStyles.Menu>
+              ))}
+            </div>
+            <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
+              <CategoryPageStyles.Mode>
+                {recentRegisterMode ? '최근등록순' : '최근영상순'}
+              </CategoryPageStyles.Mode>
+              {recentRegisterMode ? (
+                <ChangeBottomSvg width={24} height={24} />
+              ) : (
+                <ChangeTopSvg width={24} height={24} />
+              )}
+            </CategoryPageStyles.ModeWrap>
+          </>
+        )}
       </CategoryPageStyles.MenuWrap>
 
-      <Card categoryItems = {categoryItems} checkedItems = {checkedItems} setCheckedItems = {setCheckedItems}/>
+      {(videos.length === 0 || videos === undefined) && <EmptyCard />}
+      {videos.length > 0 && (
+        <Card
+          videos={videos}
+          checkedVideos={checkedVideos}
+          setCheckedVideos={setCheckedVideos}
+        />
+      )}
     </CategoryPageStyles.Container>
   );
 };
