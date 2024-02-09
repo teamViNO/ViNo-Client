@@ -95,7 +95,7 @@ const CategoryPage = () => {
                   params.sub_folder === menu.categoryId.toString() &&
                   'activated'
                 }`}
-                key={menu.name}
+                key={`${menu.name}-${menu.categoryId}`}
               >
                 {menu.name}
               </CategoryPageStyles.Menu>

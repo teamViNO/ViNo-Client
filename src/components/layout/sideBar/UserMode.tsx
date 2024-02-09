@@ -86,7 +86,7 @@ const UserMode = () => {
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             putCategoryFolder={putCategoryFolder}
-            key={`${category.name}-${index}`}
+            key={`${category.name}-${category.categoryId}`}
           />
         ))}
       </>

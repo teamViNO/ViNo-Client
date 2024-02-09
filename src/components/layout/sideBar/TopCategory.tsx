@@ -176,7 +176,7 @@ const TopCategory = ({
               setIsDeleteModalOpen={setIsDeleteModalOpen}
               grabedCategory={grabedCategory}
               putCategoryFolder={putCategoryFolder}
-              key={subFolder.name}
+              key={`${subFolder.name}-${subFolder.categoryId}`}
             />
           ))}
         </TopCategoryStyles.SubFolderContainer>
