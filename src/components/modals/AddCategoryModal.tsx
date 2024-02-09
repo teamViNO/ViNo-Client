@@ -12,11 +12,13 @@ import {
 } from '@/styles/modals/common.style';
 import { ICommonModalProps } from 'types/modal';
 import handleEdit from '@/utils/handleEdit';
+import { postSubCategroy, postTopCategroy } from '@/apis/category';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
+  topCategoryId: number;
 }
 
 const AddCategoryModal = ({
@@ -26,6 +28,7 @@ const AddCategoryModal = ({
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
   setIsSubAdded,
+  topCategoryId,
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
 
@@ -48,7 +51,7 @@ const AddCategoryModal = ({
     handleEdit(e, setCategoryName);
 
   const addCategory = (e: React.MouseEvent) => {
-    // API 요청 로직 넣기
+    isTopCategoryModalOpen ? postTopCategroy() : postSubCategroy(topCategoryId);
     e.stopPropagation();
     onCloseModal();
     setIsSuccessAddCategoryModalOpen(true);

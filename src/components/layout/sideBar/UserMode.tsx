@@ -97,6 +97,7 @@ const UserMode = () => {
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
           setIsSubAdded={setIsSubAdded}
+          topCategoryId={topId}
         />
       )}
       {isDeleteModalOpen && (
