@@ -1,6 +1,6 @@
 import * as SideBarStyles from '@/styles/layout/sideBar';
 import { useRecoilValue } from 'recoil';
-import { userState } from '@/stores/user';
+import { userTokenState } from '@/stores/user';
 import GuestMode from './GuestMode';
 import UserMode from './UserMode';
 import AddCategory from './AddCategory';
@@ -8,7 +8,7 @@ import ConvertVideo from './ConvertVideo';
 import VinoGuide from './VinoGuide';
 
 const SideBar = () => {
-  const isUser = useRecoilValue(userState);
+  const isUser = useRecoilValue(userTokenState);
 
   return (
     <SideBarStyles.Container>

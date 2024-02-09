@@ -137,7 +137,7 @@ const CategoryPage = () => {
         )}
       </CategoryPageStyles.MenuWrap>
 
-      {videos.length === 0 && <EmptyCard />}
+      {(videos.length === 0 || videos === undefined) && <EmptyCard />}
       {videos.length > 0 && (
         <Card
           videos={videos}

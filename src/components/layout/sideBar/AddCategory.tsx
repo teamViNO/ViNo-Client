@@ -2,12 +2,12 @@ import * as AddCategoryStyle from '@/styles/layout/sideBar/AddCategory.style';
 import PlusSvg from '@/assets/icons/plus.svg?react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
-import { userState } from '@/stores/user';
+import { userTokenState } from '@/stores/user';
 import { useState } from 'react';
 import GuestNoticeModal from '@/components/modals/GuestNoticeModal';
 
 const AddCategory = () => {
-  const isUser = useRecoilValue(userState);
+  const isUser = useRecoilValue(userTokenState);
   const setTopCategoryModal = useSetRecoilState(topCategoryModalState);
   const [isGuestNoticeModalOpen, setIsGuestNoticeModalOpen] = useState(false);
 

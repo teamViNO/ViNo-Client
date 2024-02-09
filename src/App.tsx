@@ -39,12 +39,13 @@ const App = () => {
   const userToken = useRecoilValue(userTokenState);
   const { initializeCategory } = handleCategory();
   useEffect(() => {
-    getCategories()
-      .then((res) => {
-        setCategories(initializeCategory(res));
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    userToken &&
+      getCategories()
+        .then((res) => {
+          setCategories(initializeCategory(res));
+        })
+        .catch((err) => console.log(err));
+  }, [userToken]);
 
   return (
     <ThemeProvider theme={theme}>

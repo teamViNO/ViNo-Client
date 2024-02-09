@@ -60,7 +60,6 @@ const Card: React.FC<ICardProps> = ({
     prev[id] = !prev[id];
     setCheckedVideos(prev);
   };
-  console.log(videos);
   return (
     <CardStyles.Container>
       {videos.map((video, idx) => (
