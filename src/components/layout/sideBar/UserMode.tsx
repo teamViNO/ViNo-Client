@@ -1,30 +1,33 @@
 import LookSvg from '@/assets/icons/look.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
-import { useLocation } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
 import AddCategoryModal from '@/components/modals/AddCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useRef, useState } from 'react';
 import TopCategory from './TopCategory';
 import DeleteCategory from './DeleteCategory';
-import handleCategory from '@/utils/handleCategory';
 import { categoryState } from '@/stores/category';
 import { IFolderProps, ISubFolderProps } from 'types/category';
 import useMoveCategory from '@/hooks/useMoveCategory';
+import { deleteCategory } from '@/apis/category';
+import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
   const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
     useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isSubAdded, setIsSubAdded] = useState(false);
   const [categoryName, setCategoryName] = useState('');
-  const [categories, setCategories] = useRecoilState(categoryState);
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const categories = useRecoilValue(categoryState);
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
-  const { deleteSubCategory } = handleCategory();
+  const navigate = useNavigate();
+
+  const { updateCategories } = useUpdateCategories();
 
   const { subToOtherTop, subToTop, topToOtherTop } = useMoveCategory();
 
@@ -34,14 +37,11 @@ const UserMode = () => {
   const topId = Number(href[0]);
   const subId = Number(href[1]);
 
-  const handleDeleteCategory = () => {
-    if (!isNaN(subId)) {
-      setCategories([...deleteSubCategory(categories, topId, subId)]);
-    } else {
-      const newData = categories.filter(
-        (myFolder) => myFolder.categoryId !== topId,
-      );
-      setCategories([...newData]);
+  const handleDeleteCategory = async () => {
+    const response = await deleteCategory(categoryId!);
+    if (response.isSuccess) {
+      updateCategories();
+      navigate('/category/recent');
     }
     setIsDeleteModalOpen(false);
   };
@@ -85,6 +85,7 @@ const UserMode = () => {
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             putCategoryFolder={putCategoryFolder}
+            setCategoryId={setCategoryId}
             key={`${category.name}-${category.categoryId}`}
           />
         ))}
@@ -96,8 +97,8 @@ const UserMode = () => {
           categoryName={categoryName}
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-          setIsSubAdded={setIsSubAdded}
           topCategoryId={topId}
+          setCategoryId={setCategoryId}
         />
       )}
       {isDeleteModalOpen && (
@@ -111,9 +112,7 @@ const UserMode = () => {
           categoryName={categoryName}
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-          isSubAdded={isSubAdded}
-          setIsSubAdded={setIsSubAdded}
-          topId={topId}
+          categoryId={categoryId}
         />
       )}
     </>

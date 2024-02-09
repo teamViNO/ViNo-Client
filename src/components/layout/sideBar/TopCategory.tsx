@@ -21,6 +21,7 @@ interface ITopCategoryProps {
   dropedCategory: React.MutableRefObject<number | undefined>;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
   putCategoryFolder: () => void;
 }
 
@@ -36,6 +37,7 @@ const TopCategory = ({
   setIsSubCategoryModalOpen,
   setIsDeleteModalOpen,
   putCategoryFolder,
+  setCategoryId,
 }: ITopCategoryProps) => {
   const [folderOptionModalOpen, setFolderOptionModalOpen] = useState(false);
   const [folderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -66,6 +68,7 @@ const TopCategory = ({
       setIsEditing(true);
       setBeforeEdit(edit);
     } else if (option === '삭제') {
+      setCategoryId(categoryId);
       setIsDeleteModalOpen(true);
     }
     setFolderOptionModalOpen(false);
@@ -176,6 +179,7 @@ const TopCategory = ({
               setIsDeleteModalOpen={setIsDeleteModalOpen}
               grabedCategory={grabedCategory}
               putCategoryFolder={putCategoryFolder}
+              setCategoryId={setCategoryId}
               key={`${subFolder.name}-${subFolder.categoryId}`}
             />
           ))}

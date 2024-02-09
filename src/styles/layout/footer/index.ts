@@ -6,7 +6,7 @@ export const Container = styled.footer`
   background-color: ${theme.color.gray100};
   ${theme.typography.Body1};
   position: relative;
-  z-index: 1;
+  z-index: -1;
 `;
 
 export const SendEmailWrap = styled.div`
@@ -38,7 +38,6 @@ export const SendEmailInput = styled.input`
 `;
 
 export const SendEmailButton = styled.button`
-  /* padding: 7px 28px; */
   width: 98px;
   height: 40px;
   border-radius: 8px;

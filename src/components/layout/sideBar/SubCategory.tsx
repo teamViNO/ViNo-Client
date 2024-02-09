@@ -15,6 +15,7 @@ interface ISubCategoryProps {
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
   putCategoryFolder: () => void;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const SubCategory = ({
@@ -25,6 +26,7 @@ const SubCategory = ({
   setIsDeleteModalOpen,
   grabedCategory,
   putCategoryFolder,
+  setCategoryId,
 }: ISubCategoryProps) => {
   const [subFolderOptionModalOpen, setSubFolderOptionModalOpen] =
     useState(false);
@@ -45,6 +47,7 @@ const SubCategory = ({
     if (option === '수정') {
       setIsEditing(true);
     } else if (option === '삭제') {
+      setCategoryId(categoryId);
       setIsDeleteModalOpen(true);
     }
     setSubFolderOptionModalOpen(false);

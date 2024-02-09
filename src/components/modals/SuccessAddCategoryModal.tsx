@@ -7,58 +7,25 @@ import {
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as SuccessAddCategoryStyles from '@/styles/modals/SuccessAddCategoryModal.style';
 import { ICommonModalProps } from 'types/modal';
-import { useRecoilState } from 'recoil';
-import { categoryState } from '@/stores/category';
-
 import FileImage from '@/assets/file.png';
 
 interface ISuccessAddCategory extends ICommonModalProps {
-  isSubAdded: boolean;
-  setIsSubAdded: React.Dispatch<React.SetStateAction<boolean>>;
-  topId: number;
+  categoryId: number | null;
 }
 
 const SuccessAddCategoryModal = ({
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-  isSubAdded,
-  setIsSubAdded,
-  topId,
+  categoryId,
 }: ISuccessAddCategory) => {
   const onCloseModal = () => {
     setIsSuccessAddCategoryModalOpen(false);
     setCategoryName('');
   };
-  const [categories, setCategories] = useRecoilState(categoryState);
 
   const [successAddCategoryModalRef] =
     useOutsideClick<HTMLDivElement>(onCloseModal);
-
-  const handleGoToCategory = () => {
-    if (isSubAdded) {
-      const index = categories.findIndex(
-        (folder) => folder.categoryId === topId,
-      );
-      categories[index].subFolders.push({
-        name: categoryName,
-        categoryId: categories[index].categoryId,
-        topCategoryId: topId,
-      });
-    } else {
-      setCategories([
-        ...categories,
-        {
-          categoryId: categories.length + 1,
-          name: categoryName,
-          topCategoryId: null,
-          subFolders: [],
-        },
-      ]);
-    }
-    setIsSubAdded(false);
-    onCloseModal();
-  };
   return (
     <BlurBackground>
       <CommonCategoryContainer ref={successAddCategoryModalRef}>
@@ -73,12 +40,8 @@ const SuccessAddCategoryModal = ({
           생성 완료!
         </SuccessAddCategoryStyles.Title>
         <SuccessAddCategoryStyles.GoToCategoryButton
-          to={
-            isSubAdded
-              ? `/category/${topId}`
-              : `/category/${categories.length + 1}`
-          }
-          onClick={handleGoToCategory}
+          to={`/category/${categoryId}`}
+          onClick={onCloseModal}
         >
           보러가기
         </SuccessAddCategoryStyles.GoToCategoryButton>
