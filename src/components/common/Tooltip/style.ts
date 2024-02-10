@@ -1,20 +1,91 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 export type TooltipBoxDirection = 'up' | 'right' | 'down' | 'left';
+
+const upKeyframe = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`;
+
+const rightKeyframe = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+`;
+
+const downKeyframe = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`;
+
+const leftKeyframe = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+`;
 
 export const TooltipBox = styled.div<{ direction: TooltipBoxDirection }>`
   position: relative;
   padding: 12px 28px;
   border-radius: 4px;
-  background-color: rgba(30, 30, 30, 0.9);
+  background-color: ${(props) => props.theme.color.green300};
+  box-shadow: 4px 4px 30px 0 rgba(0, 0, 0, 0.16);
   text-align: center;
-  color: ${(props) => props.theme.color.green400};
+  white-space: nowrap;
+  color: ${(props) => props.theme.color.gray500};
   ${(props) => props.theme.typography.Caption2};
+
+  animation: ${(props) => {
+    switch (props.direction) {
+      case 'up':
+        return css`
+          ${upKeyframe} 1s forwards
+        `;
+      case 'right':
+        return css`
+          ${rightKeyframe} 1s forwards
+        `;
+      case 'down':
+        return css`
+          ${downKeyframe} 1s forwards
+        `;
+      case 'left':
+        return css`
+          ${leftKeyframe} 1s forwards
+        `;
+    }
+  }};
 
   &::before {
     content: '';
     position: absolute;
-    background-color: rgba(30, 30, 30, 0.9);
+    background-color: ${(props) => props.theme.color.green300};
 
     ${(props) => {
       switch (props.direction) {
