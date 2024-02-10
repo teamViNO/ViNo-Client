@@ -37,7 +37,17 @@ export const Wrapper = styled.div`
       background-color: white;
       color: ${(props) => props.theme.color.gray400};
       cursor: pointer;
+      outline: none;
+      transition: 0.1s;
       ${(props) => props.theme.typography.Body1};
+
+      &:hover {
+        border: 1.5px solid ${(props) => props.theme.color.gray400};
+      }
+
+      &:active {
+        border: 1.5px solid ${(props) => props.theme.color.gray300};
+      }
     }
   }
 
@@ -60,6 +70,7 @@ export const Wrapper = styled.div`
     color: white;
     transition: 0.1s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body1};
 
     &:disabled {
@@ -145,6 +156,7 @@ export const Box = styled.div`
     color: ${(props) => props.theme.color.gray400};
     transition: 0.15s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body1};
 
     &.selected {
@@ -180,6 +192,7 @@ export const Box = styled.div`
     color: ${(props) => props.theme.color.gray300};
     transition: 0.1s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body2};
 
     &.selected {
@@ -191,5 +204,63 @@ export const Box = styled.div`
         fill: white;
       }
     }
+  }
+`;
+
+export const ModalBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 40px 50px;
+  width: 700px;
+  background-color: white;
+  box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 40px;
+
+  & > .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    & > .close {
+      align-self: flex-end;
+      cursor: pointer;
+    }
+
+    & > .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      & img {
+        width: 56px;
+        height: auto;
+      }
+
+      & h1.title {
+        color: ${(props) => props.theme.color.gray500};
+        ${(props) => props.theme.typography.Header6};
+      }
+
+      & span.description {
+        color: ${(props) => props.theme.color.gray300};
+        ${(props) => props.theme.typography.Body1};
+      }
+    }
+  }
+
+  & > button {
+    width: 100%;
+    height: 58px;
+    background-color: ${(props) => props.theme.color.gray500};
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    ${(props) => props.theme.typography.Body1};
   }
 `;
