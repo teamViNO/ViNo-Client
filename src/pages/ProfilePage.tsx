@@ -1,8 +1,14 @@
+import { useRecoilValue } from 'recoil';
+
 import { Account, ServiceSetting } from '@/components/ProfilePage';
+
+import { userInfoState } from '@/stores/user';
 
 import { Wrapper } from '@/styles/ProfilePage';
 
 const ProfilePage = () => {
+  const userInfo = useRecoilValue(userInfoState);
+
   return (
     <Wrapper>
       <div className="container">
@@ -12,9 +18,13 @@ const ProfilePage = () => {
             <span className="description">여기서 계정 정보를 관리하세요</span>
           </div>
 
-          <Account />
+          {userInfo && (
+            <>
+              <Account />
 
-          <ServiceSetting />
+              <ServiceSetting />
+            </>
+          )}
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>

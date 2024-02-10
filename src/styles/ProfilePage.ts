@@ -41,6 +41,13 @@ export const Wrapper = styled.div`
     }
   }
 
+  & .submit-tooltip {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, calc(-200% + 25px));
+  }
+
   & button.submit {
     display: flex;
     align-items: center;
@@ -55,7 +62,7 @@ export const Wrapper = styled.div`
     cursor: pointer;
     ${(props) => props.theme.typography.Body1};
 
-    &.disabled {
+    &:disabled {
       background-color: ${(props) => props.theme.color.gray100};
       color: ${(props) => props.theme.color.gray300};
       cursor: not-allowed;
@@ -99,6 +106,7 @@ export const Box = styled.div`
     min-height: 50px;
     border-radius: 12px;
     border: solid 1.5px ${(props) => props.theme.color.gray200};
+    transition: 0.2s;
     ${(props) => props.theme.typography.Body1};
 
     &.disabled {
@@ -122,6 +130,12 @@ export const Box = styled.div`
     ${(props) => props.theme.typography.Caption1};
   }
 
+  & .input-error-text {
+    padding-left: 16px;
+    color: ${(props) => props.theme.color.red};
+    ${(props) => props.theme.typography.Body3};
+  }
+
   & button.option {
     width: 100%;
     height: 50px;
@@ -129,12 +143,12 @@ export const Box = styled.div`
     border: solid 1.5px ${(props) => props.theme.color.gray200};
     background-color: white;
     color: ${(props) => props.theme.color.gray400};
-    transition: 0.1s;
+    transition: 0.15s;
     cursor: pointer;
     ${(props) => props.theme.typography.Body1};
 
     &.selected {
-      border: none;
+      border: solid 1.5px ${(props) => props.theme.color.gray100};
       background-color: ${(props) => props.theme.color.gray100};
       color: ${(props) => props.theme.color.gray500};
     }

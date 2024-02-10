@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import ProfileImage from '@/assets/default-profile-rect.png';
 import InformationImage from '@/assets/information.png';
 import KeyImage from '@/assets/key.png';
 
-import { userTokenState } from '@/stores/user';
+import { MyInfoResponse } from '@/models/user';
+
+import { userInfoState, userTokenState } from '@/stores/user';
 
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
 
@@ -16,6 +18,7 @@ type Props = {
 const ProfileDetail = ({ onClose }: Props) => {
   const navigate = useNavigate();
   const setUserToken = useSetRecoilState(userTokenState);
+  const userInfo = useRecoilValue(userInfoState) as MyInfoResponse;
 
   const handleClickProfileButton = () => {
     navigate('/profile');
@@ -34,10 +37,10 @@ const ProfileDetail = ({ onClose }: Props) => {
           <img src={ProfileImage} alt="사각 프로필 이미지" />
           <ProfileDetailStyle.InformationWrap>
             <ProfileDetailStyle.InformationNickname>
-              여울
+              {userInfo.name}
             </ProfileDetailStyle.InformationNickname>
             <ProfileDetailStyle.InformationEmail>
-              abcd1234@naver.com
+              {userInfo.email}
             </ProfileDetailStyle.InformationEmail>
           </ProfileDetailStyle.InformationWrap>
         </ProfileDetailStyle.InformationContainer>
