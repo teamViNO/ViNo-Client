@@ -29,9 +29,15 @@ import { ToastList } from './components/common';
 
 // Store
 import { userTokenState } from './stores/user';
+import { useEffect } from 'react';
+import useUpdateCategories from './hooks/useUpdateCategories';
 
 const App = () => {
   const userToken = useRecoilValue(userTokenState);
+  const { updateCategories } = useUpdateCategories();
+  useEffect(() => {
+    userToken && updateCategories();
+  }, [updateCategories, userToken]);
 
   return (
     <ThemeProvider theme={theme}>

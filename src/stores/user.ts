@@ -4,11 +4,6 @@ import { MyInfoResponse } from '@/models/user';
 
 import localStorageEffect from './effects/localStorageEffect';
 
-export const userState = atom({
-  key: 'user',
-  default: true,
-});
-
 export const userInfoState = atom<MyInfoResponse | null>({
   key: 'user-info',
   default: null,

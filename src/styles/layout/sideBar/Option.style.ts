@@ -21,7 +21,8 @@ export const OptionsWrap = styled.div`
 export const OptionButton = styled.button`
   cursor: pointer;
   background-color: ${theme.color.white};
-  padding: 12px 71.25px;
+  padding: 12px 0;
+  width: 167.5px;
   border: 0;
   color: ${theme.color.gray400};
   ${theme.typography.Body3}

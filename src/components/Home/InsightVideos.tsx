@@ -8,10 +8,13 @@ interface InsightVideosProps {
   popularHashtags: string[];
 }
 
-const InsightVideos: React.FC<InsightVideosProps> = ({ username, popularHashtags }) => {
-    const formattedHashtags = popularHashtags.map(tag => '#' + tag);
-    const [categoryItems] = useState<cardDummy[]>([]); 
-    const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+const InsightVideos: React.FC<InsightVideosProps> = ({
+  username,
+  popularHashtags,
+}) => {
+  const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
+  const [categoryItems] = useState<cardDummy[]>([]);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
 
   return (
     <InsightVideosContainer>
@@ -23,16 +26,16 @@ const InsightVideos: React.FC<InsightVideosProps> = ({ username, popularHashtags
             콘텐츠에요!
           </h4>
         </div>
-        <div className='insight-videos'>
-          <Card 
-          categoryItems={categoryItems} 
-          checkedItems={checkedItems} 
-          setCheckedItems={setCheckedItems} 
-        />
+        <div className="insight-videos">
+          <Card
+            videos={categoryItems}
+            checkedVideos={checkedItems}
+            setCheckedVideos={setCheckedItems}
+          />
         </div>
       </div>
     </InsightVideosContainer>
   );
- };
+};
 
 export default InsightVideos;
