@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import React from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { recommendationModalState } from '@/stores/modal';
 import useOutsideClick from '@/hooks/useOutsideClick';
 
@@ -7,11 +7,12 @@ import emptyvideoImg from '@/assets/empty-video.png';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import cardimageImg from '@/assets/card-image.png';
 
+import { userInfoState } from '@/stores/user';
+
 import { RecommendationModalContainer } from '@/styles/modals/RecommendationModal.style';
-import { getMyInfoAPI } from '@/apis/user';
 
 const RecommendationModal: React.FC = () => {
-  const [nickname, setNickname] = useState('');
+  const userInfo = useRecoilValue(userInfoState);
   const [modalOpen, setModalOpen] = useRecoilState(recommendationModalState);
 
   const closeModal = () => {
@@ -19,15 +20,6 @@ const RecommendationModal: React.FC = () => {
   };
 
   const [modalRef] = useOutsideClick<HTMLDivElement>(closeModal);
-
-  useEffect(() => {
-    async function fetchNickname() {
-      const response = await getMyInfoAPI();
-      setNickname(response.data.result.nickname);
-    }
-
-    fetchNickname();
-  }, []);
 
   return (
     <RecommendationModalContainer isOpen={modalOpen}>
@@ -48,7 +40,8 @@ const RecommendationModal: React.FC = () => {
                 기다리는 동안 이런 영상은 어때요?
               </div>
               <div className="inform-subtext">
-                {nickname}님을 위해 미리 정리 된 영상을 소개해드릴게요
+                {userInfo?.nick_name}님을 위해 미리 정리 된 영상을
+                소개해드릴게요
               </div>
             </div>
           </div>
