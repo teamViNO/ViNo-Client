@@ -1,4 +1,4 @@
-import { APIResponse } from '@/models/config/axios';
+import { APIBaseResponse, APIResponse } from '@/models/config/axios';
 import {
   CheckEmailRequest,
   CheckEmailResponse,
@@ -6,6 +6,8 @@ import {
   JoinResponse,
   LoginRequest,
   LoginResponse,
+  MyInfoResponse,
+  UpdateMyInfoRequest,
 } from '@/models/user';
 import {
   AlarmResponse,
@@ -13,7 +15,6 @@ import {
   DeleteAlarmRequest,
   DeleteAlarmResponse,
 } from '@/models/alarm';
-import { getNicknameResponse } from '@/models/user';
 import axios from './config/instance';
 
 const PREFIX = '/user';
@@ -50,6 +51,14 @@ export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };
 
-export const getNicknameAPI = () => {
-  return axios.get<APIResponse<getNicknameResponse>>(PREFIX + '/myPage/myInfo');
+export const socialAccountAPI = (code: string) => {
+  return axios.get(`/sign-up/success?code=${code}`);
+};
+
+export const getMyInfoAPI = () => {
+  return axios.get<APIResponse<MyInfoResponse>>(PREFIX + '/myPage/myInfo');
+};
+
+export const updateMyInfoAPI = (data: UpdateMyInfoRequest) => {
+  return axios.put<APIBaseResponse>(PREFIX + '/myPage/setInfo', data);
 };
