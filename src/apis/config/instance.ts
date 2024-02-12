@@ -10,6 +10,7 @@ const axiosInstance = axios.create({ baseURL });
 axiosInstance.interceptors.request.use((config) => {
   config.withCredentials = true;
   config.headers['Access-Control-Allow-Origin'] = '*';
+  config.headers['Client-Host'] = location.origin;
 
   if (localStorage.vino) {
     const storage = JSON.parse(localStorage.vino);
