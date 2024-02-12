@@ -7,7 +7,7 @@ import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
-import Card from '@/components/category/Card';
+import Card, { IVideoProps } from '@/components/category/Card';
 import axiosInstance from '@/apis/config/instance';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
@@ -18,9 +18,9 @@ const CategoryPage = () => {
   const params = useParams();
   const [name, setName] = useState('');
   const [menus, setMenus] = useState<ISubFolderProps[]>([]);
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<IVideoProps[]>([]);
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
-  const [checkedVideos, setCheckedVideos] = useState<boolean[]>([]);
+  const [checkedVideos, setCheckedVideos] = useState<number[]>([]);
   const categories = useRecoilValue(categoryState);
 
   const toggleRecentRegisterMode = () =>
@@ -47,41 +47,38 @@ const CategoryPage = () => {
   }, [categories, params.top_folder]);
 
   const allCheckBtnHandler = () => {
-    if (checkedVideos.includes(false)) {
-      setCheckedVideos(checkedVideos.map(() => true));
+    if (checkedVideos.length === videos.length) {
+      // 삭제 API 요청
+      console.log('모두 삭제');
+      setCheckedVideos([]);
     } else {
-      // 모두 삭제
+      console.log('모두 선택');
+      setCheckedVideos(videos.map((video) => video.video_id));
     }
   };
 
   const dirMoveHanlder = () => {
-    checkedVideos.map((value, id) => {
-      if (value === true) {
-        console.log('이동해야할 index : ', id);
-      }
-    });
+    console.log(checkedVideos);
   };
 
   const garbageHandler = () => {
-    checkedVideos.map((value, id) => {
-      if (value === true) {
-        console.log('삭제해야할 index : ', id);
-      }
-    });
+    console.log(checkedVideos);
   };
 
   return (
     <CategoryPageStyles.Container>
       <CategoryTitle name={name} totalVideos={videos.length} />
       <CategoryPageStyles.MenuWrap>
-        {checkedVideos.includes(true) ? (
+        {checkedVideos.length > 0 ? (
           <>
             <div>
               <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-                {!checkedVideos.includes(false) ? '모두 삭제' : '모두 선택'}
+                {checkedVideos.length === videos.length
+                  ? '모두 삭제'
+                  : '모두 선택'}
               </CategoryPageStyles.AllSelectBtn>
               <CategoryPageStyles.SelectedCount>
-                {checkedVideos.filter((bool) => bool === true).length}개 선택
+                {checkedVideos.length}개 선택
               </CategoryPageStyles.SelectedCount>
             </div>
             <CategoryPageStyles.CardManagement>
@@ -101,7 +98,7 @@ const CategoryPage = () => {
                   width={28}
                   height={28}
                   onClick={() => {
-                    setCheckedVideos(checkedVideos.map(() => false));
+                    setCheckedVideos([]);
                   }}
                 />
               </CategoryPageStyles.ManagementBox>
