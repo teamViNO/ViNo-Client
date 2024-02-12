@@ -1,5 +1,5 @@
 import axios from './config/instance';
 
-export const kakaoLoginAPI = (token: string) => {
-  return axios.get(`/kakao-login?token=${token}`);
+export const kakaoLoginAPI = (code: string) => {
+  return axios.get(`/kakao-login?code=${code}`);
 };
