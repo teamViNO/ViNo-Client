@@ -8,10 +8,12 @@ import handleCategory from '@/utils/handleCategory';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { ISubFolderProps } from 'types/category';
+import useUpdateCategories from './useUpdateCategories';
 
 const useMoveCategory = () => {
   const [categories, setCategories] = useRecoilState(categoryState);
   const navigate = useNavigate();
+  const { updateCategories } = useUpdateCategories();
   const {
     deleteSubCategory,
     deleteTopCategory,
@@ -19,7 +21,7 @@ const useMoveCategory = () => {
     insertSubToTopCategory,
   } = handleCategory();
 
-  const subToOtherTop = (
+  const subToOtherTop = async (
     topId: number,
     grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>,
   ) => {
@@ -39,13 +41,20 @@ const useMoveCategory = () => {
       grabedCategory.current?.topCategoryId,
       grabedCategory.current!,
     );
-    putSubToOtherTop(grabedCategory.current!.categoryId, topId);
-    setCategories([...insertResponse]);
-    navigate(`/category/${grabedCategory.current?.topCategoryId}`);
-    console.log(grabedCategory.current?.name);
+    const res = await putSubToOtherTop(
+      grabedCategory.current!.categoryId,
+      topId,
+    );
+    if (res.isSuccess) {
+      updateCategories();
+      setCategories([...insertResponse]);
+      navigate(`/category/${grabedCategory.current?.topCategoryId}`);
+    } else {
+      alert('카테고리를 옮기는데 오류가 발생했습니다.');
+    }
   };
 
-  const subToTop = (
+  const subToTop = async (
     topId: number,
     grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>,
     dropedCategory: React.MutableRefObject<number | undefined>,
@@ -66,11 +75,16 @@ const useMoveCategory = () => {
       dropedCategory.current,
       grabedCategory.current!,
     );
-    putSubToTop(grabedCategory.current!.categoryId);
-    setCategories([...insertResponse]);
+    const res = await putSubToTop(grabedCategory.current!.categoryId);
+    if (res.isSuccess) {
+      updateCategories();
+      setCategories([...insertResponse]);
+    } else {
+      alert('카테고리를 옮기는데 오류가 발생했습니다.');
+    }
   };
 
-  const topToOtherTop = (
+  const topToOtherTop = async (
     grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>,
     dropedCategory: React.MutableRefObject<number | undefined>,
   ) => {
@@ -89,12 +103,16 @@ const useMoveCategory = () => {
         topCategoryId: dropedCategory.current!,
       },
     );
-    putTopToOtherTop(
+    const res = await putTopToOtherTop(
       grabedCategory.current!.categoryId,
       dropedCategory.current!,
     );
-    setCategories(insertResponse);
-    navigate(`/category/${dropedCategory.current}`);
+    if (res.isSuccess) {
+      setCategories(insertResponse);
+      navigate(`/category/${dropedCategory.current}`);
+    } else {
+      alert('카테고리를 옮기는데 오류가 발생했습니다.');
+    }
   };
 
   return { subToOtherTop, subToTop, topToOtherTop };
