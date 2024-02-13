@@ -7,20 +7,21 @@ import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
-import Card from '@/components/category/Card';
+import Card, { IVideoProps } from '@/components/category/Card';
 import axiosInstance from '@/apis/config/instance';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
+import { deleteVideos } from '@/apis/videos';
 
 const CategoryPage = () => {
   const params = useParams();
   const [name, setName] = useState('');
   const [menus, setMenus] = useState<ISubFolderProps[]>([]);
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<IVideoProps[]>([]);
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
-  const [checkedVideos, setCheckedVideos] = useState<boolean[]>([]);
+  const [checkedVideos, setCheckedVideos] = useState<number[]>([]);
   const categories = useRecoilValue(categoryState);
 
   const toggleRecentRegisterMode = () =>
@@ -46,42 +47,47 @@ const CategoryPage = () => {
     }
   }, [categories, params.top_folder]);
 
-  const allCheckBtnHandler = () => {
-    if (checkedVideos.includes(false)) {
-      setCheckedVideos(checkedVideos.map(() => true));
+  const handleDeleteVideos = async () => {
+    const res = await deleteVideos(checkedVideos);
+    if (res.isSuccess) {
+      const existVideos = videos.filter(
+        (video) => !checkedVideos.includes(video.video_id),
+      );
+      setVideos(existVideos);
+      setCheckedVideos([]);
     } else {
-      // 모두 삭제
+      alert('비디오를 삭제하는데 실패했습니다.');
+    }
+  };
+
+  const allCheckBtnHandler = async () => {
+    if (checkedVideos.length === videos.length) {
+      handleDeleteVideos();
+    } else {
+      console.log('모두 선택');
+      setCheckedVideos(videos.map((video) => video.video_id));
     }
   };
 
   const dirMoveHanlder = () => {
-    checkedVideos.map((value, id) => {
-      if (value === true) {
-        console.log('이동해야할 index : ', id);
-      }
-    });
+    console.log(checkedVideos);
   };
-
-  const garbageHandler = () => {
-    checkedVideos.map((value, id) => {
-      if (value === true) {
-        console.log('삭제해야할 index : ', id);
-      }
-    });
-  };
+  console.log(videos);
 
   return (
     <CategoryPageStyles.Container>
       <CategoryTitle name={name} totalVideos={videos.length} />
       <CategoryPageStyles.MenuWrap>
-        {checkedVideos.includes(true) ? (
+        {checkedVideos.length > 0 ? (
           <>
             <div>
               <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-                {!checkedVideos.includes(false) ? '모두 삭제' : '모두 선택'}
+                {checkedVideos.length === videos.length
+                  ? '모두 삭제'
+                  : '모두 선택'}
               </CategoryPageStyles.AllSelectBtn>
               <CategoryPageStyles.SelectedCount>
-                {checkedVideos.filter((bool) => bool === true).length}개 선택
+                {checkedVideos.length}개 선택
               </CategoryPageStyles.SelectedCount>
             </div>
             <CategoryPageStyles.CardManagement>
@@ -93,7 +99,9 @@ const CategoryPage = () => {
               <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
                 <FolderSvg width={28} height={28} />
               </CategoryPageStyles.ManagementBoxGray>
-              <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}>
+              <CategoryPageStyles.ManagementBoxGray
+                onClick={handleDeleteVideos}
+              >
                 <GarbageSvg width={28} height={28} />
               </CategoryPageStyles.ManagementBoxGray>
               <CategoryPageStyles.ManagementBox>
@@ -101,7 +109,7 @@ const CategoryPage = () => {
                   width={28}
                   height={28}
                   onClick={() => {
-                    setCheckedVideos(checkedVideos.map(() => false));
+                    setCheckedVideos([]);
                   }}
                 />
               </CategoryPageStyles.ManagementBox>
