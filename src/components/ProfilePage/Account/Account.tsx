@@ -1,15 +1,19 @@
+import { AxiosError } from 'axios';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { getMyInfoAPI, updateMyInfoAPI } from '@/apis/user';
 
 import NaverIconImage from '@/assets/naver-icon.png';
+import KakaoIconImage from '@/assets/kakao-icon.png';
 
 import { Tooltip } from '@/components/common';
 
 import { GENDER_TYPE_LIST } from '@/constants/user';
 
 import useFocus from '@/hooks/useFocus';
+
+import { APIBaseResponse } from '@/models/config/axios';
 
 import { userInfoState } from '@/stores/user';
 
@@ -46,7 +50,7 @@ const Account = () => {
 
   const nicknameInputStyle = {
     border: `1.5px solid ${
-      isErrorNickname
+      isErrorNickname || isDuplicateNickname
         ? theme.color.red
         : isNicknameFocus
           ? theme.color.gray500
@@ -98,8 +102,14 @@ const Account = () => {
         showTooltip();
         refreshMyInfo();
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { code } = error.response?.data as APIBaseResponse;
+
+        if (code === 'DUPLICATE_NICKNAME') {
+          setIsDuplicateNickname(true);
+        }
+      }
     }
   };
 
@@ -227,7 +237,9 @@ const Account = () => {
         <div className="account-group">
           <span className="group-title">전화번호</span>
 
-          <div className="input-box disabled">{userInfo?.phone_number}</div>
+          <div className="input-box disabled">
+            {userInfo?.phone_number || '-'}
+          </div>
         </div>
 
         {isSocialAccount && (
@@ -238,7 +250,14 @@ const Account = () => {
               className="input-box disabled"
               style={{ display: 'flex', alignItems: 'center', gap: 10 }}
             >
-              <img src={NaverIconImage} width={40} />
+              <img
+                src={
+                  userInfo.platform === 'kakao'
+                    ? KakaoIconImage
+                    : NaverIconImage
+                }
+                width={40}
+              />
 
               <span>{userInfo?.email}</span>
             </div>
