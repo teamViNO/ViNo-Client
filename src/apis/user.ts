@@ -8,6 +8,7 @@ import {
   LoginResponse,
   MyInfoResponse,
   UpdateMyInfoRequest,
+  UpdatePasswordRequest,
 } from '@/models/user';
 import {
   AlarmResponse,
@@ -61,4 +62,8 @@ export const getMyInfoAPI = () => {
 
 export const updateMyInfoAPI = (data: UpdateMyInfoRequest) => {
   return axios.put<APIBaseResponse>(PREFIX + '/myPage/setInfo', data);
+};
+
+export const updatePasswordAPI = (data: UpdatePasswordRequest) => {
+  return axios.put<APIBaseResponse>(PREFIX + '/myPage/updatePassword', data);
 };

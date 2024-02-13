@@ -254,7 +254,7 @@ const Account = () => {
             <div className="input-box disabled">{userInfo?.email}</div>
           </div>
 
-          <ChangePassword />
+          <ChangePassword onRefresh={refreshMyInfo} />
         </Box>
       )}
     </div>

@@ -39,3 +39,9 @@ export interface UpdateMyInfoRequest {
   nick_name: string;
   gender: string;
 }
+
+export interface UpdatePasswordRequest {
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
+}

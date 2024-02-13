@@ -250,9 +250,55 @@ export const ModalBox = styled.div`
         ${(props) => props.theme.typography.Body1};
       }
     }
+
+    & > .input-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      & .input-title {
+        color: ${(props) => props.theme.color.gray400};
+        ${(props) => props.theme.typography.Body1};
+      }
+
+      & .input-help {
+        display: flex;
+        gap: 4px;
+        padding-left: 16px;
+
+        & > span {
+          color: ${(props) => props.theme.color.gray300};
+          transition: 0.1s;
+          ${(props) => props.theme.typography.Body3};
+
+          &.active {
+            color: ${(props) => props.theme.color.gray500};
+          }
+
+          &.error {
+            color: ${(props) => props.theme.color.red};
+          }
+        }
+      }
+
+      & input {
+        padding: 15px 20px;
+        width: 100%;
+        height: 56px;
+        border-radius: 12px;
+        border: 1.5px solid ${(props) => props.theme.color.gray200};
+        outline: none;
+        transition: 0.1s;
+
+        &:focus {
+          border: 2px solid ${(props) => props.theme.color.gray500};
+        }
+      }
+    }
   }
 
-  & > button {
+  & button.submit {
     width: 100%;
     height: 58px;
     background-color: ${(props) => props.theme.color.gray500};
@@ -261,6 +307,12 @@ export const ModalBox = styled.div`
     color: white;
     cursor: pointer;
     outline: none;
+    transition: 0.1s;
     ${(props) => props.theme.typography.Body1};
+
+    &:disabled {
+      background-color: ${(props) => props.theme.color.gray100};
+      color: ${(props) => props.theme.color.gray300};
+    }
   }
 `;
