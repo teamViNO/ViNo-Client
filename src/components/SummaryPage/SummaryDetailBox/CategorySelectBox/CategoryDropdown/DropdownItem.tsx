@@ -1,19 +1,27 @@
 import { useState } from 'react';
 
 import DownIcon from '@/assets/icons/down.svg?react';
+import { IFolderProps, ISelectedCategoryProps } from 'types/category';
+import { DropdownTopCategoryName } from '@/styles/SummaryPage';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-  items?: Item[];
+interface ICategoryDropdownProp {
+  category: IFolderProps;
+  setSelectedCategory: React.Dispatch<
+    React.SetStateAction<ISelectedCategoryProps>
+  >;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type Props = {
-  category: Item;
-};
+interface IItemClickProps {
+  name: string;
+  categoryId: number;
+}
 
-const DropdownItem = ({ category }: Props) => {
+const DropdownItem = ({
+  category,
+  setSelectedCategory,
+  setIsOpen,
+}: ICategoryDropdownProp) => {
   const [isShow, setIsShow] = useState(false);
 
   const dynamicStyles = {
@@ -21,30 +29,53 @@ const DropdownItem = ({ category }: Props) => {
       transform: isShow ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
     },
     subCategory: {
-      height: isShow ? (category.items?.length || 0) * 46 : 0,
+      height: isShow ? (category.subFolders.length || 0) * 46 : 0,
     },
   };
 
-  const handleItemClick = async (id: number) => {
+  const handleItemClick = async ({ name, categoryId }: IItemClickProps) => {
+    setSelectedCategory({
+      name,
+      categoryId,
+    });
     // API 요청
-    console.log(id);
+    console.log('API 요청');
+    setIsOpen(false);
   };
 
   return (
     <>
-      <li onClick={() => setIsShow(!isShow)}>
-        <DownIcon width={18} height={18} style={dynamicStyles.icon} />
-
-        {category.text}
+      <li>
+        <DownIcon
+          width={18}
+          height={18}
+          style={dynamicStyles.icon}
+          onClick={() => setIsShow(!isShow)}
+        />
+        <DropdownTopCategoryName
+          onClick={() =>
+            handleItemClick({
+              name: category.name,
+              categoryId: category.categoryId,
+            })
+          }
+        >
+          {category.name}
+        </DropdownTopCategoryName>
       </li>
 
       <ul style={dynamicStyles.subCategory}>
-        {category.items?.map((subCategory) => (
+        {category.subFolders.map((subFolder) => (
           <li
-            key={subCategory.id}
-            onClick={() => handleItemClick(subCategory.id)}
+            key={subFolder.categoryId}
+            onClick={() =>
+              handleItemClick({
+                name: subFolder.name,
+                categoryId: subFolder.categoryId,
+              })
+            }
           >
-            {subCategory.text}
+            {subFolder.name}
           </li>
         ))}
       </ul>
