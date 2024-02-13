@@ -1,10 +1,14 @@
 import { APIResponse } from '@/models/config/axios';
-import { sendSMSRequest, sendSMSResponse } from '@/models/sms';
+import { sendSMSRequest, checkSMSRequest, smsResponse } from '@/models/sms';
 
 import axios from './config/instance';
 
 const PREFIX = '/sms';
 
 export const sendSMSAPI = (data: sendSMSRequest) => {
-    return axios.post<APIResponse<sendSMSResponse>>(PREFIX + '/sendSMS', data);
+    return axios.post<APIResponse<smsResponse>>(PREFIX + '/sendSMS', data);
   };
+
+export const checkSMSAPI = (data : checkSMSRequest) => {
+    return axios.post<APIResponse<smsResponse>>(PREFIX + '/checkSMS', data);
+}

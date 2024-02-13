@@ -1,22 +1,45 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
 import firstImg from '@/assets/first.png';
 import smallLogo from "../assets/logo.png";
 import mail from "../assets/mail.png";
+import theme from '@/styles/theme';
 
 const FindEmailPage = () => {
   const [name, setName] = useState<string>("");
   const [errMessage, setErrMessage] = useState('');
   const [tel, setTel] = useState<string>("");
   const [isTel, setIsTel] = useState<boolean>(false);
-
+  const [isSend, setIsSend] = useState(false);
+  
+  const [certifyNum, setCertifyNum] = useState('');
+  const [isCertify, setIsCertify] = useState(false);
   const [showResult, setShowResult] = useState<boolean>(false);
+  const [time, setTime] = useState(60*5);
+  /*
+  const [isAllCheck, setIsAllCheck] = useState(false);
+  const [verifyCode, setVertifyCode] = useState('');
+*/
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(prevTime => {
+        if (prevTime <= 1) {
+          clearInterval(intervalId);  
+          return 0;
+        } else {
+          return prevTime - 1;
+        }
+      });
+    }, 1000); 
+
+    return () => clearInterval(intervalId); 
+  }, []);
 
   const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    console.log(name);
   }, []);
 
   const onChangeTel = useCallback(
@@ -34,6 +57,15 @@ const FindEmailPage = () => {
     },
     [tel],
   );
+  const onChangeCertifyInput = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const certifyRegex = /^\d{7}$/;
+    setCertifyNum(e.target.value);
+    if(certifyRegex.test(e.target.value)){
+      setIsCertify(true);
+    } else {
+      setIsCertify(false);
+    }
+  }
 
   const onResultHandler = useCallback(() => {
     setShowResult(true);
@@ -50,11 +82,31 @@ const FindEmailPage = () => {
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log(tel);
     },
     [tel],
   );
+  const handleCertifyNum = async () => {
+    const response = (await sendSMSAPI({
+      phone_number : tel
+    }))
+    console.log(response)
+    if(response.data.success){
+      setIsSend(true);
+      //setVertifyCode(response.data.message); // vertifycode 담는 부분 meesage로 임시 설정
+    }
+    startTimer();
+  }
+  const handleCheckCertify = async () => {
+    console.log(certifyNum);
+    const response = (await checkSMSAPI({
+      verification_code : certifyNum
+    }))
+    console.log(response.headers['set-cookie']);
+  }
+  const startTimer = () => setTime(5 * 60); // 타이머 시작
 
+  const minutes = Math.floor(time / 60); // 분
+  const seconds = time % 60; 
 return (
   <Container>
       {showResult ? (
@@ -64,10 +116,10 @@ return (
             서예진님의 이메일은 <span>yejin2174@naver.com</span>입니다!
             </h4>
             <p>로그인하고 나만의 영상 아카이빙을 시작해요</p>
-            <LoginButton type="submit" bgColor={showResult} onClick={navigateToLogin}>
+            <LoginButton type="submit" onClick={navigateToLogin}>
             로그인 하러가기
             </LoginButton>
-            <PwButton type="submit" bgColor={showResult} onClick={navigateToPw}>
+            <PwButton type="submit" onClick={navigateToPw}>
             비밀번호 찾기
             </PwButton>
           </ResultWrapper>
@@ -97,6 +149,7 @@ return (
                   </Label>
                   <TwoLabel>
                     <span>전화번호</span>
+                    <UserDiv>
                     <InputBox
                       type="text"
                       id="tel"
@@ -104,11 +157,27 @@ return (
                       value={tel}
                       placeholder="휴대폰 번호 입력 (-제외)"
                       onChange={onChangeTel}
-                    ></InputBox>
+                      style={{width : '326px'}}
+                    />
+                    <UserButton onClick = {handleCertifyNum} disabled = {!isTel}>{isSend? '인증번호 재전송' : '인증번호 받기'}</UserButton>
+                 
+                    </UserDiv>
+                    {isSend ? <UserDiv>
+                      <InputBox
+                      type='text'
+                      id='certify'
+                      value={certifyNum}
+                      placeholder='인증번호 입력'
+                      onChange={(e) => onChangeCertifyInput(e)}
+                      style={{width : '326px'}}/>
+                      <UserButton onClick = {handleCheckCertify} disabled = {!isCertify}>인증번호 확인</UserButton>
+                    </UserDiv>: ''}
+                    
                     {!isTel && <Error>{errMessage}</Error>}
+                    {isSend && <SendMsg>인증번호가 발송되었어요 (유효시간 {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')})</SendMsg>}
                   </TwoLabel>
                   </Form>
-                  <FindButton type="submit" bgColor={isTel} onClick={onResultHandler}>
+                  <FindButton type="submit" onClick={onResultHandler} disabled={true}>
                     찾아보기
                   </FindButton>
               <TextTotalComponent style={{margin: "40px 0px 0px 0px"}}>
@@ -170,11 +239,28 @@ const ResultWrapper = styled.div`
     margin-top: 8px;
   }
 `;
-
-const LoginButton = styled.button<{ bgColor?: boolean }>`
+const UserDiv = styled.div`
+  display : flex;
+  flex-direction : row;
+  gap : 8px;
+`
+const UserButton = styled.button`
+  width : 160px;
+  height : 56px;
+  color : #1E1E1E;
+  background-color : #E9FF3F;
+  border : none;
+  border-radius : 12px;
+  ${theme.typography.Body1};
+  &:disabled {
+    background-color : #F3F3F3;
+    color : #BBBBBB;
+  }
+`
+const LoginButton = styled.button`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#1E1E1E' : '#FFFFFF')};
+  background: #1E1E1E;
   color: #FFFFFF;
   font-size: 16px;
   font-weight: 500;
@@ -188,10 +274,10 @@ const LoginButton = styled.button<{ bgColor?: boolean }>`
   }
 `;
 
-const PwButton = styled.button<{ bgColor?: boolean }>`
+const PwButton = styled.button`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#FFFFFF' : '#787878')};
+  background: #FFFFFF;
   color: #787878;
   font-size: 16px;
   font-weight: 500;
@@ -271,12 +357,12 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap : 20px;
   width: 494px;
   height: auto;
 `;
 
 const Label = styled.label`
-  margin-bottom: 40px;
   span {
     font-size: 16px;
     color: #787878;
@@ -288,6 +374,8 @@ const Label = styled.label`
 `;
 
 const TwoLabel = styled.label`
+  display : flex;
+  flex-direction : column;
   margin-bottom: 8px;
   span {
     font-size: 16px;
@@ -302,6 +390,7 @@ const TwoLabel = styled.label`
 const InputBox = styled.input`
   display: flex;
   align-items: center;
+  margin-bottom : 8px;
   justify-content: center;
   width: 494px;
   height: 56px;
@@ -316,7 +405,6 @@ const InputBox = styled.input`
   line-height: 160%;
   border-radius: 12px;
   border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top: 8px;
   outline: none;
   
   &:hover {
@@ -329,12 +417,7 @@ const InputBox = styled.input`
   &::placeholder {
     color: #bbb;
 
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
+    ${theme.typography.Body1};
   }
 `;
 
@@ -346,12 +429,15 @@ const Error = styled.p`
   padding-left: 4px;
   padding-top: 12px;
 `;
-
-const FindButton = styled.button<{ bgColor?: boolean }>`
+const SendMsg = styled.span`
+  color : #FF4A4A !important;
+  ${theme.typography.Body3};
+`
+const FindButton = styled.button`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#BBBBBB' : '#F3F3F3')};
-  color: #BBBBBB;
+  background: #1E1E1E;
+  color: #EEEEEE;
   font-size: 16px;
   font-weight: 500;
   line-height: 160%;
@@ -360,6 +446,10 @@ const FindButton = styled.button<{ bgColor?: boolean }>`
   font-family: Pretendard;
   &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    background-color : #F3F3F3;
+    color : #BBBBBB;
   }
 `;
 
@@ -382,11 +472,9 @@ const TextDiv = styled.div`
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
+  ${ theme.typography.Body3 };
   text-align: center;
   text-decoration: none;
-  font-size: 14px; 
-  font-weight: 500;
-  line-height: 160%;
   margin : 0px 0px 0px 10px;
 `;
 
