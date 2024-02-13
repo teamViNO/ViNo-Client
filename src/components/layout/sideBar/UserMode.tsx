@@ -47,16 +47,21 @@ const UserMode = () => {
   };
 
   const putCategoryFolder = async () => {
+    let response;
     if (grabedCategory.current?.topCategoryId === -1) {
-      subToTop(topId, grabedCategory, dropedCategory);
+      response = await subToTop(grabedCategory);
     } else if (grabedCategory.current?.topCategoryId === null) {
-      topToOtherTop(grabedCategory, dropedCategory);
+      response = await topToOtherTop(grabedCategory, dropedCategory);
     } else {
-      subToOtherTop(topId, grabedCategory);
+      response = await subToOtherTop(topId, grabedCategory);
     }
     // 잡은 카테고리, 놓은 카테고리 초기화
-    grabedCategory.current = undefined;
-    dropedCategory.current = undefined;
+    if (response) {
+      grabedCategory.current = undefined;
+      dropedCategory.current = undefined;
+    } else {
+      alert('카테고리를 옮기는데 오류가 발생했습니다.');
+    }
   };
   return (
     <>

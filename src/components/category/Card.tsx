@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import * as CardStyles from '@/styles/category/Card.style';
+import VideoTag from '../common/videoTag';
 
 export interface IVideoProps {
   video_id: number;
@@ -60,14 +61,14 @@ const Card: React.FC<ICardProps> = ({
               {video.description}
             </CardStyles.Summary>
             <CardStyles.ChipWrap key={`${video.title}-chip-wrap`}>
-              {/* {video.tag.map((tag) => (
+              {video.tag.map((tag) => (
                 <VideoTag
                   content={`# ${tag.name}`}
                   color={'gray400'}
                   typography="Caption1"
                   key={`${video.title}-${tag.name}`}
                 />
-              ))} */}
+              ))}
             </CardStyles.ChipWrap>
           </CardStyles.Content>
         </CardStyles.Wrap>
