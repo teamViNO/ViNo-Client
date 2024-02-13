@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import * as CardStyles from '@/styles/category/Card.style';
-import { IVideoProps } from 'types/videos';
-import { CategorySelectBox } from '../SummaryPage/SummaryDetailBox/CategorySelectBox';
-import { ISelectedCategoryProps } from 'types/category';
 import { useRecoilValue } from 'recoil';
+import { IVideoProps } from 'types/videos';
+
+import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
+
 import { categoryState } from '@/stores/category';
+
+import * as CardStyles from '@/styles/category/Card.style';
 
 interface ICardProps {
   mode: 'default' | 'category' | 'recommend';
   video: IVideoProps;
   checkedVideos?: number[];
   setCheckedVideos?: (value: number[]) => void;
-  onFileClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
+  onFileClick?: (e: React.MouseEvent) => void;
 }
 
 const Card: React.FC<ICardProps> = ({
@@ -23,20 +25,12 @@ const Card: React.FC<ICardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const category = useRecoilValue(categoryState);
-  const [selectedCategory, setSelectedCategory] =
-    useState<ISelectedCategoryProps>({
-      name: category[0].name,
-      categoryId: category[0].categoryId,
-    });
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    category[0].categoryId,
+  );
 
-  const handleSelectCategory = ({
-    name,
-    categoryId,
-  }: ISelectedCategoryProps) => {
-    setSelectedCategory({
-      name,
-      categoryId,
-    });
+  const handleSelectCategory = (categoryId: number) => {
+    setSelectedCategoryId(categoryId);
   };
 
   const handleCheckBox = (videoId: number) => {
@@ -77,8 +71,8 @@ const Card: React.FC<ICardProps> = ({
       {isOpen && mode === 'recommend' && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
-            selectedCategory={selectedCategory}
-            handleSelectCategory={handleSelectCategory}
+            selectedCategoryId={selectedCategoryId}
+            onSelect={handleSelectCategory}
             onFileClick={onFileClick}
           />
         </CardStyles.DropdownWrap>

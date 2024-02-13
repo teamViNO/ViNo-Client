@@ -5,6 +5,7 @@ export interface IVideoSubHeading {
   start_time: string;
   end_time: string;
   content: string;
+  name: string;
 }
 
 export interface IVideoSummary {
@@ -17,6 +18,7 @@ export interface IVideoTag {
 }
 
 export interface IVideo {
+  category_id?: number;
   video_id: number;
   title: string;
   description: string;
@@ -32,4 +34,18 @@ export interface IVideo {
 
 export interface VideoResponse {
   videos: IVideo[];
+}
+
+export interface UpdateVideoSubHeading {
+  id: number;
+  name: string;
+  content: string;
+}
+
+export interface UpdateVideoRequest {
+  title?: string;
+  description?: string;
+  category_id?: number;
+  subHeading?: UpdateVideoSubHeading;
+  summary?: IVideoSummary[];
 }

@@ -17,7 +17,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   const [categoryItems] = useState<IVideoProps[]>([]);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
-  const onFileClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+  const onFileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
   };

@@ -1,22 +1,22 @@
 import { useState } from 'react';
 
 /**
- * @param { Number | null } initialnumber
+ * @param { number | null } initialIndex
  *
  * @example const [hoverdIndex, enterIndex, LeaveIndex] = useNumber()
  */
-const useIndex = ( initialnum = null) => {
-    const [num, setNum] = useState<Number | null>(initialnum);
+const useIndex = (initialIndex: number | null = null) => {
+  const [index, setIndex] = useState(initialIndex);
 
-    const setNumber = (num : number) => {
-        setNum(num);
-    };
+  const setNextIndex = (nextIndex: number) => {
+    setIndex(nextIndex);
+  };
 
-    const setNull = () => {
-        setNum(null);
-    };
+  const setNull = () => {
+    setIndex(null);
+  };
 
-    return [num, setNumber, setNull] as const;
-}
+  return [index, setNextIndex, setNull] as const;
+};
 
 export default useIndex;
