@@ -6,10 +6,8 @@ import { DropdownTopCategoryName } from '@/styles/SummaryPage';
 
 interface ICategoryDropdownProp {
   category: IFolderProps;
-  setSelectedCategory: React.Dispatch<
-    React.SetStateAction<ISelectedCategoryProps>
-  >;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
 }
 
 interface IItemClickProps {
@@ -19,8 +17,8 @@ interface IItemClickProps {
 
 const DropdownItem = ({
   category,
-  setSelectedCategory,
   setIsOpen,
+  handleSelectCategory,
 }: ICategoryDropdownProp) => {
   const [isShow, setIsShow] = useState(false);
 
@@ -34,12 +32,7 @@ const DropdownItem = ({
   };
 
   const handleItemClick = async ({ name, categoryId }: IItemClickProps) => {
-    setSelectedCategory({
-      name,
-      categoryId,
-    });
-    // API 요청
-    console.log('API 요청');
+    handleSelectCategory({ name, categoryId });
     setIsOpen(false);
   };
 

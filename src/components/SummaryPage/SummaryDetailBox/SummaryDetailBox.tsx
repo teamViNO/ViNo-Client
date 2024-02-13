@@ -6,9 +6,25 @@ import { DetailBox } from '@/styles/SummaryPage';
 
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
+import { useState } from 'react';
+import { ISelectedCategoryProps } from 'types/category';
 
 const SummaryDetailBox = () => {
   const summaryVideo = useRecoilValue(summaryVideoState);
+
+  const [selectedCategory, setSelectedCategory] =
+    useState<ISelectedCategoryProps>({ name: '', categoryId: 0 });
+
+  const handleSelectCategory = ({
+    name,
+    categoryId,
+  }: ISelectedCategoryProps) => {
+    setSelectedCategory({
+      name,
+      categoryId,
+    });
+    console.log('name, categoryId를 이용한 API 요청');
+  };
 
   return (
     <div
@@ -41,7 +57,10 @@ const SummaryDetailBox = () => {
           }}
         />
 
-        <CategorySelectBox />
+        <CategorySelectBox
+          selectedCategory={selectedCategory}
+          handleSelectCategory={handleSelectCategory}
+        />
 
         <span className="title">{summaryVideo?.description}</span>
 
