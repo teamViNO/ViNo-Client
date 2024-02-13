@@ -14,6 +14,7 @@ import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
 import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
+import { sortVideos } from '@/utils/sortVideos';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -27,9 +28,10 @@ const CategoryPage = () => {
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
 
+  const sortedVideos = sortVideos(videos, recentRegisterMode);
+
   useEffect(() => {
     if (!params.top_folder) {
-      // 최근 동영상 가져오는 로직
       getRecentVideos()
         .then((res) => {
           setVideos(res.result.videos);
@@ -76,13 +78,13 @@ const CategoryPage = () => {
 
   return (
     <CategoryPageStyles.Container>
-      <CategoryTitle name={name} totalVideos={videos.length} />
+      <CategoryTitle name={name} totalVideos={sortedVideos.length} />
       <CategoryPageStyles.MenuWrap>
         {checkedVideos.length > 0 ? (
           <>
             <div>
               <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-                {checkedVideos.length === videos.length
+                {checkedVideos.length === sortedVideos.length
                   ? '모두 삭제'
                   : '모두 선택'}
               </CategoryPageStyles.AllSelectBtn>
@@ -145,10 +147,12 @@ const CategoryPage = () => {
         )}
       </CategoryPageStyles.MenuWrap>
 
-      {(videos.length === 0 || videos === undefined) && <EmptyCard />}
-      {videos.length > 0 && (
+      {(sortedVideos.length === 0 || sortedVideos === undefined) && (
+        <EmptyCard />
+      )}
+      {sortedVideos.length > 0 && (
         <Card
-          videos={videos}
+          videos={sortedVideos}
           checkedVideos={checkedVideos}
           setCheckedVideos={setCheckedVideos}
         />
