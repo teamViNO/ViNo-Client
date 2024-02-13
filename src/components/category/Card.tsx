@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import * as CardStyles from '@/styles/category/Card.style';
 import VideoTag from '../common/videoTag';
 import { IVideoProps } from 'types/videos';
+import { CategorySelectBox } from '../SummaryPage/SummaryDetailBox/CategorySelectBox';
 
 interface ICardProps {
   videos: IVideoProps[];
@@ -60,6 +61,9 @@ const Card: React.FC<ICardProps> = ({
               ))}
             </CardStyles.ChipWrap>
           </CardStyles.Content>
+          <CardStyles.DropdownWrap>
+            <CategorySelectBox />
+          </CardStyles.DropdownWrap>
         </CardStyles.Wrap>
       ))}
     </CardStyles.Container>
