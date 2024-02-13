@@ -25,8 +25,9 @@ const Card: React.FC<ICardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const category = useRecoilValue(categoryState);
+
   const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category[0].categoryId,
+    category.length ? category[0].categoryId : -1,
   );
 
   const handleSelectCategory = (categoryId: number) => {

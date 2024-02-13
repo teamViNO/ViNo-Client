@@ -41,6 +41,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
                 checkedVideos={checkedItems}
                 setCheckedVideos={setCheckedItems}
                 onFileClick={onFileClick}
+                key={video.category_id}
               />
             ))}
           </CardContainer>

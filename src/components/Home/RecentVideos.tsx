@@ -35,7 +35,7 @@ const RecentVideos = ({ videos }: IRecentVideosProp) => {
         {videos.length > 0 && (
           <CardContainer>
             {videos.map((video) => (
-              <Card mode="default" video={video} />
+              <Card key={video.category_id} mode="default" video={video} />
             ))}
           </CardContainer>
         )}
