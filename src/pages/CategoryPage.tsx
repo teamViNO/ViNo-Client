@@ -13,6 +13,7 @@ import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
+import { deleteVideos } from '@/apis/videos';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -46,11 +47,22 @@ const CategoryPage = () => {
     }
   }, [categories, params.top_folder]);
 
-  const allCheckBtnHandler = () => {
-    if (checkedVideos.length === videos.length) {
-      // 삭제 API 요청
-      console.log('모두 삭제');
+  const handleDeleteVideos = async () => {
+    const res = await deleteVideos(checkedVideos);
+    if (res.isSuccess) {
+      const existVideos = videos.filter(
+        (video) => !checkedVideos.includes(video.video_id),
+      );
+      setVideos(existVideos);
       setCheckedVideos([]);
+    } else {
+      alert('비디오를 삭제하는데 실패했습니다.');
+    }
+  };
+
+  const allCheckBtnHandler = async () => {
+    if (checkedVideos.length === videos.length) {
+      handleDeleteVideos();
     } else {
       console.log('모두 선택');
       setCheckedVideos(videos.map((video) => video.video_id));
@@ -60,10 +72,7 @@ const CategoryPage = () => {
   const dirMoveHanlder = () => {
     console.log(checkedVideos);
   };
-
-  const garbageHandler = () => {
-    console.log(checkedVideos);
-  };
+  console.log(videos);
 
   return (
     <CategoryPageStyles.Container>
@@ -90,7 +99,9 @@ const CategoryPage = () => {
               <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
                 <FolderSvg width={28} height={28} />
               </CategoryPageStyles.ManagementBoxGray>
-              <CategoryPageStyles.ManagementBoxGray onClick={garbageHandler}>
+              <CategoryPageStyles.ManagementBoxGray
+                onClick={handleDeleteVideos}
+              >
                 <GarbageSvg width={28} height={28} />
               </CategoryPageStyles.ManagementBoxGray>
               <CategoryPageStyles.ManagementBox>
