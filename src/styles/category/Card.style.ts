@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 export const CheckBoxWrap = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 16px 16px 0 0;
+
   display: none;
 
   flex-direction: row-reverse;
@@ -42,7 +44,7 @@ export const CheckBox = styled.input`
   }
 `;
 
-export const Container = styled.div`
+export const CardContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, auto);
   column-gap: 20px;
@@ -93,6 +95,7 @@ export const ChipWrap = styled.div`
 
 export const Image = styled.div<{ source: string }>`
   background-image: url(${(props) => props.source});
+  border-radius: 16px 16px 0 0;
   width: 290px;
   height: 163px;
   background-size: 100%;

@@ -1,21 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import * as CardStyles from '@/styles/category/Card.style';
 import VideoTag from '../common/videoTag';
 import { IVideoProps } from 'types/videos';
 import { CategorySelectBox } from '../SummaryPage/SummaryDetailBox/CategorySelectBox';
 
 interface ICardProps {
-  videos: IVideoProps[];
+  mode: 'default' | 'category' | 'recommend';
+  video: IVideoProps;
   checkedVideos: number[];
   setCheckedVideos: (value: number[]) => void;
 }
 
 const Card: React.FC<ICardProps> = ({
-  videos,
+  mode = 'default',
+  video,
   checkedVideos,
   setCheckedVideos,
 }) => {
-  useEffect(() => {}, [checkedVideos]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleCheckBox = (videoId: number) => {
     if (checkedVideos.includes(videoId)) {
@@ -25,48 +27,44 @@ const Card: React.FC<ICardProps> = ({
     }
   };
   return (
-    <CardStyles.Container>
-      {videos.map((video) => (
-        <CardStyles.Wrap key={`${video.title}-wrap`}>
-          <CardStyles.Image source={video.image}>
-            <CardStyles.CheckBoxWrap
-              className={checkedVideos.length > 0 ? 'activated' : ''}
-            >
-              <CardStyles.CheckBox
-                type="checkbox"
-                checked={checkedVideos.includes(video.video_id)}
-                onChange={() => handleCheckBox(video.video_id)}
-              />
-            </CardStyles.CheckBoxWrap>
-          </CardStyles.Image>
-
-          <CardStyles.Content
-            to={`/summary/${video.video_id}`}
-            key={`${video.title}-card-content`}
+    <CardStyles.Wrap
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <CardStyles.Image source={video.image}>
+        {mode === 'category' && (
+          <CardStyles.CheckBoxWrap
+            className={checkedVideos.length > 0 ? 'activated' : ''}
           >
-            <CardStyles.Title key={`${video.title}`}>
-              {video.title}
-            </CardStyles.Title>
-            <CardStyles.Summary key={`${video.description}`}>
-              {video.description}
-            </CardStyles.Summary>
-            <CardStyles.ChipWrap key={`${video.title}-chip-wrap`}>
-              {video.tag.map((tag) => (
-                <VideoTag
-                  content={`# ${tag.name}`}
-                  color={'gray400'}
-                  typography="Caption1"
-                  key={`${video.title}-${tag.name}`}
-                />
-              ))}
-            </CardStyles.ChipWrap>
-          </CardStyles.Content>
-          <CardStyles.DropdownWrap>
-            <CategorySelectBox />
-          </CardStyles.DropdownWrap>
-        </CardStyles.Wrap>
-      ))}
-    </CardStyles.Container>
+            <CardStyles.CheckBox
+              type="checkbox"
+              checked={checkedVideos.includes(video.video_id)}
+              onChange={() => handleCheckBox(video.video_id)}
+            />
+          </CardStyles.CheckBoxWrap>
+        )}
+      </CardStyles.Image>
+
+      <CardStyles.Content to={`/summary/${video.video_id}`}>
+        <CardStyles.Title>{video.title}</CardStyles.Title>
+        <CardStyles.Summary>{video.description}</CardStyles.Summary>
+        <CardStyles.ChipWrap>
+          {video.tag.map((tag) => (
+            <VideoTag
+              content={`# ${tag.name}`}
+              color={'gray400'}
+              typography="Caption1"
+              key={tag.name}
+            />
+          ))}
+        </CardStyles.ChipWrap>
+      </CardStyles.Content>
+      {isOpen && (
+        <CardStyles.DropdownWrap>
+          <CategorySelectBox />
+        </CardStyles.DropdownWrap>
+      )}
+    </CardStyles.Wrap>
   );
 };
 
