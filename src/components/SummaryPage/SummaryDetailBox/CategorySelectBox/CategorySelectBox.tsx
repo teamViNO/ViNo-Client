@@ -14,7 +14,7 @@ import { CategoryDropdown } from './CategoryDropdown';
 type Props = {
   selectedCategoryId?: number;
   onSelect: (categoryId: number) => void;
-  onFileClick?: () => void;
+  onFileClick?: (e: React.MouseEvent) => void;
 };
 
 const CategorySelectBox = ({
