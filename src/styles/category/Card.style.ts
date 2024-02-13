@@ -41,6 +41,7 @@ export const CheckBox = styled.input`
     background-position: center;
   }
 `;
+
 export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, auto);
@@ -53,13 +54,16 @@ export const Wrap = styled.div`
   flex-direction: column;
   width: 290px;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
-
+  transition: all 0.5s;
+  position: relative;
   &:hover {
     ${CheckBoxWrap} {
       display: flex;
     }
+    scale: 1.025;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -92,4 +96,47 @@ export const Image = styled.div<{ source: string }>`
   width: 290px;
   height: 163px;
   background-size: 100%;
+`;
+
+export const DropdownWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px 24px;
+  & div.select-box {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    border-radius: 8px;
+    border: solid 1px ${(props) => props.theme.color.gray200};
+    color: ${(props) => props.theme.color.gray400};
+    ${(props) => props.theme.typography.Body3};
+    cursor: pointer;
+  }
+  & span.icon-button {
+    padding: 5px 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.selected {
+      background-color: ${(props) => props.theme.color.green400};
+    }
+
+    &.not-selected {
+      background-color: ${(props) => props.theme.color.gray200};
+    }
+
+    &.disabled svg {
+      & path:nth-of-type(1) {
+        fill: ${(props) => props.theme.color.gray300};
+      }
+
+      & path:nth-of-type(2) {
+        fill: ${(props) => props.theme.color.gray400};
+      }
+    }
+  }
 `;
