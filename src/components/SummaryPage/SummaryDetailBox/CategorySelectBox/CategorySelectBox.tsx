@@ -8,11 +8,17 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import { CategoryDropdown } from './CategoryDropdown';
 import { ISelectedCategoryProps } from 'types/category';
 
-const CategorySelectBox = () => {
+interface ICategorySelectBoxProps {
+  selectedCategory: ISelectedCategoryProps;
+  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
+}
+
+const CategorySelectBox = ({
+  selectedCategory,
+  handleSelectCategory,
+}: ICategorySelectBoxProps) => {
   const [isLogin] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] =
-    useState<ISelectedCategoryProps>({ name: '', categoryId: 0 });
 
   // 다른 영역 클릭 시 dropdown 안보여지게 하기
   const [ref] = useOutsideClick<HTMLDivElement>(() => {
@@ -41,8 +47,8 @@ const CategorySelectBox = () => {
 
         {isOpen && (
           <CategoryDropdown
-            setSelectedCategory={setSelectedCategory}
             setIsOpen={setIsOpen}
+            handleSelectCategory={handleSelectCategory}
           />
         )}
       </div>

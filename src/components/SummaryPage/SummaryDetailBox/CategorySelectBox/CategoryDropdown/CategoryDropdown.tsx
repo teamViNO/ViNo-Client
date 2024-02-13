@@ -7,15 +7,13 @@ import React from 'react';
 import { ISelectedCategoryProps } from 'types/category';
 
 interface ICategoryDropdownProp {
-  setSelectedCategory: React.Dispatch<
-    React.SetStateAction<ISelectedCategoryProps>
-  >;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
 }
 
 const CategoryDropdown = ({
-  setSelectedCategory,
   setIsOpen,
+  handleSelectCategory,
 }: ICategoryDropdownProp) => {
   const categories = useRecoilValue(categoryState);
   return (
@@ -25,8 +23,8 @@ const CategoryDropdown = ({
           <DropdownItem
             key={category.categoryId}
             category={category}
-            setSelectedCategory={setSelectedCategory}
             setIsOpen={setIsOpen}
+            handleSelectCategory={handleSelectCategory}
           />
         ))}
       </ul>
