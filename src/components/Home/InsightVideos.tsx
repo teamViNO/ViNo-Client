@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
-import { IVideoProps } from '../category/Card';
+import { IVideoProps } from 'types/videos';
 
 interface InsightVideosProps {
   username: string;

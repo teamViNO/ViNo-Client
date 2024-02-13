@@ -7,13 +7,14 @@ import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
-import Card, { IVideoProps } from '@/components/category/Card';
-import axiosInstance from '@/apis/config/instance';
+import Card from '@/components/category/Card';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
-import { deleteVideos } from '@/apis/videos';
+import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
+import { IVideoProps } from 'types/videos';
+import { sortVideos } from '@/utils/sortVideos';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -27,23 +28,25 @@ const CategoryPage = () => {
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
 
+  const sortedVideos = sortVideos(videos, recentRegisterMode);
+
   useEffect(() => {
     if (!params.top_folder) {
-      // 최근 동영상 가져오는 로직
-      setName('최근 읽은 영상');
+      getRecentVideos()
+        .then((res) => {
+          setVideos(res.result.videos);
+          setName('최근 읽은 영상');
+        })
+        .catch((err) => console.log(err));
     } else {
-      (async () =>
-        await axiosInstance
-          .get(`/videos/${params.top_folder}`)
-          .then((res) => {
-            const index = categories.findIndex(
-              (category) => category.categoryId === Number(params.top_folder),
-            );
-            setVideos(res.data.result.videos);
-            setName(categories[index].name);
-            setMenus(categories[index].subFolders);
-          })
-          .catch((err) => console.log(err)))();
+      getVideoById(Number(params.top_folder)).then((res) => {
+        const index = categories.findIndex(
+          (category) => category.categoryId === Number(params.top_folder),
+        );
+        setVideos(res.result.videos);
+        setName(categories[index].name);
+        setMenus(categories[index].subFolders);
+      });
     }
   }, [categories, params.top_folder]);
 
@@ -72,17 +75,16 @@ const CategoryPage = () => {
   const dirMoveHanlder = () => {
     console.log(checkedVideos);
   };
-  console.log(videos);
 
   return (
     <CategoryPageStyles.Container>
-      <CategoryTitle name={name} totalVideos={videos.length} />
+      <CategoryTitle name={name} totalVideos={sortedVideos.length} />
       <CategoryPageStyles.MenuWrap>
         {checkedVideos.length > 0 ? (
           <>
             <div>
               <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-                {checkedVideos.length === videos.length
+                {checkedVideos.length === sortedVideos.length
                   ? '모두 삭제'
                   : '모두 선택'}
               </CategoryPageStyles.AllSelectBtn>
@@ -145,10 +147,12 @@ const CategoryPage = () => {
         )}
       </CategoryPageStyles.MenuWrap>
 
-      {(videos.length === 0 || videos === undefined) && <EmptyCard />}
-      {videos.length > 0 && (
+      {(sortedVideos.length === 0 || sortedVideos === undefined) && (
+        <EmptyCard />
+      )}
+      {sortedVideos.length > 0 && (
         <Card
-          videos={videos}
+          videos={sortedVideos}
           checkedVideos={checkedVideos}
           setCheckedVideos={setCheckedVideos}
         />

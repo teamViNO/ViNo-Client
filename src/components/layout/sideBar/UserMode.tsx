@@ -47,6 +47,8 @@ const UserMode = () => {
   };
 
   const putCategoryFolder = async () => {
+    if (grabedCategory.current?.categoryId === dropedCategory.current) return;
+
     let response;
     if (grabedCategory.current?.topCategoryId === -1) {
       response = await subToTop(grabedCategory);
