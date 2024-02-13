@@ -11,11 +11,13 @@ import { ISelectedCategoryProps } from 'types/category';
 interface ICategorySelectBoxProps {
   selectedCategory: ISelectedCategoryProps;
   handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
+  onFileClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }
 
 const CategorySelectBox = ({
   selectedCategory,
   handleSelectCategory,
+  onFileClick,
 }: ICategorySelectBoxProps) => {
   const [isLogin] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +59,7 @@ const CategorySelectBox = ({
         className={`icon-button ${!isLogin && 'disabled'} ${
           selectedCategory.name ? 'selected' : 'not-selected'
         }`}
+        onClick={onFileClick}
       >
         <OpenFileIcon width={28} height={28} />
       </span>

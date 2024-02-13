@@ -1,8 +1,6 @@
 import React from 'react';
 import SearchYoutube from '@/components/Home/SearchYoutube';
-import {
-  HomePageContainer
-} from '@/styles/HomepageStyle';
+import { HomePageContainer } from '@/styles/HomepageStyle';
 import RecentVideos from '@/components/Home/RecentVideos';
 import InsightVideos from '@/components/Home/InsightVideos';
 
@@ -11,7 +9,7 @@ export interface Video {
   title: string;
   subtitle: string;
   hashtags: string[];
-  thumbnailUrl: string; 
+  thumbnailUrl: string;
 }
 
 const GuestPage: React.FC = () => {
@@ -22,8 +20,11 @@ const GuestPage: React.FC = () => {
   return (
     <HomePageContainer>
       <SearchYoutube onSearch={handleSearch} />
-      <InsightVideos username="여울" popularHashtags={['디자인', '진로', '브랜딩']} />
-      <RecentVideos />
+      <InsightVideos
+        username="여울"
+        popularHashtags={['디자인', '진로', '브랜딩']}
+      />
+      <RecentVideos videos={[]} />
     </HomePageContainer>
   );
 };

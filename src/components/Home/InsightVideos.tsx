@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
+import { CardContainer } from '@/styles/category/Card.style';
 
 interface InsightVideosProps {
   username: string;
@@ -16,6 +17,11 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   const [categoryItems] = useState<IVideoProps[]>([]);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
+  const onFileClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation();
+    // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
+  };
+
   return (
     <InsightVideosContainer>
       <div className="insight-container">
@@ -27,11 +33,17 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
           </h4>
         </div>
         <div className="insight-videos">
-          <Card
-            videos={categoryItems}
-            checkedVideos={checkedItems}
-            setCheckedVideos={setCheckedItems}
-          />
+          <CardContainer>
+            {categoryItems.map((video) => (
+              <Card
+                mode="recommend"
+                video={video}
+                checkedVideos={checkedItems}
+                setCheckedVideos={setCheckedItems}
+                onFileClick={onFileClick}
+              />
+            ))}
+          </CardContainer>
         </div>
       </div>
     </InsightVideosContainer>
