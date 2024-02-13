@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
+import { CardContainer } from '@/styles/category/Card.style';
 
 interface InsightVideosProps {
   username: string;
@@ -27,11 +28,16 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
           </h4>
         </div>
         <div className="insight-videos">
-          <Card
-            videos={categoryItems}
-            checkedVideos={checkedItems}
-            setCheckedVideos={setCheckedItems}
-          />
+          <CardContainer>
+            {categoryItems.map((video) => (
+              <Card
+                mode="recommend"
+                video={video}
+                checkedVideos={checkedItems}
+                setCheckedVideos={setCheckedItems}
+              />
+            ))}
+          </CardContainer>
         </div>
       </div>
     </InsightVideosContainer>
