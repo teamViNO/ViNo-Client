@@ -41,7 +41,9 @@ const LogoutModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <button onClick={handleClickLogoutButton}>로그아웃 하기</button>
+        <button className="submit" onClick={handleClickLogoutButton}>
+          로그아웃 하기
+        </button>
       </ModalBox>
     </Modal>
   );
