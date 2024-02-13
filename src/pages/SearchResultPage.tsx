@@ -68,6 +68,7 @@ const SearchResult = () => {
                 return searchData.then(value => value.data.result);
             })
             const responses = await Promise.all(requests);
+            console.log(responses);
             responses.forEach((response) => {
                 const ivideos = response.videos as IVideo[];
                 dataDuplicateHandler(ivideos, inputValues);
@@ -96,20 +97,18 @@ const SearchResult = () => {
 
     const dataDuplicateHandler = (videos : IVideo[], check : string) => {
         const newData = videos.filter((value) => {
-        return !data.some((item) => item.video_id === value.video_id);
-    }).map((video) => {
-        const formattedContent = formatContent(video.content, check);
-        const formattedTitle = formatContent(video.title, check);
-        const formattedDescription = formatContent(video.description, check)
-
-        return {
-            ...video,
-            title: formattedTitle,
-            description : formattedDescription,
-            content: formattedContent
-        };
-    });
-        setData(data.concat(newData));
+            return !data.some((item) => item.video_id === value.video_id);
+            })
+            const mappingData = newData.map((video) => {
+                const markdata =  {
+                    ...video,
+                    title: formatContent(video.title, check),
+                    description : formatContent(video.description, check),
+                    content: formatContent(video.content, check)
+                };
+                setData([...data, markdata]);
+            });
+            mappingData;
     }
     const handleReSearch = () => {
         const params = {
