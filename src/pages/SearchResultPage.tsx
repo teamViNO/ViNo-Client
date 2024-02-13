@@ -68,7 +68,6 @@ const SearchResult = () => {
                 return searchData.then(value => value.data.result);
             })
             const responses = await Promise.all(requests);
-            console.log(responses);
             responses.forEach((response) => {
                 const ivideos = response.videos as IVideo[];
                 dataDuplicateHandler(ivideos, inputValues);
