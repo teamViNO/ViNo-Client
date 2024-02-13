@@ -1,14 +1,26 @@
 import { useRecoilValue } from 'recoil';
 
+import {
+  createVideoSummaryAPI,
+  deleteVideoSummaryAPI,
+  updateVideoAPI,
+} from '@/apis/videos';
+
 import PlusIcon from '@/assets/icons/plus.svg?react';
 
 import useIndex from '@/hooks/useIndex';
+
+import { IVideoSummary } from '@/models/video';
 
 import { summaryVideoState } from '@/stores/summary';
 
 import NoteItem from './NoteItem';
 
-const NoteBox = () => {
+type Props = {
+  onRefresh: () => void;
+};
+
+const NoteBox = ({ onRefresh }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState);
   const [editableIndex, setEditableIndex, setDisableIndex] = useIndex();
 
@@ -17,6 +29,38 @@ const NoteBox = () => {
       setEditableIndex(-1);
     } else {
       setEditableIndex(index);
+    }
+  };
+
+  const handleUpdateNote = async (summary: IVideoSummary) => {
+    if (!summaryVideo || editableIndex === null) return;
+
+    try {
+      if (summary.content === '') {
+        await deleteVideoSummaryAPI(summary.id);
+
+        setDisableIndex();
+      } else {
+        await updateVideoAPI(summaryVideo.video_id, { summary: [summary] });
+
+        handleActiveEditable(editableIndex + 1);
+      }
+
+      onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCreateNote = async (content: string) => {
+    if (!summaryVideo || content === '') return;
+
+    try {
+      await createVideoSummaryAPI(summaryVideo.video_id, [content]);
+
+      onRefresh();
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -30,16 +74,17 @@ const NoteBox = () => {
             isEditable={editableIndex === index}
             onDisableEditable={setDisableIndex}
             onActiveEditable={() => handleActiveEditable(index)}
-            onActiveNextEditable={() => handleActiveEditable(index + 1)}
+            onEdit={(content) => handleUpdateNote({ id: summary.id, content })}
           />
         ))}
 
         {/* 추가 */}
         {editableIndex === -1 && (
           <NoteItem
-            summary={{ id: 0, content: '' }}
+            summary={{ id: -1, content: '' }}
             isEditable={editableIndex === -1}
             onDisableEditable={setDisableIndex}
+            onEdit={handleCreateNote}
           />
         )}
 
