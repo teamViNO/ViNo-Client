@@ -7,6 +7,7 @@ import firstImg from '@/assets/first.png';
 import smallLogo from "../assets/logo.png";
 import mail from "../assets/mail.png";
 import theme from '@/styles/theme';
+import NotFindUserModal from '@/components/modals/NotFindUserModal';
 
 const FindEmailPage = () => {
   const [name, setName] = useState<string>("");
@@ -19,24 +20,26 @@ const FindEmailPage = () => {
   const [isCertify, setIsCertify] = useState(false);
   const [showResult, setShowResult] = useState<boolean>(false);
   const [time, setTime] = useState(60*5);
-  /*
-  const [isAllCheck, setIsAllCheck] = useState(false);
-  const [verifyCode, setVertifyCode] = useState('');
-*/
+  const [isTimer, setIsTimer] = useState(true);
+  const [isModal, setIsModal] = useState(false);
+  const [token, setToken] = useState('');
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTime(prevTime => {
-        if (prevTime <= 1) {
-          clearInterval(intervalId);  
-          return 0;
-        } else {
-          return prevTime - 1;
-        }
-      });
-    }, 1000); 
+    if (isTimer) {
+      const intervalId = setInterval(() => {
+        setTime(prevTime => {
+          if (prevTime <= 1) {
+            clearInterval(intervalId);
+            setIsTimer(false);
+            return 0;
+          } else {
+            return prevTime - 1;
+          }
+        });
+      }, 1000);
 
-    return () => clearInterval(intervalId); 
-  }, []);
+      return () => clearInterval(intervalId);
+    }
+  }, [isTimer]);
 
   const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -89,24 +92,28 @@ const FindEmailPage = () => {
     const response = (await sendSMSAPI({
       phone_number : tel
     }))
-    console.log(response)
+  
     if(response.data.success){
       setIsSend(true);
-      //setVertifyCode(response.data.message); // vertifycode 담는 부분 meesage로 임시 설정
+      setToken(response.data.result.token);
     }
     startTimer();
   }
   const handleCheckCertify = async () => {
-    console.log(certifyNum);
+    stopTimer();
     const response = (await checkSMSAPI({
-      verification_code : certifyNum
-    }))
-    console.log(response.headers['set-cookie']);
+      verification_code : Number(certifyNum),
+    }, token))
+    console.log(response)
   }
-  const startTimer = () => setTime(5 * 60); // 타이머 시작
 
+  const startTimer = () => setTime(5 * 60); // 타이머 시작
+  const stopTimer = () => {
+    setIsTimer(false);
+  };
   const minutes = Math.floor(time / 60); // 분
   const seconds = time % 60; 
+
 return (
   <Container>
       {showResult ? (
@@ -196,6 +203,7 @@ return (
             </MainSection>
           </Wrapper>
           )}
+      {isModal && <NotFindUserModal setIsShow={setIsModal} type={true}/>}
       </Container>
   );
 };

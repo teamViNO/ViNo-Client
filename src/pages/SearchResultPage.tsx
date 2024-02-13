@@ -59,7 +59,7 @@ const SearchResult = () => {
     const handleSearchAPI = async (inputValues : string, type : string, splittype : string) => {
         try {
             const keywords = inputValues.split(splittype);
-
+            
             const requests = keywords.map((value) => {
                 if (type === 'hashtag') {
                     value = value.replace('#', ''); 
@@ -88,7 +88,7 @@ const SearchResult = () => {
         } else {
           content = escapeHTML(content);
         }
-      
+        
         content = content.replace(/\n/g, '<br>');
       
         return content;
@@ -97,19 +97,17 @@ const SearchResult = () => {
     const dataDuplicateHandler = (videos : IVideo[], check : string) => {
         const newData = videos.filter((value) => {
         return !data.some((item) => item.video_id === value.video_id);
-    }).map((video) => {
-        const formattedContent = formatContent(video.content, check);
-        const formattedTitle = formatContent(video.title, check);
-        const formattedDescription = formatContent(video.description, check)
-
-        return {
-            ...video,
-            title: formattedTitle,
-            description : formattedDescription,
-            content: formattedContent
-        };
-    });
-        setData(data.concat(newData));
+        })
+        const mappingData = newData.map((video) => {
+            const markdata =  {
+                ...video,
+                title: formatContent(video.title, check),
+                description : formatContent(video.description, check),
+                content: formatContent(video.content, check)
+            };
+            setData([...data, markdata]);
+        });
+        mappingData;
     }
     const handleReSearch = () => {
         const params = {
