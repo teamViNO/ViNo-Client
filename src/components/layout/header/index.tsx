@@ -52,7 +52,11 @@ const Header = () => {
   }, [observer, pathname]);
 
   return (
-    <HeaderStyle.Container id="header" color={isDark ? 'gray500' : 'white'}>
+    <HeaderStyle.Container
+      id="header"
+      color={isDark ? 'gray500' : 'white'}
+      width={`100% + ${isSideBarOpen ? '348px' : '0px'}`}
+    >
       <HeaderStyle.Area>
         <HeaderStyle.Button
           color={isDark ? 'white' : 'gray500'}
