@@ -3,6 +3,7 @@ import { IVideo, VideoVersionType } from '@/models/video';
 
 import axios from './config/instance';
 import axiosInstance from './config/instance';
+import { IVideoProps } from '@/components/category/Card';
 
 const PREFIX = '/videos';
 
@@ -17,5 +18,19 @@ export const deleteVideos = async (videos: number[]) => {
   const response = await axiosInstance.delete('/videos/selectDelete', {
     data: { videos },
   });
+  return response.data;
+};
+
+export const getRecentVideos = async (): Promise<
+  APIResponse<Record<'videos', IVideoProps[]>>
+> => {
+  const response = await axiosInstance.get('/videos/recent');
+  return response.data;
+};
+
+export const getVideoById = async (
+  videoId: number,
+): Promise<APIResponse<Record<'videos', IVideoProps[]>>> => {
+  const response = await axiosInstance.get(`/videos/${videoId}`);
   return response.data;
 };

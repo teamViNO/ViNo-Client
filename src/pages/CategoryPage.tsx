@@ -8,12 +8,11 @@ import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
 import Card, { IVideoProps } from '@/components/category/Card';
-import axiosInstance from '@/apis/config/instance';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
-import { deleteVideos } from '@/apis/videos';
+import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -30,20 +29,21 @@ const CategoryPage = () => {
   useEffect(() => {
     if (!params.top_folder) {
       // 최근 동영상 가져오는 로직
-      setName('최근 읽은 영상');
+      getRecentVideos()
+        .then((res) => {
+          setVideos(res.result.videos);
+          setName('최근 읽은 영상');
+        })
+        .catch((err) => console.log(err));
     } else {
-      (async () =>
-        await axiosInstance
-          .get(`/videos/${params.top_folder}`)
-          .then((res) => {
-            const index = categories.findIndex(
-              (category) => category.categoryId === Number(params.top_folder),
-            );
-            setVideos(res.data.result.videos);
-            setName(categories[index].name);
-            setMenus(categories[index].subFolders);
-          })
-          .catch((err) => console.log(err)))();
+      getVideoById(Number(params.top_folder)).then((res) => {
+        const index = categories.findIndex(
+          (category) => category.categoryId === Number(params.top_folder),
+        );
+        setVideos(res.result.videos);
+        setName(categories[index].name);
+        setMenus(categories[index].subFolders);
+      });
     }
   }, [categories, params.top_folder]);
 
@@ -72,7 +72,6 @@ const CategoryPage = () => {
   const dirMoveHanlder = () => {
     console.log(checkedVideos);
   };
-  console.log(videos);
 
   return (
     <CategoryPageStyles.Container>
