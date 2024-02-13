@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import ChangeBottomSvg from '@/assets/icons/change-bottom.svg?react';
 import ChangeTopSvg from '@/assets/icons/change-top.svg?react';
 import GarbageSvg from '@/assets/icons/garbage.svg?react';
-import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
 import Card from '@/components/category/Card';
@@ -16,6 +15,7 @@ import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
+import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -25,6 +25,14 @@ const CategoryPage = () => {
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
   const [checkedVideos, setCheckedVideos] = useState<number[]>([]);
   const categories = useRecoilValue(categoryState);
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    categories.length ? categories[0].categoryId : -1,
+  );
+
+  const handleSelectCategory = (categoryId: number) => {
+    setSelectedCategoryId(categoryId);
+  };
 
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
@@ -73,8 +81,9 @@ const CategoryPage = () => {
     }
   };
 
-  const dirMoveHanlder = () => {
-    console.log(checkedVideos);
+  const onFileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 비디오 이동 API 호출 후 모든 비디오 받아오는 API 재호출로 최신화하기
   };
 
   return (
@@ -82,7 +91,7 @@ const CategoryPage = () => {
       <CategoryTitle name={name} totalVideos={sortedVideos.length} />
       <CategoryPageStyles.MenuWrap>
         {checkedVideos.length > 0 ? (
-          <>
+          <CategoryPageStyles.SelectModeWrap>
             <div>
               <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
                 {checkedVideos.length === sortedVideos.length
@@ -94,14 +103,13 @@ const CategoryPage = () => {
               </CategoryPageStyles.SelectedCount>
             </div>
             <CategoryPageStyles.CardManagement>
-              <CategoryPageStyles.SelectManagement>
-                {menus.map((menu) => (
-                  <option key={menu.name}>{menu.name}</option>
-                ))}
-              </CategoryPageStyles.SelectManagement>
-              <CategoryPageStyles.ManagementBoxGray onClick={dirMoveHanlder}>
-                <FolderSvg width={28} height={28} />
-              </CategoryPageStyles.ManagementBoxGray>
+              <CategoryPageStyles.DropdownWrap>
+                <CategorySelectBox
+                  selectedCategoryId={selectedCategoryId}
+                  onSelect={handleSelectCategory}
+                  onFileClick={onFileClick}
+                />
+              </CategoryPageStyles.DropdownWrap>
               <CategoryPageStyles.ManagementBoxGray
                 onClick={handleDeleteVideos}
               >
@@ -117,7 +125,7 @@ const CategoryPage = () => {
                 />
               </CategoryPageStyles.ManagementBox>
             </CategoryPageStyles.CardManagement>
-          </>
+          </CategoryPageStyles.SelectModeWrap>
         ) : (
           <>
             <div>
