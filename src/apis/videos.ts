@@ -3,7 +3,7 @@ import { IVideo, VideoVersionType } from '@/models/video';
 
 import axios from './config/instance';
 import axiosInstance from './config/instance';
-import { IVideoProps } from '@/components/category/Card';
+import { IVideoProps } from 'types/videos';
 
 const PREFIX = '/videos';
 

@@ -7,12 +7,13 @@ import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import FolderSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
-import Card, { IVideoProps } from '@/components/category/Card';
+import Card from '@/components/category/Card';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
 import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
+import { IVideoProps } from 'types/videos';
 
 const CategoryPage = () => {
   const params = useParams();
