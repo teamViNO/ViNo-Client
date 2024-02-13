@@ -6,4 +6,13 @@ import svgr from 'vite-plugin-svgr';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), paths(), svgr()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://backend.vi-no.site/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 });

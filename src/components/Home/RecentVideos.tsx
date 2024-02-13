@@ -1,14 +1,7 @@
-import React from 'react';
-import {
-  RecentVideosContainer,
-  VideoButton,
-  VideosSubtitle,
-  VideosTitle,
-} from '@/styles/HomepageStyle';
+import React from 'react'
+import { RecentVideosContainer, VideoButton, VideosSubtitle, VideosTitle } from '@/styles/HomepageStyle';
 // import Card from '../category/Card';
-
 import CardImage from '@/assets/empty-video.png';
-
 const RecentVideos: React.FC = () => {
   return (
     <RecentVideosContainer>

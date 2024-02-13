@@ -2,14 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-}
+import { IVideoSummary } from '@/models/video';
 
 type Props = {
-  note: Item;
+  summary: IVideoSummary;
   isEditable: boolean;
   onDisableEditable: () => void;
   onActiveEditable?: () => void;
@@ -17,14 +13,14 @@ type Props = {
 };
 
 const NoteItem = ({
-  note,
+  summary,
   isEditable,
   onDisableEditable,
   onActiveEditable,
   onActiveNextEditable,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [noteText, setNoteText] = useState(note.text);
+  const [noteText, setNoteText] = useState(summary.content);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (
     e,
@@ -42,13 +38,13 @@ const NoteItem = ({
     if (isEditable) {
       textareaRef.current?.focus();
       textareaRef.current?.setSelectionRange(
-        note.text.length,
-        note.text.length,
+        summary.content.length,
+        summary.content.length,
       );
     }
 
-    setNoteText(note.text);
-  }, [isEditable, note.text]);
+    setNoteText(summary.content);
+  }, [isEditable, summary.content]);
 
   return (
     <div

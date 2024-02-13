@@ -1,14 +1,14 @@
 import * as CategoryTitleStyles from '@/styles/category/CategoryTitle.style';
 
 interface ICategoryTitleProps {
-  title: string;
+  name: string;
   totalVideos: number;
 }
 
-const CategoryTitle = ({ title, totalVideos }: ICategoryTitleProps) => {
+const CategoryTitle = ({ name, totalVideos }: ICategoryTitleProps) => {
   return (
     <CategoryTitleStyles.Container>
-      <CategoryTitleStyles.Title>{title}</CategoryTitleStyles.Title>
+      <CategoryTitleStyles.Title>{name}</CategoryTitleStyles.Title>
       <CategoryTitleStyles.Count>{totalVideos}</CategoryTitleStyles.Count>
     </CategoryTitleStyles.Container>
   );
