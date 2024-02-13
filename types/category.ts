@@ -10,3 +10,8 @@ export interface IFolderProps {
   topCategoryId: null;
   subFolders: ISubFolderProps[];
 }
+
+export interface ISelectedCategoryProps {
+  name: string;
+  categoryId: number;
+}

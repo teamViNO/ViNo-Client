@@ -2,7 +2,11 @@ import useBoolean from '@/hooks/useBoolean';
 
 import ChangePasswordModal from './ChangePasswordModal';
 
-const ChangePassword = () => {
+type Props = {
+  onRefresh: () => void;
+};
+
+const ChangePassword = ({ onRefresh }: Props) => {
   const [isOpen, , open, close] = useBoolean(false);
 
   return (
@@ -18,7 +22,7 @@ const ChangePassword = () => {
         </button>
       </div>
 
-      {isOpen && <ChangePasswordModal onClose={close} />}
+      {isOpen && <ChangePasswordModal onClose={close} onRefresh={onRefresh} />}
     </>
   );
 };
