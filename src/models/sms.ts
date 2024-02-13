@@ -3,10 +3,11 @@ export interface sendSMSRequest {
   }
   
 export interface checkSMSRequest {
-  verification_code : string;
+  verification_code : number;
 }
 
 export interface smsResponse {
   success : boolean;
   message : string;
+  token : string;
 }
