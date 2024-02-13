@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import theme from '../theme';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
   display: flex;
@@ -17,11 +18,11 @@ export const Content = styled.p`
   ${theme.typography.Subheader2}
 `;
 
-export const Button = styled.button`
-  cursor: pointer;
-  border: 0;
+export const Button = styled(Link)`
   background-color: ${theme.color.gray500};
   color: ${theme.color.white};
+  text-decoration: none;
+  text-align: center;
   border-radius: 100px;
   padding: 12px 32px;
   ${theme.typography.Subheader2}

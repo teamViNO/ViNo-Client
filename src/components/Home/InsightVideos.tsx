@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
-import { cardDummy } from '../category/Card';
+import { IVideoProps } from 'types/videos';
 
 interface InsightVideosProps {
   username: string;
@@ -13,8 +13,8 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   popularHashtags,
 }) => {
   const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
-  const [categoryItems] = useState<cardDummy[]>([]);
-  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+  const [categoryItems] = useState<IVideoProps[]>([]);
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
 
   return (
     <InsightVideosContainer>

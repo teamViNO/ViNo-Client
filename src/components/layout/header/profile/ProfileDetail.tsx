@@ -27,6 +27,7 @@ const ProfileDetail = ({ onClose }: Props) => {
 
   const handleClickLogoutButton = () => {
     setUserToken(null);
+    navigate('/');
     onClose();
   };
 
