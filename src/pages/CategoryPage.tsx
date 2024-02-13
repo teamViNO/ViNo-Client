@@ -57,6 +57,7 @@ const CategoryPage = () => {
         setMenus(categories[index].subFolders);
       });
     }
+    setCheckedVideos([]);
   }, [categories, params.top_folder]);
 
   const handleDeleteVideos = async () => {
