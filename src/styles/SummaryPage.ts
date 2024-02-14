@@ -50,8 +50,15 @@ export const DetailBox = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    background-color: ${(props) => props.theme.color.gray200};
     cursor: pointer;
+
+    &.selected {
+      background-color: ${(props) => props.theme.color.green400};
+    }
+
+    &.not-selected {
+      background-color: ${(props) => props.theme.color.gray200};
+    }
 
     &.disabled svg {
       & path:nth-of-type(1) {
@@ -488,4 +495,12 @@ export const ModalContainer = styled(BlurBackground)`
       color: ${(props) => props.theme.color.gray400};
     }
   }
+`;
+
+export const DropdownTopCategoryName = styled.span`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;

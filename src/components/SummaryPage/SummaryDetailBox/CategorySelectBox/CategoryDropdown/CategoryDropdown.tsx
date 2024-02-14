@@ -1,24 +1,31 @@
 import { Dropdown } from '@/styles/SummaryPage';
 
 import DropdownItem from './DropdownItem';
+import { useRecoilValue } from 'recoil';
+import { categoryState } from '@/stores/category';
+import React from 'react';
+import { ISelectedCategoryProps } from 'types/category';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-  items?: Item[];
+interface ICategoryDropdownProp {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
 }
 
-type Props = {
-  categoryList: Item[];
-};
-
-const CategoryDropdown = ({ categoryList }: Props) => {
+const CategoryDropdown = ({
+  setIsOpen,
+  handleSelectCategory,
+}: ICategoryDropdownProp) => {
+  const categories = useRecoilValue(categoryState);
   return (
     <Dropdown onClick={(e) => e.stopPropagation()}>
       <ul>
-        {categoryList.map((category) => (
-          <DropdownItem key={category.id} category={category} />
+        {categories.map((category) => (
+          <DropdownItem
+            key={category.categoryId}
+            category={category}
+            setIsOpen={setIsOpen}
+            handleSelectCategory={handleSelectCategory}
+          />
         ))}
       </ul>
     </Dropdown>

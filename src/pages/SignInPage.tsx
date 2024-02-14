@@ -22,6 +22,7 @@ import { LoginRequest } from '@/models/user';
 import { userTokenState } from '@/stores/user';
 
 import { BlurBackground } from '@/styles/modals/common.style';
+import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const SignInPage: React.FC = () => {
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isOpenSignUpModal, setIsOpenSignUpModal] = useState(false);
   const setUserToken = useSetRecoilState(userTokenState);
+  const { updateCategories } = useUpdateCategories();
 
   const [loginInfo, setLoginInfo] = useState<LoginRequest>({
     email: '',
@@ -63,7 +65,7 @@ const SignInPage: React.FC = () => {
   const handleClickLoginButton = async () => {
     try {
       const { token } = (await loginAPI(loginInfo)).data.result;
-
+      await updateCategories();
       setUserToken(token);
       navigate('/');
     } catch (error) {

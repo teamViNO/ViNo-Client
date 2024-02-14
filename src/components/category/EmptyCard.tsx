@@ -13,7 +13,7 @@ const EmptyCard = () => {
           관련 영상들을 모아보세요
         </EmptyCardStyles.Content>
       </EmptyCardStyles.ContentWrap>
-      <EmptyCardStyles.Button>영상 정리해보기</EmptyCardStyles.Button>
+      <EmptyCardStyles.Button to="/">영상 정리해보기</EmptyCardStyles.Button>
     </EmptyCardStyles.Container>
   );
 };
