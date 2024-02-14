@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
@@ -17,46 +17,42 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
   const [categoryItems] = useState<IVideoProps[]>([]);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [showEndMessage, setShowEndMessage] = useState(false);
+
+  const endBox = useRef<HTMLDivElement>(null);
 
   const onFileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
   };
-  const [isEndOfPage, setIsEndOfPage] = useState(false);
-
-  const timerId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isEndOfPage) {
-      timerId.current = setTimeout(() => {
-        window.scroll(0, 1000);
-        setIsEndOfPage(false);
-      }, 3000);
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setShowEndMessage(true);
+          setTimeout(() => {
+            setShowEndMessage(false);
+          }, 2000);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, {
+      threshold: 1.0, 
+    });
+
+    const endBoxElement = endBox.current;
+    if (endBoxElement) {
+      observer.observe(endBoxElement);
     }
-  
+
     return () => {
-      if (timerId.current !== null) {
-        clearTimeout(timerId.current);
+      if (endBoxElement) {
+        observer.unobserve(endBoxElement);
       }
     };
-  }, [isEndOfPage]);
-  
-
-  const checkScrollPosition = useCallback(() => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-      setIsEndOfPage(true);
-    } else {
-      setIsEndOfPage(false);
-    }
   }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', checkScrollPosition);
-
-    return () => {
-        window.removeEventListener('scroll', checkScrollPosition);
-    }
-  }, [checkScrollPosition]);
 
   return (
     <InsightVideosContainer>
@@ -82,15 +78,14 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
             ))}
           </CardContainer>
         </div>
-        {isEndOfPage && 
-        <div className='end-message'>
-            <div className='end-wrapper'>
-                <img src={successImg} alt='successImg' width={87.11} height={87.11}/>
-                <h4 className='end-text'>
-                    마지막 영상이에요!<br />더 많은 영상 변환하러 가볼까요?
-                </h4>
-            </div>
-        </div>}
+        <div ref={endBox} className='end-message'>
+          <div className='end-wrapper' style={{ display: showEndMessage ? 'block' : 'none' }}>
+            <img src={successImg} alt='successImg' width={87.11} height={87.11}/>
+            <h4 className='end-text'>
+              마지막 영상이에요!<br />더 많은 영상 변환하러 가볼까요?
+            </h4>
+          </div>
+        </div>
       </div>
     </InsightVideosContainer>
   );
