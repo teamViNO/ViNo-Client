@@ -142,6 +142,13 @@ export const RecentVideosContainer = styled.div`
     width: 910px;
   }
 
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
   .empty-video img {
     width: 155.56px;
     height: 155.56px;

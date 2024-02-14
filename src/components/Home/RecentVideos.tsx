@@ -20,7 +20,7 @@ const RecentVideos = ({ videos }: IRecentVideosProp) => {
         <VideosTitle>최근 읽은 영상</VideosTitle>
 
         {videos.length === 0 && (
-          <>
+          <div className="empty-container">
             <div className="empty-video">
               <img src={CardImage} alt="비어있는 비디오 이미지" />
             </div>
@@ -30,7 +30,7 @@ const RecentVideos = ({ videos }: IRecentVideosProp) => {
             <VideoButton>
               <h2 className="button-text">영상 정리해보기</h2>
             </VideoButton>
-          </>
+          </div>
         )}
         {videos.length > 0 && (
           <CardContainer>
