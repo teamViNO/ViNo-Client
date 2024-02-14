@@ -8,6 +8,12 @@ export const getCategories = async () => {
   return response.data;
 };
 
+// 카테고리 별 태그 가져오는 API
+export const getCategoryTags = async (categoryId: string) => {
+  const response = await axiosInstance.get(`/category/${categoryId}/`);
+  return response.data;
+};
+
 // 카테고리 이동1 API
 export const putSubToOtherTop = async (
   categoryId: number,

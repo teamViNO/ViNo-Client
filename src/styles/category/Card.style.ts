@@ -143,13 +143,3 @@ export const DropdownWrap = styled.div`
     }
   }
 `;
-
-export const Chip = styled.div`
-  margin-right: 18px;
-  margin-bottom: 18px;
-  padding: 3px 9.5px;
-  background-color: ${theme.color.gray100};
-  border-radius: 8px;
-  color: ${theme.color.gray400};
-  ${theme.typography.Caption1};
-`;
