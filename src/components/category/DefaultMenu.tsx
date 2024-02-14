@@ -30,7 +30,7 @@ const DefaultMenu = ({
     <>
       <div style={{ display: 'flex' }}>
         {menus.map((menu: ISubFolderProps | ITagProps) => (
-          <>
+          <div key={menu.name}>
             {'tag_id' in menu && (
               <Chip
                 key={menu.tag_id}
@@ -48,7 +48,7 @@ const DefaultMenu = ({
                 {menu.name}
               </CategoryPageStyles.Menu>
             )}
-          </>
+          </div>
         ))}
       </div>
       <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>

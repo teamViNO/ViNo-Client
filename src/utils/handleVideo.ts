@@ -13,7 +13,7 @@ const handleVideo = async (
   setName: React.Dispatch<React.SetStateAction<string>>,
   setVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>,
 ) => {
-  await getVideoById(topCategoryId).then((res) => {
+  await getVideoById(topCategoryId).then(async (res) => {
     const topCategory = categories.find(
       (category) => category.categoryId === Number(topCategoryId),
     );
@@ -22,7 +22,7 @@ const handleVideo = async (
         (subFolder) => subFolder.categoryId === Number(subCategoryId),
       );
       setName(subName!.name);
-      getCategoryTags(subCategoryId!).then((res) => {
+      await getCategoryTags(subCategoryId!).then((res) => {
         if (res.isSuccess) setMenus(res.result.tags);
         else setMenus([]);
       });

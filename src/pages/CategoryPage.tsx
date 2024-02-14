@@ -121,7 +121,7 @@ const CategoryPage = () => {
                 video={video}
                 checkedVideos={checkedVideos}
                 setCheckedVideos={setCheckedVideos}
-                key={video.category_id}
+                key={video.video_id}
               />
             );
           })}
