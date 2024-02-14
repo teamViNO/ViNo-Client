@@ -25,7 +25,6 @@ const useMoveCategory = () => {
       grabedCategory.current!.categoryId,
       topId,
     );
-    console.log(res);
     if (res.isSuccess) {
       await updateCategories();
       navigate(`/category/${grabedCategory.current?.topCategoryId}`);

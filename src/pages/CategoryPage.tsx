@@ -11,13 +11,13 @@ import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps, ITagProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
-import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
+import { deleteVideos, getRecentVideos } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
 import Chip from '@/components/common/chip/Chip';
-import { getCategoryTags } from '@/apis/category';
+import handleVideo from '@/utils/handleVideo';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -59,30 +59,15 @@ const CategoryPage = () => {
           setMenus([]);
         })
         .catch((err) => console.log(err));
-    } else if (!params.sub_folder) {
-      getVideoById(params.top_folder).then((res) => {
-        const index = categories.findIndex(
-          (category) => category.categoryId === Number(params.top_folder),
-        );
-        setName(categories[index].name);
-        setMenus(categories[index].subFolders);
-        setVideos(res.isSuccess ? res.result.videos : []);
-      });
     } else {
-      getVideoById(params.sub_folder).then((res) => {
-        const index = categories.findIndex(
-          (category) => category.categoryId === Number(params.top_folder),
-        );
-        const subIndex = categories[index].subFolders.findIndex(
-          (subFolder) => subFolder.categoryId === Number(params.sub_folder),
-        );
-        getCategoryTags(params.sub_folder!).then((res) =>
-          setMenus(res.result.tags),
-        );
-        setName(categories[index].subFolders[subIndex].name);
-
-        setVideos(res.isSuccess ? res.result.videos : []);
-      });
+      handleVideo(
+        categories,
+        params.top_folder,
+        params.sub_folder!,
+        setMenus,
+        setName,
+        setVideos,
+      );
     }
     setCheckedVideos([]);
   }, [categories, params.sub_folder, params.top_folder]);
@@ -104,7 +89,6 @@ const CategoryPage = () => {
     if (checkedVideos.length === videos.length) {
       handleDeleteVideos();
     } else {
-      console.log('모두 선택');
       setCheckedVideos(videos.map((video) => video.video_id));
     }
   };
@@ -198,15 +182,28 @@ const CategoryPage = () => {
       )}
       {sortedVideos.length > 0 && (
         <CardContainer>
-          {sortedVideos.map((video) => (
-            <Card
-              mode="category"
-              video={video}
-              checkedVideos={checkedVideos}
-              setCheckedVideos={setCheckedVideos}
-              key={video.category_id}
-            />
-          ))}
+          {sortedVideos.map((video) => {
+            const matchedTagCount = video.tag.reduce((acc, cur) => {
+              if (selectedTags.includes(cur.name)) return (acc += 1);
+              return acc;
+            }, 0);
+            if (
+              params.sub_folder &&
+              selectedTags.length &&
+              matchedTagCount !== selectedTags.length
+            )
+              return;
+
+            return (
+              <Card
+                mode="category"
+                video={video}
+                checkedVideos={checkedVideos}
+                setCheckedVideos={setCheckedVideos}
+                key={video.category_id}
+              />
+            );
+          })}
         </CardContainer>
       )}
     </CategoryPageStyles.Container>

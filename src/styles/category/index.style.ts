@@ -20,6 +20,7 @@ export const Container = styled.div`
 
 export const MenuWrap = styled.div`
   display: flex;
+  min-width: 'fit-content';
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
