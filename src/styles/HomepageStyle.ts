@@ -142,10 +142,11 @@ export const RecentVideosContainer = styled.div`
     width: 910px;
   }
 
-  .empty-video{
+  .empty-container {
     display: flex;
-    justify-content: center;
-    align-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .empty-video img {
@@ -192,7 +193,6 @@ export const VideosTitle = styled.h2`
   width: 910px;
   height: 45px;
   font-weight: bold;
-  
 `;
 
 export const VideosSubtitle = styled.h4`
