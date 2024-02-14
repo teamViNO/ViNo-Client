@@ -7,6 +7,7 @@ import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/Cat
 import { categoryState } from '@/stores/category';
 
 import * as CardStyles from '@/styles/category/Card.style';
+import Chip from '../common/chip/Chip';
 
 interface ICardProps {
   mode: 'default' | 'category' | 'recommend';
@@ -65,7 +66,7 @@ const Card: React.FC<ICardProps> = ({
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>
           {video.tag.map((tag) => (
-            <CardStyles.Chip key={tag.name}>{`# ${tag.name}`}</CardStyles.Chip>
+            <Chip key={tag.name} name={tag.name} />
           ))}
         </CardStyles.ChipWrap>
       </CardStyles.Content>

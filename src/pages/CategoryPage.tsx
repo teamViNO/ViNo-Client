@@ -9,26 +9,37 @@ import * as CategoryPageStyles from '@/styles/category/index.style';
 import Card from '@/components/category/Card';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
-import { ISubFolderProps } from 'types/category';
+import { ISubFolderProps, ITagProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
 import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
+import Chip from '@/components/common/chip/Chip';
+import { getCategoryTags } from '@/apis/category';
 
 const CategoryPage = () => {
   const params = useParams();
   const [name, setName] = useState('');
-  const [menus, setMenus] = useState<ISubFolderProps[]>([]);
+  const [menus, setMenus] = useState<ISubFolderProps[] | ITagProps[]>([]);
   const [videos, setVideos] = useState<IVideoProps[]>([]);
   const [recentRegisterMode, setRecentRegisterMode] = useState(false);
   const [checkedVideos, setCheckedVideos] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const categories = useRecoilValue(categoryState);
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categories.length ? categories[0].categoryId : -1,
   );
+
+  const onSelectTag = (name: string) => {
+    if (selectedTags.includes(name)) {
+      setSelectedTags(selectedTags.filter((tag) => tag !== name));
+    } else {
+      setSelectedTags([...selectedTags, name]);
+    }
+  };
 
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategoryId(categoryId);
@@ -45,33 +56,31 @@ const CategoryPage = () => {
         .then((res) => {
           setVideos(res.result.videos);
           setName('최근 읽은 영상');
+          setMenus([]);
         })
         .catch((err) => console.log(err));
     } else if (!params.sub_folder) {
-      getVideoById(Number(params.top_folder)).then((res) => {
+      getVideoById(params.top_folder).then((res) => {
         const index = categories.findIndex(
           (category) => category.categoryId === Number(params.top_folder),
         );
-        if (!res.isSuccess) {
-          setName(categories[index].name);
-          setMenus([]);
-          setVideos([]);
-          return;
-        }
         setName(categories[index].name);
         setMenus(categories[index].subFolders);
         setVideos(res.isSuccess ? res.result.videos : []);
       });
     } else {
-      getVideoById(Number(params.sub_folder)).then((res) => {
+      getVideoById(params.sub_folder).then((res) => {
         const index = categories.findIndex(
           (category) => category.categoryId === Number(params.top_folder),
         );
         const subIndex = categories[index].subFolders.findIndex(
           (subFolder) => subFolder.categoryId === Number(params.sub_folder),
         );
+        getCategoryTags(params.sub_folder!).then((res) =>
+          setMenus(res.result.tags),
+        );
         setName(categories[index].subFolders[subIndex].name);
-        setMenus([]);
+
         setVideos(res.isSuccess ? res.result.videos : []);
       });
     }
@@ -147,14 +156,27 @@ const CategoryPage = () => {
           </CategoryPageStyles.SelectModeWrap>
         ) : (
           <>
-            <div>
-              {menus.map((menu) => (
-                <CategoryPageStyles.Menu
-                  to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
-                  key={`${menu.name}-${menu.categoryId}`}
-                >
-                  {menu.name}
-                </CategoryPageStyles.Menu>
+            <div style={{ display: 'flex' }}>
+              {menus.map((menu: ISubFolderProps | ITagProps) => (
+                <>
+                  {'tag_id' in menu && (
+                    <Chip
+                      key={menu.tag_id}
+                      name={menu.name}
+                      light
+                      selected={selectedTags.includes(menu.name)}
+                      onSelectTag={onSelectTag}
+                    />
+                  )}
+                  {!('tag_id' in menu) && (
+                    <CategoryPageStyles.Menu
+                      to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
+                      key={`${menu.name}-${menu.categoryId}`}
+                    >
+                      {menu.name}
+                    </CategoryPageStyles.Menu>
+                  )}
+                </>
               ))}
             </div>
             <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>

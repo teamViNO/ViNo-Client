@@ -15,3 +15,8 @@ export interface ISelectedCategoryProps {
   name: string;
   categoryId: number;
 }
+
+export interface ITagProps {
+  tag_id: number;
+  name: string;
+}
