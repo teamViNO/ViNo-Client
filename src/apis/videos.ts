@@ -51,3 +51,10 @@ export const createVideoSummaryAPI = (videoId: number, content: string[]) => {
 export const deleteVideoSummaryAPI = (summaryId: number) => {
   return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
 };
+
+export const getDummyVideos = async (): Promise<
+  APIResponse<Record<'videos', IVideoProps[]>>
+> => {
+  const response = await axiosInstance.get('/videos/dummyVideos/unRead');
+  return response.data;
+};

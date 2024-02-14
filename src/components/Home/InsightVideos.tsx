@@ -8,14 +8,15 @@ import successImg from '@/assets/success.png';
 interface InsightVideosProps {
   username: string;
   popularHashtags: string[];
+  dummyVideos: IVideoProps[];
 }
 
 const InsightVideos: React.FC<InsightVideosProps> = ({
   username,
   popularHashtags,
+  dummyVideos,
 }) => {
   const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
-  const [categoryItems] = useState<IVideoProps[]>([]);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [showEndMessage, setShowEndMessage] = useState(false);
 
@@ -31,15 +32,16 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setShowEndMessage(true);
-          setTimeout(() => {
+          const timer: NodeJS.Timeout = setTimeout(() => {
             setShowEndMessage(false);
+            clearTimeout(timer);
           }, 2000);
         }
       });
     };
 
     const observer = new IntersectionObserver(handleIntersect, {
-      threshold: 1.0, 
+      threshold: 1.0,
     });
 
     const endBoxElement = endBox.current;
@@ -66,23 +68,32 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
         </div>
         <div className="insight-videos">
           <CardContainer>
-            {categoryItems.map((video) => (
+            {dummyVideos.map((video) => (
               <Card
                 mode="recommend"
                 video={video}
                 checkedVideos={checkedItems}
                 setCheckedVideos={setCheckedItems}
                 onFileClick={onFileClick}
-                key={video.category_id}
+                key={video.video_id}
               />
             ))}
           </CardContainer>
         </div>
-        <div ref={endBox} className='end-message'>
-          <div className='end-wrapper' style={{ display: showEndMessage ? 'block' : 'none' }}>
-            <img src={successImg} alt='successImg' width={87.11} height={87.11}/>
-            <h4 className='end-text'>
-              마지막 영상이에요!<br />더 많은 영상 변환하러 가볼까요?
+        <div ref={endBox} className="end-message">
+          <div
+            className="end-wrapper"
+            style={{ display: showEndMessage ? 'block' : 'none' }}
+          >
+            <img
+              src={successImg}
+              alt="successImg"
+              width={87.11}
+              height={87.11}
+            />
+            <h4 className="end-text">
+              마지막 영상이에요!
+              <br />더 많은 영상 변환하러 가볼까요?
             </h4>
           </div>
         </div>

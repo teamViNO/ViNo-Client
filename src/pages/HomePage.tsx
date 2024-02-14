@@ -6,7 +6,7 @@ import InsightVideos from '@/components/Home/InsightVideos';
 import { useRecoilValue } from 'recoil';
 import { recommendationModalState } from '@/stores/modal';
 import RecommendationModal from '@/components/modals/RecommendationModal';
-import { getRecentVideos } from '@/apis/videos';
+import { getDummyVideos, getRecentVideos } from '@/apis/videos';
 import { userTokenState } from '@/stores/user';
 import { IVideoProps } from 'types/videos';
 
@@ -20,7 +20,8 @@ export interface Video {
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
-  const [videos, setVideos] = useState<IVideoProps[]>([]);
+  const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
+  const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
   const handleSearch = (value: string) => {
     console.log(value);
   };
@@ -28,20 +29,22 @@ const HomePage: React.FC = () => {
   const isModalOpen = useRecoilValue(recommendationModalState);
 
   useEffect(() => {
-    userToken &&
-      getRecentVideos()
-        .then((res) => setVideos(res.result.videos))
-        .catch((err) => console.log(err));
+    Promise.all([getRecentVideos(), getDummyVideos()]).then((res) => {
+      const [recentVideosResponse, dummyVideosResponse] = res;
+      setRecentVideos(recentVideosResponse.result.videos);
+      setDummyVideos(dummyVideosResponse.result.videos);
+    });
   }, [userToken]);
 
   return (
     <HomePageContainer>
       <SearchYoutube onSearch={handleSearch} />
       {isModalOpen && <RecommendationModal />}
-      <RecentVideos videos={videos} />
+      <RecentVideos videos={recentVideos} />
       <InsightVideos
         username="여울"
         popularHashtags={['디자인', '진로', '브랜딩']}
+        dummyVideos={dummyVideos}
       />
     </HomePageContainer>
   );
