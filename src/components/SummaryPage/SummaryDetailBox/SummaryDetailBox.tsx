@@ -1,29 +1,33 @@
 import { useRecoilValue } from 'recoil';
 
+import { updateVideoAPI } from '@/apis/videos';
+
 import { summaryVideoState } from '@/stores/summary';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
+import { formatDate } from '@/utils/date';
+
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
-import { useState } from 'react';
-import { ISelectedCategoryProps } from 'types/category';
 
-const SummaryDetailBox = () => {
+type Props = {
+  onRefresh: () => void;
+};
+
+const SummaryDetailBox = ({ onRefresh }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState);
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<ISelectedCategoryProps>({ name: '', categoryId: 0 });
+  const handleSelectCategory = async (category_id: number) => {
+    if (!summaryVideo) return;
 
-  const handleSelectCategory = ({
-    name,
-    categoryId,
-  }: ISelectedCategoryProps) => {
-    setSelectedCategory({
-      name,
-      categoryId,
-    });
-    console.log('name, categoryId를 이용한 API 요청');
+    try {
+      await updateVideoAPI(summaryVideo.video_id, { category_id });
+
+      onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -35,9 +39,13 @@ const SummaryDetailBox = () => {
       }}
     >
       <DetailBox>
-        <span className="created_at">2024년 1월 1일</span>
+        <span className="created_at">
+          {formatDate(summaryVideo?.updated_at)}
+        </span>
 
-        <span className="youtube-video-title">{summaryVideo?.title}</span>
+        <span className="youtube-video-title">
+          {summaryVideo?.title || '-'}
+        </span>
 
         <div style={{ display: 'flex', gap: 10 }}>
           {summaryVideo?.tag.map((hashtag) => (
@@ -58,11 +66,11 @@ const SummaryDetailBox = () => {
         />
 
         <CategorySelectBox
-          selectedCategory={selectedCategory}
-          handleSelectCategory={handleSelectCategory}
+          selectedCategoryId={summaryVideo?.category_id}
+          onSelect={handleSelectCategory}
         />
 
-        <span className="title">{summaryVideo?.description}</span>
+        <span className="title">{summaryVideo?.description || '-'}</span>
 
         <div
           style={{
@@ -75,12 +83,12 @@ const SummaryDetailBox = () => {
           {summaryVideo?.subHeading.map((subHeading, i) => (
             <div key={subHeading.id} className="subtitle">
               <span className="subtitle-index">{i + 1}</span>
-              <span className="subtitle-text">{subHeading.content}</span>
+              <span className="subtitle-text">{subHeading.name}</span>
             </div>
           ))}
         </div>
 
-        <NoteBox />
+        <NoteBox onRefresh={onRefresh} />
       </DetailBox>
     </div>
   );

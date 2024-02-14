@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import theme from './theme';
 
 export const HomePageContainer = styled.div`
-  text-align: center;
-  background-color: ${theme.color.white}; 
+  background-color: ${theme.color.white};
   min-height: 100vh;
   width: 100%;
 `;
@@ -12,9 +11,9 @@ export const SearchContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;  
+  width: 100%;
   padding-bottom: 100px;
-  background-color: ${theme.color.gray500};  
+  background-color: ${theme.color.gray500};
 `;
 
 export const SearchForm = styled.form`
@@ -40,6 +39,7 @@ export const SearchForm = styled.form`
   }
 
   .search-title {
+    text-align: center;
     margin-top: 120px;
     color: white;
     font-size: 2rem;
@@ -55,10 +55,10 @@ export const SearchForm = styled.form`
     justify-content: center;
     align-items: center;
     line-height: 1.6em;
-}
+  }
 
   .search-subtitle {
-    color: ${theme.color.gray300}; 
+    color: ${theme.color.gray300};
     width: 436px;
     height: 26px;
   }
@@ -74,7 +74,7 @@ export const SearchForm = styled.form`
   .input-container {
     padding: 16px 20px;
     border: none;
-    border-radius: 12px;                                                         
+    border-radius: 12px;
     width: 908px;
     height: 72px;
     display: flex;
@@ -82,7 +82,7 @@ export const SearchForm = styled.form`
     justify-content: space-between;
     background-color: ${theme.color.white};
   }
-                        
+
   .link-container {
     display: flex;
     align-items: center;
@@ -135,13 +135,13 @@ export const RecentVideosContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  border-top-left-radius: 50px; 
-  border-top-right-radius: 50px; 
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
 
   .container {
     width: 910px;
   }
-  
+
   .empty-video img {
     width: 155.56px;
     height: 155.56px;
@@ -151,29 +151,30 @@ export const RecentVideosContainer = styled.div`
 `;
 
 export const VideosTitle = styled.h2`
-  font-size: 28px;  
-  color: ${theme.color.gray500};   
+  font-size: 28px;
+  color: ${theme.color.gray500};
   padding: 10px;
   text-align: left;
   width: 910px;
   height: 45px;
   font-weight: bold;
+  margin-bottom: 40px;
 `;
 
 export const VideosSubtitle = styled.h4`
-  font-size: 1rem;   
-  color: ${theme.color.gray400};   
+  font-size: 1rem;
+  color: ${theme.color.gray400};
   margin-bottom: 40px;
   line-height: 2;
 `;
 
-export const VideoButton = styled.button`  
-  padding: 12px 32px;   
-  font-size: 1rem;   
+export const VideoButton = styled.button`
+  padding: 12px 32px;
+  font-size: 1rem;
   border: none;
   width: 190px;
   height: 56px;
-  background-color: ${theme.color.gray500};   
+  background-color: ${theme.color.gray500};
   margin-bottom: 20px;
   border-radius: 100px;
   cursor: pointer;
@@ -192,7 +193,7 @@ export const VideoButton = styled.button`
     background-color: ${theme.color.green400};
 
     .button-text {
-      color:  ${theme.color.gray500};
+      color: ${theme.color.gray500};
     }
   }
 `;
@@ -203,14 +204,14 @@ export const InsightVideosContainer = styled.div`
   background-color: ${theme.color.white};
   width: 100%;
   padding: 100px 265px;
-  
+
   .insight-container {
     display: flex;
     flex-direction: column;
   }
-  
+
   .text-container {
-    color: ${theme.color.gray500};   
+    color: ${theme.color.gray500};
     padding: 10px;
     text-align: left;
     width: 910px;
@@ -220,7 +221,7 @@ export const InsightVideosContainer = styled.div`
   }
 
   .insight-title {
-    font-size: 1.5rem;  
+    font-size: 1.5rem;
     font-weight: bold;
   }
 
@@ -273,13 +274,13 @@ export const InsightVideosContainer = styled.div`
   .category-icon {
     height: 38px;
     width: 40px;
-    background-color: ${theme.color.green400}
+    background-color: ${theme.color.green400};
   }
 
   .insight-videos .video-card {
     transition: all 0.3s ease-in-out;
   }
-  
+
   .insight-videos .video-card:hover {
     height: 424.13px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
@@ -288,7 +289,7 @@ export const InsightVideosContainer = styled.div`
   .video-card .category-container {
     display: none;
   }
-  
+
   .video-card:hover .category-container {
     display: block;
   }

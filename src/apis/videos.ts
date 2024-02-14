@@ -1,5 +1,5 @@
-import { APIResponse } from '@/models/config/axios';
-import { IVideo, VideoVersionType } from '@/models/video';
+import { APIBaseResponse, APIResponse } from '@/models/config/axios';
+import { IVideo, UpdateVideoRequest, VideoVersionType } from '@/models/video';
 
 import axios from './config/instance';
 import axiosInstance from './config/instance';
@@ -33,4 +33,21 @@ export const getVideoById = async (
 ): Promise<APIResponse<Record<'videos', IVideoProps[]>>> => {
   const response = await axiosInstance.get(`/videos/${videoId}`);
   return response.data;
+};
+
+export const updateVideoAPI = (
+  videoId: string | number,
+  data: UpdateVideoRequest,
+) => {
+  return axios.patch<APIResponse<IVideo>>(PREFIX + `/${videoId}`, data);
+};
+
+export const createVideoSummaryAPI = (videoId: number, content: string[]) => {
+  return axios.post<APIBaseResponse>(PREFIX + `/${videoId}/newSummary`, {
+    content,
+  });
+};
+
+export const deleteVideoSummaryAPI = (summaryId: number) => {
+  return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
 };

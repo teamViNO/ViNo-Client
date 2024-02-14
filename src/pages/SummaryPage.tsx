@@ -39,7 +39,7 @@ const SummaryPage = () => {
 
   return (
     <Container style={{ height: 'calc(100vh - 74px)' }}>
-      <SummaryDetailBox />
+      <SummaryDetailBox onRefresh={callAPI} />
       <SummaryScriptBox />
     </Container>
   );

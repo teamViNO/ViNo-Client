@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { InsightVideosContainer } from '@/styles/HomepageStyle';
 import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
+import { CardContainer } from '@/styles/category/Card.style';
 import successImg from '@/assets/success.png';
 
 interface InsightVideosProps {
@@ -16,6 +17,11 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
   const [categoryItems] = useState<IVideoProps[]>([]);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+
+  const onFileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
+  };
   const [isEndOfPage, setIsEndOfPage] = useState(false);
 
   const timerId = useRef<NodeJS.Timeout | null>(null);
@@ -63,11 +69,18 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
           </h4>
         </div>
         <div className="insight-videos">
-          <Card
-            videos={categoryItems}
-            checkedVideos={checkedItems}
-            setCheckedVideos={setCheckedItems}
-          />
+          <CardContainer>
+            {categoryItems.map((video) => (
+              <Card
+                mode="recommend"
+                video={video}
+                checkedVideos={checkedItems}
+                setCheckedVideos={setCheckedItems}
+                onFileClick={onFileClick}
+                key={video.category_id}
+              />
+            ))}
+          </CardContainer>
         </div>
         {isEndOfPage && 
         <div className='end-message'>

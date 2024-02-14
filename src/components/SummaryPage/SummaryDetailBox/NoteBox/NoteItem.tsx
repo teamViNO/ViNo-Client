@@ -9,7 +9,7 @@ type Props = {
   isEditable: boolean;
   onDisableEditable: () => void;
   onActiveEditable?: () => void;
-  onActiveNextEditable?: () => void;
+  onEdit: (content: string) => void;
 };
 
 const NoteItem = ({
@@ -17,7 +17,7 @@ const NoteItem = ({
   isEditable,
   onDisableEditable,
   onActiveEditable,
-  onActiveNextEditable,
+  onEdit,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [noteText, setNoteText] = useState(summary.content);
@@ -30,7 +30,12 @@ const NoteItem = ({
     } else if (e.key === 'Enter') {
       e.preventDefault();
 
-      onActiveNextEditable && onActiveNextEditable();
+      onEdit(noteText);
+
+      // 이어서 생성할 수 있도록
+      if (summary.id === -1) {
+        setNoteText('');
+      }
     }
   };
 

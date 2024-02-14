@@ -1,25 +1,16 @@
 import { useState } from 'react';
+import { IFolderProps } from 'types/category';
 
 import DownIcon from '@/assets/icons/down.svg?react';
-import { IFolderProps, ISelectedCategoryProps } from 'types/category';
+
 import { DropdownTopCategoryName } from '@/styles/SummaryPage';
 
-interface ICategoryDropdownProp {
+type Props = {
   category: IFolderProps;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
-}
+  onSelect: (categoryId: number) => void;
+};
 
-interface IItemClickProps {
-  name: string;
-  categoryId: number;
-}
-
-const DropdownItem = ({
-  category,
-  setIsOpen,
-  handleSelectCategory,
-}: ICategoryDropdownProp) => {
+const DropdownItem = ({ category, onSelect }: Props) => {
   const [isShow, setIsShow] = useState(false);
 
   const dynamicStyles = {
@@ -31,11 +22,6 @@ const DropdownItem = ({
     },
   };
 
-  const handleItemClick = async ({ name, categoryId }: IItemClickProps) => {
-    handleSelectCategory({ name, categoryId });
-    setIsOpen(false);
-  };
-
   return (
     <>
       <li>
@@ -45,14 +31,8 @@ const DropdownItem = ({
           style={dynamicStyles.icon}
           onClick={() => setIsShow(!isShow)}
         />
-        <DropdownTopCategoryName
-          onClick={() =>
-            handleItemClick({
-              name: category.name,
-              categoryId: category.categoryId,
-            })
-          }
-        >
+
+        <DropdownTopCategoryName onClick={() => onSelect(category.categoryId)}>
           {category.name}
         </DropdownTopCategoryName>
       </li>
@@ -61,12 +41,7 @@ const DropdownItem = ({
         {category.subFolders.map((subFolder) => (
           <li
             key={subFolder.categoryId}
-            onClick={() =>
-              handleItemClick({
-                name: subFolder.name,
-                categoryId: subFolder.categoryId,
-              })
-            }
+            onClick={() => onSelect(subFolder.categoryId)}
           >
             {subFolder.name}
           </li>

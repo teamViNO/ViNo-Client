@@ -15,6 +15,7 @@ import EmptyCard from '@/components/category/EmptyCard';
 import { deleteVideos, getRecentVideos, getVideoById } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
+import { CardContainer } from '@/styles/category/Card.style';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -151,11 +152,17 @@ const CategoryPage = () => {
         <EmptyCard />
       )}
       {sortedVideos.length > 0 && (
-        <Card
-          videos={sortedVideos}
-          checkedVideos={checkedVideos}
-          setCheckedVideos={setCheckedVideos}
-        />
+        <CardContainer>
+          {sortedVideos.map((video) => (
+            <Card
+              mode="category"
+              video={video}
+              checkedVideos={checkedVideos}
+              setCheckedVideos={setCheckedVideos}
+              key={video.category_id}
+            />
+          ))}
+        </CardContainer>
       )}
     </CategoryPageStyles.Container>
   );

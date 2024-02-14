@@ -1,21 +1,18 @@
+import { useRecoilValue } from 'recoil';
+
 import { Dropdown } from '@/styles/SummaryPage';
 
-import DropdownItem from './DropdownItem';
-import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
-import React from 'react';
-import { ISelectedCategoryProps } from 'types/category';
 
-interface ICategoryDropdownProp {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleSelectCategory: ({ name, categoryId }: ISelectedCategoryProps) => void;
-}
+import DropdownItem from './DropdownItem';
 
-const CategoryDropdown = ({
-  setIsOpen,
-  handleSelectCategory,
-}: ICategoryDropdownProp) => {
+type Props = {
+  onSelect: (categoryId: number) => void;
+};
+
+const CategoryDropdown = ({ onSelect }: Props) => {
   const categories = useRecoilValue(categoryState);
+
   return (
     <Dropdown onClick={(e) => e.stopPropagation()}>
       <ul>
@@ -23,8 +20,7 @@ const CategoryDropdown = ({
           <DropdownItem
             key={category.categoryId}
             category={category}
-            setIsOpen={setIsOpen}
-            handleSelectCategory={handleSelectCategory}
+            onSelect={onSelect}
           />
         ))}
       </ul>
