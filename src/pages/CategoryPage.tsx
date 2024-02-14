@@ -1,10 +1,6 @@
 import CategoryTitle from '@/components/category/CategoryTitle';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ChangeBottomSvg from '@/assets/icons/change-bottom.svg?react';
-import ChangeTopSvg from '@/assets/icons/change-top.svg?react';
-import GarbageSvg from '@/assets/icons/garbage.svg?react';
-import CloseSvg from '@/assets/icons/close.svg?react';
 import * as CategoryPageStyles from '@/styles/category/index.style';
 import Card from '@/components/category/Card';
 import { useRecoilValue } from 'recoil';
@@ -15,9 +11,9 @@ import { deleteVideos, getRecentVideos } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
-import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
-import Chip from '@/components/common/chip/Chip';
 import handleVideo from '@/utils/handleVideo';
+import VideoSelectMenu from '@/components/category/VideoSelectMenu';
+import DefaultMenu from '@/components/category/DefaultMenu';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -28,22 +24,6 @@ const CategoryPage = () => {
   const [checkedVideos, setCheckedVideos] = useState<number[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const categories = useRecoilValue(categoryState);
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    categories.length ? categories[0].categoryId : -1,
-  );
-
-  const onSelectTag = (name: string) => {
-    if (selectedTags.includes(name)) {
-      setSelectedTags(selectedTags.filter((tag) => tag !== name));
-    } else {
-      setSelectedTags([...selectedTags, name]);
-    }
-  };
-
-  const handleSelectCategory = (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
-  };
 
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
@@ -93,87 +73,27 @@ const CategoryPage = () => {
     }
   };
 
-  const onFileClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // 비디오 이동 API 호출 후 모든 비디오 받아오는 API 재호출로 최신화하기
-  };
-
   return (
     <CategoryPageStyles.Container>
       <CategoryTitle name={name} totalVideos={sortedVideos.length} />
       <CategoryPageStyles.MenuWrap>
         {checkedVideos.length > 0 ? (
-          <CategoryPageStyles.SelectModeWrap>
-            <div>
-              <CategoryPageStyles.AllSelectBtn onClick={allCheckBtnHandler}>
-                {checkedVideos.length === sortedVideos.length
-                  ? '모두 삭제'
-                  : '모두 선택'}
-              </CategoryPageStyles.AllSelectBtn>
-              <CategoryPageStyles.SelectedCount>
-                {checkedVideos.length}개 선택
-              </CategoryPageStyles.SelectedCount>
-            </div>
-            <CategoryPageStyles.CardManagement>
-              <CategoryPageStyles.DropdownWrap>
-                <CategorySelectBox
-                  selectedCategoryId={selectedCategoryId}
-                  onSelect={handleSelectCategory}
-                  onFileClick={onFileClick}
-                />
-              </CategoryPageStyles.DropdownWrap>
-              <CategoryPageStyles.ManagementBoxGray
-                onClick={handleDeleteVideos}
-              >
-                <GarbageSvg width={28} height={28} />
-              </CategoryPageStyles.ManagementBoxGray>
-              <CategoryPageStyles.ManagementBox>
-                <CloseSvg
-                  width={28}
-                  height={28}
-                  onClick={() => {
-                    setCheckedVideos([]);
-                  }}
-                />
-              </CategoryPageStyles.ManagementBox>
-            </CategoryPageStyles.CardManagement>
-          </CategoryPageStyles.SelectModeWrap>
+          <VideoSelectMenu
+            categories={categories}
+            totalVideoCount={sortedVideos.length}
+            checkedVideos={checkedVideos}
+            setCheckedVideos={setCheckedVideos}
+            handleDeleteVideos={handleDeleteVideos}
+            allCheckBtnHandler={allCheckBtnHandler}
+          />
         ) : (
-          <>
-            <div style={{ display: 'flex' }}>
-              {menus.map((menu: ISubFolderProps | ITagProps) => (
-                <>
-                  {'tag_id' in menu && (
-                    <Chip
-                      key={menu.tag_id}
-                      name={menu.name}
-                      light
-                      selected={selectedTags.includes(menu.name)}
-                      onSelectTag={onSelectTag}
-                    />
-                  )}
-                  {!('tag_id' in menu) && (
-                    <CategoryPageStyles.Menu
-                      to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
-                      key={`${menu.name}-${menu.categoryId}`}
-                    >
-                      {menu.name}
-                    </CategoryPageStyles.Menu>
-                  )}
-                </>
-              ))}
-            </div>
-            <CategoryPageStyles.ModeWrap onClick={toggleRecentRegisterMode}>
-              <CategoryPageStyles.Mode>
-                {recentRegisterMode ? '최근등록순' : '최근영상순'}
-              </CategoryPageStyles.Mode>
-              {recentRegisterMode ? (
-                <ChangeBottomSvg width={24} height={24} />
-              ) : (
-                <ChangeTopSvg width={24} height={24} />
-              )}
-            </CategoryPageStyles.ModeWrap>
-          </>
+          <DefaultMenu
+            menus={menus}
+            recentRegisterMode={recentRegisterMode}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            toggleRecentRegisterMode={toggleRecentRegisterMode}
+          />
         )}
       </CategoryPageStyles.MenuWrap>
 
@@ -183,6 +103,7 @@ const CategoryPage = () => {
       {sortedVideos.length > 0 && (
         <CardContainer>
           {sortedVideos.map((video) => {
+            // 하위 카테고리에 있을 때 태그 선택된 것에 따라 비디오 보여지게하는 로직
             const matchedTagCount = video.tag.reduce((acc, cur) => {
               if (selectedTags.includes(cur.name)) return (acc += 1);
               return acc;
