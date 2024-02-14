@@ -31,7 +31,7 @@ export const Menu = styled(Link)`
   color: ${theme.color.gray300};
   margin-right: 20px;
 
-  &.activated {
+  &:hover {
     color: ${theme.color.gray500};
     ${theme.typography.Subheader1};
   }

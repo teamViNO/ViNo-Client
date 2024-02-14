@@ -47,18 +47,36 @@ const CategoryPage = () => {
           setName('최근 읽은 영상');
         })
         .catch((err) => console.log(err));
-    } else {
+    } else if (!params.sub_folder) {
       getVideoById(Number(params.top_folder)).then((res) => {
         const index = categories.findIndex(
           (category) => category.categoryId === Number(params.top_folder),
         );
-        setVideos(res.result.videos);
+        if (!res.isSuccess) {
+          setName(categories[index].name);
+          setMenus([]);
+          setVideos([]);
+          return;
+        }
         setName(categories[index].name);
         setMenus(categories[index].subFolders);
+        setVideos(res.isSuccess ? res.result.videos : []);
+      });
+    } else {
+      getVideoById(Number(params.sub_folder)).then((res) => {
+        const index = categories.findIndex(
+          (category) => category.categoryId === Number(params.top_folder),
+        );
+        const subIndex = categories[index].subFolders.findIndex(
+          (subFolder) => subFolder.categoryId === Number(params.sub_folder),
+        );
+        setName(categories[index].subFolders[subIndex].name);
+        setMenus([]);
+        setVideos(res.isSuccess ? res.result.videos : []);
       });
     }
     setCheckedVideos([]);
-  }, [categories, params.top_folder]);
+  }, [categories, params.sub_folder, params.top_folder]);
 
   const handleDeleteVideos = async () => {
     const res = await deleteVideos(checkedVideos);
@@ -133,10 +151,6 @@ const CategoryPage = () => {
               {menus.map((menu) => (
                 <CategoryPageStyles.Menu
                   to={`/category/${menu.topCategoryId}/${menu.categoryId}`}
-                  className={`${
-                    params.sub_folder === menu.categoryId.toString() &&
-                    'activated'
-                  }`}
                   key={`${menu.name}-${menu.categoryId}`}
                 >
                   {menu.name}

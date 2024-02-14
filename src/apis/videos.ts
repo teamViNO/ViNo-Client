@@ -31,7 +31,7 @@ export const getRecentVideos = async (): Promise<
 export const getVideoById = async (
   videoId: number,
 ): Promise<APIResponse<Record<'videos', IVideoProps[]>>> => {
-  const response = await axiosInstance.get(`/videos/${videoId}`);
+  const response = await axiosInstance.get(`/videos/${videoId}/get`);
   return response.data;
 };
 
