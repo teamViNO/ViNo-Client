@@ -44,10 +44,12 @@ const Card: React.FC<ICardProps> = ({
   };
   return (
     <CardStyles.Wrap
+      mode={mode}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <CardStyles.Image source={video.image}>
+      <div style={{ display: 'flex' }}>
+        <CardStyles.Image src={video.image} alt="카드 이미지" />
         {mode === 'category' && (
           <CardStyles.CheckBoxWrap
             className={checkedVideos!.length > 0 ? 'activated' : ''}
@@ -59,7 +61,7 @@ const Card: React.FC<ICardProps> = ({
             />
           </CardStyles.CheckBoxWrap>
         )}
-      </CardStyles.Image>
+      </div>
 
       <CardStyles.Content to={`/summary/${video.video_id}`}>
         <CardStyles.Title>{video.title}</CardStyles.Title>
