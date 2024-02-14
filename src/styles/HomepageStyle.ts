@@ -234,6 +234,25 @@ export const InsightVideosContainer = styled.div`
     margin-bottom: 40px;
   }
 
+  .end-message {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .end-wrapper {
+    width: 255px;
+    height: 171.11px;
+  }
+
+  .end-text {
+    margin-top: 20px;
+    color: ${theme.color.gray400};
+    font-size: 20px;
+    line-height: 1.6em;
+  }
+
   .category-container {
     width: 250px;
     height: 38px;
