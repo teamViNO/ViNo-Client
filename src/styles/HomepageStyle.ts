@@ -142,11 +142,45 @@ export const RecentVideosContainer = styled.div`
     width: 910px;
   }
 
+  .empty-video{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
   .empty-video img {
     width: 155.56px;
     height: 155.56px;
     margin-top: 40px;
     margin-bottom: 20px;
+  }
+
+  .empty-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .title-container {
+    width: 910px;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 40px;
+  }
+
+  .icon-wrapper {
+    border: none;
+    border-radius: 100px;
+    background-color: ${theme.color.green400};
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -158,7 +192,7 @@ export const VideosTitle = styled.h2`
   width: 910px;
   height: 45px;
   font-weight: bold;
-  margin-bottom: 40px;
+  
 `;
 
 export const VideosSubtitle = styled.h4`
