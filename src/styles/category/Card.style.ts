@@ -50,9 +50,6 @@ export const CardContainer = styled.div`
   grid-template-columns: repeat(3, auto);
   column-gap: 20px;
   row-gap: 40px;
-  &:last-child {
-    margin-bottom: 40px;
-  }
 `;
 
 export const Wrap = styled.div<{ mode: string }>`

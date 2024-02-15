@@ -17,7 +17,7 @@ interface IRecentVideosProp {
 
 const RecentVideos = ({ videos }: IRecentVideosProp) => {
   return (
-    <RecentVideosContainer>
+    <RecentVideosContainer length={videos.length}>
       <div className="container">
         <div className="title-container">
           <VideosTitle>최근 읽은 영상</VideosTitle>

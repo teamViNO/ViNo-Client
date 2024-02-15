@@ -128,15 +128,15 @@ export const SearchButton = styled.button`
   }
 `;
 
-export const RecentVideosContainer = styled.div`
-  margin-top: 60px;
-  margin-bottom: 100px;
+export const RecentVideosContainer = styled.div<{ length: number }>`
   background-color: ${theme.color.white};
   width: 100%;
   display: flex;
   justify-content: center;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
+  border-radius: 50px 50px 0px 0px;
+  position: relative;
+  bottom: 50px;
+  padding: ${(props) => (props.length ? '100px' : '0')} 0 110px;
 
   .container {
     width: 910px;
@@ -232,12 +232,15 @@ export const VideoButton = styled.button`
   }
 `;
 
-export const InsightVideosContainer = styled.div`
+export const InsightVideosContainer = styled.div<{ userToken: string | null }>`
   display: flex;
   justify-content: center;
   background-color: ${theme.color.white};
   width: 100%;
-  padding: 100px 265px;
+  border-radius: 50px 50px 0 0;
+  padding: ${(props) => (props.userToken ? '0' : '100px')} 265px 110px;
+  position: relative;
+  bottom: 50px;
 
   .insight-container {
     display: flex;
@@ -264,20 +267,17 @@ export const InsightVideosContainer = styled.div`
     color: ${theme.color.gray400};
   }
 
-  .insight-videos {
-    margin-bottom: 40px;
-  }
-
   .end-message {
-    margin-top: 120px;
     display: flex;
     justify-content: center;
     text-align: center;
   }
 
   .end-wrapper {
+    transition: all 1s;
     width: 255px;
     height: 171.11px;
+    margin-top: 120px;
   }
 
   .end-text {
