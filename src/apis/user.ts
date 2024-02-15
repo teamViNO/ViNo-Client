@@ -2,6 +2,8 @@ import { APIBaseResponse, APIResponse } from '@/models/config/axios';
 import {
   CheckEmailRequest,
   CheckEmailResponse,
+  FindEmailRequest,
+  FindEmailResponse,
   JoinRequest,
   JoinResponse,
   LoginRequest,
@@ -46,7 +48,12 @@ export const checkEmailAPI = (data: CheckEmailRequest) => {
     data,
   );
 };
-
+export const findEmailAPI = (data : FindEmailRequest) => {
+  return axios.post<FindEmailResponse>(
+    PREFIX + '/findEmail',
+    data
+  );
+}
 export const joinAPI = (data: JoinRequest) => {
   return axios.post<APIResponse<JoinResponse>>(PREFIX + '/join', data);
 };

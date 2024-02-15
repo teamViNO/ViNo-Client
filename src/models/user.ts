@@ -11,7 +11,18 @@ export interface CheckEmailRequest {
   email: string;
 }
 
+export interface FindEmailRequest {
+  name : string;
+  phone_number : string;
+}
+
 export interface CheckEmailResponse {}
+
+export interface FindEmailResponse {
+  success : boolean;
+  message : string;
+  email : string;
+}
 
 export interface JoinRequest {
   name: string;
