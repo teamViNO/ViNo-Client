@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import firstImg from "../assets/first.png";
 import errorImg from '@/assets/Error.png';
-import calendar from "../assets/calendar.png";
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { AxiosError } from "axios";
 import { checkEmailAPI } from "@/apis/user";
@@ -13,6 +12,7 @@ import { Link } from "react-router-dom";
 import { joinAPI } from '@/apis/user';
 import PhoneCheck from "@/components/PhoneCheck";
 import { BlurBackground } from '@/styles/modals/common.style';
+import Calendar from "@/components/Calendar";
 
 
 const SignUp = () => {
@@ -45,19 +45,6 @@ const SignUp = () => {
     e.preventDefault();
     setSelectedSex((e.target as HTMLButtonElement).value);
   };
-
-  const onChangeYear = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYear(e.target.value);
-  };
-
-  const onChangeMonth = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMonth(e.target.value);
-  };
-
-  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
-  };
-  
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
@@ -139,7 +126,7 @@ const SignUp = () => {
         password : password,
         check_password: passwordCheck,
         birth_date: year + month + date,
-        gender: selectedSex,
+        gender: selectedSex === '미표기' ? null : selectedSex,
         phone_number: phonenumber,
       })).data
       console.log(response);
@@ -186,7 +173,7 @@ const SignUp = () => {
                   name="year"
                   value={year}
                   placeholder="YYYY"
-                  onChange={onChangeYear}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -194,7 +181,7 @@ const SignUp = () => {
                   name="month"
                   value={month}
                   placeholder="MM"
-                  onChange={onChangeMonth}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -202,9 +189,9 @@ const SignUp = () => {
                   name="date"
                   value={date}
                   placeholder="DD"
-                  onChange={onChangeDate}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
-                <img src={calendar} alt="달력 이미지" />
+                <Calendar setYear={setYear} setMonth={setMonth} setDate={setDate}/>
               </SignupPageStyles.BirthInputSection>
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
