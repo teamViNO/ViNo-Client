@@ -242,7 +242,7 @@ export const ScriptBox = styled.div`
 
   & span.script-title {
     color: ${(props) => props.theme.color.gray500};
-    ${(props) => props.theme.typography.Subheader1}
+    ${(props) => props.theme.typography.Subheader1};
   }
 
   & span.play-button {
@@ -263,18 +263,6 @@ export const ScriptBox = styled.div`
     font-weight: 600;
     line-height: 2;
     color: #5d5b5b;
-
-    & > mark {
-      padding: 4px 8px;
-      border-radius: 4px;
-      background-color: #d2f1b4;
-      line-height: 1.6;
-      color: ${(props) => props.theme.color.gray500};
-
-      &.active {
-        background-color: #a4de6b;
-      }
-    }
   }
 
   & div.resize-thumb {
@@ -284,6 +272,18 @@ export const ScriptBox = styled.div`
     width: 5px;
     height: 100%;
     cursor: ew-resize;
+  }
+
+  & mark {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #d2f1b4;
+    line-height: 1.6;
+    color: ${(props) => props.theme.color.gray500};
+
+    &.active {
+      background-color: #a4de6b;
+    }
   }
 `;
 
@@ -487,13 +487,24 @@ export const ModalContainer = styled(BlurBackground)`
     border-radius: 12px;
     background-color: ${(props) => props.theme.color.gray500};
     color: white;
+    transition: 0.1s;
     cursor: pointer;
     ${(props) => props.theme.typography.Body1};
 
     &.all {
-      background-color: white;
+      background-color: white !important;
       border: solid 1.5px ${(props) => props.theme.color.gray200};
       color: ${(props) => props.theme.color.gray400};
+    }
+
+    &:disabled {
+      background-color: ${(props) => props.theme.color.gray200};
+      color: ${(props) => props.theme.color.gray300};
+      cursor: not-allowed;
+
+      &.all {
+        color: ${(props) => props.theme.color.gray300};
+      }
     }
   }
 `;

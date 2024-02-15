@@ -14,11 +14,13 @@ import { IVideoSubHeading } from '@/models/video';
 
 import { ModalContainer } from '@/styles/SummaryPage';
 
+import { toastListState } from '@/stores/toast';
 import {
   summaryFindKeywordCountState,
   summarySearchIndexState,
   summaryVideoState,
 } from '@/stores/summary';
+
 import { getSearchIndex } from '@/utils/summary';
 
 type Props = {
@@ -32,6 +34,7 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
   const [summaryVideo, setSummaryVideo] = useRecoilState(summaryVideoState);
   const findKeywordCount = useRecoilValue(summaryFindKeywordCountState);
   const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
+  const [toastList, setToastList] = useRecoilState(toastListState);
 
   const [holdPosition, setHoldPosition] = useState({ x: -1, y: -1 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -45,6 +48,11 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
       const { result } = (await getVideoAPI(summaryVideo.video_id)).data;
 
       setSummaryVideo(result);
+
+      setToastList([
+        ...toastList,
+        { id: Date.now(), content: '단어 변경이 완료되었어요!' },
+      ]);
     } catch (e) {
       console.error(e);
     }
@@ -101,37 +109,72 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
     setPosition({ x, y });
   };
 
-  const handleClickChangeAllButton = () => {
-    if (!summaryVideo) return;
-
-    const subHeading = summaryVideo.subHeading.map(({ content, ...others }) => {
-      return {
-        content: content.replace(new RegExp(keyword, 'g'), replaceKeyword),
-        ...others,
-      };
-    });
-
-    updateSubHeading(subHeading);
-  };
-
-  const handleClickChangeButton = () => {
+  const handleClickChangeAllButton = async () => {
     if (!summaryVideo) return;
 
     const regex = new RegExp(keyword, 'g');
-    const subHeadingList = [...summaryVideo.subHeading];
+
+    const subHeading = summaryVideo.subHeading.map(
+      ({ name, content, ...others }) => {
+        return {
+          name: name.replace(regex, replaceKeyword),
+          content: content.replace(regex, replaceKeyword),
+          ...others,
+        };
+      },
+    );
+
+    await updateSubHeading(subHeading);
+
+    onClose();
+  };
+
+  const handleClickChangeButton = async () => {
+    if (!summaryVideo) return;
+
+    const subHeadingList: IVideoSubHeading[] = [];
     let index = -1;
 
-    for (const i in summaryVideo.subHeading) {
-      const { content } = summaryVideo.subHeading[i];
+    for (const subHeading of summaryVideo.subHeading) {
+      const splittedName = subHeading.name.split(keyword);
+      const splittedContent = subHeading.content.split(keyword);
+      let name = '';
+      let content = '';
 
-      if (regex.test(content)) index++;
-      if (index === searchIndex) {
-        subHeadingList[i].content = content.replace(regex, replaceKeyword);
-        break;
+      // 제목 탐색 (탐색 로직 같음)
+      for (let i = 0; i < splittedName.length; i++) {
+        if (i === splittedName.length - 1) {
+          name += splittedName[splittedName.length - 1];
+          break;
+        }
+        index++;
+
+        if (index === searchIndex) {
+          name += splittedName[i] + replaceKeyword;
+        } else {
+          name += splittedName[i] + keyword;
+        }
       }
+
+      // 컨텐츠 탐색 (탐색 로직 같음)
+      for (let i = 0; i < splittedContent.length; i++) {
+        if (i === splittedContent.length - 1) {
+          content += splittedContent[splittedContent.length - 1];
+          break;
+        }
+        index++;
+
+        if (index === searchIndex) {
+          content += splittedContent[i] + replaceKeyword;
+        } else {
+          content += splittedContent[i] + keyword;
+        }
+      }
+
+      subHeadingList.push({ ...subHeading, name, content });
     }
 
-    updateSubHeading(subHeadingList);
+    await updateSubHeading(subHeadingList);
   };
 
   useEffect(() => {
@@ -233,11 +276,17 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
         <div style={{ marginTop: 32, gap: 12, flexDirection: 'row' }}>
           <button
             className="transform all"
+            disabled={findKeywordCount === 0}
             onClick={handleClickChangeAllButton}
           >
             전체 바꾸기
           </button>
-          <button className="transform" onClick={handleClickChangeButton}>
+
+          <button
+            className="transform"
+            disabled={findKeywordCount === 0}
+            onClick={handleClickChangeButton}
+          >
             바꾸기
           </button>
         </div>
