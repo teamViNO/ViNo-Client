@@ -50,6 +50,9 @@ export const CardContainer = styled.div`
   grid-template-columns: repeat(3, auto);
   column-gap: 20px;
   row-gap: 40px;
+  &:last-child {
+    margin-bottom: 40px;
+  }
 `;
 
 export const Wrap = styled.div<{ mode: string }>`
@@ -62,6 +65,7 @@ export const Wrap = styled.div<{ mode: string }>`
   transition: all 0.5s;
   position: relative;
   height: 400px;
+  background-color: ${theme.color.white};
   &:hover {
     ${CheckBoxWrap} {
       display: flex;
