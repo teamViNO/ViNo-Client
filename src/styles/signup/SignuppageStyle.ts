@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '@/styles/theme';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -99,11 +100,17 @@ export const TwoLabel = styled.label`
   flex-direction: row;
 `;
 
-export const InputBox = styled.input`
+export const ThreeLabel = styled.label`
+  display : flex;
+  flex-direction : column;
+  margin-bottom: 8px;
+`;
+
+export const PhoneInputBox = styled.input`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 494px;
+  width: 326px;
   height: 56px;
   padding: 0px 0px 0px 20px;
   gap: 20px;
@@ -115,7 +122,7 @@ export const InputBox = styled.input`
   font-weight: 500;
   line-height: 160%;
   border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8);
+  border: 1.5px solid var(--gray-200, #e8e8e8) ;
   margin-top: 8px;
   outline: none;
   &:hover {
@@ -137,6 +144,38 @@ export const InputBox = styled.input`
   }
 `;
 
+export const InputBox = styled.input`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 494px;
+  height: 56px;
+  padding: 0px 0px 0px 20px;
+  gap: 20px;
+  flex: 1 0 0;
+  font-style: normal;
+  color: ${theme.color.gray500};
+  font-family: Pretendard;
+  ${theme.typography.Body1};
+  border-radius: 12px;
+  border: 1.5px solid ${theme.color.gray200};
+  margin-top: 8px;
+  outline: none;
+  &:hover {
+    border: 1.5px solid #1e1e1e;
+  }
+  &:focus {
+    border: 1.5px solid #1e1e1e;
+    border-color: #1e1e1e;
+  }
+  &::placeholder {
+    color: #bbb;
+    font-family: Pretendard;
+    font-style: normal;
+    ${theme.typography.Body1};
+  }
+`;
+
 export const EmailInputBox = styled.input`
   display: flex;
   align-items: center;
@@ -153,7 +192,7 @@ export const EmailInputBox = styled.input`
   font-weight: 500;
   line-height: 160%;
   border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8) ;
+  border: 1.5px solid var(--gray-200, #e8e8e8);
   margin-top: 8px;
   outline: none;
   &:hover {
@@ -326,6 +365,10 @@ export const DupSucButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
+  &:disabled {
+    background-color : ${theme.color.gray100};
+    color : ${theme.color.gray300};
+  }
 `;
 
 export const DupButton = styled.button`
@@ -401,8 +444,35 @@ export const TextTotalComponent = styled.div`
 
 export const TextDiv = styled.div`
    font-size: 14px;
-   color:#BBB;
+   color: #BBB;
    font-weight: 500;
    line-height: 160%;
 `;
 
+export const UserButton = styled.button`
+  width : 160px;
+  height : 56px;
+  color : #1E1E1E;
+  background-color : ${theme.color.green400};
+  border : none;
+  border-radius : 12px;
+  margin-top: 8px;
+  ${theme.typography.Body1};
+  &:disabled {
+    background-color : ${theme.color.gray100};
+    color : ${theme.color.gray300};
+  }
+`
+
+export const UserDiv = styled.div`
+  display : flex;
+  flex-direction : row;
+  gap : 10px;
+`
+
+export const SendMsg = styled.div`
+   margin-left : 16px;
+   margin-top : 8px;
+    ${theme.typography.Body3};
+    color : ${theme.color.red};
+`

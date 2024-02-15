@@ -1,13 +1,13 @@
 import React, { useState} from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import firstImg from '@/assets/first.png';
 import smallLogo from "../assets/logo.png";
 import theme from '@/styles/theme';
 import NotFindUserModal from '@/components/modals/NotFindUserModal';
 import PhoneCheck from '@/components/PhoneCheck';
 import { findEmailAPI } from '@/apis/user';
 import FindEmail from '@/components/FindEmail';
+import ImageSlider from '@/components/ImageSlider';
 
 const FindEmailPage = () => {
   const [name, setName] = useState<string>("");
@@ -46,9 +46,7 @@ if(isFind){
 return (
   <Container>
           <Wrapper>
-            <LogoSection>
-              <img src={firstImg} alt="로고 이미지" />
-            </LogoSection>
+            <ImageSlider/>
             <MainSection>
               <Intro>
                 <img src={smallLogo} alt="로고 이미지" />
@@ -111,13 +109,6 @@ const Wrapper = styled.div`
   gap: 124px;
 `;
 
-const LogoSection = styled.div`
-  img{
-    display: flex;
-    width: auto;
-    height: 840px;
-  }
-`;
 
 const MainSection = styled.div`
   display: flex;
