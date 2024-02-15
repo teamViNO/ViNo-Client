@@ -34,9 +34,9 @@ export const getRecentVideos = async (): Promise<
 };
 
 export const getVideoById = async (
-  videoId: number,
+  videoId: string,
 ): Promise<APIResponse<Record<'videos', IVideoProps[]>>> => {
-  const response = await axiosInstance.get(`/videos/${videoId}`);
+  const response = await axiosInstance.get(`/videos/${videoId}/get`);
   return response.data;
 };
 
@@ -65,4 +65,22 @@ export const createVideoSummaryAPI = (videoId: number, content: string[]) => {
 
 export const deleteVideoSummaryAPI = (summaryId: number) => {
   return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
+};
+
+export const getDummyVideos = async (): Promise<
+  APIResponse<Record<'videos', IVideoProps[]>>
+> => {
+  const response = await axiosInstance.get('/videos/dummyVideos/unRead');
+  return response.data;
+};
+
+export const createDummyVideoToMine = async (
+  videoId: number,
+  categoryId: number,
+) => {
+  const response = await axiosInstance.post(
+    `/videos/dummyVideos/${videoId}/${categoryId}/newVideo`,
+  );
+
+  return response.data;
 };

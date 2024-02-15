@@ -142,11 +142,46 @@ export const RecentVideosContainer = styled.div`
     width: 910px;
   }
 
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
   .empty-video img {
     width: 155.56px;
     height: 155.56px;
     margin-top: 40px;
     margin-bottom: 20px;
+  }
+
+  .empty-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .title-container {
+    width: 910px;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 40px;
+  }
+
+  .icon-wrapper {
+    border: none;
+    border-radius: 100px;
+    background-color: ${theme.color.green400};
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -158,7 +193,6 @@ export const VideosTitle = styled.h2`
   width: 910px;
   height: 45px;
   font-weight: bold;
-  margin-bottom: 40px;
 `;
 
 export const VideosSubtitle = styled.h4`
@@ -232,6 +266,25 @@ export const InsightVideosContainer = styled.div`
 
   .insight-videos {
     margin-bottom: 40px;
+  }
+
+  .end-message {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .end-wrapper {
+    width: 255px;
+    height: 171.11px;
+  }
+
+  .end-text {
+    margin-top: 20px;
+    color: ${theme.color.gray400};
+    font-size: 20px;
+    line-height: 1.6em;
   }
 
   .category-container {

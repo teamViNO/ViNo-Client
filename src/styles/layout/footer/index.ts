@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import theme from '../../theme';
 
-export const Container = styled.footer`
+export const Container = styled.footer<{ width: string }>`
   padding: 60px 145px;
   background-color: ${theme.color.gray100};
   ${theme.typography.Body1};
   position: relative;
+  width: ${(props) => `calc(${props.width})`};
   z-index: -1;
 `;
 

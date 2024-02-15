@@ -8,13 +8,19 @@ export const getCategories = async () => {
   return response.data;
 };
 
+// 카테고리 별 태그 가져오는 API
+export const getCategoryTags = async (categoryId: string) => {
+  const response = await axiosInstance.get(`/category/${categoryId}/`);
+  return response.data;
+};
+
 // 카테고리 이동1 API
 export const putSubToOtherTop = async (
   categoryId: number,
   topCategoryId: number,
 ) => {
   const response = await axiosInstance.put(
-    `/category/${categoryId}/${topCategoryId}`,
+    `/category/move/${categoryId}/${topCategoryId}`,
   );
   return response.data;
 };
@@ -64,5 +70,16 @@ export const deleteCategory = async (category_id: number) => {
 // 카테고리 이름 수정 API
 export const updateCategoryName = async (name: string, categoryId: number) => {
   const response = await axiosInstance.put(`/category/${categoryId}`, { name });
+  return response.data;
+};
+
+// 비디오의 카테고리 위치 수정 API
+export const putVideoToOtherCategory = async (
+  videoId: number,
+  categoryId: number,
+) => {
+  const response = await axiosInstance.patch(
+    `/videos/${videoId}/${categoryId}/update`,
+  );
   return response.data;
 };

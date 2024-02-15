@@ -7,13 +7,18 @@ import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/Cat
 import { categoryState } from '@/stores/category';
 
 import * as CardStyles from '@/styles/category/Card.style';
+import Chip from '../common/chip/Chip';
 
 interface ICardProps {
   mode: 'default' | 'category' | 'recommend';
   video: IVideoProps;
   checkedVideos?: number[];
   setCheckedVideos?: (value: number[]) => void;
-  onFileClick?: (e: React.MouseEvent) => void;
+  onFileClick?: (
+    e: React.MouseEvent,
+    videoId: number,
+    categoryId: number,
+  ) => void;
 }
 
 const Card: React.FC<ICardProps> = ({
@@ -25,9 +30,13 @@ const Card: React.FC<ICardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const category = useRecoilValue(categoryState);
+
   const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category[0].categoryId,
+    category.length ? category[0].categoryId : -1,
   );
+
+  const onFileClickWithProps = (e: React.MouseEvent) =>
+    onFileClick && onFileClick(e, video.video_id, selectedCategoryId);
 
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategoryId(categoryId);
@@ -42,10 +51,12 @@ const Card: React.FC<ICardProps> = ({
   };
   return (
     <CardStyles.Wrap
+      mode={mode}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <CardStyles.Image source={video.image}>
+      <div style={{ display: 'flex' }}>
+        <CardStyles.Image src={video.image} alt="카드 이미지" />
         {mode === 'category' && (
           <CardStyles.CheckBoxWrap
             className={checkedVideos!.length > 0 ? 'activated' : ''}
@@ -57,14 +68,14 @@ const Card: React.FC<ICardProps> = ({
             />
           </CardStyles.CheckBoxWrap>
         )}
-      </CardStyles.Image>
+      </div>
 
       <CardStyles.Content to={`/summary/${video.video_id}`}>
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>
-          {video.tag.map((tag) => (
-            <CardStyles.Chip key={tag.name}>{`# ${tag.name}`}</CardStyles.Chip>
+          {video.tag.slice(0, 3).map((tag) => (
+            <Chip key={tag.name} name={tag.name} />
           ))}
         </CardStyles.ChipWrap>
       </CardStyles.Content>
@@ -73,7 +84,7 @@ const Card: React.FC<ICardProps> = ({
           <CategorySelectBox
             selectedCategoryId={selectedCategoryId}
             onSelect={handleSelectCategory}
-            onFileClick={onFileClick}
+            onFileClick={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
       )}
