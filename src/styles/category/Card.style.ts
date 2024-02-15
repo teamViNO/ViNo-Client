@@ -131,14 +131,11 @@ export const DropdownWrap = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
+    background-color: ${(props) => props.theme.color.gray200};
 
-    &.selected {
+    &.changed {
       background-color: ${(props) => props.theme.color.green400};
-    }
-
-    &.not-selected {
-      background-color: ${(props) => props.theme.color.gray200};
+      cursor: pointer;
     }
 
     &.disabled svg {

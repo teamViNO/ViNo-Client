@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
-
-import { categoryState } from '@/stores/category';
 
 import * as CardStyles from '@/styles/category/Card.style';
 import Chip from '../common/chip/Chip';
@@ -14,11 +11,7 @@ interface ICardProps {
   video: IVideoProps;
   checkedVideos?: number[];
   setCheckedVideos?: (value: number[]) => void;
-  onFileClick?: (
-    e: React.MouseEvent,
-    videoId: number,
-    categoryId: number,
-  ) => void;
+  onFileClick?: (videoId: number, categoryId: number) => void;
 }
 
 const Card: React.FC<ICardProps> = ({
@@ -29,17 +22,9 @@ const Card: React.FC<ICardProps> = ({
   onFileClick,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const category = useRecoilValue(categoryState);
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category.length ? category[0].categoryId : -1,
-  );
-
-  const onFileClickWithProps = (e: React.MouseEvent) =>
-    onFileClick && onFileClick(e, video.video_id, selectedCategoryId);
 
   const handleSelectCategory = (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
+    onFileClick && onFileClick(video.video_id, categoryId);
   };
 
   const handleCheckBox = (videoId: number) => {
@@ -82,9 +67,8 @@ const Card: React.FC<ICardProps> = ({
       {isOpen && mode === 'recommend' && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
-            selectedCategoryId={selectedCategoryId}
+            selectedCategoryId={video.category_id}
             onSelect={handleSelectCategory}
-            onFileClick={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
       )}

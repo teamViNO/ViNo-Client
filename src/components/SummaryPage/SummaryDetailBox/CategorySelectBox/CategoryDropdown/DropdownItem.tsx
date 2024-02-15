@@ -7,10 +7,11 @@ import { DropdownTopCategoryName } from '@/styles/SummaryPage';
 
 type Props = {
   category: IFolderProps;
+  selectedId?: number;
   onSelect: (categoryId: number) => void;
 };
 
-const DropdownItem = ({ category, onSelect }: Props) => {
+const DropdownItem = ({ category, selectedId, onSelect }: Props) => {
   const [isShow, setIsShow] = useState(false);
 
   const dynamicStyles = {
@@ -24,7 +25,7 @@ const DropdownItem = ({ category, onSelect }: Props) => {
 
   return (
     <>
-      <li>
+      <li className={selectedId === category.categoryId ? 'active' : ''}>
         <DownIcon
           width={18}
           height={18}
@@ -40,6 +41,7 @@ const DropdownItem = ({ category, onSelect }: Props) => {
       <ul style={dynamicStyles.subCategory}>
         {category.subFolders.map((subFolder) => (
           <li
+            className={selectedId === subFolder.categoryId ? 'active' : ''}
             key={subFolder.categoryId}
             onClick={() => onSelect(subFolder.categoryId)}
           >
