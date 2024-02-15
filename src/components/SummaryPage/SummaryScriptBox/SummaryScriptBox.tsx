@@ -23,11 +23,11 @@ import ResizeThumb from './ResizeThumb';
 import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
 
-type Props = {
-  onRefresh: () => void;
-};
+// type Props = {
+//   onRefresh: () => void;
+// };
 
-const SummaryScriptBox = ({ onRefresh }: Props) => {
+const SummaryScriptBox = () => {
   const ref = useRef<HTMLDivElement>(null);
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
   const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
