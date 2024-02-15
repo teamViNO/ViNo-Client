@@ -42,8 +42,6 @@ const NoteBox = ({ onRefresh }: Props) => {
         setDisableIndex();
       } else {
         await updateVideoAPI(summaryVideo.video_id, { summary: [summary] });
-
-        handleActiveEditable(editableIndex + 1);
       }
 
       onRefresh();
@@ -64,6 +62,17 @@ const NoteBox = ({ onRefresh }: Props) => {
     }
   };
 
+  const handleRemoveNote = async (summaryId: number) => {
+    try {
+      await deleteVideoSummaryAPI(summaryId);
+
+      setDisableIndex();
+      onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div style={{ position: 'relative', marginTop: 40 }}>
       <div className="note-box">
@@ -74,7 +83,15 @@ const NoteBox = ({ onRefresh }: Props) => {
             isEditable={editableIndex === index}
             onDisableEditable={setDisableIndex}
             onActiveEditable={() => handleActiveEditable(index)}
-            onEdit={(content) => handleUpdateNote({ id: summary.id, content })}
+            onEdit={(content) => {
+              handleUpdateNote({ id: summary.id, content });
+              setDisableIndex();
+            }}
+            onEditAndNext={(content) => {
+              handleUpdateNote({ id: summary.id, content });
+              handleActiveEditable(index + 1);
+            }}
+            onRemove={() => handleRemoveNote(summary.id)}
           />
         ))}
 
@@ -84,7 +101,11 @@ const NoteBox = ({ onRefresh }: Props) => {
             summary={{ id: -1, content: '' }}
             isEditable={editableIndex === -1}
             onDisableEditable={setDisableIndex}
-            onEdit={handleCreateNote}
+            onEdit={(content) => {
+              handleCreateNote(content);
+              setDisableIndex();
+            }}
+            onEditAndNext={handleCreateNote}
           />
         )}
 
@@ -92,7 +113,10 @@ const NoteBox = ({ onRefresh }: Props) => {
         {editableIndex === null && (
           <button
             className="create-button"
-            onClick={() => setEditableIndex(-1)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditableIndex(-1);
+            }}
           >
             <PlusIcon width={28} height={28} />
           </button>
