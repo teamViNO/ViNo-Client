@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 
-import { updateVideoAPI } from '@/apis/videos';
+import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
 import { summaryVideoState } from '@/stores/summary';
 
@@ -22,7 +22,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
     if (!summaryVideo) return;
 
     try {
-      await updateVideoAPI(summaryVideo.video_id, { category_id });
+      await updateVideoCategoryIdAPI(summaryVideo.video_id, category_id);
 
       onRefresh();
     } catch (e) {

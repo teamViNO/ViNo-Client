@@ -42,6 +42,15 @@ export const updateVideoAPI = (
   return axios.patch<APIResponse<IVideo>>(PREFIX + `/${videoId}`, data);
 };
 
+export const updateVideoCategoryIdAPI = (
+  videoId: string | number,
+  categoryId: number,
+) => {
+  return axios.patch<APIResponse<IVideo>>(
+    PREFIX + `/${videoId}/${categoryId}/update`,
+  );
+};
+
 export const createVideoSummaryAPI = (videoId: number, content: string[]) => {
   return axios.post<APIBaseResponse>(PREFIX + `/${videoId}/newSummary`, {
     content,

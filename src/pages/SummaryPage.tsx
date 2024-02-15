@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { getVideoAPI } from '@/apis/videos';
 
@@ -14,9 +14,9 @@ import { Container } from '@/styles/SummaryPage';
 const SummaryPage = () => {
   const navigate = useNavigate();
   const { videoId } = useParams();
-  const setSummaryVideo = useSetRecoilState(summaryVideoState);
+  const [summaryVideo, setSummaryVideo] = useRecoilState(summaryVideoState);
 
-  const callAPI = async () => {
+  const callAPI = useCallback(async () => {
     if (!videoId) return;
 
     try {
@@ -31,16 +31,20 @@ const SummaryPage = () => {
       console.error(e);
       navigate('/');
     }
-  };
+  }, [videoId, navigate, setSummaryVideo]);
 
   useEffect(() => {
     callAPI();
-  });
+  }, [callAPI]);
 
   return (
     <Container style={{ height: 'calc(100vh - 74px)' }}>
-      <SummaryDetailBox onRefresh={callAPI} />
-      <SummaryScriptBox />
+      {summaryVideo && (
+        <>
+          <SummaryDetailBox onRefresh={callAPI} />
+          <SummaryScriptBox />
+        </>
+      )}
     </Container>
   );
 };
