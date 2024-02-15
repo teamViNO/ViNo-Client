@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-<<<<<<< HEAD
 import celebrate from "../assets/celebrate.png";
 //import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
@@ -81,33 +80,8 @@ return(
     </Wrapper>
     );
   };
-   
   
   export default SignUpSuccessPage;
-=======
-import celebrate from '../assets/celebrate.png';
-import { useNavigate } from 'react-router-dom';
-
-const SignUpSuccessPage = () => {
-  const navigate = useNavigate();
-  const navigateToHome = () => {
-    navigate('/');
-  };
->>>>>>> dev
-
-  return (
-    <Wrapper>
-      <img src={celebrate} alt="축하 이미지" />
-      <h4>회원가입이 완료되었어요!</h4>
-      <p>로그인하고 나만의 영상 아카이빙을 시작해요</p>
-      <HomeButton type="submit" onClick={navigateToHome}>
-        영상 읽으러가기
-      </HomeButton>
-    </Wrapper>
-  );
-};
-
-export default SignUpSuccessPage;
 
 const Wrapper = styled.div`
   display: flex;
@@ -160,7 +134,6 @@ const HomeButton = styled.button`
     cursor: pointer;
   }
 `;
-<<<<<<< HEAD
 
 const ModalDiv = styled.div`
   padding: 40px 50px;
@@ -218,5 +191,3 @@ const Button = styled.button`
     text-align: center;
     ${theme.typography.Body1};
 `;
-=======
->>>>>>> dev
