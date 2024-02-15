@@ -16,9 +16,10 @@ import WarningIcon from '@/assets/icons/warning.svg?react';
 
 interface SearchBarProps {
   onSearch: (value: string) => void;
+  searchRef: React.RefObject<HTMLInputElement>;
 }
 
-const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch, searchRef }) => {
   const [inputLink, setInputLink] = useState('');
   const [isButtonValid, setIsButtonValid] = useState(false);
   const [isTextValid, setIsTextValid] = useState(true);
@@ -29,11 +30,11 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     if (isValidYoutubeLink(inputLink)) {
-        setIsButtonValid(true);
-        setIsTextValid(true);
-        setIsConverting(true);
-        onSearch(inputLink);
-        setModalOpen(true);
+      setIsButtonValid(true);
+      setIsTextValid(true);
+      setIsConverting(true);
+      onSearch(inputLink);
+      setModalOpen(true);
     } else {
       setIsButtonValid(false);
       setIsTextValid(false);
@@ -106,14 +107,17 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch }) => {
               value={inputLink}
               onChange={handleChange}
               placeholder="https://youtube.com/..."
+              ref={searchRef}
             />
           </div>
-          <SearchButton 
+          <SearchButton
             type="submit"
-            // onClick={ handleClick } 
-            style={{ 
-                color: isButtonValid ? 'white' : theme.color.gray300,
-                backgroundColor: isButtonValid ? theme.color.gray500 : theme.color.gray100
+            // onClick={ handleClick }
+            style={{
+              color: isButtonValid ? 'white' : theme.color.gray300,
+              backgroundColor: isButtonValid
+                ? theme.color.gray500
+                : theme.color.gray100,
             }}
           >
             변환하기
