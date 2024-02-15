@@ -6,7 +6,11 @@ import InsightVideos from '@/components/Home/InsightVideos';
 import { useRecoilValue } from 'recoil';
 import { recommendationModalState } from '@/stores/modal';
 import RecommendationModal from '@/components/modals/RecommendationModal';
-import { getDummyVideos, getRecentVideos } from '@/apis/videos';
+import {
+  getUnReadDummyVideos,
+  getRecentVideos,
+  getAllDummyVideos,
+} from '@/apis/videos';
 import { userTokenState } from '@/stores/user';
 import { IVideoProps } from 'types/videos';
 
@@ -29,24 +33,44 @@ const HomePage: React.FC = () => {
   const isModalOpen = useRecoilValue(recommendationModalState);
 
   useEffect(() => {
-    Promise.all([getRecentVideos(), getDummyVideos()]).then((res) => {
-      const [recentVideosResponse, dummyVideosResponse] = res;
-      setRecentVideos(recentVideosResponse.result.videos);
-      setDummyVideos(dummyVideosResponse.result.videos);
-    });
+    userToken &&
+      Promise.all([getRecentVideos(), getUnReadDummyVideos()]).then((res) => {
+        const [recentVideosResponse, dummyVideosResponse] = res;
+        setRecentVideos(recentVideosResponse.result.videos);
+        setDummyVideos(dummyVideosResponse.result.videos);
+      });
+
+    !userToken &&
+      getAllDummyVideos().then((res) => {
+        setRecentVideos([]);
+        setDummyVideos(res.result.videos);
+      });
   }, [userToken]);
 
   return (
     <HomePageContainer>
       <SearchYoutube onSearch={handleSearch} />
       {isModalOpen && <RecommendationModal />}
-      <RecentVideos videos={recentVideos} />
-      <InsightVideos
-        username="여울"
-        popularHashtags={['디자인', '진로', '브랜딩']}
-        dummyVideos={dummyVideos}
-        setDummyVideos={setDummyVideos}
-      />
+      {userToken && (
+        <>
+          <RecentVideos videos={recentVideos} />
+          <InsightVideos
+            userToken={userToken}
+            dummyVideos={dummyVideos}
+            setDummyVideos={setDummyVideos}
+          />
+        </>
+      )}
+      {!userToken && (
+        <>
+          <InsightVideos
+            userToken={userToken}
+            dummyVideos={dummyVideos}
+            setDummyVideos={setDummyVideos}
+          />
+          <RecentVideos videos={recentVideos} />
+        </>
+      )}
     </HomePageContainer>
   );
 };

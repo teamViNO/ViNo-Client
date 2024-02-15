@@ -62,15 +62,18 @@ const App = () => {
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/search/result" element={<SearchResult />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/category/recent" element={<CategoryPage />} />
+                <Route
+                  path="/category/:top_folder"
+                  element={<CategoryPage />}
+                />
+                <Route
+                  path="/category/:top_folder/:sub_folder"
+                  element={<CategoryPage />}
+                />
               </>
             )}
 
-            <Route path="/category/recent" element={<CategoryPage />} />
-            <Route path="/category/:top_folder" element={<CategoryPage />} />
-            <Route
-              path="/category/:top_folder/:sub_folder"
-              element={<CategoryPage />}
-            />
             <Route path="/summary/:videoId" element={<SummaryPage />} />
             <Route path="/" element={<HomePage />} />
           </Route>

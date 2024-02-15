@@ -11,7 +11,7 @@ interface IVideoSelectMenuProps {
   setCheckedVideos: React.Dispatch<React.SetStateAction<number[]>>;
   handleDeleteVideos: () => void;
   allCheckBtnHandler: () => void;
-  onFileClick?: (videoId: number, categoryId: number) => void;
+  onFileClick?: (categoryId: number) => void;
 }
 
 const VideoSelectMenu = ({
@@ -23,7 +23,7 @@ const VideoSelectMenu = ({
   onFileClick,
 }: IVideoSelectMenuProps) => {
   const onFileClickWithProps = (categoryId: number) =>
-    onFileClick && onFileClick(checkedVideos[0], categoryId);
+    onFileClick && onFileClick(categoryId);
 
   return (
     <CategoryPageStyles.SelectModeWrap>

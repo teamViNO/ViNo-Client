@@ -62,6 +62,7 @@ export const Wrap = styled.div<{ mode: string }>`
   transition: all 0.5s;
   position: relative;
   height: 400px;
+  background-color: ${theme.color.white};
   &:hover {
     ${CheckBoxWrap} {
       display: flex;

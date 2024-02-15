@@ -17,15 +17,13 @@ interface IRecentVideosProp {
 
 const RecentVideos = ({ videos }: IRecentVideosProp) => {
   return (
-    <RecentVideosContainer>
+    <RecentVideosContainer length={videos.length}>
       <div className="container">
         <div className="title-container">
           <VideosTitle>최근 읽은 영상</VideosTitle>
-          {videos.length >= 4 && (
-            <Link to="/videos/recent">
-              <div className="icon-wrapper">
-                <MoveIcon width={28} height={28} />
-              </div>
+          {videos.length >= 3 && (
+            <Link to="/category/recent" className="icon-wrapper">
+              <MoveIcon width={28} height={28} />
             </Link>
           )}
         </div>

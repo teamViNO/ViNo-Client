@@ -4,11 +4,9 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 60px 0px 0px 60px;
-  padding-right: 20px;
-  width: 288px;
+  padding: 60px 20px 0px 60px;
   box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.05);
-  z-index: 0;
+  z-index: 1;
 `;
 
 export const StickySection = styled.div`

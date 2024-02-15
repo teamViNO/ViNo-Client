@@ -14,7 +14,7 @@ const CommonIconBackground = styled.div`
 `;
 
 export const Container = styled.div`
-  padding: 60px 60px 0px 120px;
+  padding: 60px 60px 40px 120px;
   width: 100%;
 `;
 
@@ -105,7 +105,7 @@ export const DropdownWrap = styled.div`
   margin: 0;
   display: flex;
   flex-direction: column;
-  z-index: 10;
+  z-index: 1;
   & div.select-box {
     padding: 8px 16px;
     width: 202px;
