@@ -1,10 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import theme from '../theme';
 import checkIcon from '@/assets/icons/check.svg';
 import checkedIcon from '@/assets/icons/checked.svg';
 import { Link } from 'react-router-dom';
 
 export const CheckBoxWrap = styled.div`
+  position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 16px 16px 0 0;
 
@@ -12,7 +13,7 @@ export const CheckBoxWrap = styled.div`
 
   flex-direction: row-reverse;
   width: 100%;
-  height: 100%;
+  height: 163px;
 
   &.activated {
     display: flex;
@@ -51,7 +52,7 @@ export const CardContainer = styled.div`
   row-gap: 40px;
 `;
 
-export const Wrap = styled.div`
+export const Wrap = styled.div<{ mode: string }>`
   display: flex;
   flex-direction: column;
   width: 290px;
@@ -60,12 +61,19 @@ export const Wrap = styled.div`
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
   transition: all 0.5s;
   position: relative;
+  height: 400px;
   &:hover {
     ${CheckBoxWrap} {
       display: flex;
     }
+    z-index: 1;
     scale: 1.025;
     box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+    ${(props) =>
+      props.mode === 'recommend' &&
+      css`
+        height: 467px;
+      `}
   }
 `;
 
@@ -93,18 +101,19 @@ export const ChipWrap = styled.div`
   flex-wrap: wrap;
 `;
 
-export const Image = styled.div<{ source: string }>`
-  background-image: url(${(props) => props.source});
+export const Image = styled.img`
   border-radius: 16px 16px 0 0;
   width: 290px;
   height: 163px;
-  background-size: 100%;
 `;
 
 export const DropdownWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 20px 24px;
+  padding: 0px 20px;
+  justify-content: center;
+  height: 100%;
+
   & div.select-box {
     padding: 8px 16px;
     display: flex;

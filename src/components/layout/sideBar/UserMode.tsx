@@ -55,7 +55,7 @@ const UserMode = () => {
     } else if (grabedCategory.current?.topCategoryId === null) {
       response = await topToOtherTop(grabedCategory, dropedCategory);
     } else {
-      response = await subToOtherTop(topId, grabedCategory);
+      response = await subToOtherTop(dropedCategory.current!, grabedCategory);
     }
     // 잡은 카테고리, 놓은 카테고리 초기화
     if (response) {
