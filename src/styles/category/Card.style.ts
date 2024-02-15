@@ -110,7 +110,10 @@ export const Image = styled.img`
 export const DropdownWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 20px 24px;
+  padding: 0px 20px;
+  justify-content: center;
+  height: 100%;
+
   & div.select-box {
     padding: 8px 16px;
     display: flex;

@@ -74,7 +74,7 @@ const Card: React.FC<ICardProps> = ({
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>
-          {video.tag.map((tag) => (
+          {video.tag.slice(0, 3).map((tag) => (
             <Chip key={tag.name} name={tag.name} />
           ))}
         </CardStyles.ChipWrap>
