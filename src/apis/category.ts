@@ -75,11 +75,11 @@ export const updateCategoryName = async (name: string, categoryId: number) => {
 
 // 비디오의 카테고리 위치 수정 API
 export const putVideoToOtherCategory = async (
-  videoId: number,
+  video_id: number[],
   categoryId: number,
 ) => {
-  const response = await axiosInstance.patch(
-    `/videos/${videoId}/${categoryId}/update`,
-  );
+  const response = await axiosInstance.patch(`/videos/${categoryId}/update`, {
+    video_id,
+  });
   return response.data;
 };

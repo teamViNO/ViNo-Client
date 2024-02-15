@@ -63,13 +63,9 @@ const CategoryPage = () => {
       setCheckedVideos(videos.map((video) => video.video_id));
     }
   };
-  const onFileClick = async (
-    e: React.MouseEvent,
-    videoId: number,
-    categoryId: number,
-  ) => {
+  const onFileClick = async (e: React.MouseEvent, categoryId: number) => {
     e.stopPropagation();
-    const res = await putVideoToOtherCategory(videoId, categoryId);
+    const res = await putVideoToOtherCategory(checkedVideos, categoryId);
     if (res.isSuccess) {
       handleVideo(
         categories,
