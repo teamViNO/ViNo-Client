@@ -59,6 +59,11 @@ const SubCategory = ({
       setIsEditing(true);
       setBeforeEdit(edit);
     } else if (option === '삭제') {
+      if (name === '기타') {
+        alert(`'기타' 폴더는 삭제할 수 없습니다.`);
+        setSubFolderOptionModalOpen(false);
+        return;
+      }
       setCategoryId(categoryId);
       setIsDeleteModalOpen(true);
     }

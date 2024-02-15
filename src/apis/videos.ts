@@ -67,10 +67,17 @@ export const deleteVideoSummaryAPI = (summaryId: number) => {
   return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
 };
 
-export const getDummyVideos = async (): Promise<
+export const getUnReadDummyVideos = async (): Promise<
   APIResponse<Record<'videos', IVideoProps[]>>
 > => {
   const response = await axiosInstance.get('/videos/dummyVideos/unRead');
+  return response.data;
+};
+
+export const getAllDummyVideos = async (): Promise<
+  APIResponse<Record<'videos', IVideoProps[]>>
+> => {
+  const response = await axios.get('/videos/dummyVideos');
   return response.data;
 };
 

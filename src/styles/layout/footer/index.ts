@@ -7,7 +7,7 @@ export const Container = styled.footer<{ width: string }>`
   ${theme.typography.Body1};
   position: relative;
   width: ${(props) => `calc(${props.width})`};
-  z-index: -1;
+  z-index: 0;
 `;
 
 export const SendEmailWrap = styled.div`

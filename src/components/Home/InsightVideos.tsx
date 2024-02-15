@@ -4,22 +4,19 @@ import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
 import { CardContainer } from '@/styles/category/Card.style';
 import successImg from '@/assets/success.png';
-import { createDummyVideoToMine, getDummyVideos } from '@/apis/videos';
+import { createDummyVideoToMine, getUnReadDummyVideos } from '@/apis/videos';
 
 interface InsightVideosProps {
-  username: string;
-  popularHashtags: string[];
+  userToken: string | null;
   dummyVideos: IVideoProps[];
   setDummyVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>;
 }
 
 const InsightVideos: React.FC<InsightVideosProps> = ({
-  username,
-  popularHashtags,
+  userToken,
   dummyVideos,
   setDummyVideos,
 }) => {
-  const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [showEndMessage, setShowEndMessage] = useState(false);
 
@@ -33,7 +30,9 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
     e.stopPropagation();
     const res = await createDummyVideoToMine(videoId, categoryId);
     if (res.isSuccess)
-      await getDummyVideos().then((res) => setDummyVideos(res.result.videos));
+      await getUnReadDummyVideos().then((res) =>
+        setDummyVideos(res.result.videos),
+      );
   };
 
   useEffect(() => {
@@ -54,7 +53,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
     });
 
     const endBoxElement = endBox.current;
-    if (endBoxElement) {
+    if (endBoxElement && userToken) {
       observer.observe(endBoxElement);
     }
 
@@ -63,32 +62,29 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
         observer.unobserve(endBoxElement);
       }
     };
-  }, []);
+  }, [userToken]);
 
   return (
-    <InsightVideosContainer>
+    <InsightVideosContainer userToken={userToken}>
       <div className="insight-container">
         <div className="text-container">
           <h2 className="insight-title">이런 인사이트는 어때요?</h2>
           <h4 className="insight-subtitle">
-            {username}님이 많이 찾은 {formattedHashtags.join(', ')} 관련
-            콘텐츠에요!
+            최근 사용자들이 많이 찾은 콘텐츠들을 소개해드려요
           </h4>
         </div>
-        <div className="insight-videos">
-          <CardContainer>
-            {dummyVideos.map((video) => (
-              <Card
-                mode="recommend"
-                video={video}
-                checkedVideos={checkedItems}
-                setCheckedVideos={setCheckedItems}
-                onFileClick={onFileClick}
-                key={video.video_id}
-              />
-            ))}
-          </CardContainer>
-        </div>
+        <CardContainer>
+          {dummyVideos.map((video) => (
+            <Card
+              mode="recommend"
+              video={video}
+              checkedVideos={checkedItems}
+              setCheckedVideos={setCheckedItems}
+              onFileClick={onFileClick}
+              key={video.video_id}
+            />
+          ))}
+        </CardContainer>
         <div ref={endBox} className="end-message">
           <div
             className="end-wrapper"
