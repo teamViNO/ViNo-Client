@@ -45,6 +45,10 @@ export interface UpdateVideoSubHeading {
 export interface UpdateVideoRequest {
   title?: string;
   description?: string;
-  subHeading?: UpdateVideoSubHeading;
+  subheading?: UpdateVideoSubHeading[];
   summary?: IVideoSummary[];
+}
+
+export interface UpdateVideoCategoryRequest {
+  video_id: (string | number)[];
 }

@@ -22,7 +22,9 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
     if (!summaryVideo) return;
 
     try {
-      await updateVideoCategoryIdAPI(summaryVideo.video_id, category_id);
+      await updateVideoCategoryIdAPI(category_id, {
+        video_id: [summaryVideo.video_id],
+      });
 
       onRefresh();
     } catch (e) {

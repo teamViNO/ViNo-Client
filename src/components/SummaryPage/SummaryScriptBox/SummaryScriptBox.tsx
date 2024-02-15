@@ -8,7 +8,11 @@ import { IVideo } from '@/models/video';
 
 import { summaryTransformModalState } from '@/stores/modal';
 import { summaryBoxWidthState, summarySearchIsOpenState } from '@/stores/ui';
-import { summaryVideoState } from '@/stores/summary';
+import {
+  summaryFindKeywordCountState,
+  summarySearchIndexState,
+  summaryVideoState,
+} from '@/stores/summary';
 
 import { ScriptBox } from '@/styles/SummaryPage';
 
@@ -19,27 +23,37 @@ import ResizeThumb from './ResizeThumb';
 import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
 
-const SummaryScriptBox = () => {
+type Props = {
+  onRefresh: () => void;
+};
+
+const SummaryScriptBox = ({ onRefresh }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
+  const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
+  const [findKeywordCount, setFindKeywordCount] = useRecoilState(
+    summaryFindKeywordCountState,
+  );
 
   const searchIsOpen = useRecoilValue(summarySearchIsOpenState);
   const transformModalIsOpen = useRecoilValue(summaryTransformModalState);
   const [width, setWidth] = useRecoilState(summaryBoxWidthState);
   const [focusId, setFocusId] = useState(1);
   const [keyword, setKeyword] = useState('');
-  const [searchIndex, setSearchIndex] = useState(0);
 
-  const handleChangeSearchIndex = (index: number) => {
-    if (findKeywordCount === 0) {
-      setSearchIndex(-1);
-    } else if (index < 0) {
-      setSearchIndex(findKeywordCount - 1);
-    } else if (index >= findKeywordCount) {
-      setSearchIndex(0);
+  const handleChangeKeyword = (keyword: string) => {
+    if (keyword === '') {
+      setFindKeywordCount(0);
     } else {
-      setSearchIndex(index);
+      setFindKeywordCount(
+        summaryVideo.subHeading.reduce(
+          (total, { content }) => total + (content.split(keyword).length - 1),
+          0,
+        ),
+      );
     }
+
+    setKeyword(keyword);
   };
 
   const formattedScriptList = useMemo(() => {
@@ -62,22 +76,13 @@ const SummaryScriptBox = () => {
     });
   }, [summaryVideo, keyword, searchIsOpen, transformModalIsOpen]);
 
-  const findKeywordCount = useMemo(() => {
-    if (keyword === '') return 0;
-
-    return summaryVideo.subHeading.reduce(
-      (total, { content }) => total + (content.split(keyword).length - 1),
-      0,
-    );
-  }, [summaryVideo, keyword]);
-
   useEffect(() => {
     if (keyword === '' || !findKeywordCount) {
       setSearchIndex(-1);
     } else {
       setSearchIndex(0);
     }
-  }, [searchIsOpen, transformModalIsOpen, keyword, findKeywordCount]);
+  }, [keyword, findKeywordCount, setSearchIndex]);
 
   useEffect(() => {
     document.querySelectorAll('mark').forEach((markEl, i) => {
@@ -106,19 +111,9 @@ const SummaryScriptBox = () => {
         />
 
         <div style={{ display: 'flex', gap: 8 }}>
-          <SearchKeyword
-            searchIndex={searchIndex}
-            totalCount={findKeywordCount}
-            onChange={setKeyword}
-            onChangeSearchIndex={handleChangeSearchIndex}
-          />
+          <SearchKeyword onChange={handleChangeKeyword} />
 
-          <ChangeKeyword
-            searchIndex={searchIndex}
-            totalCount={findKeywordCount}
-            onChange={setKeyword}
-            onChangeSearchIndex={handleChangeSearchIndex}
-          />
+          <ChangeKeyword onChange={handleChangeKeyword} />
 
           <span className="icon-button">
             <ModifyIcon width={18} height={18} />
