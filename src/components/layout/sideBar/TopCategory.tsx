@@ -80,6 +80,7 @@ const TopCategory = ({
 
   const handleOpenModal = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setFolderOptionModalOpen(true);
   };
 
@@ -151,12 +152,10 @@ const TopCategory = ({
                 )}
               </TopCategoryStyles.ImageTextWrap>
             </TopCategoryStyles.FolderButton>
-            {topId === categoryId && !subId && (
-              <TopCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
-                <MoreOptionsSvg />
-              </TopCategoryStyles.ShowOptionButton>
-            )}
-            {folderOptionModalOpen && topId === categoryId && (
+            <TopCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
+              <MoreOptionsSvg />
+            </TopCategoryStyles.ShowOptionButton>
+            {folderOptionModalOpen && (
               <Option
                 options={options}
                 handleOptionClick={handleOptionClick}

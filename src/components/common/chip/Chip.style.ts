@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 export const ChipContainer = styled.div`
   cursor: pointer;
-  margin-right: 18px;
-  margin-bottom: 12px;
+  margin-right: 8px;
   padding: 3px 9.5px;
   background-color: ${theme.color.gray100};
   border-radius: 8px;

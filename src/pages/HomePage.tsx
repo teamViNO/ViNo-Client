@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SearchYoutube from '@/components/Home/SearchYoutube';
 import { HomePageContainer } from '@/styles/HomepageStyle';
 import RecentVideos from '@/components/Home/RecentVideos';
@@ -29,6 +29,7 @@ const HomePage: React.FC = () => {
   const handleSearch = (value: string) => {
     console.log(value);
   };
+  const searchRef = useRef(null);
 
   const isModalOpen = useRecoilValue(recommendationModalState);
 
@@ -49,11 +50,11 @@ const HomePage: React.FC = () => {
 
   return (
     <HomePageContainer>
-      <SearchYoutube onSearch={handleSearch} />
+      <SearchYoutube searchRef={searchRef} onSearch={handleSearch} />
       {isModalOpen && <RecommendationModal />}
       {userToken && (
         <>
-          <RecentVideos videos={recentVideos} />
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
           <InsightVideos
             userToken={userToken}
             dummyVideos={dummyVideos}
@@ -68,7 +69,7 @@ const HomePage: React.FC = () => {
             dummyVideos={dummyVideos}
             setDummyVideos={setDummyVideos}
           />
-          <RecentVideos videos={recentVideos} />
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
         </>
       )}
     </HomePageContainer>

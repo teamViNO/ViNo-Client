@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
+
+import { categoryState } from '@/stores/category';
 
 import * as CardStyles from '@/styles/category/Card.style';
 import Chip from '../common/chip/Chip';
@@ -21,9 +24,14 @@ const Card: React.FC<ICardProps> = ({
   setCheckedVideos,
   onFileClick,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const category = useRecoilValue(categoryState);
 
-  const handleSelectCategory = (categoryId: number) => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    category.length ? category[0].categoryId : -1,
+  );
+
+  const onFileClickWithProps = (categoryId: number) => {
+    setSelectedCategoryId(categoryId);
     onFileClick && onFileClick(video.video_id, categoryId);
   };
 
@@ -35,11 +43,7 @@ const Card: React.FC<ICardProps> = ({
     }
   };
   return (
-    <CardStyles.Wrap
-      mode={mode}
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <CardStyles.Wrap mode={mode}>
       <div style={{ display: 'flex' }}>
         <CardStyles.Image src={video.image} alt="카드 이미지" />
         {mode === 'category' && (
@@ -59,16 +63,16 @@ const Card: React.FC<ICardProps> = ({
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>
-          {video.tag.slice(0, 3).map((tag) => (
+          {video.tag.slice(0, 2).map((tag) => (
             <Chip key={tag.name} name={tag.name} />
           ))}
         </CardStyles.ChipWrap>
       </CardStyles.Content>
-      {isOpen && mode === 'recommend' && (
+      {mode === 'recommend' && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
-            selectedCategoryId={video.category_id}
-            onSelect={handleSelectCategory}
+            selectedCategoryId={selectedCategoryId}
+            onSelect={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
       )}
