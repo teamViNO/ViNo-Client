@@ -7,11 +7,22 @@ import useBoolean from '@/hooks/useBoolean';
 import { userInfoState } from '@/stores/user';
 
 import { Wrapper } from '@/styles/ProfilePage';
+import { useState } from 'react';
+import WithdrawModal from '@/components/modals/WIthdrawModal';
 
 const ProfilePage = () => {
+  const [reason, setReason] = useState('');
   const userInfo = useRecoilValue(userInfoState);
   const [isShowLogoutModal, , openLogoutModal, closeLogoutModal] =
     useBoolean(false);
+  const [etcReason, setEtcReason] = useState('');
+
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsWithdrawModalOpen(true);
+  };
 
   return (
     <>
@@ -33,7 +44,9 @@ const ProfilePage = () => {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <button className="other">회원탈퇴</button>
+            <button className="other" onClick={handleOpenModal}>
+              회원탈퇴
+            </button>
             <button className="other" onClick={openLogoutModal}>
               로그아웃
             </button>
@@ -42,6 +55,15 @@ const ProfilePage = () => {
       </Wrapper>
 
       {isShowLogoutModal && <LogoutModal onClose={closeLogoutModal} />}
+      {isWithdrawModalOpen && (
+        <WithdrawModal
+          setIsWithdrawModalOpen={setIsWithdrawModalOpen}
+          reason={reason}
+          setReason={setReason}
+          etcReason={etcReason}
+          setEtcReason={setEtcReason}
+        />
+      )}
     </>
   );
 };
