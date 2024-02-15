@@ -51,7 +51,11 @@ export const DetailBox = styled.div`
     height: 40px;
     border-radius: 8px;
     background-color: ${(props) => props.theme.color.gray200};
-    cursor: pointer;
+
+    &.changed {
+      background-color: ${(props) => props.theme.color.green400};
+      cursor: pointer;
+    }
 
     &.disabled svg {
       & path:nth-of-type(1) {
@@ -320,7 +324,11 @@ export const Dropdown = styled.div`
     color: ${(props) => props.theme.color.gray400};
     transition: 0.1s;
     cursor: pointer;
-    ${(props) => props.theme.typography.Body3}
+    ${(props) => props.theme.typography.Body3};
+
+    &.active {
+      color: ${(props) => props.theme.color.gray500};
+    }
 
     &:hover {
       background-color: ${(props) => props.theme.color.gray100};
@@ -488,4 +496,12 @@ export const ModalContainer = styled(BlurBackground)`
       color: ${(props) => props.theme.color.gray400};
     }
   }
+`;
+
+export const DropdownTopCategoryName = styled.span`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;

@@ -2,29 +2,37 @@ import { useEffect, useRef, useState } from 'react';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-}
+import useOutsideClick from '@/hooks/useOutsideClick';
+
+import { IVideoSummary } from '@/models/video';
 
 type Props = {
-  note: Item;
+  summary: IVideoSummary;
   isEditable: boolean;
   onDisableEditable: () => void;
   onActiveEditable?: () => void;
-  onActiveNextEditable?: () => void;
+  onEdit: (content: string) => void;
+  onEditAndNext?: (content: string) => void;
+  onRemove?: () => void;
 };
 
 const NoteItem = ({
-  note,
+  summary,
   isEditable,
   onDisableEditable,
   onActiveEditable,
-  onActiveNextEditable,
+  onEdit,
+  onEditAndNext,
+  onRemove,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [noteText, setNoteText] = useState(note.text);
+  const [noteText, setNoteText] = useState(summary.content);
+
+  const [outsideRef] = useOutsideClick<HTMLDivElement>(() => {
+    if (isEditable) {
+      onEdit(noteText);
+    }
+  });
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (
     e,
@@ -34,7 +42,12 @@ const NoteItem = ({
     } else if (e.key === 'Enter') {
       e.preventDefault();
 
-      onActiveNextEditable && onActiveNextEditable();
+      onEditAndNext && onEditAndNext(noteText);
+
+      // 이어서 생성할 수 있도록
+      if (summary.id === -1) {
+        setNoteText('');
+      }
     }
   };
 
@@ -42,16 +55,17 @@ const NoteItem = ({
     if (isEditable) {
       textareaRef.current?.focus();
       textareaRef.current?.setSelectionRange(
-        note.text.length,
-        note.text.length,
+        summary.content.length,
+        summary.content.length,
       );
     }
 
-    setNoteText(note.text);
-  }, [isEditable, note.text]);
+    setNoteText(summary.content);
+  }, [isEditable, summary.content]);
 
   return (
     <div
+      ref={outsideRef}
       className={`note-item ${isEditable && 'editable'}`}
       onDoubleClick={onActiveEditable}
     >
@@ -69,9 +83,11 @@ const NoteItem = ({
             />
           </div>
 
-          <button className="close-button" onClick={onDisableEditable}>
-            <CloseIcon width={16} height={16} />
-          </button>
+          {summary.id !== -1 && (
+            <button className="close-button" onClick={onRemove}>
+              <CloseIcon width={16} height={16} />
+            </button>
+          )}
         </div>
       ) : (
         <span className="note-text">{noteText}</span>

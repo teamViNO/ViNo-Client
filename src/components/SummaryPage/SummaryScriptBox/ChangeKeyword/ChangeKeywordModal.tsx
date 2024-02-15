@@ -1,34 +1,70 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 import DownIcon from '@/assets/icons/down.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
 import UpIcon from '@/assets/icons/up.svg?react';
 
+import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
+
 import useDebounce from '@/hooks/useDebounce';
+
+import { IVideoSubHeading } from '@/models/video';
 
 import { ModalContainer } from '@/styles/SummaryPage';
 
+import {
+  summaryFindKeywordCountState,
+  summarySearchIndexState,
+  summaryVideoState,
+} from '@/stores/summary';
+import { getSearchIndex } from '@/utils/summary';
+
 type Props = {
-  searchIndex: number;
-  totalCount: number;
   onChange: (keyword: string) => void;
-  onChangeSearchIndex: (index: number) => void;
   onClose: () => void;
 };
 
-const ChangeKeywordModal = ({
-  searchIndex,
-  totalCount,
-  onChange,
-  onChangeSearchIndex,
-  onClose,
-}: Props) => {
+const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
   const boxRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [summaryVideo, setSummaryVideo] = useRecoilState(summaryVideoState);
+  const findKeywordCount = useRecoilValue(summaryFindKeywordCountState);
+  const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
+
   const [holdPosition, setHoldPosition] = useState({ x: -1, y: -1 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [keyword, setKeyword] = useState('');
+  const [replaceKeyword, setReplaceKeyword] = useState('');
+
+  const refreshSummary = async () => {
+    if (!summaryVideo) return;
+
+    try {
+      const { result } = (await getVideoAPI(summaryVideo.video_id)).data;
+
+      setSummaryVideo(result);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const updateSubHeading = async (subheading: IVideoSubHeading[]) => {
+    if (!summaryVideo) return;
+
+    try {
+      await updateVideoAPI(summaryVideo.video_id, { subheading });
+    } catch (e) {
+      console.error(e);
+    }
+
+    await refreshSummary();
+  };
+
+  const handleChangeSearchIndex = (index: number) => {
+    setSearchIndex(getSearchIndex(index, findKeywordCount));
+  };
 
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -37,7 +73,7 @@ const ChangeKeywordModal = ({
       e.key === 'Enter' &&
       document.activeElement === inputRef.current
     ) {
-      onChangeSearchIndex(searchIndex + 1);
+      handleChangeSearchIndex(searchIndex + 1);
     }
   };
 
@@ -63,6 +99,39 @@ const ChangeKeywordModal = ({
     const y = Math.max(-maxY, Math.min(maxY, screenY - holdPosition.y));
 
     setPosition({ x, y });
+  };
+
+  const handleClickChangeAllButton = () => {
+    if (!summaryVideo) return;
+
+    const subHeading = summaryVideo.subHeading.map(({ content, ...others }) => {
+      return {
+        content: content.replace(new RegExp(keyword, 'g'), replaceKeyword),
+        ...others,
+      };
+    });
+
+    updateSubHeading(subHeading);
+  };
+
+  const handleClickChangeButton = () => {
+    if (!summaryVideo) return;
+
+    const regex = new RegExp(keyword, 'g');
+    const subHeadingList = [...summaryVideo.subHeading];
+    let index = -1;
+
+    for (const i in summaryVideo.subHeading) {
+      const { content } = summaryVideo.subHeading[i];
+
+      if (regex.test(content)) index++;
+      if (index === searchIndex) {
+        subHeadingList[i].content = content.replace(regex, replaceKeyword);
+        break;
+      }
+    }
+
+    updateSubHeading(subHeadingList);
   };
 
   useEffect(() => {
@@ -122,7 +191,7 @@ const ChangeKeywordModal = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span className="count">
                   <span className="current">{searchIndex + 1}</span>/
-                  {totalCount}
+                  {findKeywordCount}
                 </span>
 
                 <div style={{ display: 'flex', gap: 4 }}>
@@ -130,7 +199,7 @@ const ChangeKeywordModal = ({
                     <UpIcon
                       width={32}
                       height={16}
-                      onClick={() => onChangeSearchIndex(searchIndex - 1)}
+                      onClick={() => handleChangeSearchIndex(searchIndex - 1)}
                     />
                   </span>
 
@@ -138,7 +207,7 @@ const ChangeKeywordModal = ({
                     <DownIcon
                       width={32}
                       height={16}
-                      onClick={() => onChangeSearchIndex(searchIndex + 1)}
+                      onClick={() => handleChangeSearchIndex(searchIndex + 1)}
                     />
                   </span>
                 </div>
@@ -150,15 +219,27 @@ const ChangeKeywordModal = ({
             <span className="group-title">바꿀 단어</span>
             <div className="input-box">
               <div style={{ display: 'flex', flex: '1 1 auto' }}>
-                <input type="text" placeholder="수정할 단어를 입력해주세요" />
+                <input
+                  type="text"
+                  placeholder="수정할 단어를 입력해주세요"
+                  value={replaceKeyword}
+                  onChange={(e) => setReplaceKeyword(e.target.value)}
+                />
               </div>
             </div>
           </div>
         </div>
 
         <div style={{ marginTop: 32, gap: 12, flexDirection: 'row' }}>
-          <button className="transform all">전체 바꾸기</button>
-          <button className="transform">바꾸기</button>
+          <button
+            className="transform all"
+            onClick={handleClickChangeAllButton}
+          >
+            전체 바꾸기
+          </button>
+          <button className="transform" onClick={handleClickChangeButton}>
+            바꾸기
+          </button>
         </div>
       </div>
     </ModalContainer>

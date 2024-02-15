@@ -13,6 +13,8 @@ import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
 import ImageSlider from "@/components/ImageSlider";
+import NaverLogoImage from '@/assets/naver-logo.png';
+import KakaoLogoImage from '@/assets/kakao-logo.png';
 
 import { APIBaseResponse } from '@/models/config/axios';
 import { LoginRequest } from '@/models/user';
@@ -20,6 +22,7 @@ import { LoginRequest } from '@/models/user';
 import { userTokenState } from '@/stores/user';
 
 import { BlurBackground } from '@/styles/modals/common.style';
+import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ const SignInPage: React.FC = () => {
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isOpenSignUpModal, setIsOpenSignUpModal] = useState(false);
   const setUserToken = useSetRecoilState(userTokenState);
+  const { updateCategories } = useUpdateCategories();
 
   const [loginInfo, setLoginInfo] = useState<LoginRequest>({
     email: '',
@@ -61,7 +65,7 @@ const SignInPage: React.FC = () => {
   const handleClickLoginButton = async () => {
     try {
       const { token } = (await loginAPI(loginInfo)).data.result;
-
+      await updateCategories();
       setUserToken(token);
       navigate('/');
     } catch (error) {
@@ -77,32 +81,20 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  const Rest_api_key='77ddf1baeb87f4a9752ed437db43cd96' //kakao REST API KEY
-  const redirect_uri = 'https://localhost:5173/sign-up-suc' //Redirect URI
-  const NAVER_CLIENT_ID ='qR4Npp1ui69SCF6nAJd2'
-  const STATE = 'flase'
+  const redirect_uri = `${location.origin}/social-account`; //Redirect URI
+  const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
+  const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
   // oauth 요청 URL
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
-  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${redirect_uri}`
-  
-  const handleKakaoLogin = ()=>{
-      window.location.href = kakaoURL
-  }
+  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_KEY}&redirect_uri=${redirect_uri}&response_type=code`;
+  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
-  const handleNaverLogin = ()=>{
-    window.location.href = naverURL
-}
-  
-  
+  const handleKakaoLogin = () => {
+    window.location.href = kakaoURL;
+  };
 
-
-  /* let login:any = new window.naver.LoginWithNaverId("http://localhost:5173/sign-in/", "http://localhost:5173/sign-in");
-	let state = login.getUniqState();
-	login.setButton("white", 2,40);
-	login.setDomain(".service.com");
-	login.setState(state);
-	login.isPopup(false);
-	login.LoginWithNaverId(); */
+  const handleNaverLogin = () => {
+    window.location.href = naverURL;
+  };
 
   return (
     <PageComponent>
@@ -121,17 +113,13 @@ const SignInPage: React.FC = () => {
           계정에 로그인하고 나만의 영상 아카이빙을 시작해요
         </TextDiv>
 
-        <NaverSection type='button' onClick={handleNaverLogin}>
-          <img
-            src="src/assets/naver-logo.png"
-            alt="naver-logo"
-            id="naver_id_login"
-          />
+        <NaverSection type="button" onClick={handleNaverLogin}>
+          <img src={NaverLogoImage} alt="naver-logo" id="naver_id_login" />
           네이버로 시작하기
         </NaverSection>
 
-        <KakaoSection type='button' onClick={handleKakaoLogin}>
-          <img src="src/assets/kakao-logo.png" alt="kakao-logo" />
+        <KakaoSection type="button" onClick={handleKakaoLogin}>
+          <img src={KakaoLogoImage} alt="kakao-logo" />
           카카오로 시작하기
         </KakaoSection>
 

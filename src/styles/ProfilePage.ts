@@ -37,8 +37,25 @@ export const Wrapper = styled.div`
       background-color: white;
       color: ${(props) => props.theme.color.gray400};
       cursor: pointer;
+      outline: none;
+      transition: 0.1s;
       ${(props) => props.theme.typography.Body1};
+
+      &:hover {
+        border: 1.5px solid ${(props) => props.theme.color.gray400};
+      }
+
+      &:active {
+        border: 1.5px solid ${(props) => props.theme.color.gray300};
+      }
     }
+  }
+
+  & .submit-tooltip {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, calc(-200% + 25px));
   }
 
   & button.submit {
@@ -53,9 +70,10 @@ export const Wrapper = styled.div`
     color: white;
     transition: 0.1s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body1};
 
-    &.disabled {
+    &:disabled {
       background-color: ${(props) => props.theme.color.gray100};
       color: ${(props) => props.theme.color.gray300};
       cursor: not-allowed;
@@ -99,6 +117,7 @@ export const Box = styled.div`
     min-height: 50px;
     border-radius: 12px;
     border: solid 1.5px ${(props) => props.theme.color.gray200};
+    transition: 0.2s;
     ${(props) => props.theme.typography.Body1};
 
     &.disabled {
@@ -122,6 +141,12 @@ export const Box = styled.div`
     ${(props) => props.theme.typography.Caption1};
   }
 
+  & .input-error-text {
+    padding-left: 16px;
+    color: ${(props) => props.theme.color.red};
+    ${(props) => props.theme.typography.Body3};
+  }
+
   & button.option {
     width: 100%;
     height: 50px;
@@ -129,12 +154,13 @@ export const Box = styled.div`
     border: solid 1.5px ${(props) => props.theme.color.gray200};
     background-color: white;
     color: ${(props) => props.theme.color.gray400};
-    transition: 0.1s;
+    transition: 0.15s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body1};
 
     &.selected {
-      border: none;
+      border: solid 1.5px ${(props) => props.theme.color.gray100};
       background-color: ${(props) => props.theme.color.gray100};
       color: ${(props) => props.theme.color.gray500};
     }
@@ -166,6 +192,7 @@ export const Box = styled.div`
     color: ${(props) => props.theme.color.gray300};
     transition: 0.1s;
     cursor: pointer;
+    outline: none;
     ${(props) => props.theme.typography.Body2};
 
     &.selected {
@@ -176,6 +203,116 @@ export const Box = styled.div`
       & path {
         fill: white;
       }
+    }
+  }
+`;
+
+export const ModalBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 40px 50px;
+  width: 700px;
+  background-color: white;
+  box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 40px;
+
+  & > .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    & > .close {
+      align-self: flex-end;
+      cursor: pointer;
+    }
+
+    & > .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      & img {
+        width: 56px;
+        height: auto;
+      }
+
+      & h1.title {
+        color: ${(props) => props.theme.color.gray500};
+        ${(props) => props.theme.typography.Header6};
+      }
+
+      & span.description {
+        color: ${(props) => props.theme.color.gray300};
+        ${(props) => props.theme.typography.Body1};
+      }
+    }
+
+    & > .input-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      & .input-title {
+        color: ${(props) => props.theme.color.gray400};
+        ${(props) => props.theme.typography.Body1};
+      }
+
+      & .input-help {
+        display: flex;
+        gap: 4px;
+        padding-left: 16px;
+
+        & > span {
+          color: ${(props) => props.theme.color.gray300};
+          transition: 0.1s;
+          ${(props) => props.theme.typography.Body3};
+
+          &.active {
+            color: ${(props) => props.theme.color.gray500};
+          }
+
+          &.error {
+            color: ${(props) => props.theme.color.red};
+          }
+        }
+      }
+
+      & input {
+        padding: 15px 20px;
+        width: 100%;
+        height: 56px;
+        border-radius: 12px;
+        border: 1.5px solid ${(props) => props.theme.color.gray200};
+        outline: none;
+        transition: 0.1s;
+
+        &:focus {
+          border: 2px solid ${(props) => props.theme.color.gray500};
+        }
+      }
+    }
+  }
+
+  & button.submit {
+    width: 100%;
+    height: 58px;
+    background-color: ${(props) => props.theme.color.gray500};
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    transition: 0.1s;
+    ${(props) => props.theme.typography.Body1};
+
+    &:disabled {
+      background-color: ${(props) => props.theme.color.gray100};
+      color: ${(props) => props.theme.color.gray300};
     }
   }
 `;

@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { userTokenState } from '@/stores/user';
+import ProfileImage from '@/assets/default-profile-rect.png';
+import InformationImage from '@/assets/information.png';
+import KeyImage from '@/assets/key.png';
+
+import { userInfoState, userTokenState } from '@/stores/user';
 
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
 
@@ -12,6 +16,7 @@ type Props = {
 const ProfileDetail = ({ onClose }: Props) => {
   const navigate = useNavigate();
   const setUserToken = useSetRecoilState(userTokenState);
+  const userInfo = useRecoilValue(userInfoState);
 
   const handleClickProfileButton = () => {
     navigate('/profile');
@@ -20,6 +25,7 @@ const ProfileDetail = ({ onClose }: Props) => {
 
   const handleClickLogoutButton = () => {
     setUserToken(null);
+    navigate('/');
     onClose();
   };
 
@@ -27,23 +33,20 @@ const ProfileDetail = ({ onClose }: Props) => {
     <ProfileDetailStyle.Layout>
       <ProfileDetailStyle.Container>
         <ProfileDetailStyle.InformationContainer>
-          <img
-            src="/src/assets/default-profile-rect.png"
-            alt="사각 프로필 이미지"
-          />
+          <img src={ProfileImage} alt="사각 프로필 이미지" />
           <ProfileDetailStyle.InformationWrap>
             <ProfileDetailStyle.InformationNickname>
-              여울
+              {userInfo?.name || '-'}
             </ProfileDetailStyle.InformationNickname>
             <ProfileDetailStyle.InformationEmail>
-              abcd1234@naver.com
+              {userInfo?.email || '-'}
             </ProfileDetailStyle.InformationEmail>
           </ProfileDetailStyle.InformationWrap>
         </ProfileDetailStyle.InformationContainer>
 
         <ProfileDetailStyle.ButtonWrap>
           <ProfileDetailStyle.Button onClick={handleClickProfileButton}>
-            <img src="/src/assets/information.png" alt="icon" />
+            <img src={InformationImage} alt="icon" />
 
             <ProfileDetailStyle.ButtonName>
               내 정보
@@ -51,7 +54,7 @@ const ProfileDetail = ({ onClose }: Props) => {
           </ProfileDetailStyle.Button>
 
           <ProfileDetailStyle.Button onClick={handleClickLogoutButton}>
-            <img src="/src/assets/key.png" alt="icon" />
+            <img src={KeyImage} alt="icon" />
 
             <ProfileDetailStyle.ButtonName>
               로그아웃

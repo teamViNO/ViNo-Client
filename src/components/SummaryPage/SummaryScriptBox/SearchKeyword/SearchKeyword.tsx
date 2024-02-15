@@ -9,25 +9,24 @@ import useDebounce from '@/hooks/useDebounce';
 
 import { summaryTransformModalState } from '@/stores/modal';
 import { summarySearchIsOpenState } from '@/stores/ui';
+import {
+  summaryFindKeywordCountState,
+  summarySearchIndexState,
+} from '@/stores/summary';
 
 import { SearchKeywordBox } from '@/styles/SummaryPage';
+import { getSearchIndex } from '@/utils/summary';
 
 type Props = {
-  searchIndex: number;
-  totalCount: number;
   onChange: (keyword: string) => void;
-  onChangeSearchIndex: (index: number) => void;
 };
 
-const SearchKeyword = ({
-  searchIndex,
-  totalCount,
-  onChange,
-  onChangeSearchIndex,
-}: Props) => {
+const SearchKeyword = ({ onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isOpen, setIsOpen] = useRecoilState(summarySearchIsOpenState);
   const modalIsOpen = useRecoilValue(summaryTransformModalState);
+  const findKeywordCount = useRecoilValue(summaryFindKeywordCountState);
+  const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
+  const [isOpen, setIsOpen] = useRecoilState(summarySearchIsOpenState);
   const [keyword, setKeyword] = useState('');
 
   const dynamicStyles = {
@@ -40,6 +39,13 @@ const SearchKeyword = ({
       transform: isOpen ? 'rotateZ(360deg)' : 'rotateZ(0deg)',
     },
   };
+
+  const handleChangeSearchIndex = useCallback(
+    (index: number) => {
+      setSearchIndex(getSearchIndex(index, findKeywordCount));
+    },
+    [setSearchIndex, findKeywordCount],
+  );
 
   const handleKeydown = useCallback(
     (e: KeyboardEvent) => {
@@ -63,10 +69,10 @@ const SearchKeyword = ({
         e.key === 'Enter' &&
         document.activeElement === inputRef.current
       ) {
-        onChangeSearchIndex(searchIndex + 1);
+        handleChangeSearchIndex(searchIndex + 1);
       }
     },
-    [searchIndex, modalIsOpen, setIsOpen, onChangeSearchIndex],
+    [searchIndex, modalIsOpen, setIsOpen, handleChangeSearchIndex],
   );
 
   useEffect(() => {
@@ -94,7 +100,7 @@ const SearchKeyword = ({
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <span className="count">
-          <span className="current">{searchIndex + 1}</span>/{totalCount}
+          <span className="current">{searchIndex + 1}</span>/{findKeywordCount}
         </span>
 
         <div style={{ display: 'flex', gap: 4 }}>
@@ -102,7 +108,7 @@ const SearchKeyword = ({
             <UpIcon
               width={16}
               height={16}
-              onClick={() => onChangeSearchIndex(searchIndex - 1)}
+              onClick={() => handleChangeSearchIndex(searchIndex - 1)}
             />
           </span>
 
@@ -110,7 +116,7 @@ const SearchKeyword = ({
             <DownIcon
               width={16}
               height={16}
-              onClick={() => onChangeSearchIndex(searchIndex + 1)}
+              onClick={() => handleChangeSearchIndex(searchIndex + 1)}
             />
           </span>
         </div>

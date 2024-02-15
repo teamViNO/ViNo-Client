@@ -1,17 +1,36 @@
+import { useRecoilValue } from 'recoil';
+
+import { updateVideoCategoryIdAPI } from '@/apis/videos';
+
+import { summaryVideoState } from '@/stores/summary';
+
 import { DetailBox } from '@/styles/SummaryPage';
+
+import { formatDate } from '@/utils/date';
 
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
 
-const SummaryDetailBox = () => {
-  const title = '2024년 광고 시장의 전망';
-  const hashtagList = ['뉴웨이브', '미디어', '광고'];
-  const subtitleList = [
-    { id: 1, text: '생성형 AI 검색과 광고' },
-    { id: 2, text: '비즈니스 핵심 전략, 숏폼' },
-    { id: 3, text: '맞춤형 광고 못하는 쿠키리스 시대' },
-    { id: 4, text: '단 한 명의 고객을 위한 초개인화 마케팅' },
-  ];
+type Props = {
+  onRefresh: () => void;
+};
+
+const SummaryDetailBox = ({ onRefresh }: Props) => {
+  const summaryVideo = useRecoilValue(summaryVideoState);
+
+  const handleSelectCategory = async (category_id: number) => {
+    if (!summaryVideo) return;
+
+    try {
+      await updateVideoCategoryIdAPI(category_id, {
+        video_id: [summaryVideo.video_id],
+      });
+
+      onRefresh();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div
@@ -22,16 +41,18 @@ const SummaryDetailBox = () => {
       }}
     >
       <DetailBox>
-        <span className="created_at">2024년 1월 1일</span>
+        <span className="created_at">
+          {formatDate(summaryVideo?.updated_at)}
+        </span>
 
         <span className="youtube-video-title">
-          메조미디어가 본 미디어 트렌드는...생성AI 광고 없는 구독
+          {summaryVideo?.title || '-'}
         </span>
 
         <div style={{ display: 'flex', gap: 10 }}>
-          {hashtagList.map((hashtag) => (
-            <span key={hashtag} className="hashtag">
-              #{hashtag}
+          {summaryVideo?.tag.map((hashtag) => (
+            <span key={hashtag.name} className="hashtag">
+              #{hashtag.name}
             </span>
           ))}
         </div>
@@ -46,9 +67,12 @@ const SummaryDetailBox = () => {
           }}
         />
 
-        <CategorySelectBox />
+        <CategorySelectBox
+          selectedCategoryId={summaryVideo?.category_id}
+          onSelect={handleSelectCategory}
+        />
 
-        <span className="title">{title}</span>
+        <span className="title">{summaryVideo?.description || '-'}</span>
 
         <div
           style={{
@@ -58,15 +82,15 @@ const SummaryDetailBox = () => {
             gap: 16,
           }}
         >
-          {subtitleList.map((subtitle, i) => (
-            <div key={subtitle.id} className="subtitle">
+          {summaryVideo?.subHeading.map((subHeading, i) => (
+            <div key={subHeading.id} className="subtitle">
               <span className="subtitle-index">{i + 1}</span>
-              <span className="subtitle-text">{subtitle.text}</span>
+              <span className="subtitle-text">{subHeading.name}</span>
             </div>
           ))}
         </div>
 
-        <NoteBox />
+        <NoteBox onRefresh={onRefresh} />
       </DetailBox>
     </div>
   );

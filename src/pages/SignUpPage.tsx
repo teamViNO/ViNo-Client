@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
 import { useNavigate } from 'react-router-dom';
-import logo from "../assets/logo.png";
+import logo from '../assets/logo.png';
 import errorImg from '@/assets/Error.png';
 import CloseIcon from '@/assets/icons/close.svg?react';
-import { AxiosError } from "axios";
-import { checkEmailAPI } from "@/apis/user";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { joinAPI } from '@/apis/user';
-import PhoneCheck from "@/components/PhoneCheck";
+import { AxiosError } from 'axios';
+import { checkEmailAPI, joinAPI } from '@/apis/user';
+
 import { BlurBackground } from '@/styles/modals/common.style';
 import Calendar from "@/components/Calendar";
 import ImageSlider from "@/components/ImageSlider";
+import PhoneCheck from '@/components/PhoneCheck';
+import { Link } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -52,10 +52,10 @@ const SignUp = () => {
     const emailCurrent = e.target.value;
     setEmail(emailCurrent);
     if (!emailRegex.test(emailCurrent)) {
-      setEmailMessage("이메일 형식을 다시 확인해주세요");
+      setEmailMessage('이메일 형식을 다시 확인해주세요');
       setIsEmail(false);
     } else {
-      setEmailMessage("");
+      setEmailMessage('');
       setIsEmail(true);
     }
   };
@@ -74,35 +74,40 @@ const SignUp = () => {
   }
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    const passwordRegex =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     const passwordCurrent = e.target.value;
     setPassword(passwordCurrent);
     if (!passwordRegex.test(passwordCurrent)) {
-      setPasswordMessage("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
+      setPasswordMessage(
+        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
+      );
       setIsPassword(false);
     } else {
-      setPasswordMessage("");
+      setPasswordMessage('');
       setIsPassword(true);
     }
   };
 
   const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordCheck(e.target.value);
-    if (e.target.value === "") {
-      setPasswordCheckMessage("비밀번호를 재입력해주세요");
+    if (e.target.value === '') {
+      setPasswordCheckMessage('비밀번호를 재입력해주세요');
     } else if (password && e.target.value !== password) {
       setMismatchError(true);
-      setPasswordCheckMessage("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+      setPasswordCheckMessage(
+        '비밀번호가 일치하지 않습니다. 다시 확인해주세요.',
+      );
     } else {
       setMismatchError(false);
-      setPasswordCheckMessage("비밀번호가 일치합니다.");
+      setPasswordCheckMessage('비밀번호가 일치합니다.');
     }
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!mismatchError) {
-      console.log("서버로 회원가입하기");
+      console.log('서버로 회원가입하기');
     }
   };
 
@@ -111,10 +116,10 @@ const SignUp = () => {
     if (name && year && month && date && isCertify && selectedSex && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
-      console.log("정보 등록 완료");
-      navigate("/sign-up-suc");
+      console.log('정보 등록 완료');
+      navigate('/sign-up/success');
     } else {
-      alert("입력값을 확인해주세요.");
+      alert('입력값을 확인해주세요.');
     }
   };
 
@@ -200,14 +205,22 @@ const SignUp = () => {
                 <SignupPageStyles.SexButton
                   value="미표기"
                   onClick={handleSexSelect}
-                  selected={selectedSex === "미표기"}
+                  selected={selectedSex === '미표기'}
                 >
                   미표기
                 </SignupPageStyles.SexButton>
-                <SignupPageStyles.SexButton value="남자" onClick={handleSexSelect} selected={selectedSex === "남자"}>
+                <SignupPageStyles.SexButton
+                  value="남자"
+                  onClick={handleSexSelect}
+                  selected={selectedSex === '남자'}
+                >
                   남자
                 </SignupPageStyles.SexButton>
-                <SignupPageStyles.SexButton value="여자" onClick={handleSexSelect} selected={selectedSex === "여자"}>
+                <SignupPageStyles.SexButton
+                  value="여자"
+                  onClick={handleSexSelect}
+                  selected={selectedSex === '여자'}
+                >
                   여자
                 </SignupPageStyles.SexButton>
               </SignupPageStyles.SexSelectBox>
@@ -239,7 +252,9 @@ const SignUp = () => {
               </SignupPageStyles.DupButton>
               )}
               </SignupPageStyles.TwoLabel>
-              {!isEmail && <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>}
+              {!isEmail && (
+                <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>
+              )}
               <SignupPageStyles.Avail>{avaMessage}</SignupPageStyles.Avail>
               </SignupPageStyles.Label>
               <SignupPageStyles.Label>
@@ -251,25 +266,32 @@ const SignUp = () => {
                 value={password}
                 onChange={onChangePassword}
               ></SignupPageStyles.InputBox>
-              {!isPassword && <SignupPageStyles.Error>{passwordMessage}</SignupPageStyles.Error>}
+              {!isPassword && (
+                <SignupPageStyles.Error>
+                  {passwordMessage}
+                </SignupPageStyles.Error>
+              )}
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
-            <span>비밀번호 재입력</span>
-            <SignupPageStyles.InputBox
-              type="password"
-              id="passwordCheck"
-              name="passwordCheck"
-              value={passwordCheck}
-              onChange={onChangePasswordCheck}
-            ></SignupPageStyles.InputBox>
-            {(passwordCheck || passwordCheck === "") && (
-              mismatchError ? (
-                <SignupPageStyles.Error>{passwordcheckMessage}</SignupPageStyles.Error>
-              ) : (
-                <SignupPageStyles.PwDiv>{passwordcheckMessage}</SignupPageStyles.PwDiv>
-              )
-            )}
-          </SignupPageStyles.Label>
+              <span>비밀번호 재입력</span>
+              <SignupPageStyles.InputBox
+                type="password"
+                id="passwordCheck"
+                name="passwordCheck"
+                value={passwordCheck}
+                onChange={onChangePasswordCheck}
+              ></SignupPageStyles.InputBox>
+              {(passwordCheck || passwordCheck === '') &&
+                (mismatchError ? (
+                  <SignupPageStyles.Error>
+                    {passwordcheckMessage}
+                  </SignupPageStyles.Error>
+                ) : (
+                  <SignupPageStyles.PwDiv>
+                    {passwordcheckMessage}
+                  </SignupPageStyles.PwDiv>
+                ))}
+            </SignupPageStyles.Label>
           </SignupPageStyles.Form>
           </SignupPageStyles.InputSection>
           <SignupPageStyles.ButtonSection>
@@ -277,13 +299,12 @@ const SignUp = () => {
             <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
             </SignupPageStyles.SucButton>
-            ) : (
-            <SignupPageStyles.Button>
-              가입하기
-            </SignupPageStyles.Button>)}
-            <SignupPageStyles.TextTotalComponent>
+          ) : (
+            <SignupPageStyles.Button>가입하기</SignupPageStyles.Button>
+          )}
+          <SignupPageStyles.TextTotalComponent>
             <SignupPageStyles.TextDiv>
-             이미 계정이 있으신가요? 
+              이미 계정이 있으신가요?
             </SignupPageStyles.TextDiv>
             <StyledLink to="/sign-in">로그인</StyledLink>
             </SignupPageStyles.TextTotalComponent>
@@ -322,7 +343,7 @@ const SignUp = () => {
             </SignupPageStyles.RetryButton>
           </SignupPageStyles.ModalDiv>
         </BlurBackground>
-      )}  
+      )}
     </SignupPageStyles.Wrapper>
   );
 };
@@ -333,8 +354,8 @@ export const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
   text-align: center;
   text-decoration: none;
-  font-size: 14px; 
+  font-size: 14px;
   font-weight: 500;
   line-height: 160%;
-  margin : 0px 0px 0px 10px;
+  margin: 0px 0px 0px 10px;
 `;

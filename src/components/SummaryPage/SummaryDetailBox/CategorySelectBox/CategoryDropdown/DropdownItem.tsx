@@ -1,19 +1,17 @@
 import { useState } from 'react';
+import { IFolderProps } from 'types/category';
 
 import DownIcon from '@/assets/icons/down.svg?react';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-  items?: Item[];
-}
+import { DropdownTopCategoryName } from '@/styles/SummaryPage';
 
 type Props = {
-  category: Item;
+  category: IFolderProps;
+  selectedId?: number;
+  onSelect: (categoryId: number) => void;
 };
 
-const DropdownItem = ({ category }: Props) => {
+const DropdownItem = ({ category, selectedId, onSelect }: Props) => {
   const [isShow, setIsShow] = useState(false);
 
   const dynamicStyles = {
@@ -21,30 +19,33 @@ const DropdownItem = ({ category }: Props) => {
       transform: isShow ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
     },
     subCategory: {
-      height: isShow ? (category.items?.length || 0) * 46 : 0,
+      height: isShow ? (category.subFolders.length || 0) * 46 : 0,
     },
-  };
-
-  const handleItemClick = async (id: number) => {
-    // API 요청
-    console.log(id);
   };
 
   return (
     <>
-      <li onClick={() => setIsShow(!isShow)}>
-        <DownIcon width={18} height={18} style={dynamicStyles.icon} />
+      <li className={selectedId === category.categoryId ? 'active' : ''}>
+        <DownIcon
+          width={18}
+          height={18}
+          style={dynamicStyles.icon}
+          onClick={() => setIsShow(!isShow)}
+        />
 
-        {category.text}
+        <DropdownTopCategoryName onClick={() => onSelect(category.categoryId)}>
+          {category.name}
+        </DropdownTopCategoryName>
       </li>
 
       <ul style={dynamicStyles.subCategory}>
-        {category.items?.map((subCategory) => (
+        {category.subFolders.map((subFolder) => (
           <li
-            key={subCategory.id}
-            onClick={() => handleItemClick(subCategory.id)}
+            className={selectedId === subFolder.categoryId ? 'active' : ''}
+            key={subFolder.categoryId}
+            onClick={() => onSelect(subFolder.categoryId)}
           >
-            {subCategory.text}
+            {subFolder.name}
           </li>
         ))}
       </ul>

@@ -1,30 +1,53 @@
-import React from 'react'
-import { RecentVideosContainer, VideoButton, VideosSubtitle, VideosTitle } from '@/styles/HomepageStyle';
+import {
+  RecentVideosContainer,
+  VideoButton,
+  VideosSubtitle,
+  VideosTitle,
+} from '@/styles/HomepageStyle';
+import { Link } from 'react-router-dom';
+import MoveIcon from '@/assets/icons/move.svg?react';
+import CardImage from '@/assets/empty-video.png';
+import { CardContainer } from '@/styles/category/Card.style';
 import Card from '../category/Card';
+import { IVideoProps } from 'types/videos';
 
-const RecentVideos: React.FC = () => {
+interface IRecentVideosProp {
+  videos: IVideoProps[];
+}
+
+const RecentVideos = ({ videos }: IRecentVideosProp) => {
   return (
-    <RecentVideosContainer>
-      <div className='container'>
-        <VideosTitle>최근 읽은 영상</VideosTitle>
+    <RecentVideosContainer length={videos.length}>
+      <div className="container">
+        <div className="title-container">
+          <VideosTitle>최근 읽은 영상</VideosTitle>
+          {videos.length >= 3 && (
+            <Link to="/category/recent" className="icon-wrapper">
+              <MoveIcon width={28} height={28} />
+            </Link>
+          )}
+        </div>
 
-        {/* 영상 개수 0개일 때  */}
-        <>
-          <div className='empty-video'>
-            <img src='/src/assets/empty-video.png' alt='비어있는 비디오 이미지' />
+        {videos.length === 0 && (
+          <div className="empty-container">
+            <div className="empty-video">
+              <img src={CardImage} alt="비어있는 비디오 이미지" />
+            </div>
+            <VideosSubtitle>
+              처음 방문하셨나요? <br /> 아직 정리해본 영상이 없어요!
+            </VideosSubtitle>
+            <VideoButton>
+              <h2 className="button-text">영상 정리해보기</h2>
+            </VideoButton>
           </div>
-          <VideosSubtitle>
-            처음 방문하셨나요? <br /> 아직 정리해본 영상이 없어요!
-          </VideosSubtitle>
-          <VideoButton>
-            <h2 className='button-text'>영상 정리해보기</h2>
-          </VideoButton>
-        </>
-
-        {/* 영상 개수 3개 이하일 때  */}
-
-        {/* 영상 개수 4개 이상일 때 '더보기 버튼' 활성화 & 전체 카드 모두 보여짐 */}
-       
+        )}
+        {videos.length > 0 && (
+          <CardContainer>
+            {videos.slice(0, 3).map((video) => (
+              <Card key={video.video_id} mode="default" video={video} />
+            ))}
+          </CardContainer>
+        )}
       </div>
     </RecentVideosContainer>
   );

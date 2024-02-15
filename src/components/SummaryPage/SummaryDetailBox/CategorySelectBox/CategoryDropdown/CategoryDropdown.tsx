@@ -1,24 +1,29 @@
+import { useRecoilValue } from 'recoil';
+
 import { Dropdown } from '@/styles/SummaryPage';
+
+import { categoryState } from '@/stores/category';
 
 import DropdownItem from './DropdownItem';
 
-// 임시 타입
-interface Item {
-  id: number;
-  text: string;
-  items?: Item[];
-}
-
 type Props = {
-  categoryList: Item[];
+  selectedId?: number;
+  onSelect: (categoryId: number) => void;
 };
 
-const CategoryDropdown = ({ categoryList }: Props) => {
+const CategoryDropdown = ({ selectedId, onSelect }: Props) => {
+  const categories = useRecoilValue(categoryState);
+
   return (
     <Dropdown onClick={(e) => e.stopPropagation()}>
       <ul>
-        {categoryList.map((category) => (
-          <DropdownItem key={category.id} category={category} />
+        {categories.map((category) => (
+          <DropdownItem
+            key={category.categoryId}
+            category={category}
+            selectedId={selectedId}
+            onSelect={onSelect}
+          />
         ))}
       </ul>
     </Dropdown>
