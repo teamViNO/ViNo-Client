@@ -124,7 +124,11 @@ export const DropdownWrap = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
-    background-color: ${theme.color.gray100};
+    background-color: ${(props) => props.theme.color.gray200};
+
+    &.changed {
+      background-color: ${(props) => props.theme.color.green400};
+      cursor: pointer;
+    }
   }
 `;

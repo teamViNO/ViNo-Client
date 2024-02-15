@@ -22,12 +22,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
 
   const endBox = useRef<HTMLDivElement>(null);
 
-  const onFileClick = async (
-    e: React.MouseEvent,
-    videoId: number,
-    categoryId: number,
-  ) => {
-    e.stopPropagation();
+  const onFileClick = async (videoId: number, categoryId: number) => {
     const res = await createDummyVideoToMine(videoId, categoryId);
     if (res.isSuccess)
       await getUnReadDummyVideos().then((res) =>

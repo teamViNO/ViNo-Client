@@ -14,21 +14,17 @@ import { CategoryDropdown } from './CategoryDropdown';
 type Props = {
   selectedCategoryId?: number;
   onSelect: (categoryId: number) => void;
-  onFileClick?: (e: React.MouseEvent) => void;
 };
 
-const CategorySelectBox = ({
-  selectedCategoryId,
-  onSelect,
-  onFileClick,
-}: Props) => {
+const CategorySelectBox = ({ selectedCategoryId, onSelect }: Props) => {
   const userToken = useRecoilValue(userTokenState);
   const categories = useRecoilValue(categoryState);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(selectedCategoryId);
 
   const selectedCategory =
-    selectedCategoryId &&
+    selectedId &&
     categories
       .reduce(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +35,7 @@ const CategorySelectBox = ({
         ],
         [],
       )
-      .find((category) => category.categoryId === selectedCategoryId);
+      .find((category) => category.categoryId === selectedId);
 
   // 다른 영역 클릭 시 dropdown 안보여지게 하기
   const [ref] = useOutsideClick<HTMLDivElement>(() => {
@@ -53,13 +49,22 @@ const CategorySelectBox = ({
   };
 
   const handleSelect = (categoryId: number) => {
-    onSelect(categoryId);
+    setSelectedId(categoryId);
     setIsOpen(false);
   };
 
+  const handleClick = () => {
+    if (!selectedId || selectedId === selectedCategoryId) return;
+
+    onSelect(selectedId);
+  };
+
   return (
-    <div ref={ref} style={{ display: 'flex', gap: 8 }} onClick={handleBoxClick}>
-      <div style={{ position: 'relative', flex: '1 1 auto' }}>
+    <div ref={ref} style={{ display: 'flex', gap: 8 }}>
+      <div
+        style={{ position: 'relative', flex: '1 1 auto' }}
+        onClick={handleBoxClick}
+      >
         <div className="select-box">
           <span>
             {userToken
@@ -72,14 +77,16 @@ const CategorySelectBox = ({
           <DownIcon width={18} height={18} />
         </div>
 
-        {isOpen && <CategoryDropdown onSelect={handleSelect} />}
+        {isOpen && (
+          <CategoryDropdown selectedId={selectedId} onSelect={handleSelect} />
+        )}
       </div>
 
       <span
         className={`icon-button ${!userToken && 'disabled'} ${
-          selectedCategory ? 'selected' : 'not-selected'
+          selectedCategoryId !== selectedId ? 'changed' : ''
         }`}
-        onClick={onFileClick}
+        onClick={handleClick}
       >
         <OpenFileIcon width={28} height={28} />
       </span>

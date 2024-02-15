@@ -50,14 +50,11 @@ export const DetailBox = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
+    background-color: ${(props) => props.theme.color.gray200};
 
-    &.selected {
+    &.changed {
       background-color: ${(props) => props.theme.color.green400};
-    }
-
-    &.not-selected {
-      background-color: ${(props) => props.theme.color.gray200};
+      cursor: pointer;
     }
 
     &.disabled svg {
@@ -327,7 +324,11 @@ export const Dropdown = styled.div`
     color: ${(props) => props.theme.color.gray400};
     transition: 0.1s;
     cursor: pointer;
-    ${(props) => props.theme.typography.Body3}
+    ${(props) => props.theme.typography.Body3};
+
+    &.active {
+      color: ${(props) => props.theme.color.gray500};
+    }
 
     &:hover {
       background-color: ${(props) => props.theme.color.gray100};
