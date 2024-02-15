@@ -34,8 +34,6 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
     const res = await createDummyVideoToMine(videoId, categoryId);
     if (res.isSuccess)
       await getDummyVideos().then((res) => setDummyVideos(res.result.videos));
-
-    // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
   };
 
   useEffect(() => {
