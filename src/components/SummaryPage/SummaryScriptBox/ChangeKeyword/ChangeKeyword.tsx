@@ -7,10 +7,7 @@ import { summaryTransformModalState } from '@/stores/modal';
 import ChangeKeywordModal from './ChangeKeywordModal';
 
 type Props = {
-  searchIndex: number;
-  totalCount: number;
   onChange: (keyword: string) => void;
-  onChangeSearchIndex: (index: number) => void;
 };
 
 const ChangeKeyword = (props: Props) => {

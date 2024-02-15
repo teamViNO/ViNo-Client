@@ -1,5 +1,10 @@
 import { APIBaseResponse, APIResponse } from '@/models/config/axios';
-import { IVideo, UpdateVideoRequest, VideoVersionType } from '@/models/video';
+import {
+  IVideo,
+  UpdateVideoCategoryRequest,
+  UpdateVideoRequest,
+  VideoVersionType,
+} from '@/models/video';
 
 import axios from './config/instance';
 import axiosInstance from './config/instance';
@@ -40,6 +45,16 @@ export const updateVideoAPI = (
   data: UpdateVideoRequest,
 ) => {
   return axios.patch<APIResponse<IVideo>>(PREFIX + `/${videoId}`, data);
+};
+
+export const updateVideoCategoryIdAPI = (
+  categoryId: number,
+  data: UpdateVideoCategoryRequest,
+) => {
+  return axios.patch<APIResponse<IVideo>>(
+    PREFIX + `/${categoryId}/update`,
+    data,
+  );
 };
 
 export const createVideoSummaryAPI = (videoId: number, content: string[]) => {

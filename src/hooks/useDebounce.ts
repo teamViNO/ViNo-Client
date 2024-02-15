@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 const useDebounce = <T>(func: () => void, value: T, delay = 500) => {
-  const callback = useCallback(func, [func, value]);
+  const callback = useCallback(func, [value]);
 
   useEffect(() => {
     const timer = setTimeout(callback, delay);
