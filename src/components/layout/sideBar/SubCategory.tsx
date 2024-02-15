@@ -113,13 +113,11 @@ const SubCategory = ({
               to={`/category/${topId}/${categoryId}`}
             >
               {edit}
-              {subId === categoryId && (
-                <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
-                  <MoreOptionsSvg width={16} height={16} />
-                </SubCategoryStyles.ShowOptionButton>
-              )}
+              <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
+                <MoreOptionsSvg width={16} height={16} />
+              </SubCategoryStyles.ShowOptionButton>
             </SubCategoryStyles.SubFolder>
-            {subFolderOptionModalOpen && subId === categoryId && (
+            {subFolderOptionModalOpen && (
               <Option
                 options={options}
                 handleOptionClick={handleOptionClick}
