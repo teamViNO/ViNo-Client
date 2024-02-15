@@ -1,90 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-import firstImg from '../assets/first.png';
 import errorImg from '@/assets/Error.png';
-import calendar from '../assets/calendar.png';
 import CloseIcon from '@/assets/icons/close.svg?react';
-import axios, { AxiosError } from 'axios';
-import { checkEmailAPI } from '@/apis/user';
+import { AxiosError } from 'axios';
+import { checkEmailAPI, joinAPI } from '@/apis/user';
 
 import { BlurBackground } from '@/styles/modals/common.style';
+import Calendar from "@/components/Calendar";
+import ImageSlider from "@/components/ImageSlider";
+import PhoneCheck from '@/components/PhoneCheck';
+import { Link } from 'react-router-dom';
 
-interface SignUpProps {}
 
-const SignUp: React.FC<SignUpProps> = () => {
-  const [selectedSex, setSelectedSex] = useState<string | undefined>();
-  const [name, setName] = useState<string>('');
-  const [phonenumber, setPhonenumber] = useState<string>('');
-  const [year, setYear] = useState<string>('');
-  const [month, setMonth] = useState<string>('');
-  const [date, setDate] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [passwordCheck, setPasswordCheck] = useState<string>('');
-  const [mismatchError, setMismatchError] = useState<boolean>(false);
+const SignUp = () => {
+  const [name, setName] = useState<string>("");
+  const [year, setYear] = useState<string>("");
+  const [month, setMonth] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [selectedSex, setSelectedSex] = useState<string>('');
+  const [phonenumber, setPhonenumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordCheck, setPasswordCheck] = useState<string>("");
 
-  const [isPhonenumber, setIsPhonenumber] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPassword, setIsPassword] = useState<boolean | string>('');
-
-  const [emailMessage, setEmailMessage] = useState<string>('');
-  const [avaMessage, setAvaMessage] = useState<string>('');
-  const [passwordMessage, setPasswordMessage] = useState<string>(
-    '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
-  );
-  const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>(
-    '비밀번호 확인을 위해 다시 한 번 입력해주세요',
-  );
-  const [errMessage, setErrMessage] = useState('');
-
+  const [isPassword, setIsPassword] = useState<boolean | string>("");
+  const [isCertify, setIsCertify] = useState(false);
+  const [emailMessage, setEmailMessage] = useState<string>("");
+  const [avaMessage, setAvaMessage] = useState<string>("");
+  const [passwordMessage, setPasswordMessage] = useState<string>("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
+  const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
+  const [mismatchError, setMismatchError] = useState<boolean>(false);
+  
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
-
-  const handleSexSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e);
-    e.preventDefault();
-    setSelectedSex((e.target as HTMLButtonElement).value);
-  };
-
-  useEffect(() => {
-    console.log(selectedSex);
-  }, [selectedSex]);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    console.log(name);
   };
 
-  const onChangeYear = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYear(e.target.value);
-    console.log(year);
-  };
-
-  const onChangeMonth = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMonth(e.target.value);
-    console.log(month);
-  };
-
-  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
-    console.log(date);
-  };
-
-  const onChangePhonenumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const phonenumberRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-    const phonenumberCurrent = e.target.value;
-    setPhonenumber(phonenumberCurrent);
-    console.log(phonenumber);
-    if (!phonenumberRegex.test(phonenumberCurrent)) {
-      setErrMessage('올바른 전화번호 형식이 아닙니다.');
-      setIsPhonenumber(false);
-    } else {
-      setErrMessage('');
-      setIsPhonenumber(true);
-    }
+  const handleSexSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setSelectedSex((e.target as HTMLButtonElement).value);
   };
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,8 +58,20 @@ const SignUp: React.FC<SignUpProps> = () => {
       setEmailMessage('');
       setIsEmail(true);
     }
-    console.log(email);
   };
+
+  const id_overlap_check = async () => {
+    try {
+      const { code } = (await checkEmailAPI({ email })).data;
+      console.log(code)
+      setAvaMessage('사용 가능한 이메일이에요!');
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e.response?.data.code)
+        setIsOpenOverlapModal(true)
+      }
+    }
+  }
 
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const passwordRegex =
@@ -131,56 +102,18 @@ const SignUp: React.FC<SignUpProps> = () => {
       setMismatchError(false);
       setPasswordCheckMessage('비밀번호가 일치합니다.');
     }
-    console.log(passwordCheck);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(
-      name,
-      year,
-      month,
-      date,
-      selectedSex,
-      phonenumber,
-      email,
-      password,
-      passwordCheck,
-    );
     if (!mismatchError) {
       console.log('서버로 회원가입하기');
     }
   };
 
-  const id_overlap_check: React.MouseEventHandler<
-    HTMLButtonElement
-  > = async () => {
-    try {
-      const { code } = (await checkEmailAPI({ email })).data;
-      console.log(code);
-      setAvaMessage('사용 가능한 이메일이에요!');
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        console.log(e.response?.data.code);
-        setIsOpenOverlapModal(true);
-      }
-    }
-  };
-
   const navigate = useNavigate();
   const onApply = () => {
-    if (
-      name &&
-      year &&
-      month &&
-      date &&
-      selectedSex &&
-      phonenumber &&
-      email &&
-      password &&
-      passwordCheck &&
-      !mismatchError
-    ) {
+    if (name && year && month && date && isCertify && selectedSex && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
       console.log('정보 등록 완료');
@@ -192,23 +125,30 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   const onRegisterUserInfo = async () => {
     try {
-      const res = await axios.post('', {
-        name: name,
-        birth: year + ':' + month + ':' + date,
-        email: email,
-        password: password,
-        phonenumber: phonenumber,
-      });
-      console.log(res);
+        const response = (await joinAPI({
+        name : name,
+        email : email,
+        password : password,
+        check_password: passwordCheck,
+        birth_date: year + month + date,
+        gender: selectedSex === '미표기' ? null : selectedSex,
+        phone_number: phonenumber,
+      })).data
+      console.log(response);
     } catch (err) {
       console.log(err);
     }
   };
 
+  //const startTimer = () => setTime(5 * 60); 
+  //const stopTimer = () => {
+    //setIsTimer(false);
+  //};
+
   return (
     <SignupPageStyles.Wrapper>
       <SignupPageStyles.LogoSection>
-        <img src={firstImg} alt="로고 이미지" />
+        <ImageSlider/>
       </SignupPageStyles.LogoSection>
       <SignupPageStyles.MainSection>
         <SignupPageStyles.InputSection>
@@ -238,7 +178,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   name="year"
                   value={year}
                   placeholder="YYYY"
-                  onChange={onChangeYear}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -246,7 +186,7 @@ const SignUp: React.FC<SignUpProps> = () => {
                   name="month"
                   value={month}
                   placeholder="MM"
-                  onChange={onChangeMonth}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -254,9 +194,9 @@ const SignUp: React.FC<SignUpProps> = () => {
                   name="date"
                   value={date}
                   placeholder="DD"
-                  onChange={onChangeDate}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
-                <img src={calendar} alt="달력 이미지" />
+                <Calendar setYear={setYear} setMonth={setMonth} setDate={setDate}/>
               </SignupPageStyles.BirthInputSection>
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
@@ -284,51 +224,40 @@ const SignUp: React.FC<SignUpProps> = () => {
                   여자
                 </SignupPageStyles.SexButton>
               </SignupPageStyles.SexSelectBox>
-            </SignupPageStyles.Label>
-            <SignupPageStyles.Label>
-              <span>전화번호</span>
-              <SignupPageStyles.InputBox
-                type="text"
-                id="phonenumber"
-                name="phonenumber"
-                value={phonenumber}
-                placeholder="휴대폰 번호 입력 (-제외)"
-                onChange={onChangePhonenumber}
-              ></SignupPageStyles.InputBox>
-              {!isPhonenumber && (
-                <SignupPageStyles.Error>{errMessage}</SignupPageStyles.Error>
-              )}
-            </SignupPageStyles.Label>
-            <SignupPageStyles.Label>
+              </SignupPageStyles.Label>
+              <SignupPageStyles.Label>
+              <PhoneCheck tel={phonenumber} setTel={setPhonenumber} setCheck={setIsCertify}/>
+              </SignupPageStyles.Label>
+              <SignupPageStyles.Label>
               <span>이메일 주소</span>
               <SignupPageStyles.TwoLabel>
-                <SignupPageStyles.EmailInputBox
-                  type="text"
-                  id="email"
-                  name="email"
-                  value={email}
-                  placeholder="abcd@email.com"
-                  onChange={onChangeEmail}
-                ></SignupPageStyles.EmailInputBox>
-                {isEmail ? (
-                  <SignupPageStyles.DupSucButton
-                    id="overlap_button"
-                    onClick={id_overlap_check}
-                  >
-                    중복 확인하기
-                  </SignupPageStyles.DupSucButton>
-                ) : (
-                  <SignupPageStyles.DupButton>
-                    중복 확인하기
-                  </SignupPageStyles.DupButton>
-                )}
+              <SignupPageStyles.EmailInputBox
+                type="text"
+                id="email"
+                name="email"
+                value={email}
+                placeholder="abcd@email.com"
+                onChange={onChangeEmail}
+                // error={!isEmail}
+              ></SignupPageStyles.EmailInputBox>
+              {isEmail  ? (
+              <SignupPageStyles.DupSucButton 
+                id ="overlap_button" 
+                onClick={id_overlap_check}>
+                중복 확인하기
+              </SignupPageStyles.DupSucButton>
+              ) : (
+              <SignupPageStyles.DupButton>
+                중복 확인하기
+              </SignupPageStyles.DupButton>
+              )}
               </SignupPageStyles.TwoLabel>
               {!isEmail && (
                 <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>
               )}
               <SignupPageStyles.Avail>{avaMessage}</SignupPageStyles.Avail>
-            </SignupPageStyles.Label>
-            <SignupPageStyles.Label>
+              </SignupPageStyles.Label>
+              <SignupPageStyles.Label>
               <span>비밀번호</span>
               <SignupPageStyles.InputBox
                 type="password"
@@ -364,19 +293,9 @@ const SignUp: React.FC<SignUpProps> = () => {
                 ))}
             </SignupPageStyles.Label>
           </SignupPageStyles.Form>
-        </SignupPageStyles.InputSection>
-        <SignupPageStyles.ButtonSection>
-          {name &&
-          year &&
-          month &&
-          date &&
-          selectedSex &&
-          isPhonenumber &&
-          isEmail &&
-          avaMessage &&
-          isPassword &&
-          passwordCheck &&
-          !mismatchError ? (
+          </SignupPageStyles.InputSection>
+          <SignupPageStyles.ButtonSection>
+          {name && year && month && date && selectedSex  && isEmail && avaMessage && isPassword && passwordCheck && !mismatchError  ? (
             <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
             </SignupPageStyles.SucButton>
@@ -388,12 +307,12 @@ const SignUp: React.FC<SignUpProps> = () => {
               이미 계정이 있으신가요?
             </SignupPageStyles.TextDiv>
             <StyledLink to="/sign-in">로그인</StyledLink>
-          </SignupPageStyles.TextTotalComponent>
-        </SignupPageStyles.ButtonSection>
-      </SignupPageStyles.MainSection>
-      {isOpenOverlapModal && (
-        <BlurBackground>
-          <SignupPageStyles.ModalDiv>
+            </SignupPageStyles.TextTotalComponent>
+            </SignupPageStyles.ButtonSection>
+            </SignupPageStyles.MainSection>
+            {isOpenOverlapModal && (
+            <BlurBackground>
+            <SignupPageStyles.ModalDiv>
             <CloseIcon
               width={28}
               height={28}
