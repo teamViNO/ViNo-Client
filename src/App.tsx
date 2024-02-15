@@ -11,7 +11,7 @@ import CategoryPage from '@/pages/CategoryPage';
 import FindEmailPage from '@/pages/FindEmailPage';
 import FindPasswordPage from '@/pages/FindPasswordPage';
 import HomePage from '@/pages/HomePage';
-// import GuestPage from './pages/GuestPage';
+//import GuestPage from '@/pages/GuestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
 import SearchResult from './pages/SearchResultPage';

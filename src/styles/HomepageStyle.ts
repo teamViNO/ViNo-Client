@@ -204,7 +204,7 @@ export const VideosSubtitle = styled.h4`
 
 export const VideoButton = styled.button`
   padding: 12px 32px;
-  font-size: 1rem;
+  ${theme.typography.Subheader2}
   border: none;
   width: 190px;
   height: 56px;
