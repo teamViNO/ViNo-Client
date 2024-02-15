@@ -1,54 +1,40 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
-import firstImg from "../assets/first.png";
 import errorImg from '@/assets/Error.png';
-import calendar from "../assets/calendar.png";
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { AxiosError } from "axios";
 import { checkEmailAPI } from "@/apis/user";
-import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { joinAPI } from '@/apis/user';
-
+import PhoneCheck from "@/components/PhoneCheck";
 import { BlurBackground } from '@/styles/modals/common.style';
+import Calendar from "@/components/Calendar";
+import ImageSlider from "@/components/ImageSlider";
 
-interface SignUpProps {
-  setCheck : (value: boolean) => void;
-}
 
-const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
+const SignUp = () => {
   const [name, setName] = useState<string>("");
   const [year, setYear] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [date, setDate] = useState<string>("");
-  const [selectedSex, setSelectedSex] = useState<string | undefined>();
+  const [selectedSex, setSelectedSex] = useState<string>('');
   const [phonenumber, setPhonenumber] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
 
-  const [isPhonenumber, setIsPhonenumber] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean | string>("");
-
+  const [isCertify, setIsCertify] = useState(false);
   const [emailMessage, setEmailMessage] = useState<string>("");
   const [avaMessage, setAvaMessage] = useState<string>("");
   const [passwordMessage, setPasswordMessage] = useState<string>("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
   const [mismatchError, setMismatchError] = useState<boolean>(false);
-
-  const [certifyNum, setCertifyNum] = useState('');
-  const [token,setToken] = useState('');
-  const [time, setTime] = useState(300);
-  const [isCheck, SetIsCheck] = useState(false);
-  const [isSend, setIsSend] = useState(false);
-  const [isCertify, setIsCertify] = useState(false);
-  const [isTimer, setIsTimer] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
+  
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,90 +45,6 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
     e.preventDefault();
     setSelectedSex((e.target as HTMLButtonElement).value);
   };
-
-  const onChangeYear = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYear(e.target.value);
-  };
-
-  const onChangeMonth = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMonth(e.target.value);
-  };
-
-  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(e.target.value);
-  };
-  
-  const onChangePhonenumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const phonenumberRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-    const phonenumberCurrent = e.target.value;
-    setPhonenumber(phonenumberCurrent);
-    if (!phonenumberRegex.test(phonenumberCurrent)) {
-      setIsPhonenumber(false);
-    } else {
-      setIsPhonenumber(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isTimer) {
-      const intervalId = setInterval(() => {
-        setTime(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(intervalId);
-            setIsTimer(false);
-            return 0;
-          } else {
-            return prevTime - 1;
-          }
-        });
-      }, 1000);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [isTimer]);
-
-  const onChangeCertifyInput = (e : React.ChangeEvent<HTMLInputElement>) => {
-    const certifyRegex = /^\d{7}$/;
-    setCertifyNum(e.target.value);
-    if(certifyRegex.test(e.target.value)){
-      setIsCertify(true);
-    } else {
-      setIsCertify(false);
-    }
-  }
-
-  const handleCheckCertify = async () => {
-    setIsTimer(false);
-    SetIsCheck(true);
-    const response = (await checkSMSAPI({
-    verification_code : Number(certifyNum),
-    }, token))
-    if(response.data.success){
-        setIsSuccess(true);
-        setCheck(true);
-    } else {
-        setIsSuccess(false);
-    }
-}
-
-  const handleCertifyNum = async () => {
-    setIsSend(true)
-    setIsTimer(true);
-    if(isSend){
-        SetIsCheck(false);
-        setTime(10);
-    }
-    const response = (await sendSMSAPI({
-    phone_number : phonenumber
-    }))
-
-    if(response.data.success){
-        setToken(response.data.result.token);
-    }
-  }
-
-  const minutes = Math.floor(time / 60); // 분
-  const seconds = time % 60;  
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
@@ -158,7 +60,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
     }
   };
 
-  const id_overlap_check: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+  const id_overlap_check = async () => {
     try {
       const { code } = (await checkEmailAPI({ email })).data;
       console.log(code)
@@ -206,7 +108,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
 
   const navigate = useNavigate();
   const onApply = () => {
-    if (name && year && month && date && selectedSex && phonenumber && email && password && passwordCheck && !mismatchError) {
+    if (name && year && month && date && isCertify && selectedSex && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
       console.log("정보 등록 완료");
@@ -218,13 +120,13 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
 
   const onRegisterUserInfo = async () => {
     try {
-      const response = (await joinAPI({
+        const response = (await joinAPI({
         name : name,
         email : email,
         password : password,
         check_password: passwordCheck,
         birth_date: year + month + date,
-        gender: selectedSex,
+        gender: selectedSex === '미표기' ? null : selectedSex,
         phone_number: phonenumber,
       })).data
       console.log(response);
@@ -241,7 +143,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
   return (
     <SignupPageStyles.Wrapper>
       <SignupPageStyles.LogoSection>
-        <img src={firstImg} alt="로고 이미지" />
+        <ImageSlider/>
       </SignupPageStyles.LogoSection>
       <SignupPageStyles.MainSection>
         <SignupPageStyles.InputSection>
@@ -271,7 +173,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
                   name="year"
                   value={year}
                   placeholder="YYYY"
-                  onChange={onChangeYear}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -279,7 +181,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
                   name="month"
                   value={month}
                   placeholder="MM"
-                  onChange={onChangeMonth}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
                 <SignupPageStyles.BirthInputBox
                   type="text"
@@ -287,9 +189,9 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
                   name="date"
                   value={date}
                   placeholder="DD"
-                  onChange={onChangeDate}
+                  readOnly={true}
                 ></SignupPageStyles.BirthInputBox>
-                <img src={calendar} alt="달력 이미지" />
+                <Calendar setYear={setYear} setMonth={setMonth} setDate={setDate}/>
               </SignupPageStyles.BirthInputSection>
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
@@ -311,49 +213,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
               </SignupPageStyles.SexSelectBox>
               </SignupPageStyles.Label>
               <SignupPageStyles.Label>
-              <span>전화번호</span>
-              <SignupPageStyles.ThreeLabel>
-              <SignupPageStyles.UserDiv>
-              <SignupPageStyles.PhoneInputBox
-                type="text"
-                id="phonenumber"
-                name="phonenumber"
-                value={phonenumber}
-                placeholder="휴대폰 번호 입력 (-제외)"
-                onChange={onChangePhonenumber}
-                style={{width : '326px'}}
-                readOnly={isSuccess}
-              ></SignupPageStyles.PhoneInputBox>
-              <SignupPageStyles.UserButton 
-                onClick = {handleCertifyNum} 
-                disabled = {!isPhonenumber || isSuccess}>
-                {isSend ? '인증번호 재전송' : '인증번호 받기'}
-              </SignupPageStyles.UserButton>
-              </SignupPageStyles.UserDiv>
-              {isSend ? <SignupPageStyles.UserDiv>
-              <SignupPageStyles.InputBox
-                type='text'
-                id='certify'
-                value={certifyNum}
-                placeholder='인증번호 입력'
-                onChange={(e) => onChangeCertifyInput(e)}
-                style={{width : '326px'}}
-                readOnly={isSuccess}/>
-              <SignupPageStyles.UserButton 
-                onClick = {handleCheckCertify} 
-                disabled = {time <= 0 || !isCertify || isSuccess}>
-                인증번호 확인
-              </SignupPageStyles.UserButton>
-              </SignupPageStyles.UserDiv>: ''}
-              {isSend && (isCheck === false) && <SignupPageStyles.SendMsg>
-                인증번호가 발송되었어요 (유효시간 {minutes}:{seconds})
-                </SignupPageStyles.SendMsg>}
-              {isCheck === true && 
-              <SignupPageStyles.SendMsg 
-                style = {{color : isSuccess ? '#3681FE' : '#FF3A4A'}}>
-                {isSuccess ? '인증이 완료되었어요!' : '인증번호가 잘못되었어요'}
-                </SignupPageStyles.SendMsg>}
-              </SignupPageStyles.ThreeLabel>
+              <PhoneCheck tel={phonenumber} setTel={setPhonenumber} setCheck={setIsCertify}/>
               </SignupPageStyles.Label>
               <SignupPageStyles.Label>
               <span>이메일 주소</span>
@@ -365,13 +225,19 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
                 value={email}
                 placeholder="abcd@email.com"
                 onChange={onChangeEmail}
+                // error={!isEmail}
               ></SignupPageStyles.EmailInputBox>
+              {isEmail  ? (
               <SignupPageStyles.DupSucButton 
                 id ="overlap_button" 
-                onClick={id_overlap_check}
-                disabled = { !isEmail }>
+                onClick={id_overlap_check}>
                 중복 확인하기
               </SignupPageStyles.DupSucButton>
+              ) : (
+              <SignupPageStyles.DupButton>
+                중복 확인하기
+              </SignupPageStyles.DupButton>
+              )}
               </SignupPageStyles.TwoLabel>
               {!isEmail && <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>}
               <SignupPageStyles.Avail>{avaMessage}</SignupPageStyles.Avail>
@@ -407,7 +273,7 @@ const SignUp: React.FC<SignUpProps> = ({setCheck}) => {
           </SignupPageStyles.Form>
           </SignupPageStyles.InputSection>
           <SignupPageStyles.ButtonSection>
-          {name && year && month && date && selectedSex && isPhonenumber && isSuccess && isEmail && avaMessage && isPassword && passwordCheck && !mismatchError  ? (
+          {name && year && month && date && selectedSex  && isEmail && avaMessage && isPassword && passwordCheck && !mismatchError  ? (
             <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
             </SignupPageStyles.SucButton>

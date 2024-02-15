@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
-import firstImg from '@/assets/first.png';
+import ImageSlider from "@/components/ImageSlider";
 import smallLogo from "../assets/logo.png";
 import mail from "../assets/mail.png";
 import theme from '@/styles/theme';
@@ -155,7 +155,7 @@ return (
         ) : (
           <Wrapper>
             <LogoSection>
-              <img src={firstImg} alt="로고 이미지" />
+              <ImageSlider/>
             </LogoSection>
             <MainSection>
               <Intro>

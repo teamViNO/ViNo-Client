@@ -10,9 +10,9 @@ import { loginAPI } from '@/apis/user';
 import CloseIcon from '@/assets/icons/close.svg?react';
 import smallLogo from '@/assets/logo-dark.png';
 import lineImg from '@/assets/line_img.png';
-import firstImg from '@/assets/first.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
+import ImageSlider from "@/components/ImageSlider";
 
 import { APIBaseResponse } from '@/models/config/axios';
 import { LoginRequest } from '@/models/user';
@@ -235,7 +235,7 @@ const SignInPage: React.FC = () => {
         </TextTotalComponent>
       </LoginTotalComponent>
 
-      <Image src={firstImg} alt="firstImg" width="auto" height="840px" />
+      <ImageSlider/>
 
       {isOpenErrorModal && (
         <BlurBackground>
