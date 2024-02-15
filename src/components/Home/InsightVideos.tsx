@@ -4,17 +4,20 @@ import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
 import { CardContainer } from '@/styles/category/Card.style';
 import successImg from '@/assets/success.png';
+import { createDummyVideoToMine, getDummyVideos } from '@/apis/videos';
 
 interface InsightVideosProps {
   username: string;
   popularHashtags: string[];
   dummyVideos: IVideoProps[];
+  setDummyVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>;
 }
 
 const InsightVideos: React.FC<InsightVideosProps> = ({
   username,
   popularHashtags,
   dummyVideos,
+  setDummyVideos,
 }) => {
   const formattedHashtags = popularHashtags.map((tag) => '#' + tag);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
@@ -22,8 +25,16 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
 
   const endBox = useRef<HTMLDivElement>(null);
 
-  const onFileClick = (e: React.MouseEvent) => {
+  const onFileClick = async (
+    e: React.MouseEvent,
+    videoId: number,
+    categoryId: number,
+  ) => {
     e.stopPropagation();
+    const res = await createDummyVideoToMine(videoId, categoryId);
+    if (res.isSuccess)
+      await getDummyVideos().then((res) => setDummyVideos(res.result.videos));
+
     // 비디오 카테고리로 저장 API 호출 후 이런 인사이트는 어때요 API 재호출로 최신화하기
   };
 

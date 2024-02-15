@@ -20,7 +20,7 @@ export const putSubToOtherTop = async (
   topCategoryId: number,
 ) => {
   const response = await axiosInstance.put(
-    `/category/${categoryId}/${topCategoryId}`,
+    `/category/move/${categoryId}/${topCategoryId}`,
   );
   return response.data;
 };

@@ -14,7 +14,11 @@ interface ICardProps {
   video: IVideoProps;
   checkedVideos?: number[];
   setCheckedVideos?: (value: number[]) => void;
-  onFileClick?: (e: React.MouseEvent) => void;
+  onFileClick?: (
+    e: React.MouseEvent,
+    videoId: number,
+    categoryId: number,
+  ) => void;
 }
 
 const Card: React.FC<ICardProps> = ({
@@ -30,6 +34,9 @@ const Card: React.FC<ICardProps> = ({
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     category.length ? category[0].categoryId : -1,
   );
+
+  const onFileClickWithProps = (e: React.MouseEvent) =>
+    onFileClick && onFileClick(e, video.video_id, selectedCategoryId);
 
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategoryId(categoryId);
@@ -77,7 +84,7 @@ const Card: React.FC<ICardProps> = ({
           <CategorySelectBox
             selectedCategoryId={selectedCategoryId}
             onSelect={handleSelectCategory}
-            onFileClick={onFileClick}
+            onFileClick={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
       )}

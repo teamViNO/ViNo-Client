@@ -58,3 +58,14 @@ export const getDummyVideos = async (): Promise<
   const response = await axiosInstance.get('/videos/dummyVideos/unRead');
   return response.data;
 };
+
+export const createDummyVideoToMine = async (
+  videoId: number,
+  categoryId: number,
+) => {
+  const response = await axiosInstance.post(
+    `/videos/dummyVideos/${videoId}/${categoryId}/newVideo`,
+  );
+
+  return response.data;
+};

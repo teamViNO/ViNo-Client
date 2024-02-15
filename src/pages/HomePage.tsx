@@ -45,6 +45,7 @@ const HomePage: React.FC = () => {
         username="여울"
         popularHashtags={['디자인', '진로', '브랜딩']}
         dummyVideos={dummyVideos}
+        setDummyVideos={setDummyVideos}
       />
     </HomePageContainer>
   );
