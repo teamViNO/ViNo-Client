@@ -5,8 +5,6 @@ import ProfileImage from '@/assets/default-profile-rect.png';
 import InformationImage from '@/assets/information.png';
 import KeyImage from '@/assets/key.png';
 
-import { MyInfoResponse } from '@/models/user';
-
 import { userInfoState, userTokenState } from '@/stores/user';
 
 import * as ProfileDetailStyle from '@/styles/layout/header/profile/ProfileDetailstyle';
@@ -18,7 +16,7 @@ type Props = {
 const ProfileDetail = ({ onClose }: Props) => {
   const navigate = useNavigate();
   const setUserToken = useSetRecoilState(userTokenState);
-  const userInfo = useRecoilValue(userInfoState) as MyInfoResponse;
+  const userInfo = useRecoilValue(userInfoState);
 
   const handleClickProfileButton = () => {
     navigate('/profile');
@@ -38,10 +36,10 @@ const ProfileDetail = ({ onClose }: Props) => {
           <img src={ProfileImage} alt="사각 프로필 이미지" />
           <ProfileDetailStyle.InformationWrap>
             <ProfileDetailStyle.InformationNickname>
-              {userInfo.name}
+              {userInfo?.name || '-'}
             </ProfileDetailStyle.InformationNickname>
             <ProfileDetailStyle.InformationEmail>
-              {userInfo.email}
+              {userInfo?.email || '-'}
             </ProfileDetailStyle.InformationEmail>
           </ProfileDetailStyle.InformationWrap>
         </ProfileDetailStyle.InformationContainer>
