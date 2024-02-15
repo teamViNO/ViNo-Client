@@ -1,8 +1,8 @@
 import * as CategoryPageStyles from '@/styles/category/index.style';
 import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
-import { useState } from 'react';
 import { CategorySelectBox } from '../SummaryPage/SummaryDetailBox/CategorySelectBox';
+import { useState } from 'react';
 import { IFolderProps } from 'types/category';
 
 interface IVideoSelectMenuProps {
@@ -12,6 +12,11 @@ interface IVideoSelectMenuProps {
   setCheckedVideos: React.Dispatch<React.SetStateAction<number[]>>;
   handleDeleteVideos: () => void;
   allCheckBtnHandler: () => void;
+  onFileClick?: (
+    e: React.MouseEvent,
+    videoId: number,
+    categoryId: number,
+  ) => void;
 }
 
 const VideoSelectMenu = ({
@@ -21,19 +26,18 @@ const VideoSelectMenu = ({
   setCheckedVideos,
   handleDeleteVideos,
   allCheckBtnHandler,
+  onFileClick,
 }: IVideoSelectMenuProps) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categories.length ? categories[0].categoryId : -1,
   );
 
-  const handleSelectCategory = (categoryId: number) => {
+  const onSelect = (categoryId: number) => {
     setSelectedCategoryId(categoryId);
   };
 
-  const onFileClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // 비디오 이동 API 호출 후 모든 비디오 받아오는 API 재호출로 최신화하기
-  };
+  const onFileClickWithProps = (e: React.MouseEvent) =>
+    onFileClick && onFileClick(e, checkedVideos[0], selectedCategoryId);
   return (
     <CategoryPageStyles.SelectModeWrap>
       <div>
@@ -48,8 +52,8 @@ const VideoSelectMenu = ({
         <CategoryPageStyles.DropdownWrap>
           <CategorySelectBox
             selectedCategoryId={selectedCategoryId}
-            onSelect={handleSelectCategory}
-            onFileClick={onFileClick}
+            onSelect={onSelect}
+            onFileClick={onFileClickWithProps}
           />
         </CategoryPageStyles.DropdownWrap>
         <CategoryPageStyles.ManagementBoxGray onClick={handleDeleteVideos}>

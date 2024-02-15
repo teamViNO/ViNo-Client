@@ -7,13 +7,14 @@ import { useRecoilValue } from 'recoil';
 import { categoryState } from '@/stores/category';
 import { ISubFolderProps, ITagProps } from 'types/category';
 import EmptyCard from '@/components/category/EmptyCard';
-import { deleteVideos, getRecentVideos } from '@/apis/videos';
+import { deleteVideos } from '@/apis/videos';
 import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
-import handleVideo from '@/utils/handleVideo';
 import VideoSelectMenu from '@/components/category/VideoSelectMenu';
 import DefaultMenu from '@/components/category/DefaultMenu';
+import { putVideoToOtherCategory } from '@/apis/category';
+import handleVideo from '@/utils/handleVideo';
 
 const CategoryPage = () => {
   const params = useParams();
@@ -31,24 +32,14 @@ const CategoryPage = () => {
   const sortedVideos = sortVideos(videos, recentRegisterMode);
 
   useEffect(() => {
-    if (!params.top_folder) {
-      getRecentVideos()
-        .then((res) => {
-          setVideos(res.result.videos);
-          setName('최근 읽은 영상');
-          setMenus([]);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      handleVideo(
-        categories,
-        params.top_folder,
-        params.sub_folder!,
-        setMenus,
-        setName,
-        setVideos,
-      );
-    }
+    handleVideo(
+      categories,
+      params.top_folder,
+      params.sub_folder,
+      setMenus,
+      setName,
+      setVideos,
+    );
     setCheckedVideos([]);
   }, [categories, params.sub_folder, params.top_folder]);
 
@@ -72,6 +63,24 @@ const CategoryPage = () => {
       setCheckedVideos(videos.map((video) => video.video_id));
     }
   };
+  const onFileClick = async (
+    e: React.MouseEvent,
+    videoId: number,
+    categoryId: number,
+  ) => {
+    e.stopPropagation();
+    const res = await putVideoToOtherCategory(videoId, categoryId);
+    if (res.isSuccess) {
+      handleVideo(
+        categories,
+        params.top_folder,
+        params.sub_folder,
+        setMenus,
+        setName,
+        setVideos,
+      );
+    }
+  };
 
   return (
     <CategoryPageStyles.Container>
@@ -85,6 +94,7 @@ const CategoryPage = () => {
             setCheckedVideos={setCheckedVideos}
             handleDeleteVideos={handleDeleteVideos}
             allCheckBtnHandler={allCheckBtnHandler}
+            onFileClick={onFileClick}
           />
         ) : (
           <DefaultMenu
