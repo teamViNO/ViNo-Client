@@ -105,7 +105,7 @@ export const DropdownWrap = styled.div`
   margin: 0;
   display: flex;
   flex-direction: column;
-  z-index: 0;
+  z-index: 1;
   & div.select-box {
     padding: 8px 16px;
     width: 202px;
