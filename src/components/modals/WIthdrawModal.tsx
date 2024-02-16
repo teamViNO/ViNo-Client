@@ -25,7 +25,10 @@ const WithdrawModal = ({
   setIsWithdrawModalOpen,
   setIsNoticeModalOpen,
 }: IWithdrawModalProp) => {
-  const onCloseModal = () => setIsWithdrawModalOpen(false);
+  const onCloseModal = () => {
+    setReason('');
+    setIsWithdrawModalOpen(false);
+  };
   const options = [
     '기록을 삭제하고 싶어요',
     '변환 결과가 마음에 들지 않아요',
