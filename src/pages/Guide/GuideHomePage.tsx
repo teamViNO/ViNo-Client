@@ -1,4 +1,5 @@
 import ErrorIcon from '@/assets/icons/error.svg?react';
+import { QuestionTip } from '@/components/Guide';
 
 import {
   GuideHome,
@@ -86,21 +87,12 @@ const GuideHomePage = () => {
           </h1>
 
           <div className="question-tips">
-            <div className="question-tip">
-              <img src="/assets/home-question1.png" alt="question-tip" />
-
-              <div className="question-tip-content">
-                <div>
-                  <h1>알림으로 언제든지 변환 진행율 파악</h1>
-                  <span className="description">
-                    상단 바에 있는 [읽지 않은 알림]에서 어느 페이지에서든
-                    실시간으로 영상변환 진행율을 파악할 수 있어요
-                  </span>
-                </div>
-
-                <span className="position">상단바 &gt; 읽지 않은 알림</span>
-              </div>
-            </div>
+            <QuestionTip
+              image="/assets/home-question1.png"
+              title="알림으로 언제든지 변환 진행율 파악"
+              description="상단 바에 있는 [읽지 않은 알림]에서 어느 페이지에서든 실시간으로 영상변환 진행율을 파악할 수 있어요"
+              position="상단바 > 읽지 않은 알림"
+            />
 
             <QuestionHome>
               <div className="item">
@@ -133,25 +125,21 @@ const GuideHomePage = () => {
           </h1>
 
           <div className="question-tips">
-            <div className="question-tip">
-              <img src="/assets/home-question2.png" alt="question-tip" />
-
-              <div className="question-tip-content">
-                <div>
-                  <h1>사이드 바에서 영상 변환</h1>
-                  <span className="description">
-                    사이드 바에 있는 [영상 변환하기] 영역에서 다른 작업을 하는
-                    동시에 영상을 변환하고, 진행율을 확인할 수 있어요
-                  </span>
+            <QuestionTip
+              image="/assets/home-question2.png"
+              title="사이드 바에서 영상 변환"
+              description={
+                <>
+                  사이드 바에 있는 [영상 변환하기] 영역에서 다른 작업을 하는
+                  동시에 영상을 변환하고, 진행율을 확인할 수 있어요
                   <span className="error">
                     <ErrorIcon width={24} height={24} />
                     단, 영상 2개를 동시에 변환하는 것은 불가능해요!
                   </span>
-                </div>
-
-                <span className="position">좌측 메뉴바 &gt; 영상 변환하기</span>
-              </div>
-            </div>
+                </>
+              }
+              position="좌측 메뉴바 > 영상 변환하기"
+            />
           </div>
         </div>
       </QuestionSection>

@@ -192,6 +192,21 @@ export const QuestionSection = styled.section`
       font-weight: bold;
       line-height: 1.6;
       color: ${(props) => props.theme.color.gray500};
+
+      & > span.icon {
+        margin-right: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: ${(props) => props.theme.color.gray500};
+
+        & path {
+          fill: ${(props) => props.theme.color.white};
+        }
+      }
     }
 
     & span.description {
