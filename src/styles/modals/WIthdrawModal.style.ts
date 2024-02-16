@@ -23,9 +23,16 @@ export const SubTitle = styled.span`
 `;
 
 export const SubmitButton = styled(CommonButtonStyles)`
-  border: 0;
+  border: 1.5px solid ${theme.color.gray500};
   color: ${theme.color.white};
   background-color: ${theme.color.gray500};
+  transition: background-color 0.5s;
+  &.disabled {
+    cursor: default;
+    background-color: ${theme.color.gray200};
+    border-color: ${theme.color.gray200};
+    color: ${theme.color.gray300};
+  }
 `;
 
 export const SelectButton = styled(CommonButtonStyles)`

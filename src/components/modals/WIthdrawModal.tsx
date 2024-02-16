@@ -14,6 +14,7 @@ interface IWithdrawModalProp {
   etcReason: string;
   setEtcReason: React.Dispatch<React.SetStateAction<string>>;
   setIsWithdrawModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsNoticeModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WithdrawModal = ({
@@ -22,6 +23,7 @@ const WithdrawModal = ({
   etcReason,
   setEtcReason,
   setIsWithdrawModalOpen,
+  setIsNoticeModalOpen,
 }: IWithdrawModalProp) => {
   const onCloseModal = () => setIsWithdrawModalOpen(false);
   const options = [
@@ -32,6 +34,12 @@ const WithdrawModal = ({
     '기타',
   ];
   const [withdrawModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
+
+  const handleModalState = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsWithdrawModalOpen(false);
+    setIsNoticeModalOpen(true);
+  };
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     setEtcReason(e.target.value);
 
@@ -65,7 +73,11 @@ const WithdrawModal = ({
             onChange={handleInput}
           />
         </WithdrawModalStyles.EtcInputWrap>
-        <WithdrawModalStyles.SubmitButton>
+        <WithdrawModalStyles.SubmitButton
+          disabled={!reason}
+          className={`${!reason && 'disabled'}`}
+          onClick={handleModalState}
+        >
           선택하기
         </WithdrawModalStyles.SubmitButton>
       </CommonCategoryContainer>

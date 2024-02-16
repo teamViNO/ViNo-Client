@@ -4,12 +4,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { topCategoryModalState } from '@/stores/modal';
 import { userTokenState } from '@/stores/user';
 import { useState } from 'react';
-import GuestNoticeModal from '@/components/modals/GuestNoticeModal';
+import NoticeModal from '@/components/modals/NoticeModal';
 
 const AddCategory = () => {
   const isUser = useRecoilValue(userTokenState);
   const setTopCategoryModal = useSetRecoilState(topCategoryModalState);
-  const [isGuestNoticeModalOpen, setIsGuestNoticeModalOpen] = useState(false);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
 
   const openAddModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     setTopCategoryModal(true);
@@ -17,7 +17,7 @@ const AddCategory = () => {
   };
 
   const openGuestNoticeModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsGuestNoticeModalOpen(true);
+    setIsNoticeModalOpen(true);
     e.stopPropagation();
   };
 
@@ -29,9 +29,13 @@ const AddCategory = () => {
       <AddCategoryStyle.Button onClick={handleClickedAdd}>
         <PlusSvg width={20} height={20} />
       </AddCategoryStyle.Button>
-      {isGuestNoticeModalOpen && (
-        <GuestNoticeModal
-          setIsGuestNoticeModalOpen={setIsGuestNoticeModalOpen}
+      {isNoticeModalOpen && (
+        <NoticeModal
+          title="로그인하고 중요한 영상 저장하기"
+          subTitle="로그인 후 더 많은 서비스를 이용해보세요!"
+          to="/sign-in"
+          buttonTitle="로그인 하기"
+          setIsNoticeModalOpen={setIsNoticeModalOpen}
         />
       )}
     </AddCategoryStyle.Wrap>
