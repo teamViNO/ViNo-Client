@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { getVideoAPI } from '@/apis/videos';
+import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
 
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 
@@ -19,12 +19,15 @@ import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
 
 type Props = {
+  onRefresh: () => void;
   onChangeKeyword: (keyword: string) => void;
 };
 
-const ToolBox = ({ onChangeKeyword }: Props) => {
+const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
-  const setSummaryUpdateVideo = useSetRecoilState(summaryUpdateVideoState);
+  const [summaryUpdateVideo, setSummaryUpdateVideo] = useRecoilState(
+    summaryUpdateVideoState,
+  );
   const [isEditingView, setIsEditingView] = useRecoilState(
     summaryIsEditingViewState,
   );
@@ -41,13 +44,32 @@ const ToolBox = ({ onChangeKeyword }: Props) => {
     setSummaryUpdateVideo({ ...summaryVideo });
   };
 
-  const handleClickPrevButton = async () => {
+  const handleClickPrevButton = () => {
     if (!originalSummary) return;
 
     const { description, subHeading } = originalSummary;
 
     setSummaryUpdateVideo({ ...summaryVideo, description, subHeading });
     createToast('이전 버전을 불러왔어요!');
+  };
+
+  const handleClickSaveButton = async () => {
+    if (!summaryUpdateVideo) return;
+    const { title, description, subHeading: subheading } = summaryUpdateVideo;
+
+    try {
+      await updateVideoAPI(summaryVideo.video_id, {
+        title,
+        description,
+        subheading,
+      });
+
+      onRefresh();
+      setIsEditingView(false);
+      createToast('내용 수정이 완료되었어요!');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -66,6 +88,13 @@ const ToolBox = ({ onChangeKeyword }: Props) => {
     callAPI();
   }, [summaryVideo]);
 
+  useEffect(() => {
+    return () => {
+      setIsEditingView(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="tools">
       {isEditingView ? (
@@ -79,7 +108,12 @@ const ToolBox = ({ onChangeKeyword }: Props) => {
             >
               이전 버전
             </button>
-            <button className="edit-button save">수정하기</button>
+            <button
+              className="edit-button save"
+              onClick={handleClickSaveButton}
+            >
+              수정하기
+            </button>
           </div>
         </>
       ) : (
