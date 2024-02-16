@@ -4,14 +4,14 @@ import theme from './theme';
 export const HomePageContainer = styled.div`
   background-color: ${theme.color.white};
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
 `;
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 100vw;
   padding-bottom: 100px;
   background-color: ${theme.color.gray500};
 `;
@@ -130,7 +130,7 @@ export const SearchButton = styled.button`
 
 export const RecentVideosContainer = styled.div<{ length: number }>`
   background-color: ${theme.color.white};
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: center;
   border-radius: 50px 50px 0px 0px;
@@ -236,7 +236,7 @@ export const InsightVideosContainer = styled.div<{ userToken: string | null }>`
   display: flex;
   justify-content: center;
   background-color: ${theme.color.white};
-  width: 100%;
+  width: 100vw;
   border-radius: 50px 50px 0 0;
   padding: ${(props) => (props.userToken ? '0' : '100px')} 265px 110px;
   position: relative;
