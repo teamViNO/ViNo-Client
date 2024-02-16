@@ -20,7 +20,7 @@ const handleVideo = async (
       setMenus([]);
     });
   } else {
-    await getVideoById(subCategoryId || topCategoryId).then(async (res) => {
+    await getVideoById(subCategoryId ?? topCategoryId).then(async (res) => {
       const topCategory = categories.find(
         (category) => category.categoryId === Number(topCategoryId),
       );
