@@ -92,6 +92,7 @@ const color = {
   gray300: '#BBBBBB',
   gray200: '#E8E8E8',
   gray100: '#F3F3F3',
+  green700: '#9BB700',
   green600: '#BCDB00',
   green500: '#DFFF00',
   green400: '#E9FF3F',

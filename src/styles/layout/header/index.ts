@@ -3,7 +3,7 @@ import { ColorKeyType } from '@/styles/theme';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const Container = styled.header<{ color: ColorKeyType; width: string }>`
+export const Container = styled.header<{ color: ColorKeyType }>`
   position: sticky;
   left: 0;
   top: 0;
@@ -11,7 +11,7 @@ export const Container = styled.header<{ color: ColorKeyType; width: string }>`
   padding: 16px 60px;
   display: flex;
   justify-content: space-between;
-  width: ${(props) => `calc(${props.width})`};
+  width: 100vw;
   background-color: ${(props) => props.theme.color[props.color]};
   transition: background-color 0.2s;
 `;
