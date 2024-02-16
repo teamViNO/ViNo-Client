@@ -129,6 +129,46 @@ export const Section = styled.section`
       }
     }
   }
+
+  & > .feature-list {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    & > .feature-item {
+      display: flex;
+      flex-direction: column;
+
+      & > img {
+        width: 445px;
+        height: auto;
+      }
+
+      & > h1 {
+        margin-top: 40px;
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 1.6;
+        color: ${(props) => props.theme.color.gray500};
+      }
+
+      & > span.description {
+        margin-top: 20px;
+        line-height: 1.6;
+        color: ${(props) => props.theme.color.gray400};
+      }
+
+      & > div.info {
+        margin-top: 10px;
+        display: flex;
+        align-items: flex-start;
+        gap: 4px;
+        color: ${(props) => props.theme.color.blue};
+        ${(props) => props.theme.typography.Body3};
+      }
+    }
+  }
 `;
 
 export const QuestionSection = styled.section`
@@ -330,5 +370,30 @@ export const QuestionHome = styled.div`
       line-height: 1.6;
       color: ${(props) => props.theme.color.gray100};
     }
+  }
+`;
+
+export const CategoryGuide = styled.div`
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+
+  & > img {
+    width: 910px;
+  }
+
+  & > span.description {
+    margin-top: 20px;
+    line-height: 1.6;
+    color: ${(props) => props.theme.color.gray400};
+  }
+
+  & > span.error {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: ${(props) => props.theme.color.red};
+    ${(props) => props.theme.typography.Body3};
   }
 `;
