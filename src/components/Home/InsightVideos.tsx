@@ -60,7 +60,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   }, [userToken]);
 
   return (
-    <InsightVideosContainer>
+    <InsightVideosContainer user={userToken}>
       <div className="insight-container">
         <div className="text-container">
           <h2 className="insight-title">이런 인사이트는 어때요?</h2>
