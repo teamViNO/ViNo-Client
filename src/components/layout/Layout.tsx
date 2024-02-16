@@ -13,7 +13,7 @@ const Layout = () => {
   const isSideBarOpen = useRecoilValue(isSideBarOpenState);
 
   const isShowFooter = useMemo(
-    () => /^(\/|\/category|\/guide)/g.test(pathname),
+    () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
 
