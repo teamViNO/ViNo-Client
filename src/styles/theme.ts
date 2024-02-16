@@ -101,6 +101,7 @@ const color = {
   green100: '#FBFFCC',
   white: '#FFFFFF',
   red: '#FF3A4A',
+  blue: '#3681FE',
 };
 
 const theme = {
