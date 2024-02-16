@@ -8,7 +8,14 @@ import theme from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 
 // Pages
-import { GuideLayout, GuideHomePage, GuidePage } from '@/pages/Guide';
+import {
+  GuideLayout,
+  GuideHomePage,
+  GuidePage,
+  GuideSummaryPage,
+  GuideCategoryPage,
+  GuideSearchPage,
+} from '@/pages/Guide';
 import CategoryPage from '@/pages/CategoryPage';
 import FindEmailPage from '@/pages/FindEmailPage';
 import FindPasswordPage from '@/pages/FindPasswordPage';
@@ -80,6 +87,9 @@ const App = () => {
 
             <Route path="/guide" element={<GuideLayout />}>
               <Route path="/guide/home" element={<GuideHomePage />} />
+              <Route path="/guide/summary" element={<GuideSummaryPage />} />
+              <Route path="/guide/category" element={<GuideCategoryPage />} />
+              <Route path="/guide/search" element={<GuideSearchPage />} />
               <Route path="/guide" element={<GuidePage />} />
             </Route>
 
