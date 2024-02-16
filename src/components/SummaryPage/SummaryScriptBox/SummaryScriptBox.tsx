@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import ModifyIcon from '@/assets/icons/modify.svg?react';
@@ -41,36 +41,50 @@ const SummaryScriptBox = () => {
   const [focusId, setFocusId] = useState(1);
   const [keyword, setKeyword] = useState('');
 
-  const handleChangeKeyword = (keyword: string) => {
+  const updateFindKeywordCount = useCallback(() => {
     if (keyword === '') {
       setFindKeywordCount(0);
     } else {
       setFindKeywordCount(
         summaryVideo.subHeading.reduce(
-          (total, { content }) => total + (content.split(keyword).length - 1),
+          (total, { name, content }) =>
+            total +
+            (name.split(keyword).length - 1) +
+            (content.split(keyword).length - 1),
           0,
         ),
       );
     }
+  }, [summaryVideo, keyword, setFindKeywordCount]);
 
+  const handleChangeKeyword = (keyword: string) => {
     setKeyword(keyword);
+    updateFindKeywordCount();
   };
 
   const formattedScriptList = useMemo(() => {
-    return summaryVideo.subHeading.map(({ content, ...others }) => {
+    return summaryVideo.subHeading.map(({ name, content, ...others }) => {
       if ((searchIsOpen || transformModalIsOpen) && keyword !== '') {
+        name = name
+          .split(keyword)
+          .map((s) => escapeHTML(s))
+          .join(`<mark>${escapeHTML(keyword)}</mark>`);
+
         content = content
           .split(keyword)
           .map((s) => escapeHTML(s))
           .join(`<mark>${escapeHTML(keyword)}</mark>`);
       } else {
+        name = escapeHTML(name);
         content = escapeHTML(content);
       }
 
+      name = name.replace(/\n/g, '<br>');
       content = content.replace(/\n/g, '<br>');
 
       return {
         content,
+        name,
         ...others,
       };
     });
@@ -100,6 +114,10 @@ const SummaryScriptBox = () => {
       }
     });
   }, [searchIsOpen, transformModalIsOpen, keyword, searchIndex]);
+
+  useEffect(() => {
+    updateFindKeywordCount();
+  }, [updateFindKeywordCount]);
 
   return (
     <ScriptBox style={{ width }}>
@@ -137,7 +155,10 @@ const SummaryScriptBox = () => {
                     <PlayIcon width={36} height={36} />
                   </span>
 
-                  <span className="script-title">{script.name}</span>
+                  <span
+                    className="script-title"
+                    dangerouslySetInnerHTML={{ __html: script.name }}
+                  />
                 </div>
 
                 <span className="script-badge">

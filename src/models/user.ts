@@ -19,7 +19,7 @@ export interface JoinRequest {
   password: string;
   check_password: string;
   birth_date: string;
-  gender: string;
+  gender: string | null;
   phone_number: string;
 }
 

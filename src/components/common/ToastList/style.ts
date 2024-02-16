@@ -30,6 +30,9 @@ export const Container = styled.div`
   left: 50%;
   bottom: 60px;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   & > .toast {
     display: flex;

@@ -1,10 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import firstImg from '@/assets/first.png';
+import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
+import ImageSlider from "@/components/ImageSlider";
 import smallLogo from "../assets/logo.png";
 import mail from "../assets/mail.png";
+import theme from '@/styles/theme';
 
 const FindPwPage = () => {
   const [name, setName] = useState<string>("");
@@ -12,11 +14,37 @@ const FindPwPage = () => {
   const [tel, setTel] = useState<string>("");
   const [isTel, setIsTel] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [isSend, setIsSend] = useState(false);
+
+  const [certifyNum, setCertifyNum] = useState('');
+  const [isCertify, setIsCertify] = useState(false);
+  const [time, setTime] = useState(60*5);
+  const [isTimer, setIsTimer] = useState(true);
+  const [token,setToken] =useState("");
 
   const [showResult, setShowResult] = useState<boolean>(false);
   const [isEmail, setIsEmail] = useState<boolean>(false);
 
   const [emailMessage, setEmailMessage] = useState<string>("");
+
+  useEffect(() => {
+    if (isTimer) {
+      const intervalId = setInterval(() => {
+        setTime(prevTime => {
+          if (prevTime <= 1) {
+            clearInterval(intervalId);
+            setIsTimer(false);
+            return 0;
+          } else {
+            return prevTime - 1;
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isTimer]);
+
 
   const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -54,6 +82,17 @@ const FindPwPage = () => {
     [tel],
   );
 
+  const onChangeCertifyInput = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const certifyRegex = /^\d{7}$/;
+    setCertifyNum(e.target.value);
+    if(certifyRegex.test(e.target.value)){
+      setIsCertify(true);
+    } else {
+      setIsCertify(false);
+    }
+  }
+
+
   const onResultHandler = useCallback(() => {
     setShowResult(true);
   }, []);
@@ -71,6 +110,35 @@ const FindPwPage = () => {
     [tel],
   );
 
+  const handleCertifyNum = async () => {
+    const response = (await sendSMSAPI({
+      phone_number : tel
+    }))
+    console.log(response)
+    if(response.data.success){
+      setIsSend(true);
+      setToken(response.data.result.token);
+    }
+    startTimer();
+  }
+
+  const handleCheckCertify = async () => {
+    stopTimer();
+    const response = (await checkSMSAPI({
+      verification_code : Number(certifyNum),
+    },token))
+    console.log(response);
+  }
+
+  const startTimer = () => setTime(5 * 60); // 타이머 시작
+  const stopTimer = () => {
+    setIsTimer(false);
+  };
+
+  const minutes = Math.floor(time / 60); // 분
+  const seconds = time % 60; 
+
+
 return (
   <Container>
       {showResult ? (
@@ -87,7 +155,7 @@ return (
         ) : (
           <Wrapper>
             <LogoSection>
-              <img src={firstImg} alt="로고 이미지" />
+              <ImageSlider/>
             </LogoSection>
             <MainSection>
               <Intro>
@@ -122,6 +190,7 @@ return (
                   </Label>
                   <TwoLabel>
                     <span>전화번호</span>
+                    <UserDiv>
                     <InputBox
                       type="text"
                       id="tel"
@@ -129,11 +198,28 @@ return (
                       value={tel}
                       placeholder="휴대폰 번호 입력 (-제외)"
                       onChange={onChangeTel}
-                    ></InputBox>
+                      style={{width : '326px'}}
+                    />
+                    <UserButton onClick = {handleCertifyNum} disabled = {!isTel}>{isSend? '인증번호 재전송' : '인증번호 받기'}</UserButton>
+
                     {!isTel && <Error>{errMessage}</Error>}
+                    </UserDiv>
+                    {isSend ? <UserDiv>
+                      <InputBox
+                      type='text'
+                      id='certify'
+                      value={certifyNum}
+                      placeholder='인증번호 입력'
+                      onChange={(e) => onChangeCertifyInput(e)}
+                      style={{width : '326px'}}/>
+                      <UserButton onClick = {handleCheckCertify} disabled = {!isCertify}>인증번호 확인</UserButton>
+                    </UserDiv>: ''}
+                    
+                    {!isTel && <Error>{errMessage}</Error>}
+                    {isSend && <SendMsg>인증번호가 발송되었어요 (유효시간 {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')})</SendMsg>}
                   </TwoLabel>
                   </Form>
-                  <FindButton type="submit" bgColor={isTel} onClick={onResultHandler}>
+                  <FindButton type="submit" bgColor={isTel} onClick={onResultHandler} disabled={true}>
                     찾아보기
                   </FindButton>
               <TextTotalComponent style={{margin: "40px 0px 0px 0px"}}>
@@ -197,17 +283,37 @@ const ResultWrapper = styled.div`
   }
 `;
 
+const UserDiv = styled.div`
+  display : flex;
+  flex-direction : row;
+  gap : 8px;
+`
+const UserButton = styled.button`
+  width : 160px;
+  height : 56px;
+  color : #1E1E1E;
+  background-color : #E9FF3F;
+  border : none;
+  border-radius : 12px;
+  ${theme.typography.Body1};
+  &:disabled {
+    background-color : #F3F3F3;
+    color : #BBBBBB;
+  }
+`
+
+
 const LoginButton = styled.button<{ bgColor?: boolean }>`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#1E1E1E' : '#FFFFFF')};
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #787878;
   font-size: 16px;
   font-weight: 500;
   line-height: 160%;
   border-radius: 12px;
-  border: none;
-  margin-top:64px;
+  border: 1.5px solid var(--gray-200, #e8e8e8);
+  margin-top:12px;
   font-family: Pretendard;
   &:hover {
     cursor: pointer;
@@ -238,7 +344,7 @@ const MainSection = styled.div`
   align-items: center;
   width: auto;
   height: 840px;
-  margin-top: 230px;
+  margin-top: 300px;
 `;
 
 const Intro = styled.div`
@@ -297,6 +403,8 @@ const Label = styled.label`
 `;
 
 const TwoLabel = styled.label`
+  display : flex;
+  flex-direction : column;
   margin-bottom: 8px;
   span {
     font-size: 16px;
@@ -338,12 +446,7 @@ const InputBox = styled.input`
   &::placeholder {
     color: #bbb;
 
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
+    ${theme.typography.Body1};
   }
 `;
 
@@ -356,11 +459,16 @@ const Error = styled.p`
   padding-top: 12px;
 `;
 
+const SendMsg = styled.span`
+  color : #FF4A4A !important;
+  ${theme.typography.Body3};
+`
+
 const FindButton = styled.button<{ bgColor?: boolean }>`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#BBBBBB' : '#F3F3F3')};
-  color: #BBBBBB;
+  background: #1E1E1E;
+  color: #EEEEEE;
   font-size: 16px;
   font-weight: 500;
   line-height: 160%;
@@ -369,6 +477,10 @@ const FindButton = styled.button<{ bgColor?: boolean }>`
   font-family: Pretendard;
   &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    background-color : #F3F3F3;
+    color : #BBBBBB;
   }
 `;
 
@@ -391,11 +503,9 @@ const TextDiv = styled.div`
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
+  ${ theme.typography.Body3 };
   text-align: center;
   text-decoration: none;
-  font-size: 14px; 
-  font-weight: 500;
-  line-height: 160%;
   margin : 0px 0px 0px 10px;
 `;
 

@@ -13,7 +13,7 @@ const Layout = () => {
   const isSideBarOpen = useRecoilValue(isSideBarOpenState);
 
   const isShowFooter = useMemo(
-    () => ['/'].includes(pathname) || /^\/category/g.test(pathname),
+    () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
 
@@ -21,10 +21,12 @@ const Layout = () => {
     <>
       <Header />
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', width: '100vw' }}>
         {isSideBarOpen && <SideBar />}
 
-        <Outlet />
+        <div style={{ flex: '1 1 auto' }}>
+          <Outlet />
+        </div>
       </div>
 
       {isShowFooter && <Footer />}
