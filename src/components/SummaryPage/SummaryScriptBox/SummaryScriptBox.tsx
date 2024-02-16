@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import ModifyIcon from '@/assets/icons/modify.svg?react';
 import PlayIcon from '@/assets/icons/play.svg?react';
 
 import { IVideo } from '@/models/video';
@@ -18,14 +17,8 @@ import { ScriptBox } from '@/styles/SummaryPage';
 
 import { escapeHTML } from '@/utils/string';
 
-import Indicator from './Indicator';
+import { ToolBox } from './ToolBox';
 import ResizeThumb from './ResizeThumb';
-import { SearchKeyword } from './SearchKeyword';
-import { ChangeKeyword } from './ChangeKeyword';
-
-// type Props = {
-//   onRefresh: () => void;
-// };
 
 const SummaryScriptBox = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -34,11 +27,10 @@ const SummaryScriptBox = () => {
   const [findKeywordCount, setFindKeywordCount] = useRecoilState(
     summaryFindKeywordCountState,
   );
-
   const searchIsOpen = useRecoilValue(summarySearchIsOpenState);
   const transformModalIsOpen = useRecoilValue(summaryTransformModalState);
   const [width, setWidth] = useRecoilState(summaryBoxWidthState);
-  const [focusId, setFocusId] = useState(1);
+
   const [keyword, setKeyword] = useState('');
 
   const updateFindKeywordCount = useCallback(() => {
@@ -121,23 +113,7 @@ const SummaryScriptBox = () => {
 
   return (
     <ScriptBox style={{ width }}>
-      <div className="tools">
-        <Indicator
-          list={summaryVideo.subHeading}
-          focusId={focusId}
-          onChange={setFocusId}
-        />
-
-        <div style={{ display: 'flex', gap: 8 }}>
-          <SearchKeyword onChange={handleChangeKeyword} />
-
-          <ChangeKeyword onChange={handleChangeKeyword} />
-
-          <span className="icon-button">
-            <ModifyIcon width={18} height={18} />
-          </span>
-        </div>
-      </div>
+      <ToolBox onChangeKeyword={handleChangeKeyword} />
 
       <div ref={ref} style={{ height: 'calc(100% - 78px)', overflowY: 'auto' }}>
         <div className="script-container">

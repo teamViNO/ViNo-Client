@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 
 import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
-import { summaryVideoState } from '@/stores/summary';
+import { summaryIsEditingViewState, summaryVideoState } from '@/stores/summary';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -10,6 +10,7 @@ import { formatDate } from '@/utils/date';
 
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
+import { DescriptionBox } from './DescriptionBox';
 
 type Props = {
   onRefresh: () => void;
@@ -17,6 +18,7 @@ type Props = {
 
 const SummaryDetailBox = ({ onRefresh }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState);
+  const isEditingView = useRecoilValue(summaryIsEditingViewState);
 
   const handleSelectCategory = async (category_id: number) => {
     if (!summaryVideo) return;
@@ -40,7 +42,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
         flex: '1 1 555px',
       }}
     >
-      <DetailBox>
+      <DetailBox className={isEditingView ? 'disabled' : ''}>
         <span className="created_at">
           {formatDate(summaryVideo?.updated_at)}
         </span>
@@ -49,7 +51,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
           {summaryVideo?.title || '-'}
         </span>
 
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {summaryVideo?.tag.map((hashtag) => (
             <span key={hashtag.name} className="hashtag">
               #{hashtag.name}
@@ -57,13 +59,17 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
           ))}
         </div>
 
-        <div
+        <iframe
+          src={`https://www.youtube.com/embed/QXDiRtANAzA?${
+            isEditingView && 'start=10&end=18&autoplay=1&disablekb=0'
+          }`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
           style={{
             margin: '20px 0',
             width: '100%',
-            height: 432,
+            aspectRatio: '16 / 9',
             borderRadius: 16,
-            backgroundColor: '#f3f3f3',
           }}
         />
 
@@ -72,7 +78,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
           onSelect={handleSelectCategory}
         />
 
-        <span className="title">{summaryVideo?.description || '-'}</span>
+        <DescriptionBox />
 
         <div
           style={{

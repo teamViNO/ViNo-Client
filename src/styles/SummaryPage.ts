@@ -12,6 +12,8 @@ export const DetailBox = styled.div`
   display: flex;
   flex-direction: column;
   padding: 60px 58px 29.5px 60px;
+  min-width: 555px;
+  max-width: 760px;
 
   & span.created_at {
     color: ${(props) => props.theme.color.gray300};
@@ -68,10 +70,23 @@ export const DetailBox = styled.div`
     }
   }
 
-  & span.title {
+  & span.title,
+  & input.title {
     margin-top: 40px;
     color: ${(props) => props.theme.color.gray500};
     ${(props) => props.theme.typography.Header6};
+  }
+
+  & input.title {
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
+
+    &:focus {
+      border: solid 2px black;
+    }
   }
 
   & div.subtitle {
@@ -181,6 +196,34 @@ export const DetailBox = styled.div`
     right: 0;
     transform: translateX(calc(100% + 24px));
   }
+
+  &.disabled {
+    & span.youtube-video-title {
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.hashtag {
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.subtitle-index {
+      background-color: ${(props) => props.theme.color.gray200};
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.subtitle-text {
+      color: ${(props) => props.theme.color.gray300};
+      cursor: default;
+    }
+
+    & span.note-icon {
+      opacity: 0.4;
+    }
+
+    & span.note-text {
+      color: ${(props) => props.theme.color.gray300};
+    }
+  }
 `;
 
 export const ScriptBox = styled.div`
@@ -196,7 +239,36 @@ export const ScriptBox = styled.div`
     padding: 20px 100px 0 60px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
+
+    & button.edit-button {
+      padding: 8px 20px;
+      width: 100px;
+      border-radius: 8px;
+      border: none;
+      transition: 0.1s;
+      cursor: pointer;
+      ${(props) => props.theme.typography.Body1};
+
+      &.prev {
+        background-color: ${(props) => props.theme.color.gray200};
+        color: ${(props) => props.theme.color.gray400};
+
+        &:hover {
+          background-color: ${(props) => props.theme.color.gray300};
+        }
+      }
+
+      &.save {
+        background-color: ${(props) => props.theme.color.gray400};
+        color: ${(props) => props.theme.color.gray100};
+
+        &:hover {
+          background-color: #616161;
+        }
+      }
+    }
   }
 
   & div.indicator {

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 
 import useOutsideClick from '@/hooks/useOutsideClick';
 
 import { IVideoSummary } from '@/models/video';
+
+import { summaryIsEditingViewState } from '@/stores/summary';
 
 type Props = {
   summary: IVideoSummary;
@@ -26,6 +29,7 @@ const NoteItem = ({
   onRemove,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isEditingView = useRecoilValue(summaryIsEditingViewState);
   const [noteText, setNoteText] = useState(summary.content);
 
   const [outsideRef] = useOutsideClick<HTMLDivElement>(() => {
@@ -67,7 +71,11 @@ const NoteItem = ({
     <div
       ref={outsideRef}
       className={`note-item ${isEditable && 'editable'}`}
-      onDoubleClick={onActiveEditable}
+      onDoubleClick={() => {
+        if (isEditingView) return;
+
+        onActiveEditable && onActiveEditable();
+      }}
     >
       <span className="note-icon">✏️</span>
 
