@@ -1,17 +1,38 @@
-import { useRecoilValue } from 'recoil';
-
-import { Account, LogoutModal, ServiceSetting } from '@/components/ProfilePage';
-
-import useBoolean from '@/hooks/useBoolean';
-
-import { userInfoState } from '@/stores/user';
-
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { Account, ServiceSetting } from '@/components/ProfilePage';
+import { userInfoState, userTokenState } from '@/stores/user';
 import { Wrapper } from '@/styles/ProfilePage';
+import { useState } from 'react';
+import WithdrawModal from '@/components/modals/WIthdrawModal';
+import NoticeModal from '@/components/modals/NoticeModal';
 
 const ProfilePage = () => {
-  const userInfo = useRecoilValue(userInfoState);
-  const [isShowLogoutModal, , openLogoutModal, closeLogoutModal] =
-    useBoolean(false);
+  const [reason, setReason] = useState('');
+  const setUserToken = useSetRecoilState(userTokenState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const [etcReason, setEtcReason] = useState('');
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const target = e.target as HTMLElement;
+    if (target.innerHTML === '회원탈퇴') {
+      setIsWithdrawModalOpen(true);
+      return;
+    }
+    setIsLogoutModalOpen(true);
+  };
+
+  const onLogoutClick = () => {
+    setUserInfo(null);
+    setUserToken(null);
+  };
+
+  const onWithdrawClick = () => {};
 
   return (
     <>
@@ -33,15 +54,46 @@ const ProfilePage = () => {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <button className="other">회원탈퇴</button>
-            <button className="other" onClick={openLogoutModal}>
+            <button className="other" onClick={handleOpenModal}>
+              회원탈퇴
+            </button>
+            <button className="other" onClick={handleOpenModal}>
               로그아웃
             </button>
           </div>
         </div>
       </Wrapper>
 
-      {isShowLogoutModal && <LogoutModal onClose={closeLogoutModal} />}
+      {isLogoutModalOpen && (
+        <NoticeModal
+          title="로그아웃 하시겠어요?"
+          subTitle="다시 돌아오길 기다릴게요"
+          buttonTitle="로그아웃 하기"
+          to="/"
+          onButtonClick={onLogoutClick}
+          setIsNoticeModalOpen={setIsLogoutModalOpen}
+        />
+      )}
+      {isWithdrawModalOpen && (
+        <WithdrawModal
+          setIsWithdrawModalOpen={setIsWithdrawModalOpen}
+          reason={reason}
+          setReason={setReason}
+          etcReason={etcReason}
+          setEtcReason={setEtcReason}
+          setIsNoticeModalOpen={setIsNoticeModalOpen}
+        />
+      )}
+      {isNoticeModalOpen && (
+        <NoticeModal
+          title="정말 탈퇴하시겠어요?"
+          subTitle="저장한 데이터는 다시 복구할 수 없어요"
+          buttonTitle="탈퇴하기"
+          to="/"
+          onButtonClick={onWithdrawClick}
+          setIsNoticeModalOpen={setIsNoticeModalOpen}
+        />
+      )}
     </>
   );
 };
