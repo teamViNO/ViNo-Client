@@ -232,12 +232,13 @@ export const VideoButton = styled.button`
   }
 `;
 
-export const InsightVideosContainer = styled.div`
+export const InsightVideosContainer = styled.div<{ user: string | null }>`
   display: flex;
   justify-content: center;
   background-color: ${theme.color.white};
   width: 100%;
   border-radius: 50px 50px 0 0;
+  padding: ${(props) => (props.user ? '0' : '100px')} 0 110px;
   position: relative;
   bottom: 50px;
 
