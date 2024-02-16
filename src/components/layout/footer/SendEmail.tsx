@@ -2,12 +2,15 @@ import * as FooterStyle from '@/styles/layout/footer';
 import { useState } from 'react';
 
 import SendEmailImage from '@/assets/mail.png';
+import { postFeedback } from '@/apis/feedback';
 
 const SendEmail = () => {
   const [feedback, setFeedback] = useState<string>('');
 
   const handleInputFeedback = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFeedback(e.target.value);
+
+  const onSendFeedback = async () => await postFeedback(feedback);
 
   return (
     <FooterStyle.SendEmailWrap>
@@ -18,7 +21,13 @@ const SendEmail = () => {
         value={feedback}
         onChange={handleInputFeedback}
       />
-      <FooterStyle.SendEmailButton>보내기</FooterStyle.SendEmailButton>
+      <FooterStyle.SendEmailButton
+        onClick={onSendFeedback}
+        disabled={!feedback}
+        className={`${!feedback && 'disabled'}`}
+      >
+        보내기
+      </FooterStyle.SendEmailButton>
     </FooterStyle.SendEmailWrap>
   );
 };
