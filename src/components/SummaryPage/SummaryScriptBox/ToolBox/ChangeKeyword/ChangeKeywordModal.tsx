@@ -12,6 +12,8 @@ import useDebounce from '@/hooks/useDebounce';
 
 import { IVideoSubHeading } from '@/models/video';
 
+import useFocus from '@/hooks/useFocus';
+
 import { ModalContainer } from '@/styles/SummaryPage';
 
 import { toastListState } from '@/stores/toast';
@@ -30,7 +32,11 @@ type Props = {
 
 const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [keywordRef, focusKeywordInput, isKeywordFocus] =
+    useFocus<HTMLInputElement>();
+  const [replaceKeywordRef, focusReplaceKeywordInput, isReplaceKeywordFocus] =
+    useFocus<HTMLInputElement>();
+
   const [summaryVideo, setSummaryVideo] = useRecoilState(summaryVideoState);
   const findKeywordCount = useRecoilValue(summaryFindKeywordCountState);
   const [searchIndex, setSearchIndex] = useRecoilState(summarySearchIndexState);
@@ -79,7 +85,7 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
       onClose();
     } else if (
       e.key === 'Enter' &&
-      document.activeElement === inputRef.current
+      document.activeElement === keywordRef.current
     ) {
       handleChangeSearchIndex(searchIndex + 1);
     }
@@ -221,10 +227,13 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
         <div style={{ marginTop: 48, gap: 12 }}>
           <div className="group">
             <span className="group-title">찾는 단어</span>
-            <div className="input-box">
+            <div
+              className={`input-box ${isKeywordFocus ? 'focus' : ''}`}
+              onClick={focusKeywordInput}
+            >
               <div style={{ display: 'flex', flex: '1 1 auto' }}>
                 <input
-                  ref={inputRef}
+                  ref={keywordRef}
                   type="text"
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
@@ -260,9 +269,13 @@ const ChangeKeywordModal = ({ onChange, onClose }: Props) => {
 
           <div className="group">
             <span className="group-title">바꿀 단어</span>
-            <div className="input-box">
+            <div
+              className={`input-box ${isReplaceKeywordFocus ? 'focus' : ''}`}
+              onClick={focusReplaceKeywordInput}
+            >
               <div style={{ display: 'flex', flex: '1 1 auto' }}>
                 <input
+                  ref={replaceKeywordRef}
                   type="text"
                   placeholder="수정할 단어를 입력해주세요"
                   value={replaceKeyword}
