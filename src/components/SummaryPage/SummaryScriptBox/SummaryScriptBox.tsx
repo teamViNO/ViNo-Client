@@ -17,7 +17,7 @@ import { ScriptBox } from '@/styles/SummaryPage';
 import { ToolBox } from './ToolBox';
 import ResizeThumb from './ResizeThumb';
 import { ScriptViewer } from './ScriptViewer';
-import { ScriptEditer } from './ScriptEditer';
+import { ScriptEditor } from './ScriptEditor';
 
 type Props = {
   onRefresh: () => void;
@@ -92,7 +92,7 @@ const SummaryScriptBox = ({ onRefresh }: Props) => {
       <ToolBox onRefresh={onRefresh} onChangeKeyword={handleChangeKeyword} />
 
       <div ref={ref} style={{ height: 'calc(100% - 78px)', overflowY: 'auto' }}>
-        {isEditingView ? <ScriptEditer /> : <ScriptViewer keyword={keyword} />}
+        {isEditingView ? <ScriptEditor /> : <ScriptViewer keyword={keyword} />}
       </div>
 
       <ResizeThumb width={width} onChange={setWidth} />

@@ -45,9 +45,17 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   };
 
   const handleClickPrevButton = () => {
-    if (!originalSummary) return;
+    if (!originalSummary || !summaryUpdateVideo) return;
 
-    const { description, subHeading } = originalSummary;
+    const { description } = originalSummary;
+    const subHeading = summaryUpdateVideo.subHeading.map((item, i) => {
+      const { name, content } = originalSummary.subHeading[i];
+      return {
+        ...item,
+        name,
+        content,
+      };
+    });
 
     setSummaryUpdateVideo({ ...summaryVideo, description, subHeading });
     createToast('이전 버전을 불러왔어요!');

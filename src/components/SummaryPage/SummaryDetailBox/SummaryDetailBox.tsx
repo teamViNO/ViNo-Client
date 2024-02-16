@@ -2,7 +2,13 @@ import { useRecoilValue } from 'recoil';
 
 import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
-import { summaryIsEditingViewState, summaryVideoState } from '@/stores/summary';
+import { IVideo } from '@/models/video';
+
+import {
+  summaryIsEditingViewState,
+  summaryUpdateVideoState,
+  summaryVideoState,
+} from '@/stores/summary';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -17,12 +23,15 @@ type Props = {
 };
 
 const SummaryDetailBox = ({ onRefresh }: Props) => {
-  const summaryVideo = useRecoilValue(summaryVideoState);
+  const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
+  const summaryUpdateVideo = useRecoilValue(summaryUpdateVideoState);
   const isEditingView = useRecoilValue(summaryIsEditingViewState);
 
-  const handleSelectCategory = async (category_id: number) => {
-    if (!summaryVideo) return;
+  const subHeading = isEditingView
+    ? summaryUpdateVideo?.subHeading || []
+    : summaryVideo.subHeading;
 
+  const handleSelectCategory = async (category_id: number) => {
     try {
       await updateVideoCategoryIdAPI(category_id, {
         video_id: [summaryVideo.video_id],
@@ -44,15 +53,13 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
     >
       <DetailBox className={isEditingView ? 'disabled' : ''}>
         <span className="created_at">
-          {formatDate(summaryVideo?.updated_at)}
+          {formatDate(summaryVideo.updated_at)}
         </span>
 
-        <span className="youtube-video-title">
-          {summaryVideo?.title || '-'}
-        </span>
+        <span className="youtube-video-title">{summaryVideo.title || '-'}</span>
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {summaryVideo?.tag.map((hashtag) => (
+          {summaryVideo.tag.map((hashtag) => (
             <span key={hashtag.name} className="hashtag">
               #{hashtag.name}
             </span>
@@ -74,7 +81,8 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
         />
 
         <CategorySelectBox
-          selectedCategoryId={summaryVideo?.category_id}
+          disabled={isEditingView}
+          selectedCategoryId={summaryVideo.category_id}
           onSelect={handleSelectCategory}
         />
 
@@ -88,10 +96,10 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
             gap: 16,
           }}
         >
-          {summaryVideo?.subHeading.map((subHeading, i) => (
-            <div key={subHeading.id} className="subtitle">
+          {subHeading.map((item, i) => (
+            <div key={item.id} className="subtitle">
               <span className="subtitle-index">{i + 1}</span>
-              <span className="subtitle-text">{subHeading.name}</span>
+              <span className="subtitle-text">{item.name}</span>
             </div>
           ))}
         </div>

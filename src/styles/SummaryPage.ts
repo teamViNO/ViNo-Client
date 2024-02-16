@@ -312,13 +312,35 @@ export const ScriptBox = styled.div`
     gap: 60px;
   }
 
-  & span.script-title {
+  & span.script-title,
+  & input.script-title {
     color: ${(props) => props.theme.color.gray500};
     ${(props) => props.theme.typography.Subheader1};
   }
 
+  & input.script-title {
+    padding: 4px 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
+
+    &:focus {
+      border: solid 2px black;
+    }
+  }
+
   & span.play-button {
     cursor: pointer;
+
+    &.disabled {
+      cursor: default;
+
+      & svg {
+        fill: ${(props) => props.theme.color.gray300};
+      }
+    }
   }
 
   & span.script-badge {
@@ -335,6 +357,19 @@ export const ScriptBox = styled.div`
     font-weight: 600;
     line-height: 2;
     color: #5d5b5b;
+  }
+
+  & div.script-content-edit {
+    padding: 4px 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
+
+    &:focus {
+      border: solid 2px black;
+    }
   }
 
   & div.resize-thumb {
