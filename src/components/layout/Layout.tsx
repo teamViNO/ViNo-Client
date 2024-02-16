@@ -6,7 +6,7 @@ import { isSideBarOpenState } from '@/stores/ui';
 import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -16,6 +16,10 @@ const Layout = () => {
     () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
 
   return (
     <>

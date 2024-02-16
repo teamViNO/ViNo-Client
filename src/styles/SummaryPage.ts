@@ -548,7 +548,13 @@ export const ModalContainer = styled(BlurBackground)`
     display: flex;
     flex: 1 1 auto;
     border-radius: 12px;
+    border: solid 2px rgba(0, 0, 0, 0);
     background-color: ${(props) => props.theme.color.gray100};
+    transition: 0.1s;
+
+    &.focus {
+      border: solid 2px ${(props) => props.theme.color.gray500};
+    }
 
     & input {
       width: 100%;
@@ -561,6 +567,10 @@ export const ModalContainer = styled(BlurBackground)`
 
       &::placeholder {
         color: ${(props) => props.theme.color.gray300};
+      }
+
+      &:focus::placeholder {
+        color: transparent;
       }
     }
   }

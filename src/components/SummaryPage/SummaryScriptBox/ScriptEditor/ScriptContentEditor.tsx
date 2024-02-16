@@ -7,7 +7,7 @@ type Props = {
 
 const ScriptContentEditor = ({ content, onChange }: Props) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const caretPos = useRef(0);
+  const caretPos = useRef(-1);
 
   const getCaret = (el: HTMLDivElement) => {
     let caretAt = 0;
@@ -31,7 +31,7 @@ const ScriptContentEditor = ({ content, onChange }: Props) => {
     const sel = window.getSelection();
     const range = document.createRange();
 
-    if (sel) {
+    if (sel && el.childNodes.length) {
       range.setStart(el.childNodes[0], offset);
       range.collapse(true);
       sel.removeAllRanges();
@@ -40,7 +40,7 @@ const ScriptContentEditor = ({ content, onChange }: Props) => {
   };
 
   useEffect(() => {
-    if (contentRef.current) {
+    if (contentRef.current && caretPos.current > -1) {
       setCaret(contentRef.current, caretPos.current);
       contentRef.current.focus();
     }

@@ -169,6 +169,7 @@ const Account = () => {
                   type="text"
                   value={nickname}
                   onChange={handleChangeNickname}
+                  maxLength={7}
                 />
               </div>
 
