@@ -10,7 +10,14 @@ const SendEmail = () => {
   const handleInputFeedback = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFeedback(e.target.value);
 
-  const onSendFeedback = async () => await postFeedback(feedback);
+  const onSendFeedback = async () => {
+    const res = await postFeedback(feedback);
+    if (res.data.success) {
+      setFeedback('');
+      return;
+    }
+    alert('피드백을 전송하는 과정에서 오류가 발생했습니다.');
+  };
 
   return (
     <FooterStyle.SendEmailWrap>
