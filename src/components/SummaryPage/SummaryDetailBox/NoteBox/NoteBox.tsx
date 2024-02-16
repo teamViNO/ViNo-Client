@@ -12,7 +12,7 @@ import useIndex from '@/hooks/useIndex';
 
 import { IVideoSummary } from '@/models/video';
 
-import { summaryVideoState } from '@/stores/summary';
+import { summaryIsEditingViewState, summaryVideoState } from '@/stores/summary';
 
 import NoteItem from './NoteItem';
 
@@ -22,6 +22,7 @@ type Props = {
 
 const NoteBox = ({ onRefresh }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState);
+  const isEditingView = useRecoilValue(summaryIsEditingViewState);
   const [editableIndex, setEditableIndex, setDisableIndex] = useIndex();
 
   const handleActiveEditable = (index: number) => {
@@ -110,7 +111,7 @@ const NoteBox = ({ onRefresh }: Props) => {
         )}
 
         {/* 추가 버튼 */}
-        {editableIndex === null && (
+        {editableIndex === null && !isEditingView && (
           <button
             className="create-button"
             onClick={(e) => {

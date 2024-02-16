@@ -42,7 +42,7 @@ const SummaryPage = () => {
       {summaryVideo && (
         <>
           <SummaryDetailBox onRefresh={callAPI} />
-          <SummaryScriptBox />
+          <SummaryScriptBox onRefresh={callAPI} />
         </>
       )}
     </Container>
