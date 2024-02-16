@@ -13,6 +13,7 @@ import {
 
 import VideoIcon from '@/assets/icons/video.svg?react';
 import WarningIcon from '@/assets/icons/warning.svg?react';
+import { getVideoModeling } from '@/apis/videos';
 
 interface SearchBarProps {
   onSearch: (value: string) => void;
@@ -26,6 +27,10 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch, searchRef }) => {
   const [isConverting, setIsConverting] = useState(false);
 
   const setModalOpen = useSetRecoilState(recommendationModalState);
+
+  const onStartConvert = async () => {
+    await getVideoModeling(inputLink);
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -112,7 +117,7 @@ const SearchYoutube: React.FC<SearchBarProps> = ({ onSearch, searchRef }) => {
           </div>
           <SearchButton
             type="submit"
-            // onClick={ handleClick }
+            onClick={onStartConvert}
             style={{
               color: isButtonValid ? 'white' : theme.color.gray300,
               backgroundColor: isButtonValid
