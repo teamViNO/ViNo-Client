@@ -107,7 +107,7 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
     <div className="tools">
       {isEditingView ? (
         <>
-          <div>대충 히스토리 버튼</div>
+          <div />
 
           <div style={{ display: 'flex', gap: 8 }}>
             <button

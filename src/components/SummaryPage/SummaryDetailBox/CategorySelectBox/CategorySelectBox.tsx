@@ -14,7 +14,7 @@ import { CategoryDropdown } from './CategoryDropdown';
 type Props = {
   disabled?: boolean;
   selectedCategoryId?: number;
-  onSelect: (categoryId: number) => void;
+  onSelect: (categoryId: number, categoryName?: string) => void;
 };
 
 const CategorySelectBox = ({
@@ -59,9 +59,10 @@ const CategorySelectBox = ({
   };
 
   const handleClick = () => {
-    if (!selectedId || selectedId === selectedCategoryId || disabled) return;
+    if (!selectedCategory || selectedId === selectedCategoryId || disabled)
+      return;
 
-    onSelect(selectedId);
+    onSelect(selectedCategory.categoryId, selectedCategory.name);
   };
 
   return (

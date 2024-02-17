@@ -12,7 +12,7 @@ export const DetailBox = styled.div`
   display: flex;
   flex-direction: column;
   padding: 60px 58px 29.5px 60px;
-  min-width: 555px;
+  min-width: 535px;
   max-width: 760px;
 
   & span.created_at {
