@@ -102,12 +102,12 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
         type : searchType === true ? 'keyword' : 'hashtag',
         value: searchType ? input : tags.join('&')
     };
-
+    window.scrollTo(0, 0);
     searchNav({
         pathname : '/search/result',
         search : `?${createSearchParams(params)}`
     })
-    window.scrollTo(0, 0);
+    
 }
 
   return (
