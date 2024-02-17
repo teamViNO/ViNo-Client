@@ -37,7 +37,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
     setToastList([...toastList, { id: Date.now(), content }]);
   };
 
-  const handleSelectCategory = async (category_id: number, name: string) => {
+  const handleSelectCategory = async (category_id: number, name?: string) => {
     try {
       await updateVideoCategoryIdAPI(category_id, {
         video_id: [summaryVideo.video_id],
