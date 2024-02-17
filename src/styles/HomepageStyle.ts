@@ -17,7 +17,7 @@ export const SearchContainer = styled.div`
 `;
 
 export const SearchForm = styled.form`
-  margin: 0 auto;
+  padding-top: 120px;
   width: 908px;
   min-height: 350px;
   display: flex;
@@ -25,11 +25,10 @@ export const SearchForm = styled.form`
   align-items: center;
 
   .search-text {
-    width: 436px;
-    margin-bottom: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 8px;
   }
 
   .valid-text {
@@ -39,32 +38,15 @@ export const SearchForm = styled.form`
   }
 
   .search-title {
-    text-align: center;
-    margin-top: 120px;
     color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-    width: 379px;
-    height: 58px;
-  }
-
-  .non-valid-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.6em;
+    ${(props) => props.theme.typography.Header3};
   }
 
   .search-subtitle {
     color: ${theme.color.gray300};
-    width: 436px;
-    height: 26px;
   }
 
   .search-subtitle-wrapper {
-    width: 301px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -72,6 +54,7 @@ export const SearchForm = styled.form`
   }
 
   .input-container {
+    margin-top: 40px;
     padding: 16px 20px;
     border: none;
     border-radius: 12px;
@@ -86,7 +69,7 @@ export const SearchForm = styled.form`
   .link-container {
     display: flex;
     align-items: center;
-    width: 516.5px;
+    flex: 1 1 auto;
     height: 36px;
   }
 
@@ -101,7 +84,7 @@ export const SearchForm = styled.form`
 `;
 
 export const SearchInput = styled.input`
-  width: 372px;
+  width: 100%;
   height: 26px;
   padding: 16px 20px;
   font-size: 1rem;
@@ -109,6 +92,7 @@ export const SearchInput = styled.input`
   border-radius: 10px;
   outline: none;
   color: ${theme.color.gray500};
+  background-color: rgba(0, 0, 0, 0);
 
   &::placeholder {
     color: ${theme.color.gray300};
@@ -120,11 +104,15 @@ export const SearchButton = styled.button`
   font-size: 1rem;
   border: none;
   border-radius: 8px;
+  color: white;
+  background-color: ${(props) => props.theme.color.gray500};
+  transition: 0.1s;
   cursor: pointer;
 
-  &:hover {
-    color: white;
-    background-color: ${theme.color.gray500};
+  &:disabled {
+    color: ${(props) => props.theme.color.gray300};
+    background-color: ${(props) => props.theme.color.gray200};
+    cursor: not-allowed;
   }
 `;
 

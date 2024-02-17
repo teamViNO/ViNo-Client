@@ -9,8 +9,3 @@ export const summaryTransformModalState = atom({
   key: 'summary-transform-modal',
   default: false,
 });
-
-export const recommendationModalState = atom({
-    key: 'recommendationModal',
-    default: false,
-});

@@ -34,7 +34,7 @@ import SummaryPage from '@/pages/SummaryPage';
 import Layout from '@/components/layout/Layout';
 
 // Components
-import { ToastList } from '@/components/common';
+import { ModelController, ToastList } from '@/components/common';
 
 // Hooks
 import useUpdateCategories from '@/hooks/useUpdateCategories';
@@ -106,6 +106,7 @@ const App = () => {
       </BrowserRouter>
 
       <ToastList />
+      <ModelController />
     </ThemeProvider>
   );
 };

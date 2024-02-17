@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import SearchYoutube from '@/components/Home/SearchYoutube';
-import { HomePageContainer } from '@/styles/HomepageStyle';
-import RecentVideos from '@/components/Home/RecentVideos';
-import InsightVideos from '@/components/Home/InsightVideos';
 import { useRecoilValue } from 'recoil';
-import { recommendationModalState } from '@/stores/modal';
-import RecommendationModal from '@/components/modals/RecommendationModal';
+import { IVideoProps } from 'types/videos';
+
 import {
   getUnReadDummyVideos,
   getRecentVideos,
   getAllDummyVideos,
 } from '@/apis/videos';
+
+import SearchYoutube from '@/components/Home/SearchYoutube';
+import RecentVideos from '@/components/Home/RecentVideos';
+import InsightVideos from '@/components/Home/InsightVideos';
+import RecommendationModal from '@/components/modals/RecommendationModal';
+
+import { HomePageContainer } from '@/styles/HomepageStyle';
+
 import { userTokenState } from '@/stores/user';
-import { IVideoProps } from 'types/videos';
 
 export interface Video {
   id: string;
@@ -23,15 +26,10 @@ export interface Video {
 }
 
 const HomePage: React.FC = () => {
+  const searchRef = useRef(null);
   const userToken = useRecoilValue(userTokenState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
-  const handleSearch = (value: string) => {
-    console.log(value);
-  };
-  const searchRef = useRef(null);
-
-  const isModalOpen = useRecoilValue(recommendationModalState);
 
   useEffect(() => {
     userToken &&
@@ -50,28 +48,16 @@ const HomePage: React.FC = () => {
 
   return (
     <HomePageContainer>
-      <SearchYoutube searchRef={searchRef} onSearch={handleSearch} />
-      {isModalOpen && <RecommendationModal />}
-      {userToken && (
-        <>
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            setDummyVideos={setDummyVideos}
-          />
-        </>
-      )}
-      {!userToken && (
-        <>
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            setDummyVideos={setDummyVideos}
-          />
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        </>
-      )}
+      <SearchYoutube searchRef={searchRef} />
+
+      <div style={{ flexDirection: userToken ? 'column' : 'column-reverse' }}>
+        <RecentVideos searchRef={searchRef} videos={recentVideos} />
+        <InsightVideos
+          userToken={userToken}
+          dummyVideos={dummyVideos}
+          setDummyVideos={setDummyVideos}
+        />
+      </div>
     </HomePageContainer>
   );
 };

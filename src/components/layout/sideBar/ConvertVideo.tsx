@@ -1,51 +1,106 @@
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+
 import VideoSvg from '@/assets/icons/video.svg?react';
 import DownSvg from '@/assets/icons/down.svg?react';
 import UpSvg from '@/assets/icons/up.svg?react';
+
 import * as ConvertVideoStyle from '@/styles/layout/sideBar/ConvertVideo.style';
-import { useState } from 'react';
 import { CommonTitle } from '@/styles/layout/sideBar/UserMode.style';
 
+import {
+  modelingErrorCodeState,
+  modelingProgressState,
+  videoLinkState,
+} from '@/stores/model-controller';
+
+import { validateYoutubeLink } from '@/utils/validation';
+import theme from '@/styles/theme';
+
 const ConvertVideo = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [url, setURL] = useState<string>('');
-  const [isFocus, setIsFocus] = useState<boolean>(false);
+  const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
+  const errorCode = useRecoilValue(modelingErrorCodeState);
+  const progress = useRecoilValue(modelingProgressState);
 
-  const youtubeURLValidation = url.includes('https://youtube.com/');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+  const [url, setURL] = useState('');
 
-  const toggleOpen = () => setIsOpen(!isOpen);
+  const isValidate = validateYoutubeLink(url);
 
-  const handleFocusState = () => setIsFocus(true);
-
-  const inputURL = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setURL(e.target.value);
+  const handleClickButton = () => {
+    setVideoLink(url);
+  };
 
   return (
     <ConvertVideoStyle.Container>
-      <ConvertVideoStyle.Wrap onClick={toggleOpen}>
+      <ConvertVideoStyle.Wrap onClick={() => setIsOpen(!isOpen)}>
         <div style={{ display: 'flex', width: '100%' }}>
           <VideoSvg width={28} height={28} />
           <CommonTitle>영상 변환하기</CommonTitle>
         </div>
-        {isOpen && <UpSvg width={18} height={18} />}
-        {!isOpen && <DownSvg width={18} height={18} />}
+
+        {isOpen ? (
+          <UpSvg width={18} height={18} />
+        ) : (
+          <DownSvg width={18} height={18} />
+        )}
       </ConvertVideoStyle.Wrap>
+
       {isOpen && (
         <>
           <ConvertVideoStyle.URLInput
             placeholder="https://youtube.com/..."
             type="text"
             value={url}
-            onChange={inputURL}
-            onFocus={handleFocusState}
+            disabled={!!videoLink}
+            onChange={(e) => setURL(e.target.value)}
+            onFocus={() => setIsFocus(true)}
           />
-          {isFocus && !youtubeURLValidation && (
+
+          {isFocus && !isValidate && (
             <ConvertVideoStyle.WarningMessage>
               *youtube.com이 들어간 링크만 가능해요
             </ConvertVideoStyle.WarningMessage>
           )}
-          <ConvertVideoStyle.StartButton disabled={!youtubeURLValidation}>
-            start
-          </ConvertVideoStyle.StartButton>
+
+          {progress < 100 ? (
+            <ConvertVideoStyle.Button
+              disabled={!isValidate || (progress > 0 && progress < 100)}
+              onClick={handleClickButton}
+            >
+              start
+            </ConvertVideoStyle.Button>
+          ) : (
+            <ConvertVideoStyle.Button
+              style={{
+                color: theme.color.gray500,
+                backgroundColor: theme.color.green400,
+              }}
+              onClick={handleClickButton}
+            >
+              start
+            </ConvertVideoStyle.Button>
+          )}
+
+          {videoLink && (
+            <>
+              <ConvertVideoStyle.ProgressBar>
+                <div
+                  style={{
+                    width: `${progress}%`,
+                    backgroundColor: errorCode
+                      ? theme.color.red
+                      : theme.color.green300,
+                  }}
+                />
+              </ConvertVideoStyle.ProgressBar>
+
+              <span className="progress-text">
+                {errorCode ? '변환 중 오류' : `${progress}%`}
+              </span>
+            </>
+          )}
         </>
       )}
     </ConvertVideoStyle.Container>
