@@ -1,6 +1,5 @@
 import { APIBaseResponse, APIResponse } from '@/models/config/axios';
 import {
-  ITempTokenResponse,
   IVideo,
   UpdateVideoCategoryRequest,
   UpdateVideoRequest,
@@ -99,13 +98,6 @@ export const createDummyVideoToMine = async (
     `/videos/dummyVideos/${videoId}/${categoryId}/newVideo`,
   );
 
-  return response.data;
-};
-
-export const getTempToken = async (): Promise<
-  APIResponse<ITempTokenResponse>
-> => {
-  const response = await axiosInstance.get('/');
   return response.data;
 };
 

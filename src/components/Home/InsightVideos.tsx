@@ -4,31 +4,26 @@ import Card from '../category/Card';
 import { IVideoProps } from 'types/videos';
 import { CardContainer } from '@/styles/category/Card.style';
 import successImg from '@/assets/success.png';
-import { createDummyVideoToMine, getUnReadDummyVideos } from '@/apis/videos';
 
 interface InsightVideosProps {
   userToken: string | null;
   dummyVideos: IVideoProps[];
-  setDummyVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>;
+  onFileClick: (
+    videoId: number,
+    categoryId: number,
+    categoryName?: string,
+  ) => void;
 }
 
 const InsightVideos: React.FC<InsightVideosProps> = ({
   userToken,
   dummyVideos,
-  setDummyVideos,
+  onFileClick,
 }) => {
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [showEndMessage, setShowEndMessage] = useState(false);
 
   const endBox = useRef<HTMLDivElement>(null);
-
-  const onFileClick = async (videoId: number, categoryId: number) => {
-    const res = await createDummyVideoToMine(videoId, categoryId);
-    if (res.isSuccess)
-      await getUnReadDummyVideos().then((res) =>
-        setDummyVideos(res.result.videos),
-      );
-  };
 
   useEffect(() => {
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {
@@ -71,7 +66,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
         <CardContainer>
           {dummyVideos.map((video) => (
             <Card
-              mode="recommend"
+              mode={userToken ? 'recommend' : 'default'}
               video={video}
               checkedVideos={checkedItems}
               setCheckedVideos={setCheckedItems}

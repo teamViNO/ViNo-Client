@@ -33,27 +33,6 @@ export const Container = styled.div<{ selected: boolean }>`
   }
 `;
 
-export const EditNameInputWrap = styled.div`
-  display: flex;
-  padding: 10px 20px;
-  border: 1px solid ${theme.color.gray200};
-  width: 100%;
-  background-color: ${theme.color.white};
-  border-radius: 100px;
-  &.warning {
-    border: 1px solid ${theme.color.red};
-  }
-`;
-
-export const EditNameInput = styled.input`
-  width: 100%;
-  margin-left: 10px;
-  outline: none;
-  border: 0;
-  background-color: rgba(0, 0, 0, 0);
-  ${theme.typography.Body1}
-`;
-
 export const FolderButton = styled(CommonButtonStyle)`
   width: 100%;
 `;

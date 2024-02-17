@@ -52,7 +52,3 @@ export interface UpdateVideoRequest {
 export interface UpdateVideoCategoryRequest {
   video_id: (string | number)[];
 }
-
-export interface ITempTokenResponse {
-  tempToken: string;
-}
