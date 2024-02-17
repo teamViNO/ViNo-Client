@@ -45,3 +45,19 @@ export interface UpdatePasswordRequest {
   new_password: string;
   confirm_password: string;
 }
+
+export interface NickNameRequest {
+  nick_name: string;
+}
+export interface NickNameResponse {}
+
+export interface FindEmailResponse {
+  success : boolean;
+  message : string;
+  email : string;
+}
+
+export interface FindEmailRequest {
+  name : string;
+  phone_number : string;
+}

@@ -34,6 +34,7 @@ const SignUp = () => {
   const [passwordMessage, setPasswordMessage] = useState<string>("*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용");
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>("비밀번호 확인을 위해 다시 한 번 입력해주세요");
   const [mismatchError, setMismatchError] = useState<boolean>(false);
+  const [isEmailSuccess, setIsEmailSuccess] = useState(false);
   
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
 
@@ -65,10 +66,12 @@ const SignUp = () => {
       const { code } = (await checkEmailAPI({ email })).data;
       console.log(code)
       setAvaMessage('사용 가능한 이메일이에요!');
+      setIsEmailSuccess(true);
     } catch (e) {
       if (e instanceof AxiosError) {
         console.log(e.response?.data.code)
         setIsOpenOverlapModal(true)
+        setIsEmailSuccess(false);
       }
     }
   }
@@ -139,11 +142,6 @@ const SignUp = () => {
       console.log(err);
     }
   };
-
-  //const startTimer = () => setTime(5 * 60); 
-  //const stopTimer = () => {
-    //setIsTimer(false);
-  //};
 
   return (
     <SignupPageStyles.Wrapper>
@@ -238,19 +236,14 @@ const SignUp = () => {
                 value={email}
                 placeholder="abcd@email.com"
                 onChange={onChangeEmail}
-                // error={!isEmail}
+                readOnly={isEmailSuccess}
               ></SignupPageStyles.EmailInputBox>
-              {isEmail  ? (
               <SignupPageStyles.DupSucButton 
                 id ="overlap_button" 
-                onClick={id_overlap_check}>
+                onClick={id_overlap_check}
+                disabled = {!isEmail || isEmailSuccess}>
                 중복 확인하기
               </SignupPageStyles.DupSucButton>
-              ) : (
-              <SignupPageStyles.DupButton>
-                중복 확인하기
-              </SignupPageStyles.DupButton>
-              )}
               </SignupPageStyles.TwoLabel>
               {!isEmail && (
                 <SignupPageStyles.Error>{emailMessage}</SignupPageStyles.Error>

@@ -1,81 +1,52 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState} from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import firstImg from '@/assets/first.png';
 import smallLogo from "../assets/logo.png";
-import mail from "../assets/mail.png";
+import theme from '@/styles/theme';
+import NotFindUserModal from '@/components/modals/NotFindUserModal';
+import PhoneCheck from '@/components/PhoneCheck';
+import { findEmailAPI } from '@/apis/user';
+import FindEmail from '@/components/FindEmail';
+import ImageSlider from '@/components/ImageSlider';
 
 const FindEmailPage = () => {
   const [name, setName] = useState<string>("");
-  const [errMessage, setErrMessage] = useState('');
-  const [tel, setTel] = useState<string>("");
-  const [isTel, setIsTel] = useState<boolean>(false);
+  const [tel, setTel] = useState('');
+  const [email, setEmail] = useState('');
+  const [isModal, setIsModal] = useState(false);
+  const [isFind, setIsFind] = useState(false);
+  const [allChecked, setAllChecked] = useState(false);
 
-  const [showResult, setShowResult] = useState<boolean>(false);
-
-  const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    console.log(name);
-  }, []);
+  }
 
-  const onChangeTel = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const telRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-      const telCurrent = e.target.value;
-      setTel(telCurrent);
-      if (!telRegex.test(telCurrent)) {
-        setErrMessage('올바른 전화번호 형식이 아닙니다.');
-        setIsTel(false);
-      } else {
-        setErrMessage('');
-        setIsTel(true);
+  const findBtnHandler = async () => {
+    try {
+      const {data} = await findEmailAPI({
+        name: name,
+        phone_number: tel,
+      });
+      if(data.success){
+        setIsFind(true);
+        setEmail(data.email);
       }
-    },
-    [tel],
+    } catch (error) {
+        setIsModal(true);
+  }
+}
+
+if(isFind){
+  return (
+    <Container>
+      <FindEmail userName={name} email={email}/>
+    </Container>
   );
-
-  const onResultHandler = useCallback(() => {
-    setShowResult(true);
-  }, []);
-
-  const navigate = useNavigate();
-  const navigateToLogin = () => {
-    navigate('/sign-in');
-  };
-  const navigateToPw = () => {
-    navigate('/findpw');
-  };
-
-  const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log(tel);
-    },
-    [tel],
-  );
-
+}
 return (
   <Container>
-      {showResult ? (
-          <ResultWrapper>
-            <img src={mail} alt="메일 이미지" />
-            <h4>
-            서예진님의 이메일은 <span>yejin2174@naver.com</span>입니다!
-            </h4>
-            <p>로그인하고 나만의 영상 아카이빙을 시작해요</p>
-            <LoginButton type="submit" bgColor={showResult} onClick={navigateToLogin}>
-            로그인 하러가기
-            </LoginButton>
-            <PwButton type="submit" bgColor={showResult} onClick={navigateToPw}>
-            비밀번호 찾기
-            </PwButton>
-          </ResultWrapper>
-        ) : (
           <Wrapper>
-            <LogoSection>
-              <img src={firstImg} alt="로고 이미지" />
-            </LogoSection>
+            <ImageSlider/>
             <MainSection>
               <Intro>
                 <img src={smallLogo} alt="로고 이미지" />
@@ -83,7 +54,6 @@ return (
                 <p>이메일이 기억나지 않으시나요?</p>
               </Intro>
               <InputSection>
-                <Form onSubmit={onSubmit}>
                   <Label>
                     <span>이름</span>
                     <InputBox
@@ -93,22 +63,13 @@ return (
                       value={name}
                       placeholder="홍길동"
                       onChange={onChangeName}
+                      readOnly={allChecked}
                   ></InputBox>
                   </Label>
                   <TwoLabel>
-                    <span>전화번호</span>
-                    <InputBox
-                      type="text"
-                      id="tel"
-                      name="tel"
-                      value={tel}
-                      placeholder="휴대폰 번호 입력 (-제외)"
-                      onChange={onChangeTel}
-                    ></InputBox>
-                    {!isTel && <Error>{errMessage}</Error>}
-                  </TwoLabel>
-                  </Form>
-                  <FindButton type="submit" bgColor={isTel} onClick={onResultHandler}>
+                    <PhoneCheck setCheck={setAllChecked} tel={tel} setTel={setTel}/>
+                    </TwoLabel>
+                  <FindButton disabled={!allChecked} onClick={findBtnHandler}>
                     찾아보기
                   </FindButton>
               <TextTotalComponent style={{margin: "40px 0px 0px 0px"}}>
@@ -126,83 +87,16 @@ return (
               </InputSection>
             </MainSection>
           </Wrapper>
-          )}
+      {isModal && <NotFindUserModal setIsShow={setIsModal} type={true}/>}
       </Container>
   );
 };
 
 export default FindEmailPage;
 
+
 const Container = styled.div`
   display: flex;
-`;
-
-const ResultWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 1440px;
-  width: 100%;
-  min-height: 100vh;
-  h4 {
-    color:#1E1E1E;
-    font-size: 32px;
-    font-weight: 500;
-    margin-top: 41px;
-    margin-bottom: 8px;
-    text-align: center;
-    span {
-      color: ${({ theme }) => theme.color.gray500};
-      font-weight: bold;
-    }
-  }
-  img{
-    display: flex;
-    width: 130.67px;
-    height: 121.67px;
-  }
-  p{
-    color:#BBBBBB;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 160%;
-    margin-top: 8px;
-  }
-`;
-
-const LoginButton = styled.button<{ bgColor?: boolean }>`
-  width: 494px;
-  height: 56px;
-  background: ${(props) => (props.bgColor ? '#1E1E1E' : '#FFFFFF')};
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 160%;
-  border-radius: 12px;
-  border: none;
-  margin-top:64px;
-  font-family: Pretendard;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const PwButton = styled.button<{ bgColor?: boolean }>`
-  width: 494px;
-  height: 56px;
-  background: ${(props) => (props.bgColor ? '#FFFFFF' : '#787878')};
-  color: #787878;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 160%;
-  border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top:12px;
-  font-family: Pretendard;
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const Wrapper = styled.div`
@@ -215,13 +109,6 @@ const Wrapper = styled.div`
   gap: 124px;
 `;
 
-const LogoSection = styled.div`
-  img{
-    display: flex;
-    width: auto;
-    height: 840px;
-  }
-`;
 
 const MainSection = styled.div`
   display: flex;
@@ -267,16 +154,8 @@ const InputSection = styled.div`
   height: auto;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 494px;
-  height: auto;
-`;
 
 const Label = styled.label`
-  margin-bottom: 40px;
   span {
     font-size: 16px;
     color: #787878;
@@ -288,10 +167,11 @@ const Label = styled.label`
 `;
 
 const TwoLabel = styled.label`
+  display : flex;
+  flex-direction : column;
   margin-bottom: 8px;
   span {
     font-size: 16px;
-    color: #787878;
     font-family: Pretendard;
     margin-bottom: 8px;
     font-weight: 500;
@@ -302,6 +182,7 @@ const TwoLabel = styled.label`
 const InputBox = styled.input`
   display: flex;
   align-items: center;
+  margin-bottom : 8px;
   justify-content: center;
   width: 494px;
   height: 56px;
@@ -316,7 +197,6 @@ const InputBox = styled.input`
   line-height: 160%;
   border-radius: 12px;
   border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top: 8px;
   outline: none;
   
   &:hover {
@@ -329,29 +209,15 @@ const InputBox = styled.input`
   &::placeholder {
     color: #bbb;
 
-    /* Body1 */
-    font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
+    ${theme.typography.Body1};
   }
 `;
 
-const Error = styled.p`
-  color: #eb5353;
-  font-size: 0.9rem !important;
-  font-weight: 500;
-  margin: 0;
-  padding-left: 4px;
-  padding-top: 12px;
-`;
-
-const FindButton = styled.button<{ bgColor?: boolean }>`
+const FindButton = styled.button`
   width: 494px;
   height: 56px;
-  background: ${(props) => (props.bgColor ? '#BBBBBB' : '#F3F3F3')};
-  color: #BBBBBB;
+  background: #1E1E1E;
+  color: #EEEEEE;
   font-size: 16px;
   font-weight: 500;
   line-height: 160%;
@@ -360,6 +226,10 @@ const FindButton = styled.button<{ bgColor?: boolean }>`
   font-family: Pretendard;
   &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    background-color : #F3F3F3;
+    color : #BBBBBB;
   }
 `;
 
@@ -382,11 +252,8 @@ const TextDiv = styled.div`
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
+  ${ theme.typography.Body3 };
   text-align: center;
   text-decoration: none;
-  font-size: 14px; 
-  font-weight: 500;
-  line-height: 160%;
   margin : 0px 0px 0px 10px;
 `;
-
