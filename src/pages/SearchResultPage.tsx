@@ -19,7 +19,6 @@ const SearchResult = () => {
   const [errormsg, setErrormsg] = useState('');
   const [data, setData] = useState<IVideo[]>([]);
   const location = useLocation();
-  const searchNav = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -111,18 +110,6 @@ const SearchResult = () => {
     });
     mappingData;
   };
-  const handleReSearch = () => {
-    const params = {
-      type: searchType === true ? 'keyword' : 'hashtag',
-      value: searchType ? input : tags.join('&'),
-    };
-
-    searchNav({
-      pathname: '/search/result',
-      search: `?${createSearchParams(params)}`,
-    });
-    window.location.reload();
-  };
 
   if (loading) {
     return (
@@ -153,14 +140,6 @@ const SearchResult = () => {
                 setSearchType={setSearchType}
               />
             </div>
-            <button
-              className="search-btn"
-              style={{ width: '90px', height: '36px' }}
-              disabled={input.length === 0 && tags.length === 0}
-              onClick={handleReSearch}
-            >
-              Search
-            </button>
           </div>
         </div>
       </div>
