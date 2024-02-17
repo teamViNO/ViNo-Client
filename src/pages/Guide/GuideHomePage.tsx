@@ -1,5 +1,4 @@
 import ErrorIcon from '@/assets/icons/error.svg?react';
-
 import { QuestionTip } from '@/components/Guide';
 
 import {
@@ -8,6 +7,10 @@ import {
   QuestionSection,
   Section,
 } from '@/styles/GuidePage';
+
+import GuideProgress1 from '@/assets/guideprogress1.svg?react';
+import GuideProgress2 from '@/assets/guideprogress2.svg?react';
+import GuideProgress3 from '@/assets/guideprogress3.svg?react';
 
 const GuideHomePage = () => {
   return (
@@ -22,7 +25,7 @@ const GuideHomePage = () => {
             <span>영상을 텍스트로 변환</span>할 수 있어요
           </h1>
         </div>
-
+        
         <GuideHome>
           <div className="item">
             <img src="/assets/home-guide1.png" alt="guide-image" width={446} />
@@ -97,17 +100,17 @@ const GuideHomePage = () => {
 
             <QuestionHome>
               <div className="item">
-                <img src="" alt="question-tip" />
+                <GuideProgress1 width={205}/>
                 <span>진행중</span>
               </div>
 
               <div className="item">
-                <img src="" alt="question-tip" />
+                <GuideProgress2 width={205}/>
                 <span>진행 완료</span>
               </div>
 
               <div className="item">
-                <img src="" alt="question-tip" />
+                <GuideProgress3 width={205}/>
                 <span>진행 오류</span>
               </div>
             </QuestionHome>

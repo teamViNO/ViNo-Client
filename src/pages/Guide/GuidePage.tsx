@@ -1,10 +1,13 @@
 import { Section } from '@/styles/GuidePage';
-
+import ServiceList1 from '@/assets/servicelist1.svg?react'
+import ServiceList2 from '@/assets/servicelist2.svg?react'
+import ServiceList3 from '@/assets/servicelist3.svg?react'
+import ServiceList4 from '@/assets/servicelist4.svg?react'
 const GuidePage = () => {
   const serviceList = [
     {
       id: 'SIMPLE',
-      image: '',
+      image: ServiceList1,
       title: '한 눈에 읽는 영상',
       description: (
         <>
@@ -15,7 +18,7 @@ const GuidePage = () => {
     },
     {
       id: 'INSIGHT',
-      image: '',
+      image: ServiceList2,
       title: '쉽게 남기는 인사이트',
       description: (
         <>
@@ -27,7 +30,7 @@ const GuidePage = () => {
     },
     {
       id: 'SEARCH',
-      image: '',
+      image: ServiceList3,
       title: '다시 읽고 싶다면 간단하게 검색',
       description: (
         <>
@@ -39,7 +42,7 @@ const GuidePage = () => {
     },
     {
       id: 'CATEGORY',
-      image: '',
+      image: ServiceList4,
       title: '내용별 카테고리 정리',
       description: (
         <>
@@ -68,7 +71,7 @@ const GuidePage = () => {
       <div className="service-content">
         {serviceList.map((service) => (
           <div key={service.id} className="service-item">
-            <img src="" alt="service-item" />
+            <service.image/>
 
             <h1>{service.title}</h1>
 
