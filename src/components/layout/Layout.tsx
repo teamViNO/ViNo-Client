@@ -6,11 +6,14 @@ import { isSideBarOpenState } from '@/stores/ui';
 import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
+import NicknameModal from '@/components/NicknameModal';
 import { useMemo } from 'react';
+import { userInfoState } from '@/stores/user';
 
 const Layout = () => {
   const { pathname } = useLocation();
   const isSideBarOpen = useRecoilValue(isSideBarOpenState);
+  const userInfo = useRecoilValue(userInfoState);
 
   const isShowFooter = useMemo(
     () => ['/'].includes(pathname) || /^\/category/g.test(pathname),
@@ -28,6 +31,7 @@ const Layout = () => {
       </div>
 
       {isShowFooter && <Footer />}
+      {userInfo && userInfo.nick_name === '' && <NicknameModal />}
     </>
   );
 };
