@@ -12,7 +12,9 @@ const handleVideo = async (
   >,
   setName: React.Dispatch<React.SetStateAction<string>>,
   setVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
+  setIsLoading(true);
   if (!topCategoryId) {
     await getRecentVideos().then((res) => {
       setVideos(res.result.videos);
@@ -37,6 +39,7 @@ const handleVideo = async (
         setName(topCategory!.name);
         setMenus(topCategory!.subFolders);
       }
+      setIsLoading(false);
       setVideos(res.isSuccess ? res.result.videos : []);
     });
   }

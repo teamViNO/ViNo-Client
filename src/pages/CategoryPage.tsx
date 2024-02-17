@@ -15,9 +15,11 @@ import VideoSelectMenu from '@/components/category/VideoSelectMenu';
 import DefaultMenu from '@/components/category/DefaultMenu';
 import { putVideoToOtherCategory } from '@/apis/category';
 import handleVideo from '@/utils/handleVideo';
+import CategoryPageSkeleton from '@/components/skeleton/CategoryPageSkeleton';
 
 const CategoryPage = () => {
   const params = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState('');
   const [menus, setMenus] = useState<ISubFolderProps[] | ITagProps[]>([]);
   const [videos, setVideos] = useState<IVideoProps[]>([]);
@@ -39,6 +41,7 @@ const CategoryPage = () => {
       setMenus,
       setName,
       setVideos,
+      setIsLoading,
     );
     setCheckedVideos([]);
   }, [categories, params.sub_folder, params.top_folder]);
@@ -73,9 +76,13 @@ const CategoryPage = () => {
         setMenus,
         setName,
         setVideos,
+        setIsLoading,
       );
     }
   };
+
+  if (isLoading)
+    return <CategoryPageSkeleton isSubSkeleton={!!params.sub_folder} />;
 
   return (
     <CategoryPageStyles.Container>
