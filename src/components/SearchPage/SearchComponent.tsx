@@ -3,6 +3,9 @@ import Container from '@/styles/SearchComponent';
 import useBoolean from '@/hooks/useBoolean';
 import useIndex from '@/hooks/useIndex';
 import CloseIcon from '@/assets/icons/close-btn.svg?react'
+import SearchIcon from '@/assets/icons/search.svg?react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+
 const placeholder = '검색하고 싶은 키워드를 입력해주세요'
 
 interface BaseTagInputProps {
@@ -27,7 +30,7 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
   const [hoverdIndex, setHoveredIndex, setLeaveIndex] = useIndex(null);
   const [hoverBtnIndex, setHoverBtnIndex, setLeaveBtnIndex] = useIndex(null);
   const [tagIndex, setRemovingTagIndex, setNullTagIndex] = useIndex(null);
-
+  const searchNav = useNavigate();
   useEffect(() => {
     if (tags.length > 3) {
       const lastValue = tags[3]
@@ -45,8 +48,12 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
   }, [tags, setTags]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === 'Enter'){
+      handleSearch();
+    }
     if(!searchType){
-        if (event.key === 'Enter' && !isComposing) {
+        
+        if ((event.code === 'Comma' || event.code === 'Space') && !isComposing) {
         event.preventDefault(); 
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
@@ -54,7 +61,7 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
             input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
           setInput('');
         }
-        } else if (event.key === 'Backspace' && !input) { 
+        } else if ((event.key === 'Backspace' || event.code === 'Backspace') && !input) { 
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
             if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
@@ -90,8 +97,23 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
     }, 500)
   }
 
-  
+  const handleSearch = () => {
+    const params = {
+        type : searchType === true ? 'keyword' : 'hashtag',
+        value: searchType ? input : tags.join('&')
+    };
+
+    searchNav({
+        pathname : '/search/result',
+        search : `?${createSearchParams(params)}`
+    })
+    window.scrollTo(0, 0);
+}
+
   return (
+    <div style={{display : 'flex', flexDirection : 'row'}}>
+    <div className='input' style={{width : '770px', height : '36px'}}>
+      <SearchIcon width={36} height={36}/>
     <Container className="tag-container" style={{width : '700px', height : '36px'}}>
       {tags.map((tag : string, index : number) => (
         <span className={`tag ${hoverdIndex === index ? 'hovered' : ''} ${ (index >= 3 || index === tagIndex) ? 'exceed' : ''}`} key={index} onMouseEnter={() => setHoverBtnIndex(index)} onMouseLeave={setLeaveBtnIndex}>
@@ -110,6 +132,9 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
         onChange={(e) => handleOnchage(e)}
       />
     </Container>
+    </div>
+      <button className='search-btn' onClick={handleSearch} disabled={(input.length === 0 && tags.length === 0)} style={{width : '90px', height : '36px'}}>Search</button>
+    </div>
   );
 };
 

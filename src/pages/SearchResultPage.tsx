@@ -1,13 +1,12 @@
 import { escapeHTML } from "@/utils/string";
 import { useState, useEffect} from "react";
-import { createSearchParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Styled from "@/styles/SearchResult";
 import TagInput from "@/components/SearchPage/SearchComponent";
 import SearchNotFound from "@/components/SearchPage/SearchNotFound";
 import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from "@/models/search";
 import { searchAPI } from "@/apis/search";
-import { useNavigate } from "react-router-dom";
 
 import SearchResultBox from "@/components/SearchPage/SearchResultBox";
 
@@ -19,8 +18,6 @@ const SearchResult = () => {
     const [errormsg, setErrormsg] = useState('');
     const [data, setData] = useState<IVideo[]>([]);
     const location = useLocation();
-    const searchNav = useNavigate();
-
 
     useEffect(() => {
             const searchParams = new URLSearchParams(location.search);
@@ -41,13 +38,13 @@ const SearchResult = () => {
                     break;
                 case 'hashtag':
                     const tagValues = searchParams.get('value') as string;
-                    const tagtype = searchParams.get('type') as string
-
-                    setTags(tagValues.split('&'))
+                    const tagtype = searchParams.get('type') as string;
+                    setTags(tagValues.replace(/\ /g, '').split('&'))
                     setSearchType(false);
                     handleSearchAPI(tagValues, tagtype, '&');
                     if(data.length === 0){
-                        setErrormsg(tagValues.replace('&', ' '))
+                        const changeSpace = tagValues.replace(/\&/g, ' ');
+                        setErrormsg(changeSpace)
                     }
                     break;
 
@@ -109,18 +106,7 @@ const SearchResult = () => {
             });
             mappingData;
     }
-    const handleReSearch = () => {
-        const params = {
-            type : searchType === true ? 'keyword' : 'hashtag',
-            value: searchType ? input : tags.join('&')
-        };
-
-        searchNav({
-            pathname : '/search/result',
-            search : `?${createSearchParams(params)}`
-        })
-        window.location.reload();
-    }
+    
 
   if(loading){
     return (
@@ -140,7 +126,6 @@ const SearchResult = () => {
                             <TagInput tags={tags} input={input} searchType={searchType}
                             setTags={setTags} setInput={setInput} setSearchType={setSearchType}/>
                         </div>
-                        <button className='search-btn' style={{width : '90px', height : '36px'}} disabled={(input.length === 0 && tags.length === 0)} onClick={handleReSearch}>Search</button>
                     </div>
             </div>
         </div>

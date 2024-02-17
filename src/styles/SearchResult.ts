@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import theme from "./theme";
 
 const Container = styled.div`
      display : flex;
@@ -45,7 +46,7 @@ const Container = styled.div`
 
    & div.input {
           display : flex;
-          gap : 20px;
+          gap : 10px;
    }
 
    & input::placeholder {
@@ -66,6 +67,10 @@ const Container = styled.div`
           border-radius: 8px;
           order : 1;
           border : 0;
+          &:hover {
+               background-color : ${theme.color.green500};
+               color : ${theme.color.gray500};
+          }
    }
 
    & button:disabled {
@@ -273,9 +278,14 @@ const SearchNotFoundContainer = styled.div`
 
      & div.text {
           ${(props) => props.theme.typography.Header3};
+          display : flex;
+          flex-direction : column;
+          justify-content: center;
+          align-items: center;
      }
      & span.user {
           color : ${(props) => props.theme.color.gray300};
+          text-align : center;
      }
 
      & button {

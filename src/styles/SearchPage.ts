@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import theme from "./theme";
 
 const Container = styled.div`
     display : flex;
@@ -98,6 +99,10 @@ const Container = styled.div`
         border-radius: 8px;
         order : 1;
         border : 0;
+        &:hover {
+            background-color : ${theme.color.green500};
+            color : ${theme.color.gray500};
+        }
    }
 
    & button:disabled {
