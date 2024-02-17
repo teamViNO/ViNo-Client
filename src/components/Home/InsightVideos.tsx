@@ -22,12 +22,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
 
   const endBox = useRef<HTMLDivElement>(null);
 
-  const onFileClick = async (
-    e: React.MouseEvent,
-    videoId: number,
-    categoryId: number,
-  ) => {
-    e.stopPropagation();
+  const onFileClick = async (videoId: number, categoryId: number) => {
     const res = await createDummyVideoToMine(videoId, categoryId);
     if (res.isSuccess)
       await getUnReadDummyVideos().then((res) =>
@@ -65,7 +60,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   }, [userToken]);
 
   return (
-    <InsightVideosContainer userToken={userToken}>
+    <InsightVideosContainer user={userToken}>
       <div className="insight-container">
         <div className="text-container">
           <h2 className="insight-title">이런 인사이트는 어때요?</h2>

@@ -6,25 +6,31 @@ import { isSideBarOpenState } from '@/stores/ui';
 import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const Layout = () => {
   const { pathname } = useLocation();
   const isSideBarOpen = useRecoilValue(isSideBarOpenState);
 
   const isShowFooter = useMemo(
-    () => ['/'].includes(pathname) || /^\/category/g.test(pathname),
+    () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
 
   return (
     <>
       <Header />
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', width: '100vw' }}>
         {isSideBarOpen && <SideBar />}
 
-        <Outlet />
+        <div style={{ flex: '1 1 auto' }}>
+          <Outlet />
+        </div>
       </div>
 
       {isShowFooter && <Footer />}

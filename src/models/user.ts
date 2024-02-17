@@ -19,25 +19,25 @@ export interface JoinRequest {
   password: string;
   check_password: string;
   birth_date: string;
-  gender: string;
+  gender: string | null;
   phone_number: string;
 }
 
 export interface JoinResponse {}
 
 export interface MyInfoResponse {
-  birth_date: string;
+  birth_date?: string;
   email: string;
   gender: string;
   name: string;
-  nick_name: string;
+  nick_name?: string;
   phone_number: string;
   platform?: 'kakao' | 'naver';
 }
 
 export interface UpdateMyInfoRequest {
   nick_name: string;
-  gender: string;
+  gender?: string;
 }
 
 export interface UpdatePasswordRequest {

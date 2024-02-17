@@ -12,6 +12,8 @@ export const DetailBox = styled.div`
   display: flex;
   flex-direction: column;
   padding: 60px 58px 29.5px 60px;
+  min-width: 555px;
+  max-width: 760px;
 
   & span.created_at {
     color: ${(props) => props.theme.color.gray300};
@@ -50,14 +52,11 @@ export const DetailBox = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
+    background-color: ${(props) => props.theme.color.gray200};
 
-    &.selected {
+    &.changed {
       background-color: ${(props) => props.theme.color.green400};
-    }
-
-    &.not-selected {
-      background-color: ${(props) => props.theme.color.gray200};
+      cursor: pointer;
     }
 
     &.disabled svg {
@@ -71,10 +70,23 @@ export const DetailBox = styled.div`
     }
   }
 
-  & span.title {
+  & span.title,
+  & input.title {
     margin-top: 40px;
     color: ${(props) => props.theme.color.gray500};
     ${(props) => props.theme.typography.Header6};
+  }
+
+  & input.title {
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
+
+    &:focus {
+      border: solid 2px black;
+    }
   }
 
   & div.subtitle {
@@ -184,6 +196,34 @@ export const DetailBox = styled.div`
     right: 0;
     transform: translateX(calc(100% + 24px));
   }
+
+  &.disabled {
+    & span.youtube-video-title {
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.hashtag {
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.subtitle-index {
+      background-color: ${(props) => props.theme.color.gray200};
+      color: ${(props) => props.theme.color.gray300};
+    }
+
+    & span.subtitle-text {
+      color: ${(props) => props.theme.color.gray300};
+      cursor: default;
+    }
+
+    & span.note-icon {
+      opacity: 0.4;
+    }
+
+    & span.note-text {
+      color: ${(props) => props.theme.color.gray300};
+    }
+  }
 `;
 
 export const ScriptBox = styled.div`
@@ -199,7 +239,36 @@ export const ScriptBox = styled.div`
     padding: 20px 100px 0 60px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
+
+    & button.edit-button {
+      padding: 8px 20px;
+      width: 100px;
+      border-radius: 8px;
+      border: none;
+      transition: 0.1s;
+      cursor: pointer;
+      ${(props) => props.theme.typography.Body1};
+
+      &.prev {
+        background-color: ${(props) => props.theme.color.gray200};
+        color: ${(props) => props.theme.color.gray400};
+
+        &:hover {
+          background-color: ${(props) => props.theme.color.gray300};
+        }
+      }
+
+      &.save {
+        background-color: ${(props) => props.theme.color.gray400};
+        color: ${(props) => props.theme.color.gray100};
+
+        &:hover {
+          background-color: #616161;
+        }
+      }
+    }
   }
 
   & div.indicator {
@@ -243,13 +312,35 @@ export const ScriptBox = styled.div`
     gap: 60px;
   }
 
-  & span.script-title {
+  & span.script-title,
+  & input.script-title {
     color: ${(props) => props.theme.color.gray500};
-    ${(props) => props.theme.typography.Subheader1}
+    ${(props) => props.theme.typography.Subheader1};
+  }
+
+  & input.script-title {
+    padding: 4px 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
+
+    &:focus {
+      border: solid 2px black;
+    }
   }
 
   & span.play-button {
     cursor: pointer;
+
+    &.disabled {
+      cursor: default;
+
+      & svg {
+        fill: ${(props) => props.theme.color.gray300};
+      }
+    }
   }
 
   & span.script-badge {
@@ -266,17 +357,18 @@ export const ScriptBox = styled.div`
     font-weight: 600;
     line-height: 2;
     color: #5d5b5b;
+  }
 
-    & > mark {
-      padding: 4px 8px;
-      border-radius: 4px;
-      background-color: #d2f1b4;
-      line-height: 1.6;
-      color: ${(props) => props.theme.color.gray500};
+  & div.script-content-edit {
+    padding: 4px 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: solid 2px ${(props) => props.theme.color.gray200};
+    outline: none;
+    transition: 0.1s;
 
-      &.active {
-        background-color: #a4de6b;
-      }
+    &:focus {
+      border: solid 2px black;
     }
   }
 
@@ -287,6 +379,18 @@ export const ScriptBox = styled.div`
     width: 5px;
     height: 100%;
     cursor: ew-resize;
+  }
+
+  & mark {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #d2f1b4;
+    line-height: 1.6;
+    color: ${(props) => props.theme.color.gray500};
+
+    &.active {
+      background-color: #a4de6b;
+    }
   }
 `;
 
@@ -327,7 +431,11 @@ export const Dropdown = styled.div`
     color: ${(props) => props.theme.color.gray400};
     transition: 0.1s;
     cursor: pointer;
-    ${(props) => props.theme.typography.Body3}
+    ${(props) => props.theme.typography.Body3};
+
+    &.active {
+      color: ${(props) => props.theme.color.gray500};
+    }
 
     &:hover {
       background-color: ${(props) => props.theme.color.gray100};
@@ -440,7 +548,13 @@ export const ModalContainer = styled(BlurBackground)`
     display: flex;
     flex: 1 1 auto;
     border-radius: 12px;
+    border: solid 2px rgba(0, 0, 0, 0);
     background-color: ${(props) => props.theme.color.gray100};
+    transition: 0.1s;
+
+    &.focus {
+      border: solid 2px ${(props) => props.theme.color.gray500};
+    }
 
     & input {
       width: 100%;
@@ -453,6 +567,10 @@ export const ModalContainer = styled(BlurBackground)`
 
       &::placeholder {
         color: ${(props) => props.theme.color.gray300};
+      }
+
+      &:focus::placeholder {
+        color: transparent;
       }
     }
   }
@@ -486,13 +604,24 @@ export const ModalContainer = styled(BlurBackground)`
     border-radius: 12px;
     background-color: ${(props) => props.theme.color.gray500};
     color: white;
+    transition: 0.1s;
     cursor: pointer;
     ${(props) => props.theme.typography.Body1};
 
     &.all {
-      background-color: white;
+      background-color: white !important;
       border: solid 1.5px ${(props) => props.theme.color.gray200};
       color: ${(props) => props.theme.color.gray400};
+    }
+
+    &:disabled {
+      background-color: ${(props) => props.theme.color.gray200};
+      color: ${(props) => props.theme.color.gray300};
+      cursor: not-allowed;
+
+      &.all {
+        color: ${(props) => props.theme.color.gray300};
+      }
     }
   }
 `;

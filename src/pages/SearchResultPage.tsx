@@ -8,7 +8,7 @@ import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from "@/models/search";
 import { searchAPI } from "@/apis/search";
 
-import SearchResultBox from "@/components/SearchPage/SearchResultBox";
+import SearchResultBox from '@/components/SearchPage/SearchResultBox';
 
 const SearchResult = () => {
     const [tags, setTags] = useState<string[]>([]);
@@ -19,10 +19,13 @@ const SearchResult = () => {
     const [data, setData] = useState<IVideo[]>([]);
     const location = useLocation();
 
-    useEffect(() => {
-            const searchParams = new URLSearchParams(location.search);
+    setLoading(true);
 
-            setLoading(true);
+    switch (searchParams.get('type')) {
+      case 'keyword':
+        setSearchType(true);
+        const inputValues = searchParams.get('value') as string;
+        const keywordtype = searchParams.get('type') as string;
 
             switch(searchParams.get('type')) {
                 case 'keyword':
@@ -74,22 +77,85 @@ const SearchResult = () => {
         } finally {
             setLoading(false);
         }
+        break;
+      case 'hashtag':
+        const tagValues = searchParams.get('value') as string;
+        const tagtype = searchParams.get('type') as string;
+
+        setTags(tagValues.split('&'));
+        setSearchType(false);
+        handleSearchAPI(tagValues, tagtype, '&');
+        if (data.length === 0) {
+          setErrormsg(tagValues.replace('&', ' '));
+        }
+        break;
+
+      default:
+      // 기타 에러
+    }
+  }, [location.search]);
+
+  const handleSearchAPI = async (
+    inputValues: string,
+    type: string,
+    splittype: string,
+  ) => {
+    try {
+      const keywords = inputValues.split(splittype);
+
+      const requests = keywords.map((value) => {
+        if (type === 'hashtag') {
+          value = value.replace('#', '');
+        }
+        const searchData = searchAPI(type, value);
+        return searchData.then((value) => value.data.result);
+      });
+      const responses = await Promise.all(requests);
+      responses.forEach((response) => {
+        const ivideos = response.videos as IVideo[];
+        dataDuplicateHandler(ivideos, inputValues);
+      });
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatContent = (content: string, keyword: string) => {
+    if (keyword.trim() !== '') {
+      content = content
+        .split(keyword)
+        .map((s) => escapeHTML(s))
+        .join(`<mark>${escapeHTML(keyword)}</mark>`);
+    } else {
+      content = escapeHTML(content);
     }
 
-    const formatContent = (content : string, keyword : string) => {
-        if (keyword.trim() !== '') {
-          content = content
-            .split(keyword)
-            .map((s) => escapeHTML(s))
-            .join(`<mark>${escapeHTML(keyword)}</mark>`);
-        } else {
-          content = escapeHTML(content);
-        }
-      
-        content = content.replace(/\n/g, '<br>');
-      
-        return content;
+    content = content.replace(/\n/g, '<br>');
+
+    return content;
+  };
+
+  const dataDuplicateHandler = (videos: IVideo[], check: string) => {
+    const newData = videos.filter((value) => {
+      return !data.some((item) => item.video_id === value.video_id);
+    });
+    const mappingData = newData.map((video) => {
+      const markdata = {
+        ...video,
+        title: formatContent(video.title, check),
+        description: formatContent(video.description, check),
+        content: formatContent(video.content, check),
       };
+      setData([...data, markdata]);
+    });
+    mappingData;
+  };
+  const handleReSearch = () => {
+    const params = {
+      type: searchType === true ? 'keyword' : 'hashtag',
+      value: searchType ? input : tags.join('&'),
+    };
 
     const dataDuplicateHandler = (videos : IVideo[], check : string) => {
         const newData = videos.filter((value) => {
@@ -110,12 +176,13 @@ const SearchResult = () => {
 
   if(loading){
     return (
-        <div style={{width : '100%', height : '100vh'}}>스켈레톤 페이지</div>
-    )
+      <div style={{ width: '100%', height: '100vh' }}>스켈레톤 페이지</div>
+    );
   }
   return (
-    <Styled.Container style={{width : '100vw', height : '100vh'}}>
-        <div className="inputContainer" 
+    <Styled.Container style={{ width: '100%', height: '100vh' }}>
+      <div
+        className="inputContainer"
         style={{
             height: '210px'
           }}>
@@ -128,20 +195,36 @@ const SearchResult = () => {
                         </div>
                     </div>
             </div>
+            <button
+              className="search-btn"
+              style={{ width: '90px', height: '36px' }}
+              disabled={input.length === 0 && tags.length === 0}
+              onClick={handleReSearch}
+            >
+              Search
+            </button>
+          </div>
         </div>
-        
-        <div className="result">
-            <div className="filter" style={{width : '910px', height : '24px'}}>
-                {(data.length !== 0) ?  <span>총 {data.length}개의 영상이 발견되었어요!</span> : ''}
-            </div>
-            <div className="content">
-                {data.length === 0 ? 
-                <SearchNotFound input={errormsg}></SearchNotFound> :
-                data.map((item, index) =>
-                <SearchResultBox key={index} video={item}/>)
-                }
-            </div>
+      </div>
+
+      <div className="result">
+        <div className="filter" style={{ width: '910px', height: '24px' }}>
+          {data.length !== 0 ? (
+            <span>총 {data.length}개의 영상이 발견되었어요!</span>
+          ) : (
+            ''
+          )}
         </div>
+        <div className="content">
+          {data.length === 0 ? (
+            <SearchNotFound input={errormsg}></SearchNotFound>
+          ) : (
+            data.map((item, index) => (
+              <SearchResultBox key={index} video={item} />
+            ))
+          )}
+        </div>
+      </div>
     </Styled.Container>
   );
 };

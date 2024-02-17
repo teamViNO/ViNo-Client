@@ -7,10 +7,11 @@ import { categoryState } from '@/stores/category';
 import DropdownItem from './DropdownItem';
 
 type Props = {
+  selectedId?: number;
   onSelect: (categoryId: number) => void;
 };
 
-const CategoryDropdown = ({ onSelect }: Props) => {
+const CategoryDropdown = ({ selectedId, onSelect }: Props) => {
   const categories = useRecoilValue(categoryState);
 
   return (
@@ -20,6 +21,7 @@ const CategoryDropdown = ({ onSelect }: Props) => {
           <DropdownItem
             key={category.categoryId}
             category={category}
+            selectedId={selectedId}
             onSelect={onSelect}
           />
         ))}

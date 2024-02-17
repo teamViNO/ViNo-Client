@@ -2,7 +2,6 @@ import * as CategoryPageStyles from '@/styles/category/index.style';
 import GarbageSvg from '@/assets/icons/garbage.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import { CategorySelectBox } from '../SummaryPage/SummaryDetailBox/CategorySelectBox';
-import { useState } from 'react';
 import { IFolderProps } from 'types/category';
 
 interface IVideoSelectMenuProps {
@@ -12,11 +11,10 @@ interface IVideoSelectMenuProps {
   setCheckedVideos: React.Dispatch<React.SetStateAction<number[]>>;
   handleDeleteVideos: () => void;
   allCheckBtnHandler: () => void;
-  onFileClick?: (e: React.MouseEvent, categoryId: number) => void;
+  onFileClick?: (categoryId: number) => void;
 }
 
 const VideoSelectMenu = ({
-  categories,
   totalVideoCount,
   checkedVideos,
   setCheckedVideos,
@@ -24,16 +22,9 @@ const VideoSelectMenu = ({
   allCheckBtnHandler,
   onFileClick,
 }: IVideoSelectMenuProps) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    categories.length ? categories[0].categoryId : -1,
-  );
+  const onFileClickWithProps = (categoryId: number) =>
+    onFileClick && onFileClick(categoryId);
 
-  const onSelect = (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
-  };
-
-  const onFileClickWithProps = (e: React.MouseEvent) =>
-    onFileClick && onFileClick(e, selectedCategoryId);
   return (
     <CategoryPageStyles.SelectModeWrap>
       <div>
@@ -46,11 +37,7 @@ const VideoSelectMenu = ({
       </div>
       <CategoryPageStyles.CardManagement>
         <CategoryPageStyles.DropdownWrap>
-          <CategorySelectBox
-            selectedCategoryId={selectedCategoryId}
-            onSelect={onSelect}
-            onFileClick={onFileClickWithProps}
-          />
+          <CategorySelectBox onSelect={onFileClickWithProps} />
         </CategoryPageStyles.DropdownWrap>
         <CategoryPageStyles.ManagementBoxGray onClick={handleDeleteVideos}>
           <GarbageSvg width={28} height={28} />

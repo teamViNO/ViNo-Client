@@ -1,5 +1,6 @@
-import { useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
 // Styles
@@ -7,11 +8,19 @@ import theme from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 
 // Pages
+import {
+  GuideLayout,
+  GuideHomePage,
+  GuidePage,
+  GuideSummaryPage,
+  GuideCategoryPage,
+  GuideSearchPage,
+} from '@/pages/Guide';
 import CategoryPage from '@/pages/CategoryPage';
 import FindEmailPage from '@/pages/FindEmailPage';
 import FindPasswordPage from '@/pages/FindPasswordPage';
 import HomePage from '@/pages/HomePage';
-// import GuestPage from './pages/GuestPage';
+//import GuestPage from '@/pages/GuestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SearchPage from '@/pages/SearchPage';
 import SearchResult from './pages/SearchResultPage';
@@ -22,19 +31,21 @@ import SocialAccountPage from '@/pages/SocialAccountPage';
 import SummaryPage from '@/pages/SummaryPage';
 
 // Layouts
-import Layout from './components/layout/Layout';
+import Layout from '@/components/layout/Layout';
 
 // Components
-import { ToastList } from './components/common';
+import { ToastList } from '@/components/common';
+
+// Hooks
+import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 // Store
-import { userTokenState } from './stores/user';
-import { useEffect } from 'react';
-import useUpdateCategories from './hooks/useUpdateCategories';
+import { userTokenState } from '@/stores/user';
 
 const App = () => {
   const userToken = useRecoilValue(userTokenState);
   const { updateCategories } = useUpdateCategories();
+
   useEffect(() => {
     userToken && updateCategories();
   }, [updateCategories, userToken]);
@@ -73,6 +84,14 @@ const App = () => {
                 />
               </>
             )}
+
+            <Route path="/guide" element={<GuideLayout />}>
+              <Route path="/guide/home" element={<GuideHomePage />} />
+              <Route path="/guide/summary" element={<GuideSummaryPage />} />
+              <Route path="/guide/category" element={<GuideCategoryPage />} />
+              <Route path="/guide/search" element={<GuideSearchPage />} />
+              <Route path="/guide" element={<GuidePage />} />
+            </Route>
 
             <Route path="/summary/:videoId" element={<SummaryPage />} />
             <Route path="/" element={<HomePage />} />

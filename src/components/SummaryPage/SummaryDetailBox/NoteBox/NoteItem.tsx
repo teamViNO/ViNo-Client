@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 
+import useOutsideClick from '@/hooks/useOutsideClick';
+
 import { IVideoSummary } from '@/models/video';
+
+import { summaryIsEditingViewState } from '@/stores/summary';
 
 type Props = {
   summary: IVideoSummary;
@@ -10,6 +15,8 @@ type Props = {
   onDisableEditable: () => void;
   onActiveEditable?: () => void;
   onEdit: (content: string) => void;
+  onEditAndNext?: (content: string) => void;
+  onRemove?: () => void;
 };
 
 const NoteItem = ({
@@ -18,9 +25,18 @@ const NoteItem = ({
   onDisableEditable,
   onActiveEditable,
   onEdit,
+  onEditAndNext,
+  onRemove,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isEditingView = useRecoilValue(summaryIsEditingViewState);
   const [noteText, setNoteText] = useState(summary.content);
+
+  const [outsideRef] = useOutsideClick<HTMLDivElement>(() => {
+    if (isEditable) {
+      onEdit(noteText);
+    }
+  });
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = (
     e,
@@ -30,7 +46,7 @@ const NoteItem = ({
     } else if (e.key === 'Enter') {
       e.preventDefault();
 
-      onEdit(noteText);
+      onEditAndNext && onEditAndNext(noteText);
 
       // 이어서 생성할 수 있도록
       if (summary.id === -1) {
@@ -53,8 +69,13 @@ const NoteItem = ({
 
   return (
     <div
+      ref={outsideRef}
       className={`note-item ${isEditable && 'editable'}`}
-      onDoubleClick={onActiveEditable}
+      onDoubleClick={() => {
+        if (isEditingView) return;
+
+        onActiveEditable && onActiveEditable();
+      }}
     >
       <span className="note-icon">✏️</span>
 
@@ -70,9 +91,11 @@ const NoteItem = ({
             />
           </div>
 
-          <button className="close-button" onClick={onDisableEditable}>
-            <CloseIcon width={16} height={16} />
-          </button>
+          {summary.id !== -1 && (
+            <button className="close-button" onClick={onRemove}>
+              <CloseIcon width={16} height={16} />
+            </button>
+          )}
         </div>
       ) : (
         <span className="note-text">{noteText}</span>

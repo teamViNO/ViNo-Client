@@ -18,8 +18,9 @@ const SearchPage = () => {
                 const extraData = data.result.map((item) => {
                     return item.name;
                 });
-                const shuffleData = sortShuffle(extraData).slice(0, 10);
+                const shuffleData = sortShuffle(extraData).slice(0,10);
                 setUserHashTag(shuffleData);
+
             } catch(e) {
                 setUserHashTag(['A','B','C','D','E','F','G','H','I','J']);
             }

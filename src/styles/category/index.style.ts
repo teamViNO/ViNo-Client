@@ -16,6 +16,8 @@ const CommonIconBackground = styled.div`
 export const Container = styled.div`
   padding: 60px 60px 40px 120px;
   width: 100%;
+  margin-inline: auto;
+  max-width: 1440px;
 `;
 
 export const MenuWrap = styled.div`
@@ -124,7 +126,11 @@ export const DropdownWrap = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
-    background-color: ${theme.color.gray100};
+    background-color: ${(props) => props.theme.color.gray200};
+
+    &.changed {
+      background-color: ${(props) => props.theme.color.green400};
+      cursor: pointer;
+    }
   }
 `;
