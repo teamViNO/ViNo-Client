@@ -8,6 +8,7 @@ export const Container = styled.div`
   box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.05);
   z-index: 2;
   background-color: ${theme.color.white};
+  min-height: 964px;
 `;
 
 export const StickySection = styled.div`
