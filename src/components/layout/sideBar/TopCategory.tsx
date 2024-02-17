@@ -6,9 +6,9 @@ import React, { useState } from 'react';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
-import handleEdit from '@/utils/handleEdit';
 import handleDrag from '@/utils/handleDrag';
 import { ISubFolderProps } from 'types/category';
+import EditCategoryName from '@/components/category/EditCategoryName';
 
 interface ITopCategoryProps {
   topId: number;
@@ -47,22 +47,7 @@ const TopCategory = ({
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
   const [beforeEdit, setBeforeEdit] = useState(edit);
-  const { editText, finishEdit } = handleEdit();
-
-  const [nameRegex, setNameRegex] = useState(true);
   const options = ['추가', '수정', '삭제', '이동'];
-
-  const [editNameRef] = useOutsideClick<HTMLDivElement>(() =>
-    finishEdit(
-      edit,
-      setEdit,
-      beforeEdit,
-      setIsEditing,
-      nameRegex,
-      setNameRegex,
-      categoryId,
-    ),
-  );
 
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
@@ -84,8 +69,6 @@ const TopCategory = ({
     setFolderOptionModalOpen(true);
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
-    editText(e, setEdit, setNameRegex);
   const handleDragStart = () =>
     (grabedCategory.current = {
       categoryId: categoryId,
@@ -124,16 +107,14 @@ const TopCategory = ({
         selected={topId === categoryId && !subId}
       >
         {isEditing ? (
-          <TopCategoryStyles.EditNameInputWrap
-            ref={editNameRef}
-            className={`${(!nameRegex || !edit.length) && 'warning'}`}
-          >
-            <OpenFileSvg width={28} height={28} />
-            <TopCategoryStyles.EditNameInput
-              value={edit}
-              onChange={handleInput}
-            />
-          </TopCategoryStyles.EditNameInputWrap>
+          <EditCategoryName
+            mode="top"
+            categoryId={categoryId}
+            beforeEdit={beforeEdit}
+            edit={edit}
+            setEdit={setEdit}
+            setIsEditing={setIsEditing}
+          />
         ) : (
           <>
             <TopCategoryStyles.FolderButton to={`/category/${categoryId}`}>
