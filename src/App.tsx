@@ -46,7 +46,9 @@ const App = () => {
   const userToken = useRecoilValue(userTokenState);
   const { updateCategories } = useUpdateCategories();
 
-  useEffect(() => {}, [updateCategories, userToken]);
+  useEffect(() => {
+    userToken && updateCategories();
+  }, [updateCategories, userToken]);
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
