@@ -7,6 +7,11 @@ export const summaryVideoState = atom<IVideo | null>({
   default: null,
 });
 
+export const summaryUpdateVideoState = atom<IVideo | null>({
+  key: 'summary-update-video',
+  default: null,
+});
+
 export const summaryFindKeywordCountState = atom({
   key: 'summary-find-keyword-count',
   default: 0,
@@ -15,4 +20,9 @@ export const summaryFindKeywordCountState = atom({
 export const summarySearchIndexState = atom({
   key: 'summarh-search-index',
   default: 0,
+});
+
+export const summaryIsEditingViewState = atom({
+  key: 'summary-is-editing-view',
+  default: false,
 });

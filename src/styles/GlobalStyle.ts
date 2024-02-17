@@ -36,6 +36,10 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Pretendard', 'Spline Sans' !important;
     box-sizing: border-box;
   }
+
+  #root {
+    min-width: 1440px;
+  }
 `;
 
 export default GlobalStyle;

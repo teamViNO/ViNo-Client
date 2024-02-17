@@ -12,11 +12,16 @@ import { userTokenState } from '@/stores/user';
 import { CategoryDropdown } from './CategoryDropdown';
 
 type Props = {
+  disabled?: boolean;
   selectedCategoryId?: number;
-  onSelect: (categoryId: number) => void;
+  onSelect: (categoryId: number, categoryName?: string) => void;
 };
 
-const CategorySelectBox = ({ selectedCategoryId, onSelect }: Props) => {
+const CategorySelectBox = ({
+  disabled,
+  selectedCategoryId,
+  onSelect,
+}: Props) => {
   const userToken = useRecoilValue(userTokenState);
   const categories = useRecoilValue(categoryState);
 
@@ -43,7 +48,7 @@ const CategorySelectBox = ({ selectedCategoryId, onSelect }: Props) => {
   });
 
   const handleBoxClick = () => {
-    if (!userToken) return;
+    if (!userToken || disabled) return;
 
     setIsOpen(!isOpen);
   };
@@ -54,18 +59,25 @@ const CategorySelectBox = ({ selectedCategoryId, onSelect }: Props) => {
   };
 
   const handleClick = () => {
-    if (!selectedId || selectedId === selectedCategoryId) return;
+    if (!selectedCategory || selectedId === selectedCategoryId || disabled)
+      return;
 
-    onSelect(selectedId);
+    onSelect(selectedCategory.categoryId, selectedCategory.name);
   };
 
   return (
     <div ref={ref} style={{ display: 'flex', gap: 8 }}>
       <div
-        style={{ position: 'relative', flex: '1 1 auto' }}
+        style={{
+          position: 'relative',
+          flex: '1 1 auto',
+        }}
         onClick={handleBoxClick}
       >
-        <div className="select-box">
+        <div
+          className="select-box"
+          style={{ cursor: disabled ? 'default' : 'pointer' }}
+        >
           <span>
             {userToken
               ? selectedCategory
@@ -83,7 +95,7 @@ const CategorySelectBox = ({ selectedCategoryId, onSelect }: Props) => {
       </div>
 
       <span
-        className={`icon-button ${!userToken && 'disabled'} ${
+        className={`icon-button ${(!userToken || disabled) && 'disabled'} ${
           selectedCategoryId !== selectedId ? 'changed' : ''
         }`}
         onClick={handleClick}

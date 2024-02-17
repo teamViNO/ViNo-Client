@@ -56,10 +56,6 @@ export const Visual = styled.section`
         background-color: ${(props) => props.theme.color.green400};
         color: ${(props) => props.theme.color.gray500};
       }
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 `;

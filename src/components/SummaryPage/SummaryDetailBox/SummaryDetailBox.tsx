@@ -1,8 +1,15 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
-import { summaryVideoState } from '@/stores/summary';
+import { IVideo } from '@/models/video';
+
+import {
+  summaryIsEditingViewState,
+  summaryUpdateVideoState,
+  summaryVideoState,
+} from '@/stores/summary';
+import { toastListState } from '@/stores/toast';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -10,22 +17,33 @@ import { formatDate } from '@/utils/date';
 
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
+import { DescriptionBox } from './DescriptionBox';
 
 type Props = {
   onRefresh: () => void;
 };
 
 const SummaryDetailBox = ({ onRefresh }: Props) => {
-  const summaryVideo = useRecoilValue(summaryVideoState);
+  const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
+  const summaryUpdateVideo = useRecoilValue(summaryUpdateVideoState);
+  const isEditingView = useRecoilValue(summaryIsEditingViewState);
+  const [toastList, setToastList] = useRecoilState(toastListState);
 
-  const handleSelectCategory = async (category_id: number) => {
-    if (!summaryVideo) return;
+  const subHeading = isEditingView
+    ? summaryUpdateVideo?.subHeading || []
+    : summaryVideo.subHeading;
 
+  const createToast = (content: string) => {
+    setToastList([...toastList, { id: Date.now(), content }]);
+  };
+
+  const handleSelectCategory = async (category_id: number, name?: string) => {
     try {
       await updateVideoCategoryIdAPI(category_id, {
         video_id: [summaryVideo.video_id],
       });
 
+      createToast(`[${name}] 카테고리로 이동되었어요!`);
       onRefresh();
     } catch (e) {
       console.error(e);
@@ -40,39 +58,42 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
         flex: '1 1 555px',
       }}
     >
-      <DetailBox>
+      <DetailBox className={isEditingView ? 'disabled' : ''}>
         <span className="created_at">
-          {formatDate(summaryVideo?.updated_at)}
+          {formatDate(summaryVideo.updated_at)}
         </span>
 
-        <span className="youtube-video-title">
-          {summaryVideo?.title || '-'}
-        </span>
+        <span className="youtube-video-title">{summaryVideo.title || '-'}</span>
 
-        <div style={{ display: 'flex', gap: 10 }}>
-          {summaryVideo?.tag.map((hashtag) => (
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {summaryVideo.tag.map((hashtag) => (
             <span key={hashtag.name} className="hashtag">
               #{hashtag.name}
             </span>
           ))}
         </div>
 
-        <div
+        <iframe
+          src={`https://www.youtube.com/embed/QXDiRtANAzA?${
+            isEditingView && 'start=10&end=18&autoplay=1&disablekb=0'
+          }`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
           style={{
             margin: '20px 0',
             width: '100%',
-            height: 432,
+            aspectRatio: '16 / 9',
             borderRadius: 16,
-            backgroundColor: '#f3f3f3',
           }}
         />
 
         <CategorySelectBox
-          selectedCategoryId={summaryVideo?.category_id}
+          disabled={isEditingView}
+          selectedCategoryId={summaryVideo.category_id}
           onSelect={handleSelectCategory}
         />
 
-        <span className="title">{summaryVideo?.description || '-'}</span>
+        <DescriptionBox />
 
         <div
           style={{
@@ -82,10 +103,10 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
             gap: 16,
           }}
         >
-          {summaryVideo?.subHeading.map((subHeading, i) => (
-            <div key={subHeading.id} className="subtitle">
+          {subHeading.map((item, i) => (
+            <div key={item.id} className="subtitle">
               <span className="subtitle-index">{i + 1}</span>
-              <span className="subtitle-text">{subHeading.name}</span>
+              <span className="subtitle-text">{item.name}</span>
             </div>
           ))}
         </div>

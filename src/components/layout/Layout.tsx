@@ -6,22 +6,29 @@ import { isSideBarOpenState } from '@/stores/ui';
 import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
-import { useMemo } from 'react';
+import NicknameModal from '@/components/NicknameModal';
+import { useMemo, useEffect } from 'react';
+import { userInfoState } from '@/stores/user';
 
 const Layout = () => {
   const { pathname } = useLocation();
   const isSideBarOpen = useRecoilValue(isSideBarOpenState);
+  const userInfo = useRecoilValue(userInfoState);
 
   const isShowFooter = useMemo(
     () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
 
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
+
   return (
     <>
       <Header />
 
-      <div style={{ display: 'flex', width: '100vw' }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         {isSideBarOpen && <SideBar />}
 
         <div style={{ flex: '1 1 auto' }}>
@@ -30,6 +37,7 @@ const Layout = () => {
       </div>
 
       {isShowFooter && <Footer />}
+      {userInfo && userInfo.nick_name === '' && <NicknameModal />}
     </>
   );
 };
