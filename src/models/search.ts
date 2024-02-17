@@ -18,3 +18,8 @@ export interface IVideo {
 export interface ResponseSearch {
     videos : IVideo[];
 }
+
+export interface ITag {
+    id : number;
+    name : string;
+}
