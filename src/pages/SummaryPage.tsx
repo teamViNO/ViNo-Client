@@ -23,7 +23,7 @@ const SummaryPage = () => {
       const { isSuccess, result } = (await getVideoAPI(videoId)).data;
 
       if (!isSuccess) {
-        navigate(-1);
+        navigate('/');
       }
 
       setSummaryVideo(result);
@@ -35,14 +35,18 @@ const SummaryPage = () => {
 
   useEffect(() => {
     callAPI();
-  }, [callAPI]);
+
+    return () => {
+      setSummaryVideo(null);
+    };
+  }, [callAPI, setSummaryVideo]);
 
   return (
     <Container style={{ height: 'calc(100vh - 74px)' }}>
       {summaryVideo && (
         <>
           <SummaryDetailBox onRefresh={callAPI} />
-          <SummaryScriptBox />
+          <SummaryScriptBox onRefresh={callAPI} />
         </>
       )}
     </Container>

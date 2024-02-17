@@ -23,3 +23,20 @@ export const formatDate = (date?: string) => {
 
   return `${year}년 ${month}월 ${day}일`;
 };
+
+export const getDate = (dateString?: string) => {
+  const result = {
+    year: '-',
+    month: '-',
+    date: '-',
+  };
+
+  if (dateString) {
+    const date = new Date(dateString);
+    result.year = String(date.getFullYear());
+    result.month = String(date.getMonth() + 1).padStart(2, '0');
+    result.date = String(date.getDate()).padStart(2, '0');
+  }
+
+  return result;
+};

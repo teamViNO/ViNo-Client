@@ -204,7 +204,7 @@ export const VideosSubtitle = styled.h4`
 
 export const VideoButton = styled.button`
   padding: 12px 32px;
-  font-size: 1rem;
+  ${theme.typography.Subheader2}
   border: none;
   width: 190px;
   height: 56px;
@@ -232,13 +232,13 @@ export const VideoButton = styled.button`
   }
 `;
 
-export const InsightVideosContainer = styled.div<{ userToken: string | null }>`
+export const InsightVideosContainer = styled.div<{ user: string | null }>`
   display: flex;
   justify-content: center;
   background-color: ${theme.color.white};
   width: 100%;
   border-radius: 50px 50px 0 0;
-  padding: ${(props) => (props.userToken ? '0' : '100px')} 265px 110px;
+  padding: ${(props) => (props.user ? '0' : '100px')} 0 110px;
   position: relative;
   bottom: 50px;
 

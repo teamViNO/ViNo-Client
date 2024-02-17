@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-type Props = {
-  width: number;
-  onChange: (width: number) => void;
-};
+import { isSideBarOpenState, summaryBoxWidthState } from '@/stores/ui';
 
-const ResizeThumb = ({ width, onChange }: Props) => {
+const ResizeThumb = () => {
+  const isSidebarOpen = useRecoilValue(isSideBarOpenState);
+  const [width, setWidth] = useRecoilState(summaryBoxWidthState);
+
   const [saveWidth, setSaveWidth] = useState(-1);
   const [holdX, setHoldX] = useState(-1);
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    if (isSidebarOpen) return;
+
     setSaveWidth(width);
     setHoldX(e.pageX);
   };
@@ -18,7 +21,7 @@ const ResizeThumb = ({ width, onChange }: Props) => {
     if (holdX < 0) return;
 
     const changeWidth = saveWidth + (holdX - e.pageX);
-    onChange(Math.min(Math.max(555, changeWidth), 865));
+    setWidth(Math.min(Math.max(555, changeWidth), 865));
   };
 
   const handleMouseUp = () => {
@@ -35,6 +38,10 @@ const ResizeThumb = ({ width, onChange }: Props) => {
       window.removeEventListener('mouseup', handleMouseUp);
     };
   });
+
+  useEffect(() => {
+    setWidth(isSidebarOpen ? 555 : 865);
+  }, [isSidebarOpen, setWidth]);
 
   return <div className="resize-thumb" onMouseDown={handleMouseDown} />;
 };

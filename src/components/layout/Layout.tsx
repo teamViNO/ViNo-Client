@@ -7,7 +7,7 @@ import Footer from './footer/Footer';
 import Header from './header';
 import SideBar from './sideBar';
 import NicknameModal from '@/components/NicknameModal';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { userInfoState } from '@/stores/user';
 
 const Layout = () => {
@@ -16,18 +16,24 @@ const Layout = () => {
   const userInfo = useRecoilValue(userInfoState);
 
   const isShowFooter = useMemo(
-    () => ['/'].includes(pathname) || /^\/category/g.test(pathname),
+    () => pathname === '/' || /^(\/category)/g.test(pathname),
     [pathname],
   );
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
 
   return (
     <>
       <Header />
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         {isSideBarOpen && <SideBar />}
 
-        <Outlet />
+        <div style={{ flex: '1 1 auto' }}>
+          <Outlet />
+        </div>
       </div>
 
       {isShowFooter && <Footer />}

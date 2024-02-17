@@ -4,6 +4,54 @@ import checkIcon from '@/assets/icons/check.svg';
 import checkedIcon from '@/assets/icons/checked.svg';
 import { Link } from 'react-router-dom';
 
+export const DropdownWrap = styled.div`
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  padding: 0 20px;
+  bottom: 24px;
+
+  & div.select-box {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    border-radius: 8px;
+    border: solid 1px ${(props) => props.theme.color.gray200};
+    color: ${(props) => props.theme.color.gray400};
+    ${(props) => props.theme.typography.Body3};
+    cursor: pointer;
+  }
+  & span.icon-button {
+    padding: 5px 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.selected {
+      background-color: ${(props) => props.theme.color.green400};
+    }
+
+    &.not-selected {
+      background-color: ${(props) => props.theme.color.gray200};
+    }
+
+    &.disabled svg {
+      & path:nth-of-type(1) {
+        fill: ${(props) => props.theme.color.gray300};
+      }
+
+      & path:nth-of-type(2) {
+        fill: ${(props) => props.theme.color.gray400};
+      }
+    }
+  }
+`;
+
 export const CheckBoxWrap = styled.div`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
@@ -61,10 +109,14 @@ export const Wrap = styled.div<{ mode: string }>`
   box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.05);
   transition: all 0.5s;
   position: relative;
-  height: 400px;
+  height: 370px;
   background-color: ${theme.color.white};
+
   &:hover {
     ${CheckBoxWrap} {
+      display: flex;
+    }
+    ${DropdownWrap} {
       display: flex;
     }
     z-index: 1;
@@ -73,7 +125,7 @@ export const Wrap = styled.div<{ mode: string }>`
     ${(props) =>
       props.mode === 'recommend' &&
       css`
-        height: 467px;
+        height: 424px;
       `}
   }
 `;
@@ -88,65 +140,26 @@ export const Content = styled(Link)`
 export const Title = styled.span`
   ${theme.typography.Subheader3};
   color: ${theme.color.gray500};
-  margin-bottom: 16px;
+  height: 52px;
+  line-clamp: 2;
 `;
 
 export const Summary = styled.span`
   ${theme.typography.Body3};
   color: ${theme.color.gray300};
-  margin-bottom: 16px;
+  margin: 16px 0;
+  height: 44px;
+  line-clamp: 2;
 `;
 
 export const ChipWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 `;
 
 export const Image = styled.img`
   border-radius: 16px 16px 0 0;
   width: 290px;
   height: 163px;
-`;
-
-export const DropdownWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0px 20px;
-  justify-content: center;
-  height: 100%;
-
-  & div.select-box {
-    padding: 8px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-    border-radius: 8px;
-    border: solid 1px ${(props) => props.theme.color.gray200};
-    color: ${(props) => props.theme.color.gray400};
-    ${(props) => props.theme.typography.Body3};
-    cursor: pointer;
-  }
-  & span.icon-button {
-    padding: 5px 6px;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background-color: ${(props) => props.theme.color.gray200};
-
-    &.changed {
-      background-color: ${(props) => props.theme.color.green400};
-      cursor: pointer;
-    }
-
-    &.disabled svg {
-      & path:nth-of-type(1) {
-        fill: ${(props) => props.theme.color.gray300};
-      }
-
-      & path:nth-of-type(2) {
-        fill: ${(props) => props.theme.color.gray400};
-      }
-    }
-  }
 `;

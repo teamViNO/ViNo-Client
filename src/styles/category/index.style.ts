@@ -16,6 +16,8 @@ const CommonIconBackground = styled.div`
 export const Container = styled.div`
   padding: 60px 60px 40px 120px;
   width: 100%;
+  margin-inline: auto;
+  max-width: 1440px;
 `;
 
 export const MenuWrap = styled.div`

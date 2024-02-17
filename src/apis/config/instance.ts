@@ -8,8 +8,8 @@ const baseURL =
 const axiosInstance = axios.create({ baseURL });
 
 axiosInstance.interceptors.request.use((config) => {
-  // config.withCredentials = true;
-  // config.headers['Access-Control-Allow-Origin'] = '*';
+  config.withCredentials = true;
+  config.headers['Access-Control-Allow-Origin'] = '*';
 
   if (localStorage.vino) {
     const storage = JSON.parse(localStorage.vino);

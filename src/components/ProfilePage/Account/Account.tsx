@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getMyInfoAPI, updateMyInfoAPI } from '@/apis/user';
 
@@ -14,21 +14,24 @@ import { GENDER_TYPE_LIST } from '@/constants/user';
 import useFocus from '@/hooks/useFocus';
 
 import { APIBaseResponse } from '@/models/config/axios';
+import { MyInfoResponse } from '@/models/user';
 
 import { userInfoState } from '@/stores/user';
 
 import theme from '@/styles/theme';
 import { Box } from '@/styles/ProfilePage';
 
+import { getDate } from '@/utils/date';
 import { validateNickname } from '@/utils/validation';
 
 import { ChangePassword } from './ChangePassword';
 
 const Account = () => {
   const timerRef = useRef<NodeJS.Timeout>();
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [nickname, setNickname] = useState(userInfo?.nick_name || '');
-  const [gender, setGender] = useState(userInfo?.gender || '');
+  const userInfo = useRecoilValue(userInfoState) as MyInfoResponse;
+  const setUserInfo = useSetRecoilState(userInfoState);
+  const [nickname, setNickname] = useState(userInfo.nick_name || '-');
+  const [gender, setGender] = useState(userInfo.gender);
 
   const [isDuplicateNickname, setIsDuplicateNickname] = useState(false);
   const [isErrorNickname, setIsErrorNickname] = useState(
@@ -39,13 +42,13 @@ const Account = () => {
   const [nicknameInputRef, focusNicknameInput, isNicknameFocus] =
     useFocus<HTMLInputElement>();
 
-  const isSocialAccount = !!userInfo?.platform;
-  const birthDate = new Date(userInfo?.birth_date || '');
+  const isSocialAccount = !!userInfo.platform;
+  const birthDate = getDate(userInfo.birth_date);
 
   const isDisabled = useMemo(() => {
     if (isErrorNickname) return true;
 
-    return !(nickname !== userInfo?.nick_name || gender !== userInfo?.gender);
+    return !(nickname !== userInfo.nick_name || gender !== userInfo.gender);
   }, [userInfo, nickname, gender, isErrorNickname]);
 
   const nicknameInputStyle = {
@@ -169,6 +172,7 @@ const Account = () => {
                   type="text"
                   value={nickname}
                   onChange={handleChangeNickname}
+                  maxLength={7}
                 />
               </div>
 
@@ -195,11 +199,11 @@ const Account = () => {
 
           <div className="input-box disabled">
             <div style={{ display: 'flex', flex: '1 1 auto' }}>
-              {userInfo?.name}
+              {userInfo.name}
             </div>
 
             <span className="input-guide">
-              {userInfo?.name.length}/7 (공백포함)
+              {userInfo.name.length}/7 (공백포함)
             </span>
           </div>
         </div>
@@ -224,13 +228,9 @@ const Account = () => {
           <span className="group-title">생년월일</span>
 
           <div style={{ display: 'flex', gap: 12 }}>
-            <div className="input-box disabled">{birthDate.getFullYear()}</div>
-            <div className="input-box disabled">
-              {String(birthDate.getMonth() + 1).padStart(2, '0')}
-            </div>
-            <div className="input-box disabled">
-              {String(birthDate.getDate()).padStart(2, '0')}
-            </div>
+            <div className="input-box disabled">{birthDate.year}</div>
+            <div className="input-box disabled">{birthDate.month}</div>
+            <div className="input-box disabled">{birthDate.date}</div>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ const Account = () => {
           <span className="group-title">전화번호</span>
 
           <div className="input-box disabled">
-            {userInfo?.phone_number || '-'}
+            {userInfo.phone_number || '-'}
           </div>
         </div>
 
@@ -259,7 +259,7 @@ const Account = () => {
                 width={40}
               />
 
-              <span>{userInfo?.email}</span>
+              <span>{userInfo.email}</span>
             </div>
           </div>
         )}
@@ -270,7 +270,7 @@ const Account = () => {
           <div className="account-group">
             <span className="group-title">계정</span>
 
-            <div className="input-box disabled">{userInfo?.email}</div>
+            <div className="input-box disabled">{userInfo.email}</div>
           </div>
 
           <ChangePassword onRefresh={refreshMyInfo} />

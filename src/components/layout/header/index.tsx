@@ -22,15 +22,13 @@ const Header = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(isSideBarOpenState);
   const [isDarkSection, setIsDarkSection] = useState(false);
 
-  const isDark = ['/'].includes(pathname) && isDarkSection;
-
   const observer = useMemo(() => {
     return new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const { height, y } = entry.boundingClientRect;
+          const { isIntersecting } = entry;
 
-          setIsDarkSection(!(y < height * -0.9));
+          setIsDarkSection(isIntersecting);
         });
       },
       { threshold: 0.1 },
@@ -44,7 +42,11 @@ const Header = () => {
   useEffect(() => {
     const darkSectionList = document.querySelectorAll('.dark-section') || [];
 
-    darkSectionList.forEach((el) => observer.observe(el));
+    if (darkSectionList.length) {
+      darkSectionList.forEach((el) => observer.observe(el));
+    } else {
+      setIsDarkSection(false);
+    }
 
     return () => {
       observer.disconnect();
@@ -54,12 +56,11 @@ const Header = () => {
   return (
     <HeaderStyle.Container
       id="header"
-      color={isDark ? 'gray500' : 'white'}
-      width={`100% + ${isSideBarOpen ? '348px' : '0px'}`}
+      color={isDarkSection ? 'gray500' : 'white'}
     >
       <HeaderStyle.Area>
         <HeaderStyle.Button
-          color={isDark ? 'white' : 'gray500'}
+          color={isDarkSection ? 'white' : 'gray500'}
           onClick={toggleSideBarState}
         >
           {isSideBarOpen ? (
@@ -70,7 +71,10 @@ const Header = () => {
         </HeaderStyle.Button>
 
         <Link to="/">
-          <img src={isDark ? LightLogoImage : DarkLogoImage} alt="Logo" />
+          <img
+            src={isDarkSection ? LightLogoImage : DarkLogoImage}
+            alt="Logo"
+          />
         </Link>
       </HeaderStyle.Area>
 
@@ -79,20 +83,20 @@ const Header = () => {
           <>
             <HeaderStyle.IconLink
               to="/search"
-              color={isDark ? 'white' : 'gray500'}
+              color={isDarkSection ? 'white' : 'gray500'}
             >
               <SearchIcon width={28} height={28} />
             </HeaderStyle.IconLink>
 
-            <Alarm isDark={isDark} />
+            <Alarm isDark={isDarkSection} />
 
             <Profile />
           </>
         ) : (
           <HeaderStyle.LoginButton
             to="/sign-in"
-            background={isDark ? 'green400' : 'gray500'}
-            text={isDark ? 'gray500' : 'white'}
+            background={isDarkSection ? 'green400' : 'gray500'}
+            text={isDarkSection ? 'gray500' : 'white'}
           >
             로그인/회원가입
           </HeaderStyle.LoginButton>
