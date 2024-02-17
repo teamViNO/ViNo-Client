@@ -39,10 +39,10 @@ const handleVideo = async (
         setName(topCategory!.name);
         setMenus(topCategory!.subFolders);
       }
-      setIsLoading(false);
       setVideos(res.isSuccess ? res.result.videos : []);
     });
   }
+  setIsLoading(false);
 };
 
 export default handleVideo;
