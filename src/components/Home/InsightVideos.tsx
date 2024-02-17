@@ -71,7 +71,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
         <CardContainer>
           {dummyVideos.map((video) => (
             <Card
-              mode="recommend"
+              mode={userToken ? 'recommend' : 'default'}
               video={video}
               checkedVideos={checkedItems}
               setCheckedVideos={setCheckedItems}
