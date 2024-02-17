@@ -10,7 +10,6 @@ import { IVideoProps } from 'types/videos';
 import { sortVideos } from '@/utils/sortVideos';
 import { CardContainer } from '@/styles/category/Card.style';
 import VideoSelectMenu from '@/components/category/VideoSelectMenu';
-import DefaultMenu from '@/components/category/DefaultMenu';
 import { putVideoToOtherCategory } from '@/apis/category';
 import handleVideo from '@/utils/handleVideo';
 import CategoryPageSkeleton from '@/components/skeleton/CategoryPageSkeleton';
@@ -19,10 +18,12 @@ const CategoryTitle = React.lazy(
   () => import('@/components/category/CategoryTitle'),
 );
 const Card = React.lazy(() => import('@/components/category/Card'));
+const DefaultMenu = React.lazy(
+  () => import('@/components/category/DefaultMenu'),
+);
 
 const CategoryPage = () => {
   const params = useParams();
-  const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState('');
   const [menus, setMenus] = useState<ISubFolderProps[] | ITagProps[]>([]);
   const [videos, setVideos] = useState<IVideoProps[]>([]);
@@ -44,7 +45,6 @@ const CategoryPage = () => {
       setMenus,
       setName,
       setVideos,
-      setIsLoading,
     );
     setCheckedVideos([]);
   }, [categories, params.sub_folder, params.top_folder]);
@@ -79,13 +79,9 @@ const CategoryPage = () => {
         setMenus,
         setName,
         setVideos,
-        setIsLoading,
       );
     }
   };
-
-  if (isLoading)
-    return <CategoryPageSkeleton isSubSkeleton={!!params.sub_folder} />;
 
   return (
     <Suspense

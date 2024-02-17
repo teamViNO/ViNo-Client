@@ -12,9 +12,7 @@ const handleVideo = async (
   >,
   setName: React.Dispatch<React.SetStateAction<string>>,
   setVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-  setIsLoading(true);
   if (!topCategoryId) {
     await getRecentVideos().then((res) => {
       setVideos(res.result.videos);
@@ -42,7 +40,6 @@ const handleVideo = async (
       setVideos(res.isSuccess ? res.result.videos : []);
     });
   }
-  setIsLoading(false);
 };
 
 export default handleVideo;
