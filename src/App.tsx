@@ -41,15 +41,19 @@ import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 // Store
 import { userTokenState } from '@/stores/user';
+import { getTempToken } from './apis/videos';
 
 const App = () => {
   const userToken = useRecoilValue(userTokenState);
   const { updateCategories } = useUpdateCategories();
 
   useEffect(() => {
+    (async () => {
+      const response = await getTempToken();
+      document.cookie = `tempToken=${response.result.tempToken}`;
+    })();
     userToken && updateCategories();
   }, [updateCategories, userToken]);
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

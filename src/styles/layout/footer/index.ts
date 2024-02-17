@@ -46,6 +46,14 @@ export const SendEmailButton = styled.button`
   color: ${theme.color.white};
   border: 0;
   cursor: pointer;
+  transition: all 0.2s;
+
+  &.disabled {
+    cursor: default;
+    background-color: ${theme.color.gray200};
+    color: ${theme.color.gray300};
+    border: 0;
+  }
 `;
 
 export const AboutViNOWrap = styled.div`

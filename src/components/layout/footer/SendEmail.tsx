@@ -2,12 +2,22 @@ import * as FooterStyle from '@/styles/layout/footer';
 import { useState } from 'react';
 
 import SendEmailImage from '@/assets/mail.png';
+import { postFeedback } from '@/apis/feedback';
 
 const SendEmail = () => {
   const [feedback, setFeedback] = useState<string>('');
 
   const handleInputFeedback = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFeedback(e.target.value);
+
+  const onSendFeedback = async () => {
+    const res = await postFeedback(feedback);
+    if (res.data.success) {
+      setFeedback('');
+      return;
+    }
+    alert('피드백을 전송하는 과정에서 오류가 발생했습니다.');
+  };
 
   return (
     <FooterStyle.SendEmailWrap>
@@ -18,7 +28,13 @@ const SendEmail = () => {
         value={feedback}
         onChange={handleInputFeedback}
       />
-      <FooterStyle.SendEmailButton>보내기</FooterStyle.SendEmailButton>
+      <FooterStyle.SendEmailButton
+        onClick={onSendFeedback}
+        disabled={!feedback}
+        className={`${!feedback && 'disabled'}`}
+      >
+        보내기
+      </FooterStyle.SendEmailButton>
     </FooterStyle.SendEmailWrap>
   );
 };
