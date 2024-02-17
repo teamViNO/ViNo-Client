@@ -1,10 +1,10 @@
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
 import GuideSummarySvg from '@/assets/guidesummary.svg?react'
-import StepA from '@/assets/StepA.svg?react';
-import StepB from '@/assets/StepB.svg?react';
-import StepC from '@/assets/StepC.svg?react';
-import StepD from '@/assets/StepD.svg?react';
+import StepA from '@/assets/stepA.svg?react';
+import StepB from '@/assets/stepB.svg?react';
+import StepC from '@/assets/stepC.svg?react';
+import StepD from '@/assets/stepD.svg?react';
 
 import SearchIcon from '@/assets/icons/search.svg?react';
 
@@ -63,6 +63,7 @@ const GuideSummaryPage = () => {
       position: '영상 요약 페이지 > 키워드 검색',
     },
   ];
+
   const tipSteps = [
     {
       stepImg : StepA,
