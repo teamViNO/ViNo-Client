@@ -5,7 +5,7 @@ const baseURL =
     ? '/api'
     : 'https://backend.vi-no.site';
 
-const axiosInstance = axios.create({ baseURL });
+const axiosInstance = axios.create({ baseURL, timeout: 1000 * 60 * 5 });
 
 axiosInstance.interceptors.request.use((config) => {
   config.withCredentials = true;

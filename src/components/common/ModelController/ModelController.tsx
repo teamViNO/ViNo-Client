@@ -9,16 +9,16 @@ import {
 
 import {
   modelingDataState,
-  modelingErrorCodeState,
   modelingProgressState,
+  modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
 
 const ModelController = () => {
   const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
-  const setModelingData = useSetRecoilState(modelingDataState);
-  const setErrorCode = useSetRecoilState(modelingErrorCodeState);
+  const setModelingStatus = useSetRecoilState(modelingStatusState);
   const setModelingProgress = useSetRecoilState(modelingProgressState);
+  const setModelingData = useSetRecoilState(modelingDataState);
 
   useEffect(() => {
     if (!videoLink) return;
@@ -33,7 +33,8 @@ const ModelController = () => {
       } catch (e) {
         console.error(e);
 
-        setErrorCode('PROCEES1');
+        setModelingStatus('ERROR');
+        setVideoLink(null);
       }
     };
 
@@ -44,11 +45,16 @@ const ModelController = () => {
         ).data.result;
 
         setModelingProgress(Number(progress));
+
+        // setTimeout(() => {
+        //   setModelingProgress(70);
         callProcess3API(videoId);
+        // }, 1000 * 60);
       } catch (e) {
         console.error(e);
 
-        setErrorCode('PROCEES2');
+        setModelingStatus('ERROR');
+        setVideoLink(null);
       }
     };
 
@@ -58,13 +64,16 @@ const ModelController = () => {
 
         setModelingData(finalData);
         setModelingProgress(100);
+        setModelingStatus('COMPLETE');
       } catch (e) {
         console.error(e);
 
-        setErrorCode('PROCEES3');
+        setModelingStatus('ERROR');
+        setVideoLink(null);
       }
     };
 
+    setModelingStatus('CONTINUE');
     setModelingProgress(10);
     callProcess1API();
     // eslint-disable-next-line react-hooks/exhaustive-deps

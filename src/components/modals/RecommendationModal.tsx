@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
 import { getUnReadDummyVideosAPI } from '@/apis/videos';
 
@@ -10,15 +11,17 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 
 import { IVideo } from '@/models/video';
 
+import { recommendationModalState } from '@/stores/modal';
+
 import { RecommendationModalContainer } from '@/styles/modals/RecommendationModal.style';
 
-type Props = {
-  onClose: () => void;
-};
-
-const RecommendationModal = ({ onClose }: Props) => {
-  const [modalRef] = useOutsideClick<HTMLDivElement>(onClose);
+const RecommendationModal = () => {
+  const setIsOpenModal = useSetRecoilState(recommendationModalState);
   const [dummyVideo, setDummyVideo] = useState<IVideo>();
+
+  const [modalRef] = useOutsideClick<HTMLDivElement>(() =>
+    setIsOpenModal(false),
+  );
 
   useEffect(() => {
     const callAPI = async () => {
@@ -39,7 +42,7 @@ const RecommendationModal = ({ onClose }: Props) => {
     <RecommendationModalContainer>
       <div className="container" ref={modalRef}>
         <div className="inform">
-          <div className="close-btn" onClick={onClose}>
+          <div className="close-btn" onClick={() => setIsOpenModal(false)}>
             <CloseIcon width={28} height={28} />
           </div>
 

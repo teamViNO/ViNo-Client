@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import { createVideoAPI } from '@/apis/videos';
 
 import VideoSvg from '@/assets/icons/video.svg?react';
 import DownSvg from '@/assets/icons/down.svg?react';
@@ -8,19 +11,29 @@ import UpSvg from '@/assets/icons/up.svg?react';
 import * as ConvertVideoStyle from '@/styles/layout/sideBar/ConvertVideo.style';
 import { CommonTitle } from '@/styles/layout/sideBar/UserMode.style';
 
+import { recommendationModalState } from '@/stores/modal';
 import {
-  modelingErrorCodeState,
+  modelingDataState,
   modelingProgressState,
+  modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
+import { userTokenState } from '@/stores/user';
 
-import { validateYoutubeLink } from '@/utils/validation';
 import theme from '@/styles/theme';
 
+import { validateYoutubeLink } from '@/utils/validation';
+
 const ConvertVideo = () => {
-  const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
-  const errorCode = useRecoilValue(modelingErrorCodeState);
-  const progress = useRecoilValue(modelingProgressState);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const userToken = useRecoilValue(userTokenState);
+  const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const setVideoLink = useSetRecoilState(videoLinkState);
+  const [status, setStatus] = useRecoilState(modelingStatusState);
+  const [progress, setProgress] = useRecoilState(modelingProgressState);
+  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
@@ -28,8 +41,37 @@ const ConvertVideo = () => {
 
   const isValidate = validateYoutubeLink(url);
 
-  const handleClickButton = () => {
+  const handleClickCreateVideoButton = async () => {
+    if (!modelingData) return;
+
+    if (userToken) {
+      try {
+        const { video_id } = (await createVideoAPI(modelingData)).data.result;
+
+        navigate(`/summary/${video_id}`);
+        setModelingData(null);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      navigate('/summary/guest');
+    }
+
+    setVideoLink(null);
+    setStatus('NONE');
+    setProgress(0);
+  };
+
+  const handleClickStartConvertButton: React.MouseEventHandler<
+    HTMLButtonElement
+  > = (e) => {
+    e.stopPropagation();
+
     setVideoLink(url);
+
+    if (pathname === '/') {
+      setIsOpenModal(true);
+    }
   };
 
   return (
@@ -53,7 +95,7 @@ const ConvertVideo = () => {
             placeholder="https://youtube.com/..."
             type="text"
             value={url}
-            disabled={!!videoLink}
+            disabled={status === 'CONTINUE'}
             onChange={(e) => setURL(e.target.value)}
             onFocus={() => setIsFocus(true)}
           />
@@ -64,43 +106,42 @@ const ConvertVideo = () => {
             </ConvertVideoStyle.WarningMessage>
           )}
 
-          {progress < 100 ? (
-            <ConvertVideoStyle.Button
-              disabled={!isValidate || (progress > 0 && progress < 100)}
-              onClick={handleClickButton}
-            >
-              start
-            </ConvertVideoStyle.Button>
-          ) : (
+          {status === 'COMPLETE' ? (
             <ConvertVideoStyle.Button
               style={{
                 color: theme.color.gray500,
                 backgroundColor: theme.color.green400,
               }}
-              onClick={handleClickButton}
+              onClick={handleClickCreateVideoButton}
+            >
+              start
+            </ConvertVideoStyle.Button>
+          ) : (
+            <ConvertVideoStyle.Button
+              disabled={!isValidate || status === 'CONTINUE'}
+              onClick={handleClickStartConvertButton}
             >
               start
             </ConvertVideoStyle.Button>
           )}
+        </>
+      )}
 
-          {videoLink && (
-            <>
-              <ConvertVideoStyle.ProgressBar>
-                <div
-                  style={{
-                    width: `${progress}%`,
-                    backgroundColor: errorCode
-                      ? theme.color.red
-                      : theme.color.green300,
-                  }}
-                />
-              </ConvertVideoStyle.ProgressBar>
+      {status !== 'NONE' && (
+        <>
+          <ConvertVideoStyle.ProgressBar>
+            <div
+              style={{
+                width: `${progress}%`,
+                backgroundColor:
+                  status === 'ERROR' ? theme.color.red : theme.color.green300,
+              }}
+            />
+          </ConvertVideoStyle.ProgressBar>
 
-              <span className="progress-text">
-                {errorCode ? '변환 중 오류' : `${progress}%`}
-              </span>
-            </>
-          )}
+          <span className="progress-text">
+            {status === 'ERROR' ? '변환 중 오류' : `${progress}%`}
+          </span>
         </>
       )}
     </ConvertVideoStyle.Container>

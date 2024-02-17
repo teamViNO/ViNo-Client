@@ -1,26 +1,29 @@
-import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { ProgressWrapper } from '@/styles/Progress';
 import theme from '@/styles/theme';
 
 import {
-  modelingErrorCodeState,
   modelingProgressState,
+  modelingStatusState,
 } from '@/stores/model-controller';
 
 const ProgressBar = () => {
   // 진행도 상태
+  const status = useRecoilValue(modelingStatusState);
   const modelingProgress = useRecoilValue(modelingProgressState);
-  const errorCode = useRecoilValue(modelingErrorCodeState);
-  // 변환중 상태
-  const [isConverting, setIsConverting] = useState(true);
 
   const getStateText = () => {
-    if (modelingProgress === 100) return '변환 완료';
-    else if (errorCode) return '변환 오류';
-
-    return isConverting ? '변환중' : '다시 시작';
+    switch (status) {
+      case 'COMPLETE':
+        return '변환완료';
+      case 'ERROR':
+        return '변환오류';
+      case 'CONTINUE':
+        return '변환중';
+      case 'STOP':
+        return '변환중지';
+    }
   };
 
   return (
@@ -37,9 +40,12 @@ const ProgressBar = () => {
             <div
               style={{
                 width: `${modelingProgress}%`,
-                backgroundColor: errorCode
-                  ? theme.color.red
-                  : theme.color.green400,
+                backgroundColor:
+                  status === 'ERROR'
+                    ? theme.color.red
+                    : status === 'STOP'
+                      ? theme.color.gray300
+                      : theme.color.green400,
               }}
             />
           </div>
@@ -47,28 +53,30 @@ const ProgressBar = () => {
           <div
             className="converting-state"
             style={{
-              color: errorCode
-                ? theme.color.red
-                : isConverting
-                  ? theme.color.green400
-                  : theme.color.gray300,
+              color:
+                status === 'ERROR'
+                  ? theme.color.red
+                  : status === 'STOP'
+                    ? theme.color.gray300
+                    : theme.color.green400,
             }}
           >
             {getStateText()}
           </div>
         </div>
 
-        {modelingProgress < 100 && !errorCode && (
+        {['CONTINUE', 'STOP'].includes(status) && (
           <div className="converting-text">
             <button
               className="converting-btn"
               style={{
-                backgroundColor: isConverting
-                  ? theme.color.gray400
-                  : theme.color.green400,
+                backgroundColor:
+                  status === 'CONTINUE'
+                    ? theme.color.gray400
+                    : theme.color.green400,
               }}
             >
-              {isConverting ? '변환중지' : '다시 시작'}
+              {status === 'CONTINUE' ? '변환중지' : '다시 시작'}
             </button>
 
             <div className="converting-percentage">{modelingProgress}%</div>

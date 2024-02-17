@@ -16,6 +16,7 @@ import RecommendationModal from '@/components/modals/RecommendationModal';
 import { HomePageContainer } from '@/styles/HomepageStyle';
 
 import { userTokenState } from '@/stores/user';
+import { recommendationModalState } from '@/stores/modal';
 
 export interface Video {
   id: string;
@@ -28,6 +29,7 @@ export interface Video {
 const HomePage: React.FC = () => {
   const searchRef = useRef(null);
   const userToken = useRecoilValue(userTokenState);
+  const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
 
@@ -47,18 +49,22 @@ const HomePage: React.FC = () => {
   }, [userToken]);
 
   return (
-    <HomePageContainer>
-      <SearchYoutube searchRef={searchRef} />
+    <>
+      <HomePageContainer>
+        <SearchYoutube searchRef={searchRef} />
 
-      <div style={{ flexDirection: userToken ? 'column' : 'column-reverse' }}>
-        <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        <InsightVideos
-          userToken={userToken}
-          dummyVideos={dummyVideos}
-          setDummyVideos={setDummyVideos}
-        />
-      </div>
-    </HomePageContainer>
+        <div style={{ flexDirection: userToken ? 'column' : 'column-reverse' }}>
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
+          <InsightVideos
+            userToken={userToken}
+            dummyVideos={dummyVideos}
+            setDummyVideos={setDummyVideos}
+          />
+        </div>
+      </HomePageContainer>
+
+      {isOpenModal && <RecommendationModal />}
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -6,8 +6,6 @@ import { createVideoAPI } from '@/apis/videos';
 
 import VideoIcon from '@/assets/icons/video.svg?react';
 import WarningIcon from '@/assets/icons/warning.svg?react';
-
-import RecommendationModal from '@/components/modals/RecommendationModal';
 
 import theme from '@/styles/theme';
 import {
@@ -17,10 +15,11 @@ import {
   SearchContainer,
 } from '@/styles/HomepageStyle';
 
+import { recommendationModalState } from '@/stores/modal';
 import {
   modelingDataState,
-  modelingErrorCodeState,
   modelingProgressState,
+  modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
 import { userTokenState } from '@/stores/user';
@@ -37,22 +36,58 @@ const SearchYoutube = ({ searchRef }: Props) => {
   const navigate = useNavigate();
 
   const userToken = useRecoilValue(userTokenState);
-  const progress = useRecoilValue(modelingProgressState);
-  const setErrorCode = useSetRecoilState(modelingErrorCodeState);
+  const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const setVideoLink = useSetRecoilState(videoLinkState);
+  const setProgress = useSetRecoilState(modelingProgressState);
+  const [status, setStatus] = useRecoilState(modelingStatusState);
   const [modelingData, setModelingData] = useRecoilState(modelingDataState);
-  const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
 
   const [inputLink, setInputLink] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isValidate = validateYoutubeLink(inputLink);
+
+  const getTitle = () => {
+    if (inputLink !== '' && !isValidate) {
+      return '영상 주소를 다시 확인해주세요!';
+    }
+
+    switch (status) {
+      case 'COMPLETE':
+        return '영상 변환이 완료되었어요!';
+      case 'STOP':
+      case 'CONTINUE':
+        return '읽기 편한 영상을 만들고 있어요!';
+      case 'NONE':
+        return '어떤 영상을 정리해볼까요?';
+      case 'ERROR':
+        return '영상 변환 중 오류가 발생했어요!';
+    }
+  };
+
+  const getSubTitle = () => {
+    if (inputLink !== '' && !isValidate) {
+      return 'YouTube 영상의 링크만 변환이 가능해요!';
+    }
+
+    switch (status) {
+      case 'COMPLETE':
+        return '지금 바로 변환된 영상을 읽어보세요';
+      case 'STOP':
+      case 'CONTINUE':
+        return '열심히 영상을 변환 중이에요';
+      case 'NONE':
+        return '영상에서 글로 변환하고 싶은 YouTube 영상의 링크를 붙여넣어주세요';
+      case 'ERROR':
+        return '영상 변환 중 오류가 발생했어요';
+    }
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
     if (validateYoutubeLink(inputLink)) {
-      setIsModalOpen(true);
       setVideoLink(inputLink);
+      setIsOpenModal(true);
     }
   };
 
@@ -68,58 +103,43 @@ const SearchYoutube = ({ searchRef }: Props) => {
       } catch (e) {
         console.error(e);
       }
+    } else {
+      navigate('/summary/guest');
     }
 
     setVideoLink(null);
-    setErrorCode(null);
+    setStatus('NONE');
+    setProgress(0);
   };
-
-  useEffect(() => {
-    if (videoLink) {
-      setIsModalOpen(true);
-    }
-  }, [videoLink]);
 
   return (
     <>
       <SearchContainer className="dark-section">
         <SearchForm onSubmit={handleSubmit}>
           <div className="search-text">
-            {inputLink === '' || isValidate ? (
-              <>
-                <h1 className="search-title">
-                  {progress === 100
-                    ? '영상 변환이 완료되었어요!'
-                    : progress === 0
-                      ? '어떤 영상을 정리해볼까요?'
-                      : '읽기 편한 영상을 만들고 있어요!'}
-                </h1>
+            <h1 className="search-title">{getTitle()}</h1>
 
-                <h4
-                  className="search-subtitle"
-                  style={{ color: theme.color.gray300 }}
-                >
-                  {progress === 100
-                    ? '지금 바로 변환된 영상을 읽어보세요'
-                    : progress === 0
-                      ? '영상에서 글로 변환하고 싶은 YouTube 영상의 링크를 붙여넣어주세요'
-                      : '열심히 영상을 변환 중이에요'}
-                </h4>
-              </>
-            ) : (
-              <>
-                <h1 className="search-title">영상 주소를 다시 확인해주세요!</h1>
-                <div className="search-subtitle-wrapper">
-                  <WarningIcon width={24} height={24} />
-                  <h4
-                    className="search-subtitle"
-                    style={{ width: 265, color: 'red', marginLeft: 12 }}
-                  >
-                    Youtube 영상의 링크만 변환이 가능해요!
-                  </h4>
-                </div>
-              </>
-            )}
+            <div className="search-subtitle-wrapper">
+              {(status === 'ERROR' || (!isValidate && inputLink !== '')) && (
+                <WarningIcon
+                  width={24}
+                  height={24}
+                  style={{ marginRight: 12 }}
+                />
+              )}
+
+              <h4
+                className="search-subtitle"
+                style={{
+                  color:
+                    status === 'ERROR' || (!isValidate && inputLink !== '')
+                      ? theme.color.red
+                      : theme.color.gray300,
+                }}
+              >
+                {getSubTitle()}
+              </h4>
+            </div>
           </div>
 
           <div className="input-container">
@@ -132,13 +152,13 @@ const SearchYoutube = ({ searchRef }: Props) => {
                 ref={searchRef}
                 type="text"
                 value={inputLink}
-                disabled={!!videoLink}
+                disabled={status === 'CONTINUE'}
                 onChange={(e) => setInputLink(e.target.value)}
                 placeholder="https://youtube.com/..."
               />
             </div>
 
-            {progress === 100 ? (
+            {status === 'COMPLETE' ? (
               <SearchButton
                 type="button"
                 style={{
@@ -150,19 +170,18 @@ const SearchYoutube = ({ searchRef }: Props) => {
                 영상 읽기
               </SearchButton>
             ) : (
-              <SearchButton type="submit" disabled={!!videoLink || !isValidate}>
+              <SearchButton
+                type="submit"
+                disabled={status === 'CONTINUE' || !isValidate}
+              >
                 변환하기
               </SearchButton>
             )}
           </div>
 
-          {videoLink && <ProgressBar />}
+          {status !== 'NONE' && <ProgressBar />}
         </SearchForm>
       </SearchContainer>
-
-      {isModalOpen && (
-        <RecommendationModal onClose={() => setIsModalOpen(false)} />
-      )}
     </>
   );
 };

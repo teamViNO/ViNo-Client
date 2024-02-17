@@ -11,7 +11,7 @@ const PREFIX = '/video';
 
 export const modelingProcess1 = (link: string) => {
   return axios.post<APIResponse<ModelingProcessResponse>>(
-    PREFIX + `/?v=${link}`,
+    PREFIX + `/?v=${encodeURIComponent(link)}`,
   );
 };
 
