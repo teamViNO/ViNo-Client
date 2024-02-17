@@ -33,7 +33,7 @@ const SummaryScriptBox = ({ onRefresh }: Props) => {
   const searchIsOpen = useRecoilValue(summarySearchIsOpenState);
   const transformModalIsOpen = useRecoilValue(summaryTransformModalState);
   const isEditingView = useRecoilValue(summaryIsEditingViewState);
-  const [width, setWidth] = useRecoilState(summaryBoxWidthState);
+  const width = useRecoilValue(summaryBoxWidthState);
 
   const [keyword, setKeyword] = useState('');
 
@@ -95,7 +95,7 @@ const SummaryScriptBox = ({ onRefresh }: Props) => {
         {isEditingView ? <ScriptEditor /> : <ScriptViewer keyword={keyword} />}
       </div>
 
-      <ResizeThumb width={width} onChange={setWidth} />
+      <ResizeThumb />
     </ScriptBox>
   );
 };
