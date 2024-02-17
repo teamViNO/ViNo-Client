@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
@@ -9,6 +9,7 @@ import {
   summaryUpdateVideoState,
   summaryVideoState,
 } from '@/stores/summary';
+import { toastListState } from '@/stores/toast';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -26,17 +27,23 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
   const summaryUpdateVideo = useRecoilValue(summaryUpdateVideoState);
   const isEditingView = useRecoilValue(summaryIsEditingViewState);
+  const [toastList, setToastList] = useRecoilState(toastListState);
 
   const subHeading = isEditingView
     ? summaryUpdateVideo?.subHeading || []
     : summaryVideo.subHeading;
 
-  const handleSelectCategory = async (category_id: number) => {
+  const createToast = (content: string) => {
+    setToastList([...toastList, { id: Date.now(), content }]);
+  };
+
+  const handleSelectCategory = async (category_id: number, name?: string) => {
     try {
       await updateVideoCategoryIdAPI(category_id, {
         video_id: [summaryVideo.video_id],
       });
 
+      createToast(`[${name}] 카테고리로 이동되었어요!`);
       onRefresh();
     } catch (e) {
       console.error(e);

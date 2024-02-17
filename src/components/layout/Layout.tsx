@@ -25,7 +25,7 @@ const Layout = () => {
     <>
       <Header />
 
-      <div style={{ display: 'flex', width: '100vw' }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         {isSideBarOpen && <SideBar />}
 
         <div style={{ flex: '1 1 auto' }}>
