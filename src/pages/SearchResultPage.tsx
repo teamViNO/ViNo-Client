@@ -1,13 +1,12 @@
 import { escapeHTML } from '@/utils/string';
 import { useState, useEffect } from 'react';
-import { createSearchParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Styled from '@/styles/SearchResult';
 import TagInput from '@/components/SearchPage/SearchComponent';
 import SearchNotFound from '@/components/SearchPage/SearchNotFound';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from '@/models/search';
 import { searchAPI } from '@/apis/search';
-import { useNavigate } from 'react-router-dom';
 
 import SearchResultBox from '@/components/SearchPage/SearchResultBox';
 
