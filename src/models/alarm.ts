@@ -1,5 +1,5 @@
 export interface IAlarm {
-  state: 'success';
+  state: 'success' | 'fail';
   type: 'video' | 'notice';
   alarm_id: number;
   video_id?: number;

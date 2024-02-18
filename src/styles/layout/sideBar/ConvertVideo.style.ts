@@ -9,6 +9,13 @@ export const Container = styled(CommonWrapStyle)`
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+
+  & .progress-text {
+    margin-top: 4px;
+    align-self: flex-end;
+    color: ${(props) => props.theme.color.gray400};
+    ${(props) => props.theme.typography.Caption3};
+  }
 `;
 
 export const Wrap = styled.button`
@@ -43,15 +50,36 @@ export const WarningMessage = styled.span`
   ${theme.typography.Caption1}
 `;
 
-export const StartButton = styled.button`
+export const Button = styled.button`
   cursor: pointer;
   width: 228px;
-  background-color: ${(props) =>
-    props.disabled ? theme.color.gray200 : theme.color.gray500};
-  border: 0;
+  background-color: ${(props) => props.theme.color.gray500};
+  border: none;
   border-radius: 8px;
   padding: 7px;
-  color: ${(props) =>
-    props.disabled ? theme.color.gray300 : theme.color.white};
-  ${theme.typography.Body1}
+  color: ${(props) => props.theme.color.white};
+  transition: 0.1s;
+  cursor: pointer;
+  ${theme.typography.Body1};
+
+  &:disabled {
+    background-color: ${(props) => props.theme.color.gray200};
+    color: ${(props) => props.theme.color.gray300};
+    cursor: not-allowed;
+  }
+`;
+
+export const ProgressBar = styled.div`
+  margin-top: 13px;
+  width: 100%;
+  height: 8px;
+  border-radius: 100px;
+  background-color: ${(props) => props.theme.color.gray100};
+  overflow: hidden;
+
+  & > div {
+    height: 100%;
+    transition: 1s;
+    transition-delay: 0.5s;
+  }
 `;

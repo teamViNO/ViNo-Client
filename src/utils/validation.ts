@@ -18,3 +18,7 @@ export const validatePassword = (password: string): ValidatePassword => {
     LENGTH: 8 <= password.length && password.length <= 13,
   };
 };
+
+export const validateYoutubeLink = (link: string) => {
+  return /^(https?:\/\/)?(www.youtube.com|youtu.?be)\/.+/g.test(link);
+};

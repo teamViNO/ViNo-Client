@@ -1,61 +1,97 @@
-import React from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { recommendationModalState } from '@/stores/modal';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+
+import { getUnReadDummyVideosAPI } from '@/apis/videos';
+
+import CloseIcon from '@/assets/icons/close.svg?react';
+import TransformationIcon from '@/assets/icons/transformation.svg?react';
+
 import useOutsideClick from '@/hooks/useOutsideClick';
 
-import emptyvideoImg from '@/assets/empty-video.png';
-import CloseIcon from '@/assets/icons/close.svg?react';
-import cardimageImg from '@/assets/card-image.png';
+import { IVideo } from '@/models/video';
 
-import { userInfoState } from '@/stores/user';
+import { recommendationModalState } from '@/stores/modal';
 
 import { RecommendationModalContainer } from '@/styles/modals/RecommendationModal.style';
 
-const RecommendationModal: React.FC = () => {
-  const userInfo = useRecoilValue(userInfoState);
-  const [modalOpen, setModalOpen] = useRecoilState(recommendationModalState);
+const RecommendationModal = () => {
+  const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const [dummyVideo, setDummyVideo] = useState<IVideo>();
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const [modalRef] = useOutsideClick<HTMLDivElement>(() =>
+    setIsOpenModal(false),
+  );
 
-  const [modalRef] = useOutsideClick<HTMLDivElement>(closeModal);
+  useEffect(() => {
+    const callAPI = async () => {
+      try {
+        const { videos } = (await getUnReadDummyVideosAPI()).data.result;
+        const random = Math.round(Math.random() * (videos.length - 1));
+
+        setDummyVideo(videos[random]);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    callAPI();
+  }, [setDummyVideo]);
 
   return (
-    <RecommendationModalContainer isOpen={modalOpen}>
-      <div className="modal-container" ref={modalRef}>
-        <div className="modal-inform">
-          <div className="close-btn" onClick={closeModal}>
+    <RecommendationModalContainer>
+      <div className="container" ref={modalRef}>
+        <div className="inform">
+          <div className="close-btn" onClick={() => setIsOpenModal(false)}>
             <CloseIcon width={28} height={28} />
           </div>
-          <div className="inform-wrapper">
-            <div className="inform">
-              <img
-                src={emptyvideoImg}
-                alt="emptyvideoImg"
-                width={56}
-                height={56}
-              />
-              <div className="inform-text">
-                기다리는 동안 이런 영상은 어때요?
-              </div>
-              <div className="inform-subtext">
-                {userInfo?.nick_name}님을 위해 미리 정리 된 영상을
-                소개해드릴게요
-              </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
+            <div className="inform-icon">
+              <TransformationIcon width={60} height={60} />
+            </div>
+
+            <div className="inform-text">잠깐! 새로고침은 안돼요!</div>
+
+            <div className="inform-subtext">
+              새로고침 시 영상변환이 초기화되니 유의해주세요
             </div>
           </div>
         </div>
-        <div className="modal-card">
-          <img src={cardimageImg} alt="card-image" width={290} />
-          <div className="card-text">
-            <h2 className="card-title">우리는 카카오워크로 일해요</h2>
-            <div className="hashtag">
-              <span className="card-hashtag"># 디자인</span>
-              <span className="card-hashtag"># 진로</span>
+
+        {dummyVideo && (
+          <div className="insight">
+            <div className="insight-text">
+              기다리는 동안 이런 영상은 어때요?
             </div>
+
+            <Link
+              className="insight-card"
+              to={`/summary/${dummyVideo.video_id}`}
+            >
+              <img src={dummyVideo.image} alt="thumbnail" />
+
+              <div className="insight-content">
+                <h1>{dummyVideo.title}</h1>
+
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {dummyVideo.tag.slice(0, 3).map((item) => (
+                    <div key={item.name} className="insight-tag">
+                      # {item.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Link>
           </div>
-        </div>
+        )}
       </div>
     </RecommendationModalContainer>
   );

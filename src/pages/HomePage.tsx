@@ -1,19 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import SearchYoutube from '@/components/Home/SearchYoutube';
-import { HomePageContainer } from '@/styles/HomepageStyle';
-import RecentVideos from '@/components/Home/RecentVideos';
-import InsightVideos from '@/components/Home/InsightVideos';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { recommendationModalState } from '@/stores/modal';
-import RecommendationModal from '@/components/modals/RecommendationModal';
+import { IVideoProps } from 'types/videos';
+
 import {
   getUnReadDummyVideos,
   getRecentVideos,
   getAllDummyVideos,
   createDummyVideoToMine,
 } from '@/apis/videos';
+
+import SearchYoutube from '@/components/Home/SearchYoutube';
+import RecentVideos from '@/components/Home/RecentVideos';
+import InsightVideos from '@/components/Home/InsightVideos';
+import RecommendationModal from '@/components/modals/RecommendationModal';
+
+import { HomePageContainer } from '@/styles/HomepageStyle';
+
 import { userTokenState } from '@/stores/user';
-import { IVideoProps } from 'types/videos';
+import { recommendationModalState } from '@/stores/modal';
 import { toastListState } from '@/stores/toast';
 
 export interface Video {
@@ -26,15 +30,13 @@ export interface Video {
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
+  const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
   const [toastList, setToastList] = useRecoilState(toastListState);
 
   const createToast = (content: string) => {
     setToastList([...toastList, { id: Date.now(), content }]);
-  };
-  const handleSearch = (value: string) => {
-    console.log(value);
   };
 
   const onFileClick = async (
@@ -53,8 +55,6 @@ const HomePage: React.FC = () => {
   };
   const searchRef = useRef(null);
 
-  const isModalOpen = useRecoilValue(recommendationModalState);
-
   useEffect(() => {
     userToken &&
       Promise.all([getRecentVideos(), getUnReadDummyVideos()]).then((res) => {
@@ -71,30 +71,22 @@ const HomePage: React.FC = () => {
   }, [userToken]);
 
   return (
-    <HomePageContainer>
-      <SearchYoutube searchRef={searchRef} onSearch={handleSearch} />
-      {isModalOpen && <RecommendationModal />}
-      {userToken && (
-        <>
+    <>
+      <HomePageContainer>
+        <SearchYoutube searchRef={searchRef} />
+
+        <div style={{ flexDirection: userToken ? 'column' : 'column-reverse' }}>
           <RecentVideos searchRef={searchRef} videos={recentVideos} />
           <InsightVideos
             userToken={userToken}
             dummyVideos={dummyVideos}
             onFileClick={onFileClick}
           />
-        </>
-      )}
-      {!userToken && (
-        <>
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            onFileClick={onFileClick}
-          />
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        </>
-      )}
-    </HomePageContainer>
+        </div>
+      </HomePageContainer>
+
+      {isOpenModal && <RecommendationModal />}
+    </>
   );
 };
 
