@@ -65,7 +65,7 @@ const ProgressBar = () => {
           </div>
         </div>
 
-        {['CONTINUE', 'STOP'].includes(status) && (
+        {['CONTINUE', 'STOP', 'ERROR'].includes(status) && (
           <div className="converting-text">
             <button
               className="converting-btn"
