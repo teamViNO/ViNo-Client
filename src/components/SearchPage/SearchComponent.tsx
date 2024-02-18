@@ -54,18 +54,18 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
     if(!searchType){
         
         if ((event.code === 'Comma' || event.code === 'Space') && !isComposing) {
-        event.preventDefault(); 
+        event.preventDefault();
         if (input) {
           tags.length > 0 && !input.startsWith('#') ? setTags([...tags, '#' + input]) : setTags([...tags, input])
           if(selectedHashtags && setSelectedHashtags && !selectedHashtags.includes(input))
-            input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1)]) : setSelectedHashtags([...selectedHashtags, input])
+            input.startsWith('#') ? setSelectedHashtags([...selectedHashtags, input.substring(1).replace(/\s/g, '')]) : setSelectedHashtags([...selectedHashtags, input.replace(/\s/g, '')])
           setInput('');
         }
         } else if ((event.key === 'Backspace' || event.code === 'Backspace') && !input) { 
           if(tags.length > 0){
             const lastValue = tags[tags.length - 1]
-            if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1)))
-              setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1)));
+            if(selectedHashtags && setSelectedHashtags && selectedHashtags.includes(lastValue.substring(1).replace(/\s/g, '')))
+              setSelectedHashtags(selectedHashtags.filter((prev : string) => prev !== lastValue.substring(1).replace(/\s/g, '')));
             setRemovingTagIndex(tags.length - 1);
     
             setTimeout(() => {

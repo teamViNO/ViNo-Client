@@ -110,6 +110,7 @@ const Container = styled.div`
    }
 
    & div.hashtag {
+        width : 100%;
         display: flex;
         flex-direction: row;
         flex-wrap : wrap;
