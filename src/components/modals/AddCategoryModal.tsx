@@ -19,7 +19,7 @@ interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
   setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   topCategoryId: number;
-  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
+  setTo: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AddCategoryModal = ({
@@ -29,7 +29,7 @@ const AddCategoryModal = ({
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
   topCategoryId,
-  setCategoryId,
+  setTo,
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
   const { updateCategories } = useUpdateCategories();
@@ -58,10 +58,10 @@ const AddCategoryModal = ({
       : await postSubCategroy(categoryName, topCategoryId);
     if (response.isSuccess) {
       updateCategories();
-      setCategoryId(
+      setTo(
         isTopCategoryModalOpen
-          ? response.result.categoryId
-          : response.result.topCategoryId,
+          ? `${response.result.categoryId}`
+          : `${response.result.topCategoryId}/${response.result.categoryId}`,
       );
       setIsSuccessAddCategoryModalOpen(true);
     }

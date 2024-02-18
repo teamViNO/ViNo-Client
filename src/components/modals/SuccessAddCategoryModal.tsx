@@ -10,14 +10,14 @@ import { ICommonModalProps } from 'types/modal';
 import FileImage from '@/assets/file.png';
 
 interface ISuccessAddCategory extends ICommonModalProps {
-  categoryId: number | null;
+  to: string;
 }
 
 const SuccessAddCategoryModal = ({
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-  categoryId,
+  to,
 }: ISuccessAddCategory) => {
   const onCloseModal = () => {
     setIsSuccessAddCategoryModalOpen(false);
@@ -40,7 +40,7 @@ const SuccessAddCategoryModal = ({
           생성 완료!
         </SuccessAddCategoryStyles.Title>
         <SuccessAddCategoryStyles.GoToCategoryButton
-          to={`/category/${categoryId}`}
+          to={`/category/${to}`}
           onClick={onCloseModal}
         >
           보러가기

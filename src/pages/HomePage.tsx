@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
@@ -19,6 +19,7 @@ import { HomePageContainer } from '@/styles/HomepageStyle';
 import { userTokenState } from '@/stores/user';
 import { recommendationModalState } from '@/stores/modal';
 import { toastListState } from '@/stores/toast';
+import { isSideBarOpenState } from '@/stores/ui';
 
 export interface Video {
   id: string;
@@ -30,6 +31,7 @@ export interface Video {
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
+  const setIsSideBarOpen = useSetRecoilState(isSideBarOpenState);
   const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
@@ -68,7 +70,9 @@ const HomePage: React.FC = () => {
         setRecentVideos([]);
         setDummyVideos(res.result.videos);
       });
-  }, [userToken]);
+
+    setIsSideBarOpen(false);
+  }, [setIsSideBarOpen, userToken]);
 
   return (
     <>
@@ -76,16 +80,24 @@ const HomePage: React.FC = () => {
         <SearchYoutube searchRef={searchRef} />
 
         {userToken ? (
-        <div>
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
-        </div>
-      ) : (
-        <div>
-          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        </div>
-      )}
+          <div>
+            <RecentVideos searchRef={searchRef} videos={recentVideos} />
+            <InsightVideos
+              userToken={userToken}
+              dummyVideos={dummyVideos}
+              onFileClick={onFileClick}
+            />
+          </div>
+        ) : (
+          <div>
+            <InsightVideos
+              userToken={userToken}
+              dummyVideos={dummyVideos}
+              onFileClick={onFileClick}
+            />
+            <RecentVideos searchRef={searchRef} videos={recentVideos} />
+          </div>
+        )}
       </HomePageContainer>
 
       {isOpenModal && <RecommendationModal />}
