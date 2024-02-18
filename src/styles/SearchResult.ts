@@ -79,6 +79,7 @@ const Container = styled.div`
 
    & div.result { 
           display: flex;
+          min-height : 800px;
           overflow : scroll;
           align-items : center;
           flex-direction: column;
@@ -100,6 +101,7 @@ const Container = styled.div`
    & div.content {
           display : flex;
           flex-direction : column;
+          padding : 10px 0 10px 0;
           gap : 20px;
    }
 `;
@@ -230,20 +232,17 @@ const VideoCard = styled.div`
      }
 
      & div.imgBox {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
           padding: 0;
-          gap: 9px;
-      
-          flex: none;
-          order: 1;
-          align-self: stretch;
-          flex-grow: 0;
+          width : 213px;
+          height : 254px;
+          border-radius : 0px 16px 16px 0px;
+          overflow:hidden;
+          margin:0 auto;
      }
      & img {
-          border : none;
-          border-radius : 0px 16px 16px 0px;
+          width : 100%;
+          height : 100%;
+          object-fit: cover;
      }
 `
 const hashtagBox = styled.div`
