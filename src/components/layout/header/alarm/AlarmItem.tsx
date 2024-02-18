@@ -4,7 +4,7 @@ import CheckIcon from '@/assets/icons/checked.svg?react';
 import EmptyFileImage from '@/assets/empty-file.png';
 import FileImage from '@/assets/file.png';
 import FileReadImage from '@/assets/file-read.png';
-import ErrorImage from '@/assets/error.png';
+import ErrorImage from '@/assets/Error.png';
 
 import { Container } from '@/styles/layout/header/alarm/AlarmItem.style';
 
