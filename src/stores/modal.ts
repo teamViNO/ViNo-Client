@@ -11,6 +11,6 @@ export const summaryTransformModalState = atom({
 });
 
 export const recommendationModalState = atom({
-    key: 'recommendationModal',
-    default: false,
+  key: 'recommendation-modal',
+  default: false,
 });
