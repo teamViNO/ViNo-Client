@@ -1,13 +1,12 @@
 import { escapeHTML } from '@/utils/string';
 import { useState, useEffect } from 'react';
-import { createSearchParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Styled from '@/styles/SearchResult';
 import TagInput from '@/components/SearchPage/SearchComponent';
 import SearchNotFound from '@/components/SearchPage/SearchNotFound';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from '@/models/search';
 import { searchAPI } from '@/apis/search';
-import { useNavigate } from 'react-router-dom';
 
 import SearchResultBox from '@/components/SearchPage/SearchResultBox';
 
@@ -19,7 +18,6 @@ const SearchResult = () => {
   const [errormsg, setErrormsg] = useState('');
   const [data, setData] = useState<IVideo[]>([]);
   const location = useLocation();
-  const searchNav = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -41,12 +39,12 @@ const SearchResult = () => {
       case 'hashtag':
         const tagValues = searchParams.get('value') as string;
         const tagtype = searchParams.get('type') as string;
-
-        setTags(tagValues.split('&'));
+        
+        setTags(tagValues.replace(/\s+/g, '').split('&'));
         setSearchType(false);
         handleSearchAPI(tagValues, tagtype, '&');
         if (data.length === 0) {
-          setErrormsg(tagValues.replace('&', ' '));
+          setErrormsg(tagValues.replace(/&/g, ' '));
         }
         break;
 
@@ -54,7 +52,7 @@ const SearchResult = () => {
       // 기타 에러
     }
   }, [location.search]);
-
+  
   const handleSearchAPI = async (
     inputValues: string,
     type: string,
@@ -97,31 +95,18 @@ const SearchResult = () => {
   };
 
   const dataDuplicateHandler = (videos: IVideo[], check: string) => {
-    const newData = videos.filter((value) => {
-      return !data.some((item) => item.video_id === value.video_id);
-    });
-    const mappingData = newData.map((video) => {
-      const markdata = {
+    const uniqueData = videos.filter((v, index, arr) => 
+      arr.findIndex(t => t.video_id === v.video_id) === index
+    );
+    const mappingData = uniqueData.map((video) => {
+      return {
         ...video,
         title: formatContent(video.title, check),
         description: formatContent(video.description, check),
         content: formatContent(video.content, check),
       };
-      setData([...data, markdata]);
     });
-    mappingData;
-  };
-  const handleReSearch = () => {
-    const params = {
-      type: searchType === true ? 'keyword' : 'hashtag',
-      value: searchType ? input : tags.join('&'),
-    };
-
-    searchNav({
-      pathname: '/search/result',
-      search: `?${createSearchParams(params)}`,
-    });
-    window.location.reload();
+    setData([...data, ...mappingData]);
   };
 
   if (loading) {
@@ -153,14 +138,6 @@ const SearchResult = () => {
                 setSearchType={setSearchType}
               />
             </div>
-            <button
-              className="search-btn"
-              style={{ width: '90px', height: '36px' }}
-              disabled={input.length === 0 && tags.length === 0}
-              onClick={handleReSearch}
-            >
-              Search
-            </button>
           </div>
         </div>
       </div>
@@ -178,7 +155,7 @@ const SearchResult = () => {
             <SearchNotFound input={errormsg}></SearchNotFound>
           ) : (
             data.map((item, index) => (
-              <SearchResultBox key={index} video={item} />
+              <SearchResultBox key={index} video={item} tags = {tags}/>
             ))
           )}
         </div>
