@@ -3,6 +3,7 @@ import {
   IVideo,
   UpdateVideoCategoryRequest,
   UpdateVideoRequest,
+  VideoResponse,
   VideoVersionType,
 } from '@/models/video';
 
@@ -11,6 +12,10 @@ import axiosInstance from './config/instance';
 import { IVideoProps } from 'types/videos';
 
 const PREFIX = '/videos';
+
+export const createVideoAPI = (data: IVideo) => {
+  return axios.post<APIResponse<IVideo>>(PREFIX + `/new-video`, data);
+};
 
 export const getVideoAPI = (
   videoId: string | number,
@@ -65,6 +70,10 @@ export const createVideoSummaryAPI = (videoId: number, content: string[]) => {
 
 export const deleteVideoSummaryAPI = (summaryId: number) => {
   return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
+};
+
+export const getUnReadDummyVideosAPI = () => {
+  return axios.get<APIResponse<VideoResponse>>('/videos/dummyVideos/unRead');
 };
 
 export const getUnReadDummyVideos = async (): Promise<

@@ -49,6 +49,10 @@ export const Container = styled.div`
       height: 8px;
       border-radius: 50%;
       background-color: ${(props) => props.theme.color.green400};
+
+      &.error {
+        background-color: ${(props) => props.theme.color.red};
+      }
     }
 
     & span.type {
