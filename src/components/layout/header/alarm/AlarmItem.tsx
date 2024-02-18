@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import { IAlarm } from '@/models/alarm';
 
 import CheckIcon from '@/assets/icons/checked.svg?react';
@@ -14,9 +16,16 @@ type Props = {
   alarm: IAlarm;
   selectIdList: number[];
   onUpdateSelectIdList: (list: number[]) => void;
+  onClose: () => void;
 };
 
-const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
+const AlarmItem = ({
+  alarm,
+  selectIdList,
+  onUpdateSelectIdList,
+  onClose,
+}: Props) => {
+  const navigate = useNavigate();
   const isSelected = selectIdList.indexOf(alarm.alarm_id) > -1;
 
   const type = () => {
@@ -49,7 +58,18 @@ const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
     return `${second}초`;
   };
 
-  const handleClickRemoveButton = () => {
+  const handleClick = () => {
+    if (alarm.type === 'notice') {
+      navigate('/guide');
+      onClose();
+    }
+  };
+
+  const handleClickRemoveButton: React.MouseEventHandler<HTMLButtonElement> = (
+    e,
+  ) => {
+    e.stopPropagation();
+
     if (selectIdList.indexOf(alarm.alarm_id) < 0) {
       onUpdateSelectIdList([...selectIdList, alarm.alarm_id]);
     } else {
@@ -58,7 +78,11 @@ const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
   };
 
   return (
-    <Container className={`${alarm.is_confirm && 'read'}`}>
+    <Container
+      className={`${alarm.is_confirm && 'read'}`}
+      style={{ cursor: alarm.type === 'notice' ? 'pointer' : 'default' }}
+      onClick={handleClick}
+    >
       <div className="top">
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div className={`color ${alarm.state === 'fail' && 'error'}`} />

@@ -40,3 +40,22 @@ export const getDate = (dateString?: string) => {
 
   return result;
 };
+
+export const formatTime = (time: number) => {
+  const hour = Math.floor(time / 60 / 60);
+  const minute = Math.floor(time / 60);
+  const second = Math.floor(time % 60);
+
+  if (hour > 0) {
+    return [
+      String(hour).padStart(2, '0'),
+      String(minute).padStart(2, '0'),
+      String(second).padStart(2, '0'),
+    ].join(':');
+  }
+
+  return [
+    String(minute).padStart(2, '0'),
+    String(second).padStart(2, '0'),
+  ].join(':');
+};
