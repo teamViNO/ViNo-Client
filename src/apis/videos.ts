@@ -19,7 +19,7 @@ export const getVideoAPI = (
   return axios.get<APIResponse<IVideo>>(PREFIX + `/${videoId}/${versionId}`);
 };
 
-export const deleteVideos = async (videos: number[]) => {
+export const deleteVideos = async (videos: number[] | undefined) => {
   const response = await axiosInstance.delete('/videos/selectDelete', {
     data: { videos },
   });

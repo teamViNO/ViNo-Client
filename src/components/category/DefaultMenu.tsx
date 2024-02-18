@@ -5,7 +5,7 @@ import ChangeBottomSvg from '@/assets/icons/change-bottom.svg?react';
 import ChangeTopSvg from '@/assets/icons/change-top.svg?react';
 
 interface IDefaultMenuProps {
-  menus: ISubFolderProps[] | ITagProps[];
+  menus: ISubFolderProps[] | ITagProps[] | undefined;
   recentRegisterMode: boolean;
   selectedTags: string[];
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
@@ -29,7 +29,7 @@ const DefaultMenu = ({
   return (
     <>
       <div style={{ display: 'flex' }}>
-        {menus.map((menu: ISubFolderProps | ITagProps) => (
+        {menus?.map((menu: ISubFolderProps | ITagProps) => (
           <div key={menu.name}>
             {'tag_id' in menu && (
               <Chip

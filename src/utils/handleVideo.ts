@@ -8,11 +8,16 @@ const handleVideo = async (
   topCategoryId: string | undefined,
   subCategoryId: string | undefined,
   setMenus: React.Dispatch<
-    React.SetStateAction<ISubFolderProps[] | ITagProps[]>
+    React.SetStateAction<ISubFolderProps[] | ITagProps[] | undefined>
   >,
-  setName: React.Dispatch<React.SetStateAction<string>>,
-  setVideos: React.Dispatch<React.SetStateAction<IVideoProps[]>>,
+  setName: React.Dispatch<React.SetStateAction<string | undefined>>,
+  setVideos: React.Dispatch<React.SetStateAction<IVideoProps[] | undefined>>,
 ) => {
+  subCategoryId &&
+    getCategoryTags(subCategoryId!).then((res) => {
+      if (res.isSuccess) setMenus(res.result.tags);
+      else setMenus([]);
+    });
   if (!topCategoryId) {
     await getRecentVideos().then((res) => {
       setVideos(res.result.videos);
@@ -20,7 +25,7 @@ const handleVideo = async (
       setMenus([]);
     });
   } else {
-    await getVideoById(subCategoryId ?? topCategoryId).then(async (res) => {
+    await getVideoById(subCategoryId ?? topCategoryId).then((res) => {
       const topCategory = categories.find(
         (category) => category.categoryId === Number(topCategoryId),
       );
@@ -29,10 +34,6 @@ const handleVideo = async (
           (subFolder) => subFolder.categoryId === Number(subCategoryId),
         );
         setName(subName!.name);
-        await getCategoryTags(subCategoryId!).then((res) => {
-          if (res.isSuccess) setMenus(res.result.tags);
-          else setMenus([]);
-        });
       } else {
         setName(topCategory!.name);
         setMenus(topCategory!.subFolders);
