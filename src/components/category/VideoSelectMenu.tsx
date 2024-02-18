@@ -8,7 +8,7 @@ interface IVideoSelectMenuProps {
   categories: IFolderProps[];
   totalVideoCount: number;
   checkedVideos: number[];
-  setCheckedVideos: React.Dispatch<React.SetStateAction<number[]>>;
+  setCheckedVideos: React.Dispatch<React.SetStateAction<number[] | undefined>>;
   handleDeleteVideos: () => void;
   allCheckBtnHandler: () => void;
   onFileClick?: (categoryId: number) => void;

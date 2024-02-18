@@ -52,9 +52,9 @@ export interface NickNameRequest {
 export interface NickNameResponse {}
 
 export interface FindEmailResponse {
-  success : boolean;
-  message : string;
-  email : string;
+  success: boolean;
+  message: string;
+  email: string;
 }
 
 export interface FindEmailRequest {
@@ -71,4 +71,10 @@ export interface FindPasswordRequest {
   name : string;
   phone_number : string;
   email: string;
+}
+
+export interface CreateVideoAlarmRequest {
+  title: string;
+  content: string;
+  is_confirm: boolean;
 }

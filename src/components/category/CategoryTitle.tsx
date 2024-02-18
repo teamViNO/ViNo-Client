@@ -1,8 +1,8 @@
 import * as CategoryTitleStyles from '@/styles/category/CategoryTitle.style';
 
 interface ICategoryTitleProps {
-  name: string;
-  totalVideos: number;
+  name: string | undefined;
+  totalVideos: number | undefined;
 }
 
 const CategoryTitle = ({ name, totalVideos }: ICategoryTitleProps) => {

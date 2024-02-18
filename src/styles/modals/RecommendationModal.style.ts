@@ -1,108 +1,124 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import theme from '../theme';
 
-export const RecommendationModalContainer = styled.div<{ isOpen: boolean }>`
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); 
+const insightAnimation = keyframes`
+  from { height: 0px; }
+  to { height: 280px; }
+`;
+
+export const RecommendationModalContainer = styled.div`
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    width: 700px;
+    border-radius: 20px;
+    background-color: ${(props) => props.theme.color.white};
+    overflow: hidden;
+  }
+
+  .close-btn {
+    align-self: flex-end;
+    cursor: pointer;
+  }
+
+  .inform {
+    padding: 40px 50px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+  }
 
-    .modal-container {
-        padding: 40px 61px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 700px;
-        height: 463.13px;
-        position: relative;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
+  .inform-icon {
+    position: relative;
 
-    .close-btn {
-        width: 600px;
-        display: flex;
-        justify-content: flex-end;
-        cursor: pointer;
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: rotateZ(45deg) translate(-2px, -2px);
+      width: 100%;
+      height: 4px;
+      background-color: ${(props) => props.theme.color.red};
     }
+  }
 
-    .inform-wrapper {
-        width: 600px;
-        height: 144px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .inform {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+  .inform-text {
+    color: ${theme.color.gray500};
+    ${(props) => props.theme.typography.Header6};
+  }
 
-    .inform-text {
-        margin-top: 12px;
-        margin-bottom: 12px;
-        color: ${theme.color.gray500};
-        font-size: 24px;
-        line-height: 1.6em;
-    }
+  .inform-subtext {
+    color: ${theme.color.red};
+    ${(props) => props.theme.typography.Body1};
+  }
 
-    .inform-subtext {
-        color: ${theme.color.gray300};
-        font-size: 16px;
-        line-height: 1.6em;
-    }
+  .insight {
+    padding: 0 62px;
+    height: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: ${(props) => props.theme.color.gray100};
+    animation: ${css`
+        ${insightAnimation}`} 1s 1s forwards;
+    overflow: hidden;
+  }
 
-    .modal-card {
-        width: 578px;
-        height: 163.13px;
-        margin-top: 48px;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        cursor: pointer;
-    }
+  .insight-text {
+    margin-top: 23px;
+    color: ${(props) => props.theme.color.gray400};
+    ${(props) => props.theme.typography.Subheader1};
+  }
 
-    .modal-card img {
-        border: none;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-        width: 290px;
-        height: auto;
-    }
+  .insight-card {
+    margin-top: 26px;
+    display: flex;
+    width: 100%;
+    border-radius: 16px;
+    background-color: ${(props) => props.theme.color.white};
+    text-decoration: none;
 
-    .card-text {
-        width: 288px;
-        padding: 24px 20px;
+    & > img {
+      width: 290px;
+      height: auto;
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
     }
+  }
 
-    .card-title {
-        width: 248px;
-        height: 78px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: left;
-    }
+  .insight-content {
+    padding: 24px 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    .hashtag {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
+    & > h1 {
+      width: 248px;
+      color: ${(props) => props.theme.color.gray500};
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      ${(props) => props.theme.typography.Subheader3};
     }
-    .card-hashtag {
-        color: ${theme.color.gray400};
-        padding: 6px 10px;
-        border-radius: 8px;
-        background-color: ${theme.color.gray100};
-        margin-right: 8px;
-    }
-`
+  }
+
+  .insight-tag {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background-color: ${(props) => props.theme.color.gray100};
+    color: ${(props) => props.theme.color.gray400};
+    ${(props) => props.theme.typography.Caption1};
+  }
+`;

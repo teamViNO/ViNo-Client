@@ -3,6 +3,7 @@ import {
   IVideo,
   UpdateVideoCategoryRequest,
   UpdateVideoRequest,
+  VideoResponse,
   VideoVersionType,
 } from '@/models/video';
 
@@ -12,6 +13,10 @@ import { IVideoProps } from 'types/videos';
 
 const PREFIX = '/videos';
 
+export const createVideoAPI = (data: IVideo) => {
+  return axios.post<APIResponse<IVideo>>(PREFIX + `/new-video`, data);
+};
+
 export const getVideoAPI = (
   videoId: string | number,
   versionId: VideoVersionType = 'revision',
@@ -19,7 +24,7 @@ export const getVideoAPI = (
   return axios.get<APIResponse<IVideo>>(PREFIX + `/${videoId}/${versionId}`);
 };
 
-export const deleteVideos = async (videos: number[]) => {
+export const deleteVideos = async (videos: number[] | undefined) => {
   const response = await axiosInstance.delete('/videos/selectDelete', {
     data: { videos },
   });
@@ -67,6 +72,10 @@ export const deleteVideoSummaryAPI = (summaryId: number) => {
   return axios.delete<APIBaseResponse>(PREFIX + `/${summaryId}/deleteSummary`);
 };
 
+export const getUnReadDummyVideosAPI = () => {
+  return axios.get<APIResponse<VideoResponse>>('/videos/dummyVideos/unRead');
+};
+
 export const getUnReadDummyVideos = async (): Promise<
   APIResponse<Record<'videos', IVideoProps[]>>
 > => {
@@ -89,5 +98,11 @@ export const createDummyVideoToMine = async (
     `/videos/dummyVideos/${videoId}/${categoryId}/newVideo`,
   );
 
+  return response.data;
+};
+
+export const getVideoModeling = async (url: string) => {
+  const response = await axiosInstance.get(`/video/?v=${url}`);
+  console.log(response);
   return response.data;
 };

@@ -14,7 +14,8 @@ import {
   FindEmailResponse,
   FindEmailRequest,
   FindPasswordResponse,
-  FindPasswordRequest
+  FindPasswordRequest,
+  CreateVideoAlarmRequest
 } from '@/models/user';
 import {
   AlarmResponse,
@@ -22,6 +23,7 @@ import {
   DeleteAlarmRequest,
   DeleteAlarmResponse,
 } from '@/models/alarm';
+
 import axios from './config/instance';
 
 const PREFIX = '/user';
@@ -78,10 +80,18 @@ export const nickNameAPI = (data: NickNameRequest) => {
   return axios.put<NickNameResponse>(PREFIX + '/nickname', data);
 };
 
-export const findEmailAPI = (data : FindEmailRequest) => {
-  return axios.post<FindEmailResponse>(
-    PREFIX + '/findEmail',
-    data
+export const findEmailAPI = (data: FindEmailRequest) => {
+  return axios.post<FindEmailResponse>(PREFIX + '/findEmail', data);
+};
+
+export const createVideoAlarmAPI = (
+  videoId: number,
+  status: 'success' | 'fail',
+  data: CreateVideoAlarmRequest,
+) => {
+  return axios.post<APIBaseResponse>(
+    PREFIX + `/videoAlarm/${videoId}/${status}`,
+    data,
   );
 }
 

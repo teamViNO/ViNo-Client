@@ -1,18 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import SearchYoutube from '@/components/Home/SearchYoutube';
-import { HomePageContainer } from '@/styles/HomepageStyle';
-import RecentVideos from '@/components/Home/RecentVideos';
-import InsightVideos from '@/components/Home/InsightVideos';
-import { useRecoilValue } from 'recoil';
-import { recommendationModalState } from '@/stores/modal';
-import RecommendationModal from '@/components/modals/RecommendationModal';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { IVideoProps } from 'types/videos';
+
 import {
   getUnReadDummyVideos,
   getRecentVideos,
   getAllDummyVideos,
+  createDummyVideoToMine,
 } from '@/apis/videos';
+
+import SearchYoutube from '@/components/Home/SearchYoutube';
+import RecentVideos from '@/components/Home/RecentVideos';
+import InsightVideos from '@/components/Home/InsightVideos';
+import RecommendationModal from '@/components/modals/RecommendationModal';
+
+import { HomePageContainer } from '@/styles/HomepageStyle';
+
 import { userTokenState } from '@/stores/user';
-import { IVideoProps } from 'types/videos';
+import { recommendationModalState } from '@/stores/modal';
+import { toastListState } from '@/stores/toast';
 
 export interface Video {
   id: string;
@@ -24,21 +30,37 @@ export interface Video {
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
+  const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
-  const handleSearch = (value: string) => {
-    console.log(value);
+  const [toastList, setToastList] = useRecoilState(toastListState);
+
+  const createToast = (content: string) => {
+    setToastList([...toastList, { id: Date.now(), content }]);
+  };
+
+  const onFileClick = async (
+    videoId: number,
+    categoryId: number,
+    categoryName?: string,
+  ) => {
+    const res = await createDummyVideoToMine(videoId, categoryId);
+    if (res.isSuccess) {
+      createToast(`[${categoryName}] 폴더에 저장되었어요`);
+
+      await getUnReadDummyVideos().then((res) =>
+        setDummyVideos(res.result.videos.slice(0, 9)),
+      );
+    }
   };
   const searchRef = useRef(null);
-
-  const isModalOpen = useRecoilValue(recommendationModalState);
 
   useEffect(() => {
     userToken &&
       Promise.all([getRecentVideos(), getUnReadDummyVideos()]).then((res) => {
         const [recentVideosResponse, dummyVideosResponse] = res;
         setRecentVideos(recentVideosResponse.result.videos);
-        setDummyVideos(dummyVideosResponse.result.videos);
+        setDummyVideos(dummyVideosResponse.result.videos.slice(0, 9));
       });
 
     !userToken &&
@@ -49,30 +71,25 @@ const HomePage: React.FC = () => {
   }, [userToken]);
 
   return (
-    <HomePageContainer>
-      <SearchYoutube searchRef={searchRef} onSearch={handleSearch} />
-      {isModalOpen && <RecommendationModal />}
-      {userToken && (
-        <>
+    <>
+      <HomePageContainer>
+        <SearchYoutube searchRef={searchRef} />
+
+        {userToken ? (
+        <div>
           <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            setDummyVideos={setDummyVideos}
-          />
-        </>
-      )}
-      {!userToken && (
-        <>
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            setDummyVideos={setDummyVideos}
-          />
+          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
+        </div>
+      ) : (
+        <div>
+          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
           <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        </>
+        </div>
       )}
-    </HomePageContainer>
+      </HomePageContainer>
+
+      {isOpenModal && <RecommendationModal />}
+    </>
   );
 };
 

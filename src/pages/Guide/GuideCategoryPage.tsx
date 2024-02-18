@@ -1,6 +1,5 @@
 import ErrorIcon from '@/assets/icons/error.svg?react';
 import InfoIcon from '@/assets/icons/info-icon.svg?react';
-
 import { QuestionTip } from '@/components/Guide';
 
 import { CategoryGuide, QuestionSection, Section } from '@/styles/GuidePage';
@@ -21,8 +20,6 @@ const GuideCategoryPage = () => {
 
         <div className="feature-list">
           <div className="feature-item">
-            <img src="/assets/category-feature1.png" alt="feature" />
-
             <h1>상위 카테고리</h1>
 
             <span className="description">

@@ -3,9 +3,9 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import { useState } from 'react';
 import * as SubCategoryStyles from '@/styles/layout/sideBar/SubCategory.style';
 import Option from './Option';
-import handleEdit from '@/utils/handleEdit';
 import handleDrag from '@/utils/handleDrag';
 import { ISubFolderProps } from 'types/category';
+import EditCategoryName from '@/components/category/EditCategoryName';
 
 interface ISubCategoryProps {
   topId: number;
@@ -33,19 +33,6 @@ const SubCategory = ({
   const [isEditing, setIsEditing] = useState(false);
   const [edit, setEdit] = useState(name);
   const [beforeEdit, setBeforeEdit] = useState(edit);
-  const { editText, finishEdit } = handleEdit();
-  const [editNameRef] = useOutsideClick<HTMLDivElement>(() =>
-    finishEdit(
-      edit,
-      setEdit,
-      beforeEdit,
-      setIsEditing,
-      nameRegex,
-      setNameRegex,
-      categoryId,
-    ),
-  );
-  const [nameRegex, setNameRegex] = useState(true);
 
   const [subFolderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
     setSubFolderOptionModalOpen(false),
@@ -76,9 +63,6 @@ const SubCategory = ({
     setSubFolderOptionModalOpen(true);
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) =>
-    editText(e, setEdit, setNameRegex);
-
   const handleDragStart = () =>
     (grabedCategory.current = {
       categoryId: categoryId,
@@ -96,15 +80,14 @@ const SubCategory = ({
       onDragEnd={putCategoryFolder}
     >
       {isEditing ? (
-        <SubCategoryStyles.EditNameInputWrap
-          ref={editNameRef}
-          className={`${(!nameRegex || !edit.length) && 'warning'}`}
-        >
-          <SubCategoryStyles.EditNameInput
-            value={edit}
-            onChange={handleInput}
-          />
-        </SubCategoryStyles.EditNameInputWrap>
+        <EditCategoryName
+          mode="sub"
+          categoryId={categoryId}
+          beforeEdit={beforeEdit}
+          edit={edit}
+          setEdit={setEdit}
+          setIsEditing={setIsEditing}
+        />
       ) : (
         <SubCategoryStyles.SubFolderWrap>
           <div style={{ display: 'flex' }}>
