@@ -13,12 +13,28 @@ import {
   modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
+import { createVideoAlarmAPI } from '@/apis/user';
 
 const ModelController = () => {
   const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
   const setModelingStatus = useSetRecoilState(modelingStatusState);
   const setModelingProgress = useSetRecoilState(modelingProgressState);
   const setModelingData = useSetRecoilState(modelingDataState);
+
+  const handleError = async () => {
+    try {
+      await createVideoAlarmAPI(0, 'fail', {
+        title: '앗, 영상 변환 중 오류가 생겼어요',
+        content: '어떤 문제인지 확인해보세요!',
+        is_confirm: false,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    setModelingStatus('ERROR');
+    setVideoLink(null);
+  };
 
   useEffect(() => {
     if (!videoLink) return;
@@ -33,8 +49,7 @@ const ModelController = () => {
       } catch (e) {
         console.error(e);
 
-        setModelingStatus('ERROR');
-        setVideoLink(null);
+        handleError();
       }
     };
 
@@ -46,15 +61,14 @@ const ModelController = () => {
 
         setModelingProgress(Number(progress));
 
-        // setTimeout(() => {
-        //   setModelingProgress(70);
-        callProcess3API(videoId);
-        // }, 1000 * 60);
+        setTimeout(() => {
+          setModelingProgress(70);
+          callProcess3API(videoId);
+        }, 1000 * 30);
       } catch (e) {
         console.error(e);
 
-        setModelingStatus('ERROR');
-        setVideoLink(null);
+        handleError();
       }
     };
 
@@ -68,8 +82,7 @@ const ModelController = () => {
       } catch (e) {
         console.error(e);
 
-        setModelingStatus('ERROR');
-        setVideoLink(null);
+        handleError();
       }
     };
 

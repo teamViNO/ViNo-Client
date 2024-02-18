@@ -4,6 +4,7 @@ import CheckIcon from '@/assets/icons/checked.svg?react';
 import EmptyFileImage from '@/assets/empty-file.png';
 import FileImage from '@/assets/file.png';
 import FileReadImage from '@/assets/file-read.png';
+import ErrorImage from '@/assets/error.png';
 
 import { Container } from '@/styles/layout/header/alarm/AlarmItem.style';
 
@@ -17,12 +18,20 @@ type Props = {
 
 const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
   const isSelected = selectIdList.indexOf(alarm.alarm_id) > -1;
-  const type = alarm.type === 'video' ? '영상 변환' : '환영인사';
+
+  const type = () => {
+    switch (alarm.type) {
+      case 'video':
+        return alarm.state === 'fail' ? '오류' : '영상 변환';
+      case 'notice':
+        return '환영인사';
+    }
+  };
 
   const image = () => {
     switch (alarm.type) {
       case 'video':
-        return EmptyFileImage;
+        return alarm.state === 'fail' ? ErrorImage : EmptyFileImage;
       case 'notice':
         return alarm.is_confirm ? FileReadImage : FileImage;
     }
@@ -52,9 +61,9 @@ const AlarmItem = ({ alarm, selectIdList, onUpdateSelectIdList }: Props) => {
     <Container className={`${alarm.is_confirm && 'read'}`}>
       <div className="top">
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div className="color" />
+          <div className={`color ${alarm.state === 'fail' && 'error'}`} />
 
-          <span className="type">{type}</span>
+          <span className="type">{type()}</span>
           <div className="line" />
           <span className="time">{time()} 전</span>
         </div>
