@@ -1,58 +1,83 @@
 import styled from "styled-components";
-import theme from '@/styles/theme';
+import theme from "../theme";
 
-const Cotainer = styled.div`
-    width : 494px;
+const Container = styled.div`
+    position : fixed;
     display : flex;
-    flex-direction : column;
-    gap : 5px;
-    & div.label {
-        color : ${theme.color.gray400};
-        ${theme.typography.Body1};
-    }
-    & input {
-        width : 326px;
-        height : 56px;
-        padding: 0px 0px 0px 20px;
-        border : 1.5px solid ${theme.color.gray200};
-        border-radius : 12px;
-        outline : none;
-        color : ${theme.color.gray500};
-        ${theme.typography.Body1};
-        &:focus {
-            border: 1.5px solid ${theme.color.gray500};
-        };
-        &:hover {
-            border: 1.5px solid ${theme.color.gray500};
-        }
-        &::placeholder {
-            color : ${theme.color.gray300};
-        }
-    }
-    & button {
-        width : 160px;
-        height : 56px;
-        background-color : ${theme.color.green400};
-        color : ${theme.color.gray500};
-        border : none;
-        border-radius : 12px;
-        ${theme.typography.Body1};
-        &:disabled {
-            background-color : ${theme.color.gray100};
-            color : ${theme.color.gray300};
-        }
-    }
-    & div.inputwrap {
+    z-index: 1; 
+    background-color: rgba(0,0,0,0.4);
+    height : 100%;
+    width : 100%;
+    justify-content : center;
+    align-items : center;
+    
+    & div.contentWrap {
+        width : 700px;
+        height : 452px;
+        padding : 40px 50px 40px 50px;
+        background-color : ${theme.color.white};
+        border-radius: 20px;
         display : flex;
+        gap: 20px;
+        flex-direction : column;
+        justify-content: space-between;
+    }
+    & div.closeWrap {
+        width : 600px;
+        display: flex;
+        flex-direction: row-reverse;
+        cursor: pointer;
+    }
+    & div.textContent {
+        height : 200px;
+        display: flex;
+        flex-direction : column;
+        justify-content: space-between;
+        align-items : center;
         gap : 10px;
     }
-    & span.msg {
-        margin-left : 10px;
-        ${theme.typography.Body3};
-        color : ${theme.color.red};
+    & div.subtitleWrap {
+        display : flex;
+        flex-direction : column;
+        justify-content : center;
+        align-items : center;
+        gap : 5px;
     }
-`;
+    & img {
+        width : 56px;
+        height : 56px;
+    }
+    & span.title { 
+        ${theme.typography.Header6}
+        color : ${theme.color.gray500};
+    }
+    & span.subtitle {
+        ${theme.typography.Body1};
+        color : ${theme.color.gray300};
+    }
+    & div.btnContent {
+        display : flex;
+        flex-direction : column;
+        gap: 12px;
+    }
+    & button {
+        width : 600px;
+        height : 58px;
+        border-radius : 12px;
+        border: none;
+        ${theme.typography.Body1};
+    }
+    & button.b_btn {
+        color : ${theme.color.white};
+        background-color : ${theme.color.gray500};
+        cursor: pointer;
+    }
+    & button.w_btn {
+        color : ${theme.color.gray400};
+        background-color : ${theme.color.white};
+        border : 1.5px solid ${theme.color.gray200};
+        cursor: pointer;
+    }
+`
 
-
-
-export default Cotainer;
+export default Container;

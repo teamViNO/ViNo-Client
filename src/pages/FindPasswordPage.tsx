@@ -1,162 +1,60 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
-import ImageSlider from "@/components/ImageSlider";
 import smallLogo from "../assets/logo.png";
-import mail from "../assets/mail.png";
 import theme from '@/styles/theme';
+import NotFindUserModal from '@/components/modals/NotFindUserModal';
+import PhoneCheck from '@/components/PhoneCheck';
+import { findPasswordAPI } from '@/apis/user';
+import FindPassword from '@/components/FindPassword';
+import ImageSlider from '@/components/ImageSlider';
 
-const FindPwPage = () => {
+const FindPasswordPage = () => {
   const [name, setName] = useState<string>("");
-  const [errMessage, setErrMessage] = useState('');
-  const [tel, setTel] = useState<string>("");
-  const [isTel, setIsTel] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [isSend, setIsSend] = useState(false);
+  const [tel, setTel] = useState('');
+  const [email, setEmail] = useState('');
+  const [isModal, setIsModal] = useState(false);
+  const [isFind, setIsFind] = useState(false);
+  const [allChecked, setAllChecked] = useState(false);
 
-  const [certifyNum, setCertifyNum] = useState('');
-  const [isCertify, setIsCertify] = useState(false);
-  const [time, setTime] = useState(60*5);
-  const [isTimer, setIsTimer] = useState(true);
-  const [token,setToken] =useState("");
-
-  const [showResult, setShowResult] = useState<boolean>(false);
-  const [isEmail, setIsEmail] = useState<boolean>(false);
-
-  const [emailMessage, setEmailMessage] = useState<string>("");
-
-  useEffect(() => {
-    if (isTimer) {
-      const intervalId = setInterval(() => {
-        setTime(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(intervalId);
-            setIsTimer(false);
-            return 0;
-          } else {
-            return prevTime - 1;
-          }
-        });
-      }, 1000);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [isTimer]);
-
-
-  const onChangeName = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    console.log(name);
-  }, []);
+  }
 
-   const onChangeEmail = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const emailRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailCurrent = e.target.value;
     setEmail(emailCurrent);
-    if (!emailRegex.test(emailCurrent)) {
-      setEmailMessage("올바른 이메일 형식이 아닙니다!");
-      setIsEmail(false);
-    } else {
-      setEmailMessage("");
-      setIsEmail(true);
-    }
-    console.log(email);
-  }, []);
+  };
 
-  const onChangeTel = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const telRegex = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
-      const telCurrent = e.target.value;
-      setTel(telCurrent);
-      if (!telRegex.test(telCurrent)) {
-        setErrMessage('올바른 전화번호 형식이 아닙니다.');
-        setIsTel(false);
-      } else {
-        setErrMessage('');
-        setIsTel(true);
+
+  const findBtnHandler = async () => {
+    try {
+      const {data} = await findPasswordAPI({
+        name: name,
+        phone_number: tel,
+        email: email
+      });
+      if(data.success){
+        setIsFind(true);
       }
-    },
-    [tel],
+      else{
+        setIsModal(true);
+      }
+    } catch (error) {
+  }
+}
+
+if(isFind){
+  return (
+    <Container>
+      <FindPassword email={email}/>
+    </Container>
   );
-
-  const onChangeCertifyInput = (e : React.ChangeEvent<HTMLInputElement>) => {
-    const certifyRegex = /^\d{7}$/;
-    setCertifyNum(e.target.value);
-    if(certifyRegex.test(e.target.value)){
-      setIsCertify(true);
-    } else {
-      setIsCertify(false);
-    }
-  }
-
-
-  const onResultHandler = useCallback(() => {
-    setShowResult(true);
-  }, []);
-
-  const navigate = useNavigate();
-  const navigateToLogin = () => {
-    navigate('/sign-in');
-  };
-
-  const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log(tel);
-    },
-    [tel],
-  );
-
-  const handleCertifyNum = async () => {
-    const response = (await sendSMSAPI({
-      phone_number : tel
-    }))
-    console.log(response)
-    if(response.data.success){
-      setIsSend(true);
-      setToken(response.data.result.token);
-    }
-    startTimer();
-  }
-
-  const handleCheckCertify = async () => {
-    stopTimer();
-    const response = (await checkSMSAPI({
-      verification_code : Number(certifyNum),
-    },token))
-    console.log(response);
-  }
-
-  const startTimer = () => setTime(5 * 60); // 타이머 시작
-  const stopTimer = () => {
-    setIsTimer(false);
-  };
-
-  const minutes = Math.floor(time / 60); // 분
-  const seconds = time % 60; 
-
-
+}
 return (
   <Container>
-      {showResult ? (
-          <ResultWrapper>
-            <img src={mail} alt="메일 이미지" />
-            <h4>
-            <span>yejin2174@naver.com</span>로<br></br>회원님의 임시 비밀번호를 전송하였습니다!
-            </h4>
-            <p>로그인하고 나만의 영상 아카이빙을 시작해요</p>
-            <LoginButton type="submit" bgColor={showResult} onClick={navigateToLogin}>
-            로그인 하러가기
-            </LoginButton>
-          </ResultWrapper>
-        ) : (
           <Wrapper>
-            <LogoSection>
-              <ImageSlider/>
-            </LogoSection>
+            <ImageSlider/>
             <MainSection>
               <Intro>
                 <img src={smallLogo} alt="로고 이미지" />
@@ -164,7 +62,6 @@ return (
                 <p>비밀번호가 기억나지 않으시나요?</p>
               </Intro>
               <InputSection>
-                <Form onSubmit={onSubmit}>
                   <Label>
                     <span>이메일 주소</span>
                     <InputBox
@@ -175,7 +72,6 @@ return (
                       placeholder="abcd@email.com"
                       onChange={onChangeEmail}
                     ></InputBox>
-                    {!isEmail && <Error>{emailMessage}</Error>}
                   </Label>
                   <Label>
                     <span>이름</span>
@@ -186,40 +82,13 @@ return (
                       value={name}
                       placeholder="홍길동"
                       onChange={onChangeName}
+                      readOnly={allChecked}
                   ></InputBox>
                   </Label>
                   <TwoLabel>
-                    <span>전화번호</span>
-                    <UserDiv>
-                    <InputBox
-                      type="text"
-                      id="tel"
-                      name="tel"
-                      value={tel}
-                      placeholder="휴대폰 번호 입력 (-제외)"
-                      onChange={onChangeTel}
-                      style={{width : '326px'}}
-                    />
-                    <UserButton onClick = {handleCertifyNum} disabled = {!isTel}>{isSend? '인증번호 재전송' : '인증번호 받기'}</UserButton>
-
-                    {!isTel && <Error>{errMessage}</Error>}
-                    </UserDiv>
-                    {isSend ? <UserDiv>
-                      <InputBox
-                      type='text'
-                      id='certify'
-                      value={certifyNum}
-                      placeholder='인증번호 입력'
-                      onChange={(e) => onChangeCertifyInput(e)}
-                      style={{width : '326px'}}/>
-                      <UserButton onClick = {handleCheckCertify} disabled = {!isCertify}>인증번호 확인</UserButton>
-                    </UserDiv>: ''}
-                    
-                    {!isTel && <Error>{errMessage}</Error>}
-                    {isSend && <SendMsg>인증번호가 발송되었어요 (유효시간 {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')})</SendMsg>}
-                  </TwoLabel>
-                  </Form>
-                  <FindButton type="submit" bgColor={isTel} onClick={onResultHandler} disabled={true}>
+                    <PhoneCheck setCheck={setAllChecked} tel={tel} setTel={setTel}/>
+                    </TwoLabel>
+                  <FindButton disabled={!allChecked} onClick={findBtnHandler}>
                     찾아보기
                   </FindButton>
               <TextTotalComponent style={{margin: "40px 0px 0px 0px"}}>
@@ -237,87 +106,16 @@ return (
               </InputSection>
             </MainSection>
           </Wrapper>
-          )}
+      {isModal && <NotFindUserModal setIsShow={setIsModal} type={true}/>}
       </Container>
   );
 };
 
-export default FindPwPage;
+export default FindPasswordPage;
+
 
 const Container = styled.div`
   display: flex;
-`;
-
-const ResultWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 1440px;
-  width: 100%;
-  min-height: 100vh;
-  h4 {
-    color:#1E1E1E;
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 160%;
-    margin-top: 41px;
-    margin-bottom: 8px;
-    text-align: center;
-    span {
-      color: ${({ theme }) => theme.color.gray500};
-      font-weight: bold;
-    }
-  }
-  img{
-    display: flex;
-    width: 130.67px;
-    height: 121.67px;
-  }
-  p{
-    color:#BBBBBB;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 160%;
-    margin-top: 8px;
-  }
-`;
-
-const UserDiv = styled.div`
-  display : flex;
-  flex-direction : row;
-  gap : 8px;
-`
-const UserButton = styled.button`
-  width : 160px;
-  height : 56px;
-  color : #1E1E1E;
-  background-color : #E9FF3F;
-  border : none;
-  border-radius : 12px;
-  ${theme.typography.Body1};
-  &:disabled {
-    background-color : #F3F3F3;
-    color : #BBBBBB;
-  }
-`
-
-
-const LoginButton = styled.button<{ bgColor?: boolean }>`
-  width: 494px;
-  height: 56px;
-  background: #FFFFFF;
-  color: #787878;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 160%;
-  border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top:12px;
-  font-family: Pretendard;
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const Wrapper = styled.div`
@@ -330,13 +128,6 @@ const Wrapper = styled.div`
   gap: 124px;
 `;
 
-const LogoSection = styled.div`
-  img{
-    display: flex;
-    width: auto;
-    height: 840px;
-  }
-`;
 
 const MainSection = styled.div`
   display: flex;
@@ -382,13 +173,6 @@ const InputSection = styled.div`
   height: auto;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 494px;
-  height: auto;
-`;
 
 const Label = styled.label`
   margin-bottom: 20px;
@@ -408,7 +192,6 @@ const TwoLabel = styled.label`
   margin-bottom: 8px;
   span {
     font-size: 16px;
-    color: #787878;
     font-family: Pretendard;
     margin-bottom: 8px;
     font-weight: 500;
@@ -419,6 +202,7 @@ const TwoLabel = styled.label`
 const InputBox = styled.input`
   display: flex;
   align-items: center;
+  margin-bottom : 8px;
   justify-content: center;
   width: 494px;
   height: 56px;
@@ -433,7 +217,6 @@ const InputBox = styled.input`
   line-height: 160%;
   border-radius: 12px;
   border: 1.5px solid var(--gray-200, #e8e8e8);
-  margin-top: 8px;
   outline: none;
   
   &:hover {
@@ -450,21 +233,7 @@ const InputBox = styled.input`
   }
 `;
 
-const Error = styled.p`
-  color: #eb5353;
-  font-size: 0.9rem !important;
-  font-weight: 500;
-  margin: 0;
-  padding-left: 4px;
-  padding-top: 12px;
-`;
-
-const SendMsg = styled.span`
-  color : #FF4A4A !important;
-  ${theme.typography.Body3};
-`
-
-const FindButton = styled.button<{ bgColor?: boolean }>`
+const FindButton = styled.button`
   width: 494px;
   height: 56px;
   background: #1E1E1E;
@@ -508,4 +277,3 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   margin : 0px 0px 0px 10px;
 `;
-
