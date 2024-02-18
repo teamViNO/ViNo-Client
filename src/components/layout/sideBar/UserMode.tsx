@@ -21,6 +21,7 @@ const UserMode = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [to, setTo] = useState('');
   const categories = useRecoilValue(categoryState);
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
@@ -105,7 +106,7 @@ const UserMode = () => {
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
           topCategoryId={topId}
-          setCategoryId={setCategoryId}
+          setTo={setTo}
         />
       )}
       {isDeleteModalOpen && (
@@ -119,7 +120,7 @@ const UserMode = () => {
           categoryName={categoryName}
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-          categoryId={categoryId}
+          to={to}
         />
       )}
     </>

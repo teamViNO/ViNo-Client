@@ -18,6 +18,18 @@ export const SendEmailWrap = styled.div`
   margin: 40px 0px;
   border-radius: 12px;
   background-color: ${theme.color.white};
+
+  &.success-send {
+    justify-content: flex-start;
+    padding: 0;
+    background-color: ${theme.color.gray100};
+  }
+`;
+
+export const SuccessSendEmail = styled.span`
+  margin-left: 20px;
+  ${theme.typography.Subheader2}
+  color: ${theme.color.blue};
 `;
 
 export const SendEmailImage = styled.img`
