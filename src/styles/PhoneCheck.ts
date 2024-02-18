@@ -37,9 +37,11 @@ const Cotainer = styled.div`
         border : none;
         border-radius : 12px;
         ${theme.typography.Body1};
+        cursor: pointer;
         &:disabled {
             background-color : ${theme.color.gray100};
             color : ${theme.color.gray300};
+            cursor: default;
         }
     }
     & div.inputwrap {

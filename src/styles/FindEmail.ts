@@ -36,6 +36,7 @@ const Container = styled.div`
         border : none;
         border-radius : 12px;
         ${theme.typography.Body1};
+        cursor: pointer;
     }
     & img {
         width : 87px;

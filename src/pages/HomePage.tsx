@@ -75,14 +75,17 @@ const HomePage: React.FC = () => {
       <HomePageContainer>
         <SearchYoutube searchRef={searchRef} />
 
-        <div style={{ flexDirection: userToken ? 'column' : 'column-reverse' }}>
+        {userToken ? (
+        <div>
           <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          <InsightVideos
-            userToken={userToken}
-            dummyVideos={dummyVideos}
-            onFileClick={onFileClick}
-          />
+          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
         </div>
+      ) : (
+        <div>
+          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
+        </div>
+      )}
       </HomePageContainer>
 
       {isOpenModal && <RecommendationModal />}
