@@ -12,7 +12,9 @@ import {
   NickNameRequest,
   NickNameResponse,
   FindEmailResponse,
-  FindEmailRequest
+  FindEmailRequest,
+  FindPasswordResponse,
+  FindPasswordRequest
 } from '@/models/user';
 import {
   AlarmResponse,
@@ -79,6 +81,13 @@ export const nickNameAPI = (data: NickNameRequest) => {
 export const findEmailAPI = (data : FindEmailRequest) => {
   return axios.post<FindEmailResponse>(
     PREFIX + '/findEmail',
+    data
+  );
+}
+
+export const findPasswordAPI = (data : FindPasswordRequest) => {
+  return axios.post<FindPasswordResponse>(
+    PREFIX + '/findPassword',
     data
   );
 }

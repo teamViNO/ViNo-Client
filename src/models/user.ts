@@ -61,3 +61,14 @@ export interface FindEmailRequest {
   name : string;
   phone_number : string;
 }
+
+export interface FindPasswordResponse {
+  success : boolean;
+  message : string;
+}
+
+export interface FindPasswordRequest {
+  name : string;
+  phone_number : string;
+  email: string;
+}

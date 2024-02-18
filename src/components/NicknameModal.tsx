@@ -1,13 +1,27 @@
 import styled from 'styled-components';
 import theme from '@/styles/theme';
 import React, { useState } from 'react';
-import { nickNameAPI } from '@/apis/user';
+import { getMyInfoAPI, nickNameAPI } from '@/apis/user';
 import nameImg from '@/assets/name.png';
 import { BlurBackground } from '@/styles/modals/common.style';
+import { userInfoState } from '@/stores/user';
+import { useSetRecoilState } from 'recoil';
 
 const NicknameModal = () => {
     const [inputCount, setInputCount] = useState(0);
     const [name, setName] = useState<string>("");
+    
+    const setUserInfo = useSetRecoilState(userInfoState);
+
+    const refreshMyInfo = async () => {
+    try {
+      const { result } = (await getMyInfoAPI()).data;
+
+      setUserInfo(result);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
     const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         const target = e.currentTarget;
@@ -15,7 +29,6 @@ const NicknameModal = () => {
           target.value = target.value.slice(0, 7);
         }
         setName(target.value);
-          console.log(name);
           setInputCount(
             target.value.replace(/[\0-\x7f]|([0-\u07ff]|(.))/g, "$&$1$2").length
             );
@@ -36,6 +49,7 @@ const NicknameModal = () => {
               const response = (await nickNameAPI({
               nick_name : name,
             })).data
+            refreshMyInfo();
             console.log(response);
           } catch (err) {
             console.log(err);
@@ -156,6 +170,7 @@ const SucButton = styled.button`
     color: #fff;
     text-align: center;
     ${theme.typography.Body1};
+    cursor: pointer;
 `;
 
 const Button = styled.button`

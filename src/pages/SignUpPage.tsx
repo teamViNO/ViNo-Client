@@ -83,7 +83,7 @@ const SignUp = () => {
     setPassword(passwordCurrent);
     if (!passwordRegex.test(passwordCurrent)) {
       setPasswordMessage(
-        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
+        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용'
       );
       setIsPassword(false);
     } else {
@@ -96,12 +96,14 @@ const SignUp = () => {
     setPasswordCheck(e.target.value);
     if (e.target.value === '') {
       setPasswordCheckMessage('비밀번호를 재입력해주세요');
-    } else if (password && e.target.value !== password) {
+    } 
+    else if (password && e.target.value !== password) {
       setMismatchError(true);
       setPasswordCheckMessage(
         '비밀번호가 일치하지 않습니다. 다시 확인해주세요.',
       );
-    } else {
+    } 
+    else {
       setMismatchError(false);
       setPasswordCheckMessage('비밀번호가 일치합니다.');
     }
@@ -109,9 +111,6 @@ const SignUp = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!mismatchError) {
-      console.log('서버로 회원가입하기');
-    }
   };
 
   const navigate = useNavigate();
@@ -119,7 +118,6 @@ const SignUp = () => {
     if (name && year && month && date && isCertify && selectedSex && email && password && passwordCheck && !mismatchError) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
-      console.log('정보 등록 완료');
       navigate('/sign-up/success');
     } else {
       alert('입력값을 확인해주세요.');
