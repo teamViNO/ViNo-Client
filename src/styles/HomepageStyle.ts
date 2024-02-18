@@ -86,7 +86,7 @@ export const SearchForm = styled.form`
   .link-container {
     display: flex;
     align-items: center;
-    width: 516.5px;
+    width: 745px;
     height: 36px;
   }
 
@@ -101,7 +101,7 @@ export const SearchForm = styled.form`
 `;
 
 export const SearchInput = styled.input`
-  width: 372px;
+  width: 689px;
   height: 26px;
   padding: 16px 20px;
   font-size: 1rem;
