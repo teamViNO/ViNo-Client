@@ -2,8 +2,8 @@ export type VideoVersionType = 'original' | 'revision';
 
 export interface IVideoSubHeading {
   id: number;
-  start_time: string;
-  end_time: string;
+  start_time: number;
+  end_time: number;
   content: string;
   name: string;
 }
@@ -25,6 +25,7 @@ export interface IVideo {
   image: string;
   link: string;
   youtube_created_at: string;
+  youtube_id: string;
   created_at: string;
   updated_at: string;
   subHeading: IVideoSubHeading[];

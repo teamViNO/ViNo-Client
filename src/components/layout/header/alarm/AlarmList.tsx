@@ -12,9 +12,10 @@ import AlarmItem from './AlarmItem';
 type Props = {
   alarmList: IAlarm[];
   onRefresh: () => void;
+  onClose: () => void;
 };
 
-const AlarmList = ({ alarmList, onRefresh }: Props) => {
+const AlarmList = ({ alarmList, onRefresh, onClose }: Props) => {
   const [selectIdList, setSelectIdList] = useState<number[]>([]);
   const count = alarmList.filter((item) => !item.is_confirm).length;
 
@@ -73,6 +74,7 @@ const AlarmList = ({ alarmList, onRefresh }: Props) => {
                 alarm={alarm}
                 selectIdList={selectIdList}
                 onUpdateSelectIdList={setSelectIdList}
+                onClose={onClose}
               />
             ))}
           </div>

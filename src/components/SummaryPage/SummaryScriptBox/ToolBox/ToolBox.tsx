@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
 
@@ -9,6 +9,7 @@ import { IVideo } from '@/models/video';
 
 import {
   summaryIsEditingViewState,
+  summaryPlaySubHeadingIdState,
   summaryUpdateVideoState,
   summaryVideoState,
 } from '@/stores/summary';
@@ -25,6 +26,7 @@ type Props = {
 
 const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
+  const setPlaySubHeadingId = useSetRecoilState(summaryPlaySubHeadingIdState);
   const [summaryUpdateVideo, setSummaryUpdateVideo] = useRecoilState(
     summaryUpdateVideoState,
   );
@@ -40,6 +42,7 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   };
 
   const handleClickModifyIcon = () => {
+    setPlaySubHeadingId(-1);
     setIsEditingView(true);
     setSummaryUpdateVideo({ ...summaryVideo });
   };
