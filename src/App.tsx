@@ -49,7 +49,6 @@ const App = () => {
   useEffect(() => {
     userToken && updateCategories();
   }, [updateCategories, userToken]);
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />

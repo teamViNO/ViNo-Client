@@ -1,10 +1,16 @@
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
+import GuideSummarySvg from '@/assets/guidesummary.svg?react'
+import StepA from '@/assets/stepA.svg?react';
+import StepB from '@/assets/stepB.svg?react';
+import StepC from '@/assets/stepC.svg?react';
+import StepD from '@/assets/stepD.svg?react';
+
 import SearchIcon from '@/assets/icons/search.svg?react';
 
 import { QuestionTip } from '@/components/Guide';
 
-import { QuestionSection, Section } from '@/styles/GuidePage';
+import { QuestionSection, Section, Step } from '@/styles/GuidePage';
 
 const GuideSummaryPage = () => {
   const question1Tips = [
@@ -58,6 +64,28 @@ const GuideSummaryPage = () => {
     },
   ];
 
+  const tipSteps = [
+    {
+      stepImg : StepA,
+      title : '대표 키워드 추출',
+      content : `영상에서 핵심이 될 수 있는 키워드를 추출하고, 이를 해시태그화 하여 제공해요 \n 추후 해당 키워드로 영상을 검색할 수 있어요`
+    },
+    {
+      stepImg : StepB,
+      title : '1줄 핵심 주제 요약',
+      content : '영상의 본래 이름이 아닌 내용을 통해 추출한 주제를 한 줄로 제공해요'
+    },
+    {
+      stepImg : StepC,
+      title : '영상의 블로그화',
+      content : '영상의 스크립트를 텍스트로 전달해요\n 내용을 분석해서 소주제로 분류하고 소주제별 영상 링크를 연결하여 소주제에 해당하는 영상 부분부터 시청할 수 있어요 \n좌측에서는 영상을 우측에서는 텍스트를 확인해요'
+    },
+    {
+      stepImg : StepD,
+      title : '5줄 주요 내용 요약',
+      content : '영상의 스크립트를 읽고 핵심이 될 수 있는 주요 내용 5가지를 요약해 제공해요 \n이때 추가적으로 내용을 작성할 수도, 작성 된 내용을 수정할 수도 있어요'
+    }
+  ];
   return (
     <>
       <Section>
@@ -69,6 +97,24 @@ const GuideSummaryPage = () => {
             <br />
             <span>쉽게 정리</span>할 수 있어요
           </h1>
+        </div>
+          <GuideSummarySvg width={705}/>
+          <div className='step-box'>
+          {
+            tipSteps.map((step) => {
+              return (
+                <Step>
+                  <div className='icon-box'>
+                    <step.stepImg/>
+                  </div>
+                  <div className='text-box'>
+                    <span className='title'>{step.title}</span>
+                    <span className='content'>{step.content}</span>
+                  </div>
+                </Step>
+              )
+            })
+          }
         </div>
       </Section>
 

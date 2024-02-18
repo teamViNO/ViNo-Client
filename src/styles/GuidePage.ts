@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from './theme';
 
 export const Container = styled.div`
   display: flex;
@@ -65,7 +66,11 @@ export const Section = styled.section`
   flex-direction: column;
   align-items: center;
   width: 100%;
-
+  & > .step-box {
+    display : flex;
+    flex-direction: column;
+    gap : 40px;
+  }
   & > .info-box {
     display: flex;
     flex-direction: column;
@@ -393,3 +398,34 @@ export const CategoryGuide = styled.div`
     ${(props) => props.theme.typography.Body3};
   }
 `;
+
+export const Step = styled.div`
+  width : 705px;
+  min-height : 72px;
+  gap : 60px;
+  display : flex;
+  align-items : center;
+  & div.icon-box {
+    display : flex;
+    align-self : flex-start;
+    flex-direction: column;
+  }
+  & div.text-box {
+    display : flex;
+    flex-direction : column;
+    gap : 10px;
+
+    & span.title {
+    ${theme.typography.Header6};
+    line-height: 1;
+    color : ${theme.color.gray500};
+    }
+  
+    & span.content {
+      ${theme.typography.Body1};
+      color : ${theme.color.gray400};
+      white-space: pre-wrap;
+    }
+  }
+  
+`

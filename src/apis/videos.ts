@@ -91,3 +91,9 @@ export const createDummyVideoToMine = async (
 
   return response.data;
 };
+
+export const getVideoModeling = async (url: string) => {
+  const response = await axiosInstance.get(`/video/?v=${url}`);
+  console.log(response);
+  return response.data;
+};

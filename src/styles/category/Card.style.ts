@@ -95,7 +95,7 @@ export const CheckBox = styled.input`
 
 export const CardContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(3, 290px);
   column-gap: 20px;
   row-gap: 40px;
 `;
