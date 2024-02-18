@@ -4,18 +4,20 @@ import { ProgressWrapper } from '@/styles/Progress';
 import theme from '@/styles/theme';
 
 const ProgressBar = () => {
-  // 진행도 상태
   const [progress, setProgress] = useState(0);
-  // 변환중 상태
   const [convertingState, setConvertingState] = useState('변환중');
+  const [convertingButtonState, setConvertingButtonState] = useState('변환중지'); 
+
 
   const handleConvertingBtn = () => {
     if (convertingState === '변환중') {
-        setConvertingState('다시 시작');
-      } else {
-        setConvertingState('변환중');
-      }
-  }
+      setConvertingState('변환중지');
+      setConvertingButtonState('다시 시작');
+    } else if (convertingState === '변환중지'){
+      setConvertingState('변환중');
+      setConvertingButtonState('변환중지');
+    }
+  }  
 
   useEffect(() => {
     const updateProgress = async () => {
@@ -55,11 +57,11 @@ const ProgressBar = () => {
                 <button className='converting-btn' 
                         onClick={handleConvertingBtn}
                         style={{ 
-                            color: convertingState === '변환중' ? theme.color.gray500 : theme.color.gray500, 
-                            backgroundColor: convertingState === '변환중' ? theme.color.gray400 : theme.color.green400 
-                          }}
+                            color: theme.color.gray500, 
+                            backgroundColor: convertingButtonState === '변환중지' ? theme.color.gray400 : theme.color.green400
+                        }}
                         >
-                    {convertingState === '변환중' ? '변환중지' : '다시 시작' }
+                    { convertingButtonState }
                 </button>
                 <div className='converting-percentage'>
                     {progress}%

@@ -15,6 +15,7 @@ export const ProgressWrapper = styled.div`
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
+        position: relative;
 
         &:hover .converting-text {
             visibility: visible;
@@ -48,12 +49,15 @@ export const ProgressWrapper = styled.div`
 
     .converting-text {
         margin-top: 4px;
+        position: absolute;
         width: 908px;
         height: 28px;
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
         visibility: hidden;
+        bottom: -28px;
+        right: 0;
     }
 
     .converting-btn {
