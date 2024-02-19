@@ -1,3 +1,4 @@
+import theme from '@/styles/theme';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -121,5 +122,31 @@ export const Container = styled.div`
         font-weight: bold;
       }
     }
+  }
+
+  & div.progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  & div.progress-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 100px;
+    background-color: ${(props) => props.theme.color.gray100};
+    overflow: hidden;
+
+    & > div {
+      height: 100%;
+      transition: 1s;
+      transition-delay: 0.5s;
+    }
+  }
+
+  & span.progress-text {
+    ${theme.typography.Caption3}
+    color: ${theme.color.gray400};
   }
 `;

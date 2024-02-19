@@ -40,9 +40,27 @@ const Alarm = ({ isDark }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (status === 'ERROR') {
+    if (status === 'ERROR' || status === 'COMPLETE') {
+      console.log(status, 'dd');
       callAPI();
     }
+
+    if (status === 'CONTINUE') {
+      setAlarmList([
+        {
+          state: 'success',
+          type: 'video',
+          alarm_id: 999,
+          title: '열심히 영상을 변환하는 중이에요!',
+          content: '잠시후 멋진 글을 만날 수 있어요:)',
+          is_confirm: 0,
+          created_at: new Date().toString(),
+          updated_at: new Date().toString(),
+        },
+        ...alarmList,
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   return (

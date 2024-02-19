@@ -55,6 +55,15 @@ const ModelController = () => {
     setVideoLink(null);
   };
 
+  const handleUpdateAlarm = async (title: string) => {
+    await createVideoAlarmAPI(0, 'success', {
+      title: `[${title}]`,
+      content:
+        '영상이 모두 변환되었어요!\n이제 정리 된 영상을 확인하러 가볼까요?',
+      is_confirm: false,
+    });
+  };
+
   useEffect(() => {
     if (!videoLink) return;
 
@@ -100,6 +109,7 @@ const ModelController = () => {
           updated_at: new Date().toString(),
         });
         setModelingProgress(100);
+        handleUpdateAlarm(finalData.title);
         setModelingStatus('COMPLETE');
       } catch (e) {
         console.error(e);

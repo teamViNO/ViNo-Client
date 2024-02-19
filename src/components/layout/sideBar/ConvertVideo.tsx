@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-
-import { createVideoAPI } from '@/apis/videos';
+import { useLocation } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import VideoSvg from '@/assets/icons/video.svg?react';
 import DownSvg from '@/assets/icons/down.svg?react';
@@ -11,58 +9,31 @@ import UpSvg from '@/assets/icons/up.svg?react';
 import * as ConvertVideoStyle from '@/styles/layout/sideBar/ConvertVideo.style';
 import { CommonTitle } from '@/styles/layout/sideBar/UserMode.style';
 
-import { errorModalState, recommendationModalState } from '@/stores/modal';
+import { recommendationModalState } from '@/stores/modal';
 import {
-  modelingDataState,
   modelingProgressState,
   modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
-import { userTokenState } from '@/stores/user';
 
 import theme from '@/styles/theme';
 
 import { validateYoutubeLink } from '@/utils/validation';
+import useCreateVideo from '@/hooks/useCreateVideo';
 
 const ConvertVideo = () => {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
-
-  const userToken = useRecoilValue(userTokenState);
   const setIsOpenModal = useSetRecoilState(recommendationModalState);
   const setVideoLink = useSetRecoilState(videoLinkState);
-  const setIsOpenErrorModal = useSetRecoilState(errorModalState);
-  const [status, setStatus] = useRecoilState(modelingStatusState);
-  const [progress, setProgress] = useRecoilState(modelingProgressState);
-  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
+  const status = useRecoilValue(modelingStatusState);
+  const progress = useRecoilValue(modelingProgressState);
+  const { createVideo } = useCreateVideo();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const [url, setURL] = useState('');
 
   const isValidate = validateYoutubeLink(url);
-
-  const handleClickCreateVideoButton = async () => {
-    if (!modelingData) return;
-
-    if (userToken) {
-      try {
-        const { video_id } = (await createVideoAPI(modelingData)).data.result;
-
-        navigate(`/summary/${video_id}`);
-        setModelingData(null);
-      } catch (e) {
-        setIsOpenErrorModal(true)
-        console.error(e);
-      }
-    } else {
-      navigate('/summary/guest');
-    }
-
-    setVideoLink(null);
-    setStatus('NONE');
-    setProgress(0);
-  };
 
   const handleClickStartConvertButton: React.MouseEventHandler<
     HTMLButtonElement
@@ -114,7 +85,7 @@ const ConvertVideo = () => {
                 color: theme.color.gray500,
                 backgroundColor: theme.color.green400,
               }}
-              onClick={handleClickCreateVideoButton}
+              onClick={createVideo}
             >
               start
             </ConvertVideoStyle.Button>

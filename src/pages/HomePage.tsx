@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
@@ -34,6 +34,7 @@ const HomePage: React.FC = () => {
   const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
+  const searchRef = useRef();
   const { createToast } = useCreateToast();
 
   const onFileClick = async (
@@ -71,7 +72,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <HomePageContainer>
-        <SearchYoutube />
+        <SearchYoutube searchRef={searchRef} />
 
         <div
           style={{
