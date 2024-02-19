@@ -6,9 +6,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { ISubFolderProps } from 'types/category';
 import useUpdateCategories from './useUpdateCategories';
+import useCreateToast from './useCreateToast';
 
 const useMoveCategory = () => {
   const navigate = useNavigate();
+  const { createToast } = useCreateToast();
   const { updateCategories } = useUpdateCategories();
 
   const subToOtherTop = async (
@@ -16,7 +18,7 @@ const useMoveCategory = () => {
     grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>,
   ) => {
     if (grabedCategory.current?.name === '기타') {
-      alert(`'기타' 폴더는 이동할 수 없습니다.`);
+      createToast(`'기타' 폴더는 이동할 수 없습니다.`);
       return;
     }
     // 하위에 있는 폴더를 다른 상위 폴더로 이동하는 기능
@@ -36,7 +38,7 @@ const useMoveCategory = () => {
     grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>,
   ) => {
     if (grabedCategory.current?.name === '기타') {
-      alert(`'기타' 폴더는 이동할 수 없습니다.`);
+      createToast(`'기타' 폴더는 이동할 수 없습니다.`);
       return;
     }
     // 하위에 있는 폴더를 상위로 올리는 기능

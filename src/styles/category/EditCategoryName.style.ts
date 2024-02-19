@@ -5,6 +5,7 @@ export const EditNameInputWrap = styled.div`
   display: flex;
   padding: 10px 20px;
   border: 1px solid ${theme.color.gray200};
+  background-color: ${theme.color.white};
   width: 100%;
   border-radius: 100px;
   &.warning {

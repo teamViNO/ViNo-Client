@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
@@ -18,8 +18,8 @@ import { HomePageContainer } from '@/styles/HomepageStyle';
 
 import { userTokenState } from '@/stores/user';
 import { recommendationModalState } from '@/stores/modal';
-import { toastListState } from '@/stores/toast';
 import { isSideBarOpenState } from '@/stores/ui';
+import useCreateToast from '@/hooks/useCreateToast';
 
 export interface Video {
   id: string;
@@ -35,11 +35,7 @@ const HomePage: React.FC = () => {
   const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
-  const [toastList, setToastList] = useRecoilState(toastListState);
-
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
+  const { createToast } = useCreateToast();
 
   const onFileClick = async (
     videoId: number,

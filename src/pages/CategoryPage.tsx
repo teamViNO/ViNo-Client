@@ -14,6 +14,7 @@ import { putVideoToOtherCategory } from '@/apis/category';
 import handleVideo from '@/utils/handleVideo';
 import CategoryPageSkeleton from '@/components/skeleton/CategoryPageSkeleton';
 import DefaultMenu from '@/components/category/DefaultMenu';
+import useCreateToast from '@/hooks/useCreateToast';
 
 const CategoryTitle = React.lazy(
   () => import('@/components/category/CategoryTitle'),
@@ -31,6 +32,7 @@ const CategoryPage = () => {
   const [checkedVideos, setCheckedVideos] = useState<number[] | undefined>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const categories = useRecoilValue(categoryState);
+  const { createToast } = useCreateToast();
 
   const toggleRecentRegisterMode = () =>
     setRecentRegisterMode(!recentRegisterMode);
@@ -58,7 +60,7 @@ const CategoryPage = () => {
       setVideos(existVideos);
       setCheckedVideos([]);
     } else {
-      alert('비디오를 삭제하는데 실패했습니다.');
+      createToast('비디오를 삭제하는데 실패했습니다.');
     }
   };
 
