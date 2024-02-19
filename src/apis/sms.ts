@@ -10,6 +10,10 @@ export const sendSMSAPI = (data: sendSMSRequest) => {
 
   };
 
+export const sendSMSFindAPI = (data : sendSMSRequest) => {
+  return axios.post<APIResponse<smsResponse>>(PREFIX + '/sendSMS-find', data);
+}
+
 export const checkSMSAPI = (data : checkSMSRequest, token : string) => {
     return axios.post<APIResponse<smsResponse>>(PREFIX + '/checkSMS', data, {
       headers : { Authorization : `Bearer ${token}`}
