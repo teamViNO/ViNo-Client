@@ -10,10 +10,13 @@ import EditCategoryName from '@/components/category/EditCategoryName';
 interface ISubCategoryProps {
   topId: number;
   subId: number;
-  categoryId: number;
-  name: string;
-  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  subFolder: ISubFolderProps;
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
+  isEditing: { activated: boolean; categoryId: number };
+  setIsEditing: React.Dispatch<
+    React.SetStateAction<{ activated: boolean; categoryId: number }>
+  >;
+  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   putCategoryFolder: () => void;
   setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
@@ -21,17 +24,17 @@ interface ISubCategoryProps {
 const SubCategory = ({
   topId,
   subId,
-  categoryId,
-  name,
-  setIsDeleteModalOpen,
+  subFolder,
   grabedCategory,
+  isEditing,
+  setIsEditing,
+  setIsDeleteModalOpen,
   putCategoryFolder,
   setCategoryId,
 }: ISubCategoryProps) => {
   const [subFolderOptionModalOpen, setSubFolderOptionModalOpen] =
     useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [edit, setEdit] = useState(name);
+  const [edit, setEdit] = useState(subFolder.name);
   const [beforeEdit, setBeforeEdit] = useState(edit);
 
   const [subFolderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
@@ -43,15 +46,15 @@ const SubCategory = ({
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
     if (option === '수정') {
-      setIsEditing(true);
+      setIsEditing({ activated: true, categoryId: subFolder.categoryId });
       setBeforeEdit(edit);
     } else if (option === '삭제') {
-      if (name === '기타') {
+      if (subFolder.name === '기타') {
         alert(`'기타' 폴더는 삭제할 수 없습니다.`);
         setSubFolderOptionModalOpen(false);
         return;
       }
-      setCategoryId(categoryId);
+      setCategoryId(subFolder.categoryId);
       setIsDeleteModalOpen(true);
     }
     setSubFolderOptionModalOpen(false);
@@ -65,8 +68,8 @@ const SubCategory = ({
 
   const handleDragStart = () =>
     (grabedCategory.current = {
-      categoryId: categoryId,
-      name,
+      categoryId: subFolder.categoryId,
+      name: subFolder.name,
       topCategoryId: topId,
     });
 
@@ -79,10 +82,10 @@ const SubCategory = ({
       onDragStart={handleDragStart}
       onDragEnd={putCategoryFolder}
     >
-      {isEditing ? (
+      {isEditing.activated && isEditing.categoryId === subFolder.categoryId ? (
         <EditCategoryName
           mode="sub"
-          categoryId={categoryId}
+          categoryId={subFolder.categoryId}
           beforeEdit={beforeEdit}
           edit={edit}
           setEdit={setEdit}
@@ -92,13 +95,15 @@ const SubCategory = ({
         <SubCategoryStyles.SubFolderWrap>
           <div style={{ display: 'flex' }}>
             <SubCategoryStyles.SubFolder
-              selected={subId === categoryId}
-              to={`/category/${topId}/${categoryId}`}
+              selected={subId === subFolder.categoryId}
+              to={`/category/${topId}/${subFolder.categoryId}`}
             >
               {edit}
-              <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
-                <MoreOptionsSvg width={16} height={16} />
-              </SubCategoryStyles.ShowOptionButton>
+              {!isEditing.activated && (
+                <SubCategoryStyles.ShowOptionButton onClick={handleOpenModal}>
+                  <MoreOptionsSvg width={16} height={16} />
+                </SubCategoryStyles.ShowOptionButton>
+              )}
             </SubCategoryStyles.SubFolder>
             {subFolderOptionModalOpen && (
               <Option

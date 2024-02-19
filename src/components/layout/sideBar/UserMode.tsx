@@ -26,6 +26,10 @@ const UserMode = () => {
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
+  const [isEditing, setIsEditing] = useState({
+    activated: false,
+    categoryId: 0,
+  });
   const navigate = useNavigate();
 
   const { updateCategories } = useUpdateCategories();
@@ -85,11 +89,11 @@ const UserMode = () => {
             topId={topId}
             subId={subId}
             index={index}
-            categoryId={category.categoryId}
-            name={category.name}
-            subFolders={category.subFolders}
             grabedCategory={grabedCategory}
             dropedCategory={dropedCategory}
+            category={category}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             putCategoryFolder={putCategoryFolder}
