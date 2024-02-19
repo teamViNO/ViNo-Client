@@ -14,10 +14,10 @@ const CommonIconBackground = styled.div`
 `;
 
 export const Container = styled.div`
-  padding: 60px 60px 40px 120px;
+  padding: 60px 0 40px;
   width: 100%;
   margin-inline: auto;
-  max-width: 1440px;
+  max-width: 910px;
 `;
 
 export const MenuWrap = styled.div`
