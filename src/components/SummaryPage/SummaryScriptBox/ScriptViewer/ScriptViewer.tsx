@@ -67,7 +67,7 @@ const ScriptViewer = ({ keyword }: Props) => {
   return (
     <div className="script-container">
       {scriptList.map((script) => (
-        <div key={script.id}>
+        <div key={script.id} className="script-box">
           <div
             style={{
               display: 'flex',
