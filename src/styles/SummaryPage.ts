@@ -249,17 +249,18 @@ export const ScriptBox = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 40px;
   min-width: 555px;
   max-width: 865px;
   box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
 
   & div.tools {
-    padding: 20px 100px 0 60px;
+    z-index: 1;
+    padding: 20px 100px 20px 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
 
     & button.edit-button {
       padding: 8px 20px;
@@ -325,7 +326,7 @@ export const ScriptBox = styled.div`
   }
 
   & div.script-container {
-    padding: 0 100px 20px 60px;
+    padding: 20px 100px 20px 60px;
     display: flex;
     flex-direction: column;
     gap: 60px;

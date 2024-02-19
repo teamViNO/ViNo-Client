@@ -1,6 +1,7 @@
 import { APIBaseResponse, APIResponse } from '@/models/config/axios';
 import { ModelingFinalData } from '@/models/modeling';
 import {
+  CreateVideoResponse,
   IVideo,
   UpdateVideoCategoryRequest,
   UpdateVideoRequest,
@@ -15,7 +16,10 @@ import { IVideoProps } from 'types/videos';
 const PREFIX = '/videos';
 
 export const createVideoAPI = (data: ModelingFinalData) => {
-  return axios.post<APIResponse<IVideo>>(PREFIX + `/new-video`, data);
+  return axios.post<APIResponse<CreateVideoResponse>>(
+    PREFIX + `/new-video`,
+    data,
+  );
 };
 
 export const getVideoAPI = (

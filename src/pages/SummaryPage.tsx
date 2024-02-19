@@ -1,13 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { getDummyVideoAPI, getVideoAPI } from '@/apis/videos';
+import { createVideoAPI, getDummyVideoAPI, getVideoAPI } from '@/apis/videos';
 
 import { SummaryDetailBox } from '@/components/SummaryPage';
 import { SummaryScriptBox } from '@/components/SummaryPage';
-
-import { IVideo } from '@/models/video';
 
 import { modelingDataState } from '@/stores/model-controller';
 import { summaryVideoState } from '@/stores/summary';
@@ -21,30 +19,14 @@ const SummaryPage = () => {
   const { search } = useLocation();
 
   const userToken = useRecoilValue(userTokenState);
-  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
+  const modelingData = useRecoilValue(modelingDataState);
   const [summaryVideo, setSummaryVideo] = useRecoilState(summaryVideoState);
 
-  const callAPI = useCallback(async () => {
+  const callVideoAPI = async () => {
     if (!videoId) return;
 
-    const searchParam = new URLSearchParams(search);
-    const isInsight = searchParam.get('insight') === 'true';
-
-    let isSuccess = false;
-    let result: IVideo | null = null;
-
     try {
-      if (isInsight) {
-        const { data } = await getDummyVideoAPI(videoId);
-
-        isSuccess = data.isSuccess;
-        result = data.result;
-      } else {
-        const { data } = await getVideoAPI(videoId);
-
-        isSuccess = data.isSuccess;
-        result = data.result;
-      }
+      const { isSuccess, result } = (await getVideoAPI(videoId)).data;
 
       if (!isSuccess) {
         navigate('/');
@@ -56,7 +38,36 @@ const SummaryPage = () => {
       console.error(e);
       navigate('/');
     }
-  }, [search, videoId, navigate, setSummaryVideo]);
+  };
+
+  const callDummyAPI = async () => {
+    if (!videoId) return;
+
+    try {
+      const { isSuccess, result } = (await getDummyVideoAPI(videoId)).data;
+
+      if (!isSuccess) {
+        navigate('/');
+        return;
+      }
+
+      if (userToken) {
+        const { video_id } = (
+          await createVideoAPI({
+            subheading: result.subHeading,
+            ...result,
+          })
+        ).data.result;
+
+        navigate(`/summary/${video_id}`);
+      } else {
+        setSummaryVideo(result);
+      }
+    } catch (e) {
+      console.error(e);
+      navigate('/');
+    }
+  };
 
   const setGuestSummaryVideo = () => {
     if (!modelingData) {
@@ -83,13 +94,20 @@ const SummaryPage = () => {
   };
 
   useEffect(() => {
+    const searchParam = new URLSearchParams(search);
+    const isInsight = searchParam.get('insight') === 'true';
+
     if (userToken) {
-      callAPI();
+      if (isInsight) {
+        callDummyAPI();
+      } else {
+        callVideoAPI();
+      }
     } else {
       if (videoId === 'guest') {
         setGuestSummaryVideo();
       } else {
-        callAPI();
+        callDummyAPI();
       }
     }
 
@@ -98,14 +116,14 @@ const SummaryPage = () => {
       // setModelingData(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userToken]);
+  }, [search]);
 
   return (
     <Container style={{ height: 'calc(100vh - 74px)' }}>
       {summaryVideo && (
         <>
-          <SummaryDetailBox onRefresh={callAPI} />
-          <SummaryScriptBox onRefresh={callAPI} />
+          <SummaryDetailBox onRefresh={callVideoAPI} />
+          <SummaryScriptBox onRefresh={callVideoAPI} />
         </>
       )}
     </Container>
