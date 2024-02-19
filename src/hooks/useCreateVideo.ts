@@ -20,17 +20,13 @@ const useCreateVideo = () => {
   const createVideo = async () => {
     if (!modelingData) return;
 
-    if (userToken) {
-      try {
-        const { video_id } = (await createVideoAPI(modelingData)).data.result;
+    try {
+      const { video_id } = (await createVideoAPI(modelingData)).data.result;
 
-        navigate(`/summary/${video_id}`);
-        setModelingData(null);
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      navigate('/summary/guest');
+      navigate(`/summary/${video_id}${!userToken && '?insight=true'}`);
+      setModelingData(null);
+    } catch (e) {
+      console.error(e);
     }
 
     setVideoLink(null);
