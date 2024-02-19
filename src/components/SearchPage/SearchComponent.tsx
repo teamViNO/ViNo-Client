@@ -108,7 +108,6 @@ const SearchComponent : React.FC<TagInputProps> = ({tags, input, searchType, sel
         pathname : '/search/result',
         search : `?${createSearchParams(params)}`
     })
-    window.location.reload();
 }
 
   return (
