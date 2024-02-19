@@ -92,17 +92,13 @@ const SignInPage: React.FC = () => {
 
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
-  const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
+  // const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
   // oauth 요청 URL
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_KEY}&redirect_uri=${redirect_uri}&response_type=code`;
-  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
+  // const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
   const handleKakaoLogin = () => {
     window.location.href = kakaoURL;
-  };
-
-  const handleNaverLogin = () => {
-    window.location.href = naverURL;
   };
 
   return (
@@ -122,9 +118,9 @@ const SignInPage: React.FC = () => {
           계정에 로그인하고 나만의 영상 아카이빙을 시작해요
         </TextDiv>
 
-        <NaverSection type="button" onClick={handleNaverLogin}>
+        <NaverSection type="button">
           <img src={NaverLogoImage} alt="naver-logo" id="naver_id_login" />
-          네이버로 시작하기
+          네이버는 지금 준비중!
         </NaverSection>
 
         <KakaoSection type="button" onClick={handleKakaoLogin}>
@@ -458,13 +454,12 @@ const SocialButton = styled.button`
   font-weight: bold;
   font-family: 'Pretendard';
   border: none;
-  cursor: pointer;
 `;
 
 const NaverSection = styled(SocialButton)`
   margin-top: 60px;
-  background: #03c75a;
-  color: #ffffff;
+  background: #F3F3F3;
+  color: #bbbbbb;
 `;
 
 const KakaoSection = styled(SocialButton)`
