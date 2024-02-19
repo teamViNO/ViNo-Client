@@ -14,6 +14,7 @@ import { ICommonModalProps } from 'types/modal';
 import handleEdit from '@/utils/handleEdit';
 import { postSubCategroy, postTopCategroy } from '@/apis/category';
 import useUpdateCategories from '@/hooks/useUpdateCategories';
+import useCreateToast from '@/hooks/useCreateToast';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
@@ -32,19 +33,21 @@ const AddCategoryModal = ({
   setTo,
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
+  const { createToast } = useCreateToast();
   const { updateCategories } = useUpdateCategories();
   const { editText } = handleEdit();
 
   const [isFocused, setIsFocused] = useState(false);
 
   const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
-  const testCategoryNameRegex = categoryNameRegex.test(categoryName);
-  const addEnabled = categoryName.length > 0 && testCategoryNameRegex;
+  const checkCategoryNameRegex = categoryNameRegex.test(categoryName);
+  const addEnabled = categoryName.length > 0 && checkCategoryNameRegex;
 
   const onCloseModal = () => {
     isTopCategoryModalOpen
       ? setIsTopCategoryModalOpen(false)
       : setIsSubCategoryModalOpen(false);
+    setCategoryName('');
   };
 
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
@@ -53,6 +56,10 @@ const AddCategoryModal = ({
     editText(e, setCategoryName);
 
   const addCategory = async (e: React.MouseEvent) => {
+    if (categoryName === '기타') {
+      createToast(`'기타' 이름은 사용하실 수 없어요`);
+      return;
+    }
     const response = isTopCategoryModalOpen
       ? await postTopCategroy(categoryName)
       : await postSubCategroy(categoryName, topCategoryId);
@@ -100,7 +107,7 @@ const AddCategoryModal = ({
             /10(공백포함)
           </AddTopCategoryModalStyles.InputCategoryNameMessage>
         </AddTopCategoryModalStyles.InputCategoryNameWrap>
-        {!testCategoryNameRegex && (
+        {!checkCategoryNameRegex && (
           <AddTopCategoryModalStyles.WarningMessage>
             *아쉽지만,이모티콘은 사용할 수 없어요
           </AddTopCategoryModalStyles.WarningMessage>

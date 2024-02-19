@@ -14,12 +14,16 @@ import { CategoryDropdown } from './CategoryDropdown';
 type Props = {
   disabled?: boolean;
   selectedCategoryId?: number;
+  startSelect?: boolean;
+  setStartSelect?: React.Dispatch<React.SetStateAction<boolean>>;
   onSelect: (categoryId: number, categoryName?: string) => void;
 };
 
 const CategorySelectBox = ({
   disabled,
   selectedCategoryId,
+  startSelect,
+  setStartSelect,
   onSelect,
 }: Props) => {
   const userToken = useRecoilValue(userTokenState);
@@ -55,11 +59,17 @@ const CategorySelectBox = ({
 
   const handleSelect = (categoryId: number) => {
     setSelectedId(categoryId);
+    setStartSelect && setStartSelect(true);
     setIsOpen(false);
   };
 
   const handleClick = () => {
-    if (!selectedCategory || selectedId === selectedCategoryId || disabled)
+    if (
+      !selectedCategory ||
+      selectedId === selectedCategoryId ||
+      disabled ||
+      !startSelect
+    )
       return;
 
     onSelect(selectedCategory.categoryId, selectedCategory.name);
@@ -95,9 +105,9 @@ const CategorySelectBox = ({
       </div>
 
       <span
-        className={`icon-button ${(!userToken || disabled) && 'disabled'} ${
-          selectedCategoryId !== selectedId ? 'changed' : ''
-        }`}
+        className={`icon-button ${startSelect && 'start-select'} ${
+          (!userToken || disabled) && 'disabled'
+        } ${selectedCategoryId !== selectedId ? 'changed' : ''}`}
         onClick={handleClick}
       >
         <OpenFileIcon width={28} height={28} />

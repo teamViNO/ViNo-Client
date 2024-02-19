@@ -4,10 +4,12 @@ import { useState } from 'react';
 import SendEmailImage from '@/assets/mail.png';
 import SuccessSendEmailImage from '@/assets/success-mail.png';
 import { postFeedback } from '@/apis/feedback';
+import useCreateToast from '@/hooks/useCreateToast';
 
 const SendEmail = () => {
   const [feedback, setFeedback] = useState<string>('');
   const [successSend, setSuccessSend] = useState(false);
+  const { createToast } = useCreateToast();
 
   const handleInputFeedback = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFeedback(e.target.value);
@@ -19,7 +21,7 @@ const SendEmail = () => {
       setSuccessSend(true);
       return;
     }
-    alert('피드백을 전송하는 과정에서 오류가 발생했습니다.');
+    createToast('피드백을 전송하는 과정에서 오류가 발생했습니다.');
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { sendSMSAPI, checkSMSAPI } from '@/apis/sms';
+import { sendSMSAPI, checkSMSAPI, sendSMSFindAPI } from '@/apis/sms';
 import Container from '@/styles/PhoneCheck';
 
 
@@ -7,20 +7,21 @@ interface PhoneCheckProps {
     setCheck : (value: boolean) => void;
     tel : string;
     setTel : (value : string) => void;
+    type : boolean; // true : 회원가입  false : 이메일 비밀번호 찾기 페이지
 }
 
-const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel}) => {
+const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel, type}) => {
     const [certifyNum, setCertifyNum] = useState('');
     const [token, setToken] = useState('');
 
     const [time, setTime] = useState(5 * 60); // 초 단위
-
     const [isCheck, SetIsCheck] = useState(false);
     const [isSend, setIsSend] = useState(false);
     const [isCertify, setIsCertify] = useState(false);    
     const [isTel, setIsTel] = useState(false);
     const [isTimer, setIsTimer] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [phoneCertify, setPhoneCertify] = useState(false);
     
     useEffect(() => {
             if (isTimer) {
@@ -64,33 +65,46 @@ const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel}) => {
       const handleCheckCertify = async () => {
             setIsTimer(false);
             SetIsCheck(true);
-            const response = (await checkSMSAPI({
-            verification_code : Number(certifyNum),
-            }, token))
-            if(response.data.success){
-                setIsSuccess(true);
-                setCheck(true);
-            } else {
-                setIsSuccess(false);
+            try{
+                const {data} = (await checkSMSAPI({
+                    verification_code : Number(certifyNum),
+                    }, token));
+
+                    if(data.success){
+                        setIsSuccess(true);
+                        setCheck(true);
+                    } else {
+                        setIsSuccess(false);
+                    }
+            } catch(e){
+                setIsSuccess(false)
             }
       }
 
       const handleCertifyNum = async () => {
-            setIsSend(true)
-            setIsTimer(true);
             if(isSend){
                 SetIsCheck(false);
                 setTime(10);
             }
-            const response = (await sendSMSAPI({
-            phone_number : tel
-            }))
-        
-            if(response.data.success){
-                setToken(response.data.result.token);
+            try{
+                const {data} = type === true ? (await sendSMSAPI({
+                    phone_number : tel
+                    })) : (await sendSMSFindAPI({
+                        phone_number : tel
+                    }));
+                
+                    if(data.success){
+                        setIsSend(true)
+                        setIsTimer(true);
+                        setPhoneCertify(false);
+                        setToken(data.result.token);
+                    }
+            } catch(e){
+                setPhoneCertify(true);
             }
+            
       }
-      
+    
     const minutes = Math.floor(time / 60); // 분
     const seconds = time % 60; 
     
@@ -110,6 +124,7 @@ const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel}) => {
                     />
                     <button onClick = {handleCertifyNum} disabled = {!isTel || isSuccess}>{isSend? '인증번호 재전송':'인증번호 전송'}</button>
                     </div>
+            {phoneCertify && <span className="msg">전화번호가 중복되었습니다.</span>}
             {isSend ? <div className="inputwrap">
                       <input
                       type='text'

@@ -12,7 +12,7 @@ import smallLogo from '@/assets/logo-dark.png';
 import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
-import ImageSlider from "@/components/ImageSlider";
+import ImageSlider from '@/components/ImageSlider';
 import NaverLogoImage from '@/assets/naver-logo.png';
 import KakaoLogoImage from '@/assets/kakao-logo.png';
 
@@ -22,7 +22,6 @@ import { LoginRequest } from '@/models/user';
 import { userTokenState } from '@/stores/user';
 
 import { BlurBackground } from '@/styles/modals/common.style';
-import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +30,6 @@ const SignInPage: React.FC = () => {
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isOpenSignUpModal, setIsOpenSignUpModal] = useState(false);
   const setUserToken = useSetRecoilState(userTokenState);
-  const { updateCategories } = useUpdateCategories();
 
   const [loginInfo, setLoginInfo] = useState<LoginRequest>({
     email: '',
@@ -64,10 +62,11 @@ const SignInPage: React.FC = () => {
 
   const handleClickLoginButton = async () => {
     try {
-      const { token } = (await loginAPI(loginInfo)).data.result;
-      await updateCategories();
-      setUserToken(token);
-      navigate('/');
+      const res = await loginAPI(loginInfo);
+      if (res.data.success) {
+        setUserToken(res.data.result.token);
+        navigate('/');
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as APIBaseResponse;
@@ -81,19 +80,25 @@ const SignInPage: React.FC = () => {
     }
   };
 
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    handleClickLoginButton();
+  }
+
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
-  const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
+  // const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
   // oauth 요청 URL
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_KEY}&redirect_uri=${redirect_uri}&response_type=code`;
-  const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
+  // const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${redirect_uri}`;
 
   const handleKakaoLogin = () => {
     window.location.href = kakaoURL;
-  };
-
-  const handleNaverLogin = () => {
-    window.location.href = naverURL;
   };
 
   return (
@@ -113,9 +118,9 @@ const SignInPage: React.FC = () => {
           계정에 로그인하고 나만의 영상 아카이빙을 시작해요
         </TextDiv>
 
-        <NaverSection type="button" onClick={handleNaverLogin}>
+        <NaverSection type="button">
           <img src={NaverLogoImage} alt="naver-logo" id="naver_id_login" />
-          네이버로 시작하기
+          네이버는 지금 준비중!
         </NaverSection>
 
         <KakaoSection type="button" onClick={handleKakaoLogin}>
@@ -182,6 +187,7 @@ const SignInPage: React.FC = () => {
           placeholder="비밀번호를 입력해주세요."
           name="password"
           value={loginInfo.password}
+          onKeyDown={handleOnKeyDown}
         />
 
         <Button
@@ -223,7 +229,7 @@ const SignInPage: React.FC = () => {
         </TextTotalComponent>
       </LoginTotalComponent>
 
-      <ImageSlider/>
+      <ImageSlider />
 
       {isOpenErrorModal && (
         <BlurBackground>
@@ -448,13 +454,12 @@ const SocialButton = styled.button`
   font-weight: bold;
   font-family: 'Pretendard';
   border: none;
-  cursor: pointer;
 `;
 
 const NaverSection = styled(SocialButton)`
   margin-top: 60px;
-  background: #03c75a;
-  color: #ffffff;
+  background: #F3F3F3;
+  color: #bbbbbb;
 `;
 
 const KakaoSection = styled(SocialButton)`
