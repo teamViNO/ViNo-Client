@@ -2,6 +2,8 @@ import { IVideo } from '@/models/search';
 import Styled from '@/styles/SearchResult';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { userInfoState } from '@/stores/user';
+import { useRecoilValue } from 'recoil';
 
 interface SearchResultProp {
     video : IVideo;
@@ -9,15 +11,17 @@ interface SearchResultProp {
 }
 
 const SearchResultBox : React.FC<SearchResultProp>= ({video, tags}) => {
-    const nav = useNavigate();  
+    const nav = useNavigate();
+    const userName = useRecoilValue(userInfoState);
     const date = video.created_at.toString().split('T')[0].split('-');
     const handleImg = (event : React.SyntheticEvent<HTMLImageElement, Event>) => {
         const target = event.target as HTMLImageElement;
         target.style.display = 'none';
     }
     const handleOnclick = () => {
-        nav(`/summary/${video.video_id}`);
+        nav(`/summary/${video.video_id}?insight=${userName?.name === video.user}`);
     }
+    
     return (
         <Styled.VideoCard style={{width : '910px', height : '254px'}} onClick={handleOnclick}>
             <div className="main" style={{width : '670px', height : '254px'}}>
