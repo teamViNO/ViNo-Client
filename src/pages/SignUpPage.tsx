@@ -157,6 +157,16 @@ const SignUp = () => {
     }
   };
 
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    onApply();
+  }
+
   return (
     <SignupPageStyles.Wrapper>
       <SignupPageStyles.LogoSection>
@@ -296,6 +306,7 @@ const SignUp = () => {
                 name="passwordCheck"
                 value={passwordCheck}
                 onChange={onChangePasswordCheck}
+                onKeyDown={handleOnKeyDown}
               ></SignupPageStyles.InputBox>
               {(passwordCheck || passwordCheck === '') &&
                 (mismatchError ? (
@@ -321,7 +332,10 @@ const SignUp = () => {
           isPassword &&
           passwordCheck &&
           !mismatchError ? (
-            <SignupPageStyles.SucButton type="submit" onClick={onApply}>
+            <SignupPageStyles.SucButton 
+            type="submit" 
+            onClick={onApply}
+            >
               가입하기
             </SignupPageStyles.SucButton>
           ) : (
