@@ -2,9 +2,10 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Account, ServiceSetting } from '@/components/ProfilePage';
 import { userInfoState, userTokenState } from '@/stores/user';
 import { Wrapper } from '@/styles/ProfilePage';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import WithdrawModal from '@/components/modals/WIthdrawModal';
 import NoticeModal from '@/components/modals/NoticeModal';
+import ProfilePageSkeleton from '@/components/skeleton/ProfilePageSkeleton';
 
 const ProfilePage = () => {
   const [reason, setReason] = useState('');
@@ -36,33 +37,40 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Wrapper>
-        <div className="container">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 60 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <h1 className="title">내 정보</h1>
-              <span className="description">여기서 계정 정보를 관리하세요</span>
+      {!userInfo && <ProfilePageSkeleton />}
+      {userInfo && (
+        <Wrapper>
+          <div className="container">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 60 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <h1 className="title">내 정보</h1>
+                <span className="description">
+                  여기서 계정 정보를 관리하세요
+                </span>
+              </div>
+
+              {userInfo && (
+                <>
+                  <Account />
+
+                  <ServiceSetting />
+                </>
+              )}
             </div>
 
-            {userInfo && (
-              <>
-                <Account />
-
-                <ServiceSetting />
-              </>
-            )}
+            <div
+              style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}
+            >
+              <button className="other" onClick={handleOpenModal}>
+                회원탈퇴
+              </button>
+              <button className="other" onClick={handleOpenModal}>
+                로그아웃
+              </button>
+            </div>
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <button className="other" onClick={handleOpenModal}>
-              회원탈퇴
-            </button>
-            <button className="other" onClick={handleOpenModal}>
-              로그아웃
-            </button>
-          </div>
-        </div>
-      </Wrapper>
+        </Wrapper>
+      )}
 
       {isLogoutModalOpen && (
         <NoticeModal
