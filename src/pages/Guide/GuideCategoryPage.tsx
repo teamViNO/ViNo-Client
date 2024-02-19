@@ -20,6 +20,7 @@ const GuideCategoryPage = () => {
 
         <div className="feature-list">
           <div className="feature-item">
+            <img src="/assets/category-feature1.png" alt="category-guide" />
             <h1>상위 카테고리</h1>
 
             <span className="description">
