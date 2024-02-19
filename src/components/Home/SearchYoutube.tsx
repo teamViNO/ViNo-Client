@@ -15,7 +15,8 @@ import {
   SearchContainer,
 } from '@/styles/HomepageStyle';
 
-import { recommendationModalState } from '@/stores/modal';
+import { recommendationModalState, errorModalState } from '@/stores/modal';
+
 import {
   modelingDataState,
   modelingProgressState,
@@ -37,6 +38,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
 
   const userToken = useRecoilValue(userTokenState);
   const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const setIsOpenErrorModal = useSetRecoilState(errorModalState);
   const setVideoLink = useSetRecoilState(videoLinkState);
   const setProgress = useSetRecoilState(modelingProgressState);
   const [status, setStatus] = useRecoilState(modelingStatusState);
@@ -102,6 +104,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
         setModelingData(null);
       } catch (e) {
         console.error(e);
+        setIsOpenErrorModal(true);
       }
     } else {
       navigate('/summary/guest');
