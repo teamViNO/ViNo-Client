@@ -13,9 +13,10 @@ import { IVideoProps } from 'types/videos';
 
 interface IRecentVideosProp {
   videos: IVideoProps[];
+  searchRef: React.RefObject<HTMLInputElement>;
 }
 
-const RecentVideos = ({ videos }: IRecentVideosProp) => {
+const RecentVideos = ({ videos, searchRef }: IRecentVideosProp) => {
   return (
     <RecentVideosContainer>
       <div className="container">
@@ -39,7 +40,12 @@ const RecentVideos = ({ videos }: IRecentVideosProp) => {
             <VideoButton
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <h2 className="button-text">영상 정리해보기</h2>
+              <h2
+                className="button-text"
+                onClick={() => searchRef.current?.focus()}
+              >
+                영상 정리해보기
+              </h2>
             </VideoButton>
           </div>
         )}

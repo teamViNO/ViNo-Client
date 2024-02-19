@@ -34,8 +34,8 @@ const HomePage: React.FC = () => {
   const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
-  const searchRef = useRef();
   const { createToast } = useCreateToast();
+  const searchRef = useRef(null);
 
   const onFileClick = async (
     videoId: number,
@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
             backgroundColor: 'white',
           }}
         >
-          <RecentVideos videos={recentVideos} />
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
           <InsightVideos
             userToken={userToken}
             dummyVideos={dummyVideos}
