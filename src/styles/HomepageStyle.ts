@@ -5,7 +5,9 @@ export const HomePageContainer = styled.div`
   background-color: ${theme.color.white};
   min-height: 100vh;
   width: 100%;
+  background-color: ${theme.color.gray500};
 `;
+
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,7 +15,6 @@ export const SearchContainer = styled.div`
   justify-content: center;
   width: 100%;
   padding-bottom: 100px;
-  background-color: ${theme.color.gray500};
 `;
 
 export const SearchForm = styled.form`
@@ -116,15 +117,12 @@ export const SearchButton = styled.button`
   }
 `;
 
-export const RecentVideosContainer = styled.div<{ length: number }>`
+export const RecentVideosContainer = styled.div`
   background-color: ${theme.color.white};
   width: 100%;
   display: flex;
   justify-content: center;
-  border-radius: 50px 50px 0px 0px;
   position: relative;
-  bottom: 50px;
-  padding: ${(props) => (props.length ? '100px' : '0')} 0 110px;
 
   .container {
     width: 910px;
@@ -220,15 +218,12 @@ export const VideoButton = styled.button`
   }
 `;
 
-export const InsightVideosContainer = styled.div<{ user: string | null }>`
+export const InsightVideosContainer = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${theme.color.white};
   width: 100%;
-  border-radius: 50px 50px 0 0;
-  padding: ${(props) => (props.user ? '0' : '100px')} 0 110px;
   position: relative;
-  bottom: 50px;
 
   .insight-container {
     display: flex;

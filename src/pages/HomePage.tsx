@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
@@ -50,7 +50,6 @@ const HomePage: React.FC = () => {
       );
     }
   };
-  const searchRef = useRef(null);
 
   useEffect(() => {
     userToken &&
@@ -72,27 +71,25 @@ const HomePage: React.FC = () => {
   return (
     <>
       <HomePageContainer>
-        <SearchYoutube searchRef={searchRef} />
+        <SearchYoutube />
 
-        {userToken ? (
-          <div>
-            <RecentVideos searchRef={searchRef} videos={recentVideos} />
-            <InsightVideos
-              userToken={userToken}
-              dummyVideos={dummyVideos}
-              onFileClick={onFileClick}
-            />
-          </div>
-        ) : (
-          <div>
-            <InsightVideos
-              userToken={userToken}
-              dummyVideos={dummyVideos}
-              onFileClick={onFileClick}
-            />
-            <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          </div>
-        )}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: userToken ? 'column' : 'column-reverse',
+            gap: 160,
+            padding: '100px 0',
+            borderRadius: '50px 50px 0 0',
+            backgroundColor: 'white',
+          }}
+        >
+          <RecentVideos videos={recentVideos} />
+          <InsightVideos
+            userToken={userToken}
+            dummyVideos={dummyVideos}
+            onFileClick={onFileClick}
+          />
+        </div>
       </HomePageContainer>
 
       {isOpenModal && <RecommendationModal />}

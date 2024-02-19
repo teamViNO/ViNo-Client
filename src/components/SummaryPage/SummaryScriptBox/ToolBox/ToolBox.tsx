@@ -5,6 +5,8 @@ import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
 
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 
+import useCreateToast from '@/hooks/useCreateToast';
+
 import { IVideo } from '@/models/video';
 
 import {
@@ -17,7 +19,6 @@ import {
 import Indicator from './Indicator';
 import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
-import useCreateToast from '@/hooks/useCreateToast';
 
 type Props = {
   onRefresh: () => void;
@@ -33,9 +34,10 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   const [isEditingView, setIsEditingView] = useRecoilState(
     summaryIsEditingViewState,
   );
-  const { createToast } = useCreateToast();
 
   const [originalSummary, setOriginalSummary] = useState<IVideo | null>(null);
+
+  const { createToast } = useCreateToast();
 
   const handleClickModifyIcon = () => {
     setPlaySubHeadingId(-1);
@@ -125,11 +127,7 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
         </>
       ) : (
         <>
-          <Indicator
-            list={summaryVideo.subHeading}
-            focusId={1}
-            onChange={() => {}}
-          />
+          <Indicator />
 
           <div style={{ display: 'flex', gap: 8 }}>
             <SearchKeyword onChange={onChangeKeyword} />

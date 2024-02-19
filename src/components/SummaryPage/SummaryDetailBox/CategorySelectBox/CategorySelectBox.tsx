@@ -12,18 +12,16 @@ import { userTokenState } from '@/stores/user';
 import { CategoryDropdown } from './CategoryDropdown';
 
 type Props = {
+  size?: 'SMALL' | 'LARGE';
   disabled?: boolean;
   selectedCategoryId?: number;
-  startSelect?: boolean;
-  setStartSelect?: React.Dispatch<React.SetStateAction<boolean>>;
   onSelect: (categoryId: number, categoryName?: string) => void;
 };
 
 const CategorySelectBox = ({
+  size,
   disabled,
   selectedCategoryId,
-  startSelect,
-  setStartSelect,
   onSelect,
 }: Props) => {
   const userToken = useRecoilValue(userTokenState);
@@ -59,17 +57,11 @@ const CategorySelectBox = ({
 
   const handleSelect = (categoryId: number) => {
     setSelectedId(categoryId);
-    setStartSelect && setStartSelect(true);
     setIsOpen(false);
   };
 
   const handleClick = () => {
-    if (
-      !selectedCategory ||
-      selectedId === selectedCategoryId ||
-      disabled ||
-      !startSelect
-    )
+    if (!selectedCategory || selectedId === selectedCategoryId || disabled)
       return;
 
     onSelect(selectedCategory.categoryId, selectedCategory.name);
@@ -92,7 +84,9 @@ const CategorySelectBox = ({
             {userToken
               ? selectedCategory
                 ? selectedCategory.name
-                : '어떤 카테고리에 넣을까요?'
+                : size === 'SMALL'
+                  ? '카테고리 선택'
+                  : '어떤 카테고리에 넣을까요?'
               : '로그인하고 요약한 영상을 아카이빙해요!'}
           </span>
 
@@ -105,9 +99,9 @@ const CategorySelectBox = ({
       </div>
 
       <span
-        className={`icon-button ${startSelect && 'start-select'} ${
-          (!userToken || disabled) && 'disabled'
-        } ${selectedCategoryId !== selectedId ? 'changed' : ''}`}
+        className={`icon-button ${(!userToken || disabled) && 'disabled'} ${
+          selectedCategoryId !== selectedId ? 'changed' : ''
+        }`}
         onClick={handleClick}
       >
         <OpenFileIcon width={28} height={28} />
