@@ -28,11 +28,7 @@ import { validateYoutubeLink } from '@/utils/validation';
 
 import ProgressBar from './ProgressBar';
 
-type Props = {
-  searchRef: React.RefObject<HTMLInputElement>;
-};
-
-const SearchYoutube = ({ searchRef }: Props) => {
+const SearchYoutube = () => {
   const navigate = useNavigate();
 
   const userToken = useRecoilValue(userTokenState);
@@ -157,7 +153,6 @@ const SearchYoutube = ({ searchRef }: Props) => {
               </div>
 
               <SearchInput
-                ref={searchRef}
                 type="text"
                 value={inputLink}
                 disabled={status === 'CONTINUE'}
