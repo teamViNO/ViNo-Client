@@ -14,6 +14,7 @@ import { ICommonModalProps } from 'types/modal';
 import handleEdit from '@/utils/handleEdit';
 import { postSubCategroy, postTopCategroy } from '@/apis/category';
 import useUpdateCategories from '@/hooks/useUpdateCategories';
+import useCreateToast from '@/hooks/useCreateToast';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
   isTopCategoryModalOpen: boolean;
@@ -32,6 +33,7 @@ const AddCategoryModal = ({
   setTo,
 }: IAddTopCategoryModalProps) => {
   const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
+  const { createToast } = useCreateToast();
   const { updateCategories } = useUpdateCategories();
   const { editText } = handleEdit();
 
@@ -55,7 +57,7 @@ const AddCategoryModal = ({
 
   const addCategory = async (e: React.MouseEvent) => {
     if (categoryName === '기타') {
-      alert(`'기타' 이름은 사용하실 수 없어요`);
+      createToast(`'기타' 이름은 사용하실 수 없어요`);
       return;
     }
     const response = isTopCategoryModalOpen

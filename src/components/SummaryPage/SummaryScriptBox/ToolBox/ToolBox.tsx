@@ -13,11 +13,11 @@ import {
   summaryUpdateVideoState,
   summaryVideoState,
 } from '@/stores/summary';
-import { toastListState } from '@/stores/toast';
 
 import Indicator from './Indicator';
 import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
+import useCreateToast from '@/hooks/useCreateToast';
 
 type Props = {
   onRefresh: () => void;
@@ -33,13 +33,9 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   const [isEditingView, setIsEditingView] = useRecoilState(
     summaryIsEditingViewState,
   );
-  const [toastList, setToastList] = useRecoilState(toastListState);
+  const { createToast } = useCreateToast();
 
   const [originalSummary, setOriginalSummary] = useState<IVideo | null>(null);
-
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
 
   const handleClickModifyIcon = () => {
     setPlaySubHeadingId(-1);

@@ -6,6 +6,7 @@ import Option from './Option';
 import handleDrag from '@/utils/handleDrag';
 import { ISubFolderProps } from 'types/category';
 import EditCategoryName from '@/components/category/EditCategoryName';
+import useCreateToast from '@/hooks/useCreateToast';
 
 interface ISubCategoryProps {
   topId: number;
@@ -36,6 +37,7 @@ const SubCategory = ({
     useState(false);
   const [edit, setEdit] = useState(subFolder.name);
   const [beforeEdit, setBeforeEdit] = useState(edit);
+  const { createToast } = useCreateToast();
 
   const [subFolderOptionModalRef] = useOutsideClick<HTMLDivElement>(() =>
     setSubFolderOptionModalOpen(false),
@@ -47,7 +49,7 @@ const SubCategory = ({
     e.stopPropagation();
     if (option === '수정') {
       if (subFolder.name === '기타') {
-        alert(`'기타' 폴더는 수정할 수 없습니다.`);
+        createToast(`'기타' 폴더는 수정할 수 없습니다.`);
         setSubFolderOptionModalOpen(false);
         return;
       }
@@ -55,7 +57,7 @@ const SubCategory = ({
       setBeforeEdit(edit);
     } else if (option === '삭제') {
       if (subFolder.name === '기타') {
-        alert(`'기타' 폴더는 삭제할 수 없습니다.`);
+        createToast(`'기타' 폴더는 삭제할 수 없습니다.`);
         setSubFolderOptionModalOpen(false);
         return;
       }
