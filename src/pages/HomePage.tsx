@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
-  getUnReadDummyVideos,
   getRecentVideos,
   getAllDummyVideos,
   createDummyVideoToMine,
@@ -18,7 +17,8 @@ import { HomePageContainer } from '@/styles/HomepageStyle';
 
 import { userTokenState } from '@/stores/user';
 import { recommendationModalState } from '@/stores/modal';
-import { toastListState } from '@/stores/toast';
+import { isSideBarOpenState } from '@/stores/ui';
+import useCreateToast from '@/hooks/useCreateToast';
 
 export interface Video {
   id: string;
@@ -30,14 +30,11 @@ export interface Video {
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
+  const setIsSideBarOpen = useSetRecoilState(isSideBarOpenState);
   const isOpenModal = useRecoilValue(recommendationModalState);
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
-  const [toastList, setToastList] = useRecoilState(toastListState);
-
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
+  const { createToast } = useCreateToast();
 
   const onFileClick = async (
     videoId: number,
@@ -48,7 +45,7 @@ const HomePage: React.FC = () => {
     if (res.isSuccess) {
       createToast(`[${categoryName}] 폴더에 저장되었어요`);
 
-      await getUnReadDummyVideos().then((res) =>
+      await getAllDummyVideos().then((res) =>
         setDummyVideos(res.result.videos.slice(0, 9)),
       );
     }
@@ -57,7 +54,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     userToken &&
-      Promise.all([getRecentVideos(), getUnReadDummyVideos()]).then((res) => {
+      Promise.all([getRecentVideos(), getAllDummyVideos()]).then((res) => {
         const [recentVideosResponse, dummyVideosResponse] = res;
         setRecentVideos(recentVideosResponse.result.videos);
         setDummyVideos(dummyVideosResponse.result.videos.slice(0, 9));
@@ -68,7 +65,9 @@ const HomePage: React.FC = () => {
         setRecentVideos([]);
         setDummyVideos(res.result.videos);
       });
-  }, [userToken]);
+
+    setIsSideBarOpen(false);
+  }, [setIsSideBarOpen, userToken]);
 
   return (
     <>
@@ -76,16 +75,24 @@ const HomePage: React.FC = () => {
         <SearchYoutube searchRef={searchRef} />
 
         {userToken ? (
-        <div>
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
-        </div>
-      ) : (
-        <div>
-          <InsightVideos userToken={userToken} dummyVideos={dummyVideos} onFileClick={onFileClick} />
-          <RecentVideos searchRef={searchRef} videos={recentVideos} />
-        </div>
-      )}
+          <div>
+            <RecentVideos searchRef={searchRef} videos={recentVideos} />
+            <InsightVideos
+              userToken={userToken}
+              dummyVideos={dummyVideos}
+              onFileClick={onFileClick}
+            />
+          </div>
+        ) : (
+          <div>
+            <InsightVideos
+              userToken={userToken}
+              dummyVideos={dummyVideos}
+              onFileClick={onFileClick}
+            />
+            <RecentVideos searchRef={searchRef} videos={recentVideos} />
+          </div>
+        )}
       </HomePageContainer>
 
       {isOpenModal && <RecommendationModal />}

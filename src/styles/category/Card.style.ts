@@ -30,14 +30,12 @@ export const DropdownWrap = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    cursor: pointer;
+    cursor: default;
+    background-color: ${theme.color.gray100};
 
-    &.selected {
-      background-color: ${(props) => props.theme.color.green400};
-    }
-
-    &.not-selected {
-      background-color: ${(props) => props.theme.color.gray200};
+    &.start-select {
+      cursor: pointer;
+      background-color: ${theme.color.green400};
     }
 
     &.disabled svg {
@@ -141,7 +139,10 @@ export const Title = styled.span`
   ${theme.typography.Subheader3};
   color: ${theme.color.gray500};
   height: 52px;
-  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
 `;
 
 export const Summary = styled.span`
@@ -149,7 +150,10 @@ export const Summary = styled.span`
   color: ${theme.color.gray300};
   margin: 16px 0;
   height: 44px;
-  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
 `;
 
 export const ChipWrap = styled.div`

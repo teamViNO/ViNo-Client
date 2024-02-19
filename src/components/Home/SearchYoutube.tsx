@@ -93,6 +93,13 @@ const SearchYoutube = ({ searchRef }: Props) => {
     }
   };
 
+  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setInputLink(e.target.value);
+    setVideoLink(null);
+    setStatus('NONE');
+    setProgress(0);
+  };
+
   const handleClickCreateVideoButton = async () => {
     if (!modelingData) return;
 
@@ -156,7 +163,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
                 type="text"
                 value={inputLink}
                 disabled={status === 'CONTINUE'}
-                onChange={(e) => setInputLink(e.target.value)}
+                onChange={handleChangeInput}
                 placeholder="https://youtube.com/..."
               />
             </div>

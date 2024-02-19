@@ -13,6 +13,7 @@ import { IFolderProps, ISubFolderProps } from 'types/category';
 import useMoveCategory from '@/hooks/useMoveCategory';
 import { deleteCategory } from '@/apis/category';
 import useUpdateCategories from '@/hooks/useUpdateCategories';
+import useCreateToast from '@/hooks/useCreateToast';
 
 const UserMode = () => {
   const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
@@ -21,10 +22,16 @@ const UserMode = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [to, setTo] = useState('');
   const categories = useRecoilValue(categoryState);
   const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
+  const { createToast } = useCreateToast();
+  const [isEditing, setIsEditing] = useState({
+    activated: false,
+    categoryId: 0,
+  });
   const navigate = useNavigate();
 
   const { updateCategories } = useUpdateCategories();
@@ -62,7 +69,7 @@ const UserMode = () => {
       grabedCategory.current = undefined;
       dropedCategory.current = undefined;
     } else {
-      alert('카테고리를 옮기는데 오류가 발생했습니다.');
+      createToast('카테고리를 옮기는데 오류가 발생했습니다.');
     }
   };
   return (
@@ -84,11 +91,11 @@ const UserMode = () => {
             topId={topId}
             subId={subId}
             index={index}
-            categoryId={category.categoryId}
-            name={category.name}
-            subFolders={category.subFolders}
             grabedCategory={grabedCategory}
             dropedCategory={dropedCategory}
+            category={category}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
             setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             putCategoryFolder={putCategoryFolder}
@@ -105,7 +112,7 @@ const UserMode = () => {
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
           topCategoryId={topId}
-          setCategoryId={setCategoryId}
+          setTo={setTo}
         />
       )}
       {isDeleteModalOpen && (
@@ -119,7 +126,7 @@ const UserMode = () => {
           categoryName={categoryName}
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-          categoryId={categoryId}
+          to={to}
         />
       )}
     </>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import {
@@ -16,10 +16,19 @@ import {
 import { createVideoAlarmAPI } from '@/apis/user';
 
 const ModelController = () => {
+  const interval = useRef<NodeJS.Timeout>();
   const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
   const setModelingStatus = useSetRecoilState(modelingStatusState);
   const setModelingProgress = useSetRecoilState(modelingProgressState);
   const setModelingData = useSetRecoilState(modelingDataState);
+
+  const startInterval = () => {
+    interval.current = setInterval(() => {
+      setModelingProgress((progress) =>
+        Math.min(95, progress + Math.ceil(Math.random() * 3)),
+      );
+    }, 1000 * 5);
+  };
 
   const handleError = async () => {
     try {
@@ -32,6 +41,10 @@ const ModelController = () => {
       console.error(e);
     }
 
+    if (interval.current) {
+      clearInterval(interval.current);
+    }
+
     setModelingStatus('ERROR');
     setVideoLink(null);
   };
@@ -41,10 +54,8 @@ const ModelController = () => {
 
     const callProcess1API = async () => {
       try {
-        const { videoId, progress } = (await modelingProcess1(videoLink)).data
-          .result;
+        const { videoId } = (await modelingProcess1(videoLink)).data.result;
 
-        setModelingProgress(Number(progress));
         callProcess2API(videoId);
       } catch (e) {
         console.error(e);
@@ -55,14 +66,10 @@ const ModelController = () => {
 
     const callProcess2API = async (videoId: string) => {
       try {
-        const { progress } = await (
-          await modelingProcess2({ videoId })
-        ).data.result;
-
-        setModelingProgress(Number(progress));
+        await modelingProcess2({ videoId });
 
         setTimeout(() => {
-          setModelingProgress(70);
+          setModelingProgress((progress) => Math.max(progress, 40));
           callProcess3API(videoId);
         }, 1000 * 30);
       } catch (e) {
@@ -76,6 +83,10 @@ const ModelController = () => {
       try {
         const { finalData } = (await modelingProcess3({ videoId })).data.result;
 
+        if (interval.current) {
+          clearInterval(interval.current);
+        }
+
         setModelingData(finalData);
         setModelingProgress(100);
         setModelingStatus('COMPLETE');
@@ -87,8 +98,9 @@ const ModelController = () => {
     };
 
     setModelingStatus('CONTINUE');
-    setModelingProgress(10);
+    setModelingProgress(Math.ceil(Math.random() * 5));
     callProcess1API();
+    startInterval();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoLink]);
 

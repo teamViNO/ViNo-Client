@@ -9,7 +9,9 @@ interface IEditCategoryNameProps {
   categoryId: number;
   edit: string;
   setEdit: React.Dispatch<React.SetStateAction<string>>;
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsEditing: React.Dispatch<
+    React.SetStateAction<{ activated: boolean; categoryId: number }>
+  >;
 }
 
 const EditCategoryName = ({

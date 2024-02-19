@@ -13,7 +13,9 @@ import {
   NickNameResponse,
   FindEmailResponse,
   FindEmailRequest,
-  CreateVideoAlarmRequest,
+  FindPasswordResponse,
+  FindPasswordRequest,
+  CreateVideoAlarmRequest
 } from '@/models/user';
 import {
   AlarmResponse,
@@ -91,4 +93,11 @@ export const createVideoAlarmAPI = (
     PREFIX + `/videoAlarm/${videoId}/${status}`,
     data,
   );
-};
+}
+
+export const findPasswordAPI = (data : FindPasswordRequest) => {
+  return axios.post<FindPasswordResponse>(
+    PREFIX + '/findPassword',
+    data
+  );
+}

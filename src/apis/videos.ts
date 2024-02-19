@@ -76,13 +76,6 @@ export const getUnReadDummyVideosAPI = () => {
   return axios.get<APIResponse<VideoResponse>>('/videos/dummyVideos/unRead');
 };
 
-export const getUnReadDummyVideos = async (): Promise<
-  APIResponse<Record<'videos', IVideoProps[]>>
-> => {
-  const response = await axiosInstance.get('/videos/dummyVideos/unRead');
-  return response.data;
-};
-
 export const getAllDummyVideos = async (): Promise<
   APIResponse<Record<'videos', IVideoProps[]>>
 > => {

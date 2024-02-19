@@ -13,6 +13,7 @@ import Calendar from '@/components/Calendar';
 import ImageSlider from '@/components/ImageSlider';
 import PhoneCheck from '@/components/PhoneCheck';
 import { Link } from 'react-router-dom';
+import useCreateToast from '@/hooks/useCreateToast';
 
 const SignUp = () => {
   const [name, setName] = useState<string>('');
@@ -40,6 +41,7 @@ const SignUp = () => {
   const [isEmailSuccess, setIsEmailSuccess] = useState(false);
 
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
+  const { createToast } = useCreateToast();
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -112,9 +114,6 @@ const SignUp = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!mismatchError) {
-      console.log('서버로 회원가입하기');
-    }
   };
 
   const navigate = useNavigate();
@@ -133,10 +132,9 @@ const SignUp = () => {
     ) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
-      console.log('정보 등록 완료');
       navigate('/sign-up/success');
     } else {
-      alert('입력값을 확인해주세요.');
+      createToast('입력값을 확인해주세요.');
     }
   };
 
@@ -158,6 +156,16 @@ const SignUp = () => {
       console.log(err);
     }
   };
+
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    onApply();
+  }
 
   return (
     <SignupPageStyles.Wrapper>
@@ -248,6 +256,7 @@ const SignUp = () => {
                 tel={phonenumber}
                 setTel={setPhonenumber}
                 setCheck={setIsCertify}
+                type={true}
               />
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
@@ -298,6 +307,7 @@ const SignUp = () => {
                 name="passwordCheck"
                 value={passwordCheck}
                 onChange={onChangePasswordCheck}
+                onKeyDown={handleOnKeyDown}
               ></SignupPageStyles.InputBox>
               {(passwordCheck || passwordCheck === '') &&
                 (mismatchError ? (
@@ -323,7 +333,10 @@ const SignUp = () => {
           isPassword &&
           passwordCheck &&
           !mismatchError ? (
-            <SignupPageStyles.SucButton type="submit" onClick={onApply}>
+            <SignupPageStyles.SucButton 
+            type="submit" 
+            onClick={onApply}
+            >
               가입하기
             </SignupPageStyles.SucButton>
           ) : (

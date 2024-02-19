@@ -1,4 +1,5 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect, useRef } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { updateVideoCategoryIdAPI } from '@/apis/videos';
 
@@ -6,10 +7,11 @@ import { IVideo } from '@/models/video';
 
 import {
   summaryIsEditingViewState,
+  summaryPlaySubHeadingIdState,
   summaryUpdateVideoState,
   summaryVideoState,
+  summaryVideoTimeState,
 } from '@/stores/summary';
-import { toastListState } from '@/stores/toast';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -18,24 +20,27 @@ import { formatDate } from '@/utils/date';
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
 import { DescriptionBox } from './DescriptionBox';
+import useCreateToast from '@/hooks/useCreateToast';
 
 type Props = {
   onRefresh: () => void;
 };
 
 const SummaryDetailBox = ({ onRefresh }: Props) => {
+  const player = useRef<YT.Player>();
+
+  const { createToast } = useCreateToast();
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
   const summaryUpdateVideo = useRecoilValue(summaryUpdateVideoState);
+  const setSummaryVideoTime = useSetRecoilState(summaryVideoTimeState);
   const isEditingView = useRecoilValue(summaryIsEditingViewState);
-  const [toastList, setToastList] = useRecoilState(toastListState);
+  const [playSubHeadingId, setPlaySubHeadingId] = useRecoilState(
+    summaryPlaySubHeadingIdState,
+  );
 
   const subHeading = isEditingView
     ? summaryUpdateVideo?.subHeading || []
     : summaryVideo.subHeading;
-
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
 
   const handleSelectCategory = async (category_id: number, name?: string) => {
     try {
@@ -49,6 +54,75 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
       console.error(e);
     }
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleMessage = (e: any) => {
+    if (e.origin === 'https://www.youtube.com') {
+      try {
+        const { info } = JSON.parse(e.data);
+
+        if (!info) return;
+
+        setPlaySubHeadingId((id) => {
+          const item = subHeading.find((s) => s.id === id);
+
+          // END or PAUSE
+          if ([0, 2].includes(info.playerState)) {
+            return -1;
+          }
+
+          if (item) {
+            if (
+              item.start_time > info.currentTime ||
+              info.currentTime > item.end_time
+            )
+              return -1;
+          }
+
+          return id;
+        });
+
+        setSummaryVideoTime(info.currentTime);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (player.current) return;
+
+    player.current = new YT.Player('player', {
+      videoId: summaryVideo.youtube_id,
+    });
+
+    window.onmessage = handleMessage;
+
+    return () => {
+      setSummaryVideoTime(0);
+      setPlaySubHeadingId(-1);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [summaryVideo]);
+
+  useEffect(() => {
+    if (player.current) {
+      if (playSubHeadingId > -1) {
+        const item = subHeading.find((s) => s.id === playSubHeadingId);
+
+        if (item) {
+          player.current.seekTo(item.start_time, true);
+          player.current.playVideo();
+        }
+      } else if (playSubHeadingId === -2) {
+        // 영상 멈추기
+        player.current.pauseVideo();
+
+        setPlaySubHeadingId(-1);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playSubHeadingId]);
 
   return (
     <div
@@ -73,19 +147,7 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
           ))}
         </div>
 
-        <iframe
-          src={`https://www.youtube.com/embed/QXDiRtANAzA?${
-            isEditingView && 'start=10&end=18&autoplay=1&disablekb=0'
-          }`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          style={{
-            margin: '20px 0',
-            width: '100%',
-            aspectRatio: '16 / 9',
-            borderRadius: 16,
-          }}
-        />
+        <div id="player" />
 
         <CategorySelectBox
           disabled={isEditingView}
@@ -104,7 +166,15 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
           }}
         >
           {subHeading.map((item, i) => (
-            <div key={item.id} className="subtitle">
+            <div
+              key={item.id}
+              className={`subtitle ${
+                playSubHeadingId > -1 &&
+                playSubHeadingId !== item.id &&
+                'disabled'
+              }`}
+              onClick={() => setPlaySubHeadingId(item.id)}
+            >
               <span className="subtitle-index">{i + 1}</span>
               <span className="subtitle-text">{item.name}</span>
             </div>
