@@ -64,7 +64,11 @@ const Card: React.FC<ICardProps> = ({
         )}
       </div>
 
-      <CardStyles.Content to={`/summary/${video.video_id}`}>
+      <CardStyles.Content
+        to={`/summary/${video.video_id}${
+          mode === 'recommend' && '?insights=true'
+        }`}
+      >
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>

@@ -3,7 +3,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
-  getUnReadDummyVideos,
   getRecentVideos,
   getAllDummyVideos,
   createDummyVideoToMine,
@@ -46,7 +45,7 @@ const HomePage: React.FC = () => {
     if (res.isSuccess) {
       createToast(`[${categoryName}] 폴더에 저장되었어요`);
 
-      await getUnReadDummyVideos().then((res) =>
+      await getAllDummyVideos().then((res) =>
         setDummyVideos(res.result.videos.slice(0, 9)),
       );
     }
@@ -55,7 +54,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     userToken &&
-      Promise.all([getRecentVideos(), getUnReadDummyVideos()]).then((res) => {
+      Promise.all([getRecentVideos(), getAllDummyVideos()]).then((res) => {
         const [recentVideosResponse, dummyVideosResponse] = res;
         setRecentVideos(recentVideosResponse.result.videos);
         setDummyVideos(dummyVideosResponse.result.videos.slice(0, 9));
