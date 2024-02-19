@@ -60,10 +60,9 @@ const SearchResult = () => {
   ) => {
     try {
       const keywords = inputValues.split(splittype);
-
       const requests = keywords.map((value) => {
         if (type === 'hashtag') {
-          value = value.replace('#', '');
+          value = value.replace(/^#/, '').replace(/\s/g, '');
         }
         const searchData = searchAPI(type, value);
         return searchData.then((value) => value.data.result);
@@ -80,24 +79,27 @@ const SearchResult = () => {
   };
 
   const formatContent = (content: string, keyword: string) => {
-    if (keyword.trim() !== '') {
-      content = content
-        .split(keyword)
-        .map((s) => escapeHTML(s))
-        .join(`<mark>${escapeHTML(keyword)}</mark>`);
-    } else {
-      content = escapeHTML(content);
-    }
-
-    content = content.replace(/\n/g, '<br>');
-
-    return content;
+    let result = escapeHTML(content);
+    const keywordArr = keyword.split(' ');
+  
+    keywordArr.forEach((keyword) => {
+      if (keyword.trim() !== '') {
+        result = result
+          .split(keyword)
+          .join(`<mark>${escapeHTML(keyword)}</mark>`);
+      }
+    });
+  
+    result = result.replace(/\n/g, '<br>');
+  
+    return result;
   };
 
   const dataDuplicateHandler = (videos: IVideo[], check: string) => {
     const uniqueData = videos.filter((v, index, arr) => 
       arr.findIndex(t => t.video_id === v.video_id) === index
     );
+    
     const mappingData = uniqueData.map((video) => {
       return {
         ...video,

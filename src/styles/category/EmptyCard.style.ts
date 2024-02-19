@@ -26,4 +26,8 @@ export const Button = styled(Link)`
   border-radius: 100px;
   padding: 12px 32px;
   ${theme.typography.Subheader2}
+
+  &:hover {
+    color: ${theme.color.green400};
+  }
 `;

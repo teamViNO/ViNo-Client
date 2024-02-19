@@ -13,7 +13,7 @@ export const DetailBox = styled.div`
   flex-direction: column;
   padding: 60px 58px 29.5px 60px;
   min-width: 535px;
-  max-width: 760px;
+  /* max-width: 760px; */
 
   & span.created_at {
     color: ${(props) => props.theme.color.gray300};
@@ -93,6 +93,17 @@ export const DetailBox = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+
+    &.disabled {
+      & > span.subtitle-index {
+        background-color: ${(props) => props.theme.color.green100};
+        color: ${(props) => props.theme.color.gray200};
+      }
+
+      & > span.subtitle-text {
+        color: ${(props) => props.theme.color.gray300};
+      }
+    }
   }
 
   & span.subtitle-index {
@@ -195,6 +206,14 @@ export const DetailBox = styled.div`
     top: 0;
     right: 0;
     transform: translateX(calc(100% + 24px));
+  }
+
+  & #player {
+    margin: 20px 0;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    aspect-ratio: 16 / 9;
   }
 
   &.disabled {
@@ -312,10 +331,16 @@ export const ScriptBox = styled.div`
     gap: 60px;
   }
 
-  & span.script-title,
-  & input.script-title {
+  & .script-title {
     color: ${(props) => props.theme.color.gray500};
     ${(props) => props.theme.typography.Subheader1};
+  }
+
+  & span.script-title {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    word-break: keep-all;
   }
 
   & input.script-title {

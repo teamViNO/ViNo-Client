@@ -22,12 +22,13 @@ const SearchPage = () => {
                 setUserHashTag(shuffleData);
 
             } catch(e) {
-                setUserHashTag(['A','B','C','D','E','F','G','H','I','J']);
+                setUserHashTag([]);
             }
         }
         handleTagAPI();
     }, []);
 
+  
     const handleHashtagBox = (value : string) => {
         const isSelected = selectedHashtags.includes(value);
         setSelectedHashtags(prev =>
@@ -40,7 +41,9 @@ const SearchPage = () => {
     const sortShuffle = (arr : string[]) => {
         return arr.sort(() => Math.random() - 0.5);
       }
-    
+    const firstHalf = userHashTag.slice(0, 5);
+    const secondHalf = userHashTag.slice(5);
+
     return (
         <Container style={{width : '100vw', height : '100vh'}}>
             <div className='wrap' style={{width : '908px', height : '450px'}}>
@@ -74,13 +77,23 @@ const SearchPage = () => {
                         }
                 </div>
 
-                <div className="hashtag" style={{width : '572px', height : '102px'}}>
+                <div className="hashtag" style={{width : '908px'}}>
+                    <div className='hashtag'>
                         {
-                            userHashTag.map((value : string, idx : number) => {
+                            firstHalf.map((value : string, idx : number) => {
                                 return(<HashtagBox key={idx} onClick={() => handleHashtagBox(value)}
                                 className={selectedHashtags.includes(value) ? 'toggle' : ''}>{'#' + value}</HashtagBox>)
                             })
                         }
+                    </div>
+                    <div className='hashtag'>
+                    {
+                            secondHalf.map((value : string, idx : number) => {
+                                return(<HashtagBox key={idx} onClick={() => handleHashtagBox(value)}
+                                className={selectedHashtags.includes(value) ? 'toggle' : ''}>{'#' + value}</HashtagBox>)
+                            })
+                        }
+                    </div>
                 </div>
             </div>
         </Container>

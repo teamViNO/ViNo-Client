@@ -279,6 +279,7 @@ export const SexButton = styled.button<{ selected: boolean }>`
   font-weight: 500;
   line-height: 160%;
   margin-right: 10px;
+  cursor: pointer;
   ${(props) => props.selected &&
     `
       background: #1e1e1e;
@@ -346,6 +347,7 @@ export const SucButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
+  cursor: pointer;
 `;
 
 export const DupSucButton = styled.button`
@@ -365,9 +367,11 @@ export const DupSucButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
+  cursor: pointer;
   &:disabled {
     background-color : ${theme.color.gray100};
     color : ${theme.color.gray300};
+    cursor: default;
   }
 `;
 
