@@ -12,7 +12,7 @@ import smallLogo from '@/assets/logo-dark.png';
 import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
-import ImageSlider from "@/components/ImageSlider";
+import ImageSlider from '@/components/ImageSlider';
 import NaverLogoImage from '@/assets/naver-logo.png';
 import KakaoLogoImage from '@/assets/kakao-logo.png';
 
@@ -22,7 +22,6 @@ import { LoginRequest } from '@/models/user';
 import { userTokenState } from '@/stores/user';
 
 import { BlurBackground } from '@/styles/modals/common.style';
-import useUpdateCategories from '@/hooks/useUpdateCategories';
 
 const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +30,6 @@ const SignInPage: React.FC = () => {
   const [isOpenErrorModal, setIsOpenErrorModal] = useState(false);
   const [isOpenSignUpModal, setIsOpenSignUpModal] = useState(false);
   const setUserToken = useSetRecoilState(userTokenState);
-  const { updateCategories } = useUpdateCategories();
 
   const [loginInfo, setLoginInfo] = useState<LoginRequest>({
     email: '',
@@ -64,10 +62,11 @@ const SignInPage: React.FC = () => {
 
   const handleClickLoginButton = async () => {
     try {
-      const { token } = (await loginAPI(loginInfo)).data.result;
-      await updateCategories();
-      setUserToken(token);
-      navigate('/');
+      const res = await loginAPI(loginInfo);
+      if (res.data.success) {
+        setUserToken(res.data.result.token);
+        navigate('/');
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data as APIBaseResponse;
@@ -80,6 +79,16 @@ const SignInPage: React.FC = () => {
       }
     }
   };
+
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    handleClickLoginButton();
+  }
 
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
@@ -182,6 +191,7 @@ const SignInPage: React.FC = () => {
           placeholder="비밀번호를 입력해주세요."
           name="password"
           value={loginInfo.password}
+          onKeyDown={handleOnKeyDown}
         />
 
         <Button
@@ -223,7 +233,7 @@ const SignInPage: React.FC = () => {
         </TextTotalComponent>
       </LoginTotalComponent>
 
-      <ImageSlider/>
+      <ImageSlider />
 
       {isOpenErrorModal && (
         <BlurBackground>

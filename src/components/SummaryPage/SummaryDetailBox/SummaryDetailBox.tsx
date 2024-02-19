@@ -12,7 +12,6 @@ import {
   summaryVideoState,
   summaryVideoTimeState,
 } from '@/stores/summary';
-import { toastListState } from '@/stores/toast';
 
 import { DetailBox } from '@/styles/SummaryPage';
 
@@ -21,6 +20,7 @@ import { formatDate } from '@/utils/date';
 import { CategorySelectBox } from './CategorySelectBox';
 import { NoteBox } from './NoteBox';
 import { DescriptionBox } from './DescriptionBox';
+import useCreateToast from '@/hooks/useCreateToast';
 
 type Props = {
   onRefresh: () => void;
@@ -29,6 +29,7 @@ type Props = {
 const SummaryDetailBox = ({ onRefresh }: Props) => {
   const player = useRef<YT.Player>();
 
+  const { createToast } = useCreateToast();
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
   const summaryUpdateVideo = useRecoilValue(summaryUpdateVideoState);
   const setSummaryVideoTime = useSetRecoilState(summaryVideoTimeState);
@@ -36,15 +37,10 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
   const [playSubHeadingId, setPlaySubHeadingId] = useRecoilState(
     summaryPlaySubHeadingIdState,
   );
-  const [toastList, setToastList] = useRecoilState(toastListState);
 
   const subHeading = isEditingView
     ? summaryUpdateVideo?.subHeading || []
     : summaryVideo.subHeading;
-
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
 
   const handleSelectCategory = async (category_id: number, name?: string) => {
     try {
