@@ -67,7 +67,7 @@ return (
                   ></InputBox>
                   </Label>
                   <TwoLabel>
-                    <PhoneCheck setCheck={setAllChecked} tel={tel} setTel={setTel}/>
+                    <PhoneCheck setCheck={setAllChecked} tel={tel} setTel={setTel} type = {false}/>
                     </TwoLabel>
                   <FindButton disabled={!allChecked} onClick={findBtnHandler}>
                     찾아보기
