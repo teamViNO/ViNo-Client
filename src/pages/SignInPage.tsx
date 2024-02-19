@@ -81,6 +81,16 @@ const SignInPage: React.FC = () => {
     }
   };
 
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    handleClickLoginButton();
+  }
+
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
   const NAVER_CLIENT_ID = 'qR4Npp1ui69SCF6nAJd2';
@@ -182,6 +192,7 @@ const SignInPage: React.FC = () => {
           placeholder="비밀번호를 입력해주세요."
           name="password"
           value={loginInfo.password}
+          onKeyDown={handleOnKeyDown}
         />
 
         <Button
