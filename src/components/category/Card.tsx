@@ -1,10 +1,14 @@
 import React from 'react';
+import { useRecoilValue } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
 
+import { userTokenState } from '@/stores/user';
+
 import * as CardStyles from '@/styles/category/Card.style';
-import Chip from '../common/chip/Chip';
+
+import Chip from '@/components/common/chip/Chip';
 
 interface ICardProps {
   mode: 'default' | 'category' | 'recommend';
@@ -25,6 +29,8 @@ const Card: React.FC<ICardProps> = ({
   setCheckedVideos,
   onFileClick,
 }) => {
+  const userToken = useRecoilValue(userTokenState);
+
   const onFileClickWithProps = (categoryId: number, categoryName?: string) => {
     onFileClick && onFileClick(video.video_id, categoryId, categoryName);
   };
@@ -37,7 +43,7 @@ const Card: React.FC<ICardProps> = ({
     }
   };
   return (
-    <CardStyles.Wrap mode={mode}>
+    <CardStyles.Wrap token={userToken} mode={mode}>
       <div style={{ display: 'flex' }}>
         <CardStyles.Image src={video.image} alt="카드 이미지" />
         {mode === 'category' && (
@@ -64,7 +70,7 @@ const Card: React.FC<ICardProps> = ({
           ))}
         </CardStyles.ChipWrap>
       </CardStyles.Content>
-      {mode === 'recommend' && (
+      {mode === 'recommend' && userToken && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
             size="SMALL"

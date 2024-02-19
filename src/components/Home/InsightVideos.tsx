@@ -55,7 +55,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
   }, [userToken]);
 
   return (
-    <InsightVideosContainer user={userToken}>
+    <InsightVideosContainer>
       <div className="insight-container">
         <div className="text-container">
           <h2 className="insight-title">이런 인사이트는 어때요?</h2>
@@ -66,7 +66,7 @@ const InsightVideos: React.FC<InsightVideosProps> = ({
         <CardContainer>
           {dummyVideos.map((video) => (
             <Card
-              mode={userToken ? 'recommend' : 'default'}
+              mode="recommend"
               video={video}
               checkedVideos={checkedItems}
               setCheckedVideos={setCheckedItems}
