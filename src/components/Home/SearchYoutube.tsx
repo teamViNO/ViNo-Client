@@ -96,6 +96,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
     setVideoLink(null);
     setStatus('NONE');
     setProgress(0);
+    setModelingData(null);
   };
 
   const handleClickCreateVideoButton = async () => {

@@ -43,7 +43,7 @@ export const getDate = (dateString?: string) => {
 
 export const formatTime = (time: number) => {
   const hour = Math.floor(time / 60 / 60);
-  const minute = Math.floor(time / 60);
+  const minute = Math.floor(time / 60) - hour * 60;
   const second = Math.floor(time % 60);
 
   if (hour > 0) {
