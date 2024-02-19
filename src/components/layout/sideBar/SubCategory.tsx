@@ -46,6 +46,11 @@ const SubCategory = ({
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
     if (option === '수정') {
+      if (subFolder.name === '기타') {
+        alert(`'기타' 폴더는 수정할 수 없습니다.`);
+        setSubFolderOptionModalOpen(false);
+        return;
+      }
       setIsEditing({ activated: true, categoryId: subFolder.categoryId });
       setBeforeEdit(edit);
     } else if (option === '삭제') {

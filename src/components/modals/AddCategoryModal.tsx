@@ -38,8 +38,8 @@ const AddCategoryModal = ({
   const [isFocused, setIsFocused] = useState(false);
 
   const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
-  const testCategoryNameRegex = categoryNameRegex.test(categoryName);
-  const addEnabled = categoryName.length > 0 && testCategoryNameRegex;
+  const checkCategoryNameRegex = categoryNameRegex.test(categoryName);
+  const addEnabled = categoryName.length > 0 && checkCategoryNameRegex;
 
   const onCloseModal = () => {
     isTopCategoryModalOpen
@@ -54,6 +54,10 @@ const AddCategoryModal = ({
     editText(e, setCategoryName);
 
   const addCategory = async (e: React.MouseEvent) => {
+    if (categoryName === '기타') {
+      alert(`'기타' 이름은 사용하실 수 없어요`);
+      return;
+    }
     const response = isTopCategoryModalOpen
       ? await postTopCategroy(categoryName)
       : await postSubCategroy(categoryName, topCategoryId);
@@ -101,7 +105,7 @@ const AddCategoryModal = ({
             /10(공백포함)
           </AddTopCategoryModalStyles.InputCategoryNameMessage>
         </AddTopCategoryModalStyles.InputCategoryNameWrap>
-        {!testCategoryNameRegex && (
+        {!checkCategoryNameRegex && (
           <AddTopCategoryModalStyles.WarningMessage>
             *아쉽지만,이모티콘은 사용할 수 없어요
           </AddTopCategoryModalStyles.WarningMessage>

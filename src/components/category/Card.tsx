@@ -33,6 +33,7 @@ const Card: React.FC<ICardProps> = ({
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     category.length ? category[0].categoryId : -1,
   );
+  const [startSelect, setStartSelect] = useState(false);
 
   const onFileClickWithProps = (categoryId: number, categoryName?: string) => {
     setSelectedCategoryId(categoryId);
@@ -76,6 +77,8 @@ const Card: React.FC<ICardProps> = ({
         <CardStyles.DropdownWrap>
           <CategorySelectBox
             selectedCategoryId={selectedCategoryId}
+            startSelect={startSelect}
+            setStartSelect={setStartSelect}
             onSelect={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
