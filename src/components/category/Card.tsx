@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React from 'react';
 import { IVideoProps } from 'types/videos';
 
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
-
-import { categoryState } from '@/stores/category';
 
 import * as CardStyles from '@/styles/category/Card.style';
 import Chip from '../common/chip/Chip';
@@ -28,15 +25,7 @@ const Card: React.FC<ICardProps> = ({
   setCheckedVideos,
   onFileClick,
 }) => {
-  const category = useRecoilValue(categoryState);
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category.length ? category[0].categoryId : -1,
-  );
-  const [startSelect, setStartSelect] = useState(false);
-
   const onFileClickWithProps = (categoryId: number, categoryName?: string) => {
-    setSelectedCategoryId(categoryId);
     onFileClick && onFileClick(video.video_id, categoryId, categoryName);
   };
 
@@ -80,9 +69,8 @@ const Card: React.FC<ICardProps> = ({
       {mode === 'recommend' && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
-            selectedCategoryId={selectedCategoryId}
-            startSelect={startSelect}
-            setStartSelect={setStartSelect}
+            size="SMALL"
+            selectedCategoryId={video.category_id}
             onSelect={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
