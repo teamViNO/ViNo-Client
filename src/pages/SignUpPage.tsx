@@ -246,6 +246,7 @@ const SignUp = () => {
                 tel={phonenumber}
                 setTel={setPhonenumber}
                 setCheck={setIsCertify}
+                type={true}
               />
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
