@@ -20,20 +20,21 @@ const handleEdit = () => {
     edit: string,
     setEdit: React.Dispatch<React.SetStateAction<string>>,
     beforeEdit: string,
-    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsEditing: React.Dispatch<
+      React.SetStateAction<{ activated: boolean; categoryId: number }>
+    >,
     nameRegex: boolean,
     setNameRegex: React.Dispatch<React.SetStateAction<boolean>>,
     categoryId: number,
   ) => {
     if (!edit.length || !nameRegex) {
       setEdit(beforeEdit);
-      setIsEditing(false);
+      setIsEditing({ activated: false, categoryId });
       setNameRegex(true);
-      setIsEditing(false);
       return;
     }
     if (edit !== beforeEdit) updateCategoryName(edit, categoryId);
-    setIsEditing(false);
+    setIsEditing({ activated: false, categoryId });
   };
 
   return { editText, finishEdit };

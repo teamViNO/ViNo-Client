@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
 
@@ -9,14 +9,15 @@ import { IVideo } from '@/models/video';
 
 import {
   summaryIsEditingViewState,
+  summaryPlaySubHeadingIdState,
   summaryUpdateVideoState,
   summaryVideoState,
 } from '@/stores/summary';
-import { toastListState } from '@/stores/toast';
 
 import Indicator from './Indicator';
 import { SearchKeyword } from './SearchKeyword';
 import { ChangeKeyword } from './ChangeKeyword';
+import useCreateToast from '@/hooks/useCreateToast';
 
 type Props = {
   onRefresh: () => void;
@@ -25,21 +26,19 @@ type Props = {
 
 const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
+  const setPlaySubHeadingId = useSetRecoilState(summaryPlaySubHeadingIdState);
   const [summaryUpdateVideo, setSummaryUpdateVideo] = useRecoilState(
     summaryUpdateVideoState,
   );
   const [isEditingView, setIsEditingView] = useRecoilState(
     summaryIsEditingViewState,
   );
-  const [toastList, setToastList] = useRecoilState(toastListState);
+  const { createToast } = useCreateToast();
 
   const [originalSummary, setOriginalSummary] = useState<IVideo | null>(null);
 
-  const createToast = (content: string) => {
-    setToastList([...toastList, { id: Date.now(), content }]);
-  };
-
   const handleClickModifyIcon = () => {
+    setPlaySubHeadingId(-1);
     setIsEditingView(true);
     setSummaryUpdateVideo({ ...summaryVideo });
   };

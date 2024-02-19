@@ -26,3 +26,13 @@ export const summaryIsEditingViewState = atom({
   key: 'summary-is-editing-view',
   default: false,
 });
+
+export const summaryPlaySubHeadingIdState = atom({
+  key: 'summary-play-subheading-id',
+  default: -1,
+});
+
+export const summaryVideoTimeState = atom({
+  key: 'summary-video-time',
+  default: 0,
+});
