@@ -11,7 +11,7 @@ import UpSvg from '@/assets/icons/up.svg?react';
 import * as ConvertVideoStyle from '@/styles/layout/sideBar/ConvertVideo.style';
 import { CommonTitle } from '@/styles/layout/sideBar/UserMode.style';
 
-import { recommendationModalState } from '@/stores/modal';
+import { errorModalState, recommendationModalState } from '@/stores/modal';
 import {
   modelingDataState,
   modelingProgressState,
@@ -31,6 +31,7 @@ const ConvertVideo = () => {
   const userToken = useRecoilValue(userTokenState);
   const setIsOpenModal = useSetRecoilState(recommendationModalState);
   const setVideoLink = useSetRecoilState(videoLinkState);
+  const setIsOpenErrorModal = useSetRecoilState(errorModalState);
   const [status, setStatus] = useRecoilState(modelingStatusState);
   const [progress, setProgress] = useRecoilState(modelingProgressState);
   const [modelingData, setModelingData] = useRecoilState(modelingDataState);
@@ -51,6 +52,7 @@ const ConvertVideo = () => {
         navigate(`/summary/${video_id}`);
         setModelingData(null);
       } catch (e) {
+        setIsOpenErrorModal(true)
         console.error(e);
       }
     } else {
