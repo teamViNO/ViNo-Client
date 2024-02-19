@@ -141,7 +141,10 @@ export const Title = styled.span`
   ${theme.typography.Subheader3};
   color: ${theme.color.gray500};
   height: 52px;
-  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
 `;
 
 export const Summary = styled.span`
@@ -149,7 +152,10 @@ export const Summary = styled.span`
   color: ${theme.color.gray300};
   margin: 16px 0;
   height: 44px;
-  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
 `;
 
 export const ChipWrap = styled.div`
