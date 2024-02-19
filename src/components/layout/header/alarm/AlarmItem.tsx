@@ -11,12 +11,21 @@ import ErrorImage from '@/assets/Error.png';
 import { Container } from '@/styles/layout/header/alarm/AlarmItem.style';
 
 import { diffTime } from '@/utils/date';
+import { useRecoilValue } from 'recoil';
+import {
+  modelingProgressState,
+  modelingStatusState,
+} from '@/stores/model-controller';
+import theme from '@/styles/theme';
+import useCreateVideo from '@/hooks/useCreateVideo';
+import { confirmSelectAlarmAPI } from '@/apis/user';
 
 type Props = {
   alarm: IAlarm;
   selectIdList: number[];
   onUpdateSelectIdList: (list: number[]) => void;
   onClose: () => void;
+  onRefresh: () => void;
 };
 
 const AlarmItem = ({
@@ -24,8 +33,12 @@ const AlarmItem = ({
   selectIdList,
   onUpdateSelectIdList,
   onClose,
+  onRefresh,
 }: Props) => {
   const navigate = useNavigate();
+  const status = useRecoilValue(modelingStatusState);
+  const progress = useRecoilValue(modelingProgressState);
+  const { createVideo } = useCreateVideo();
   const isSelected = selectIdList.indexOf(alarm.alarm_id) > -1;
 
   const type = () => {
@@ -58,10 +71,21 @@ const AlarmItem = ({
     return `${second}초`;
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (alarm.type === 'notice') {
       navigate('/guide');
       onClose();
+    }
+    if (alarm.type === 'video' && !alarm.is_confirm) {
+      try {
+        await confirmSelectAlarmAPI({ alarms: [alarm.alarm_id] });
+
+        onRefresh();
+        createVideo();
+        onClose();
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -110,6 +134,23 @@ const AlarmItem = ({
           <span>{alarm.content}</span>
         </div>
       </div>
+      {status !== 'NONE' && alarm.alarm_id === 999 && (
+        <div className="progress-wrap">
+          <div className="progress-bar">
+            <div
+              style={{
+                width: `${progress}%`,
+                backgroundColor:
+                  status === 'ERROR' ? theme.color.red : theme.color.green300,
+              }}
+            />
+          </div>
+
+          <span className="progress-text">
+            {status === 'ERROR' ? '변환 중 오류' : `${progress}%`}
+          </span>
+        </div>
+      )}
     </Container>
   );
 };
