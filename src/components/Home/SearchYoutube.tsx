@@ -137,7 +137,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
                 disabled={status === 'CONTINUE'}
                 onChange={handleChangeInput}
                 placeholder="https://youtube.com/..."
-                searchRef={searchRef}
+                // searchRef={searchRef}
               />
             </div>
 
