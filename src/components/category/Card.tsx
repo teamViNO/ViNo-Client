@@ -33,6 +33,7 @@ const Card: React.FC<ICardProps> = ({
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     category.length ? category[0].categoryId : -1,
   );
+  const [startSelect, setStartSelect] = useState(false);
 
   const onFileClickWithProps = (categoryId: number, categoryName?: string) => {
     setSelectedCategoryId(categoryId);
@@ -63,7 +64,11 @@ const Card: React.FC<ICardProps> = ({
         )}
       </div>
 
-      <CardStyles.Content to={`/summary/${video.video_id}`}>
+      <CardStyles.Content
+        to={`/summary/${video.video_id}${
+          mode === 'recommend' && '?insights=true'
+        }`}
+      >
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
         <CardStyles.ChipWrap>
@@ -76,6 +81,8 @@ const Card: React.FC<ICardProps> = ({
         <CardStyles.DropdownWrap>
           <CategorySelectBox
             selectedCategoryId={selectedCategoryId}
+            startSelect={startSelect}
+            setStartSelect={setStartSelect}
             onSelect={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>

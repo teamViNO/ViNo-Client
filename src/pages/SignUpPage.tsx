@@ -13,6 +13,7 @@ import Calendar from '@/components/Calendar';
 import ImageSlider from '@/components/ImageSlider';
 import PhoneCheck from '@/components/PhoneCheck';
 import { Link } from 'react-router-dom';
+import useCreateToast from '@/hooks/useCreateToast';
 
 const SignUp = () => {
   const [name, setName] = useState<string>('');
@@ -40,6 +41,7 @@ const SignUp = () => {
   const [isEmailSuccess, setIsEmailSuccess] = useState(false);
 
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
+  const { createToast } = useCreateToast();
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -86,7 +88,7 @@ const SignUp = () => {
     setPassword(passwordCurrent);
     if (!passwordRegex.test(passwordCurrent)) {
       setPasswordMessage(
-        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용'
+        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
       );
       setIsPassword(false);
     } else {
@@ -99,14 +101,12 @@ const SignUp = () => {
     setPasswordCheck(e.target.value);
     if (e.target.value === '') {
       setPasswordCheckMessage('비밀번호를 재입력해주세요');
-    } 
-    else if (password && e.target.value !== password) {
+    } else if (password && e.target.value !== password) {
       setMismatchError(true);
       setPasswordCheckMessage(
         '비밀번호가 일치하지 않습니다. 다시 확인해주세요.',
       );
-    } 
-    else {
+    } else {
       setMismatchError(false);
       setPasswordCheckMessage('비밀번호가 일치합니다.');
     }
@@ -134,7 +134,7 @@ const SignUp = () => {
       onRegisterUserInfo();
       navigate('/sign-up/success');
     } else {
-      alert('입력값을 확인해주세요.');
+      createToast('입력값을 확인해주세요.');
     }
   };
 
@@ -156,6 +156,16 @@ const SignUp = () => {
       console.log(err);
     }
   };
+
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+    }
+  };
+
+  const handleOnClick = () => {
+    onApply();
+  }
 
   return (
     <SignupPageStyles.Wrapper>
@@ -246,6 +256,7 @@ const SignUp = () => {
                 tel={phonenumber}
                 setTel={setPhonenumber}
                 setCheck={setIsCertify}
+                type={true}
               />
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
@@ -296,6 +307,7 @@ const SignUp = () => {
                 name="passwordCheck"
                 value={passwordCheck}
                 onChange={onChangePasswordCheck}
+                onKeyDown={handleOnKeyDown}
               ></SignupPageStyles.InputBox>
               {(passwordCheck || passwordCheck === '') &&
                 (mismatchError ? (
@@ -321,7 +333,10 @@ const SignUp = () => {
           isPassword &&
           passwordCheck &&
           !mismatchError ? (
-            <SignupPageStyles.SucButton type="submit" onClick={onApply}>
+            <SignupPageStyles.SucButton 
+            type="submit" 
+            onClick={onApply}
+            >
               가입하기
             </SignupPageStyles.SucButton>
           ) : (
