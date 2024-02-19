@@ -54,9 +54,7 @@ const Card: React.FC<ICardProps> = ({
       </div>
 
       <CardStyles.Content
-        to={`/summary/${video.video_id}${
-          mode === 'recommend' && '?insight=true'
-        }`}
+        to={`/summary/${video.video_id}?insight=${mode === 'recommend'}`}
       >
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
