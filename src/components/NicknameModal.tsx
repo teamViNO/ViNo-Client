@@ -14,6 +14,8 @@ const NicknameModal = () => {
   const { createToast } = useCreateToast();
 
   const setUserInfo = useSetRecoilState(userInfoState);
+  const NickNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
+  const testNickNameRegex = NickNameRegex.test(name);
 
   const refreshMyInfo = async () => {
     try {
@@ -93,6 +95,11 @@ const NicknameModal = () => {
             /7(공백포함)
           </InputNickNameMessage>
         </TextDiv>
+        {!testNickNameRegex && (
+          <WarningMessage>
+            *아쉽지만,이모티콘은 사용할 수 없어요
+          </WarningMessage>
+        )}
         {name ? (
           <SucButton type="submit" onClick={onApply} style={{ marginTop: 12 }}>
             등록하기
@@ -198,4 +205,11 @@ const TextDiv = styled.div`
   flex-direction: row;
   border-radius: 12px;
   margin-top: 48px;
+`;
+
+export const WarningMessage = styled.span`
+  align-self: flex-start;
+  margin: 0px 0px 12px 16px;
+  color: ${theme.color.red};
+  ${theme.typography.Body3}
 `;
