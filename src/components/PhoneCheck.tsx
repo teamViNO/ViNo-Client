@@ -15,7 +15,6 @@ const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel, type}) =
     const [token, setToken] = useState('');
 
     const [time, setTime] = useState(5 * 60); // 초 단위
-
     const [isCheck, SetIsCheck] = useState(false);
     const [isSend, setIsSend] = useState(false);
     const [isCertify, setIsCertify] = useState(false);    
