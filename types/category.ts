@@ -20,3 +20,14 @@ export interface ITagProps {
   tag_id: number;
   name: string;
 }
+
+export interface IEditProps {
+  activated: boolean;
+  categoryId: number;
+}
+
+export interface IAddCategoryModalProps {
+  location: string;
+  isOpen: boolean;
+  categoryId: number;
+}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import * as SubCategoryStyles from '@/styles/layout/sideBar/SubCategory.style';
 import Option from './Option';
 import handleDrag from '@/utils/handleDrag';
-import { ISubFolderProps } from 'types/category';
+import { IEditProps, ISubFolderProps } from 'types/category';
 import EditCategoryName from '@/components/category/EditCategoryName';
 import useCreateToast from '@/hooks/useCreateToast';
 
@@ -13,10 +13,8 @@ interface ISubCategoryProps {
   subId: number;
   subFolder: ISubFolderProps;
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
-  isEditing: { activated: boolean; categoryId: number };
-  setIsEditing: React.Dispatch<
-    React.SetStateAction<{ activated: boolean; categoryId: number }>
-  >;
+  isEditing: IEditProps;
+  setIsEditing: React.Dispatch<React.SetStateAction<IEditProps>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   putCategoryFolder: () => void;
   setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
