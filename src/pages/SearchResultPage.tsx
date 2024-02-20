@@ -1,9 +1,12 @@
-import { escapeHTML } from '@/utils/string';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Styled from '@/styles/SearchResult';
+
 import TagInput from '@/components/SearchPage/SearchComponent';
 import SearchNotFound from '@/components/SearchPage/SearchNotFound';
+import LoadingSpinner from '@/components/loadingSpinner/loadingSpinner';
+import { escapeHTML } from '@/utils/string';
+
 import SearchIcon from '@/assets/icons/search.svg?react';
 import { IVideo } from '@/models/search';
 import { searchAPI } from '@/apis/search';
@@ -15,13 +18,13 @@ const SearchResult = () => {
   const [input, setInput] = useState('');
   const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
   const [loading, setLoading] = useState(false);
+  const [isCroll, setIsCroll] = useState(false);
   const [errormsg, setErrormsg] = useState('');
   const [data, setData] = useState<IVideo[]>([]);
   const location = useLocation();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-
     setLoading(true);
 
     switch (searchParams.get('type')) {
@@ -32,9 +35,6 @@ const SearchResult = () => {
 
         setInput(inputValues);
         handleSearchAPI(inputValues, keywordtype, ' ');
-        if (data.length === 0) {
-          setErrormsg(inputValues);
-        }
         break;
       case 'hashtag':
         const tagValues = searchParams.get('value') as string;
@@ -43,9 +43,6 @@ const SearchResult = () => {
         setTags(tagValues.replace(/\s+/g, '').split('&'));
         setSearchType(false);
         handleSearchAPI(tagValues, tagtype, '&');
-        if (data.length === 0) {
-          setErrormsg(tagValues.replace(/&/g, ' '));
-        }
         break;
 
       default:
@@ -59,6 +56,7 @@ const SearchResult = () => {
     splittype: string,
   ) => {
     try {
+      setIsCroll(true);
       const keywords = inputValues.split(splittype);
       const requests = keywords.map((value) => {
         if (type === 'hashtag') {
@@ -68,14 +66,25 @@ const SearchResult = () => {
         return searchData.then((value) => value.data.result);
       });
       const responses = await Promise.all(requests);
+      let responseArr = [] as IVideo[];
       responses.forEach((response) => {
         const ivideos = response.videos as IVideo[];
-        dataDuplicateHandler(ivideos, inputValues);
+        ivideos.forEach((val) => {
+          responseArr.push(val);
+        })
       });
+      if(responseArr.length === 0){
+        setData([]);
+        if(type === 'hashtag')
+          setErrormsg(inputValues.replace(/\&/g, ' '));
+        else {
+          setErrormsg(inputValues);
+        }
+      } else {
+        dataDuplicateHandler(responseArr, inputValues);
+      }
     } catch (error) {
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const formatContent = (content: string, keyword: string) => {
@@ -100,7 +109,6 @@ const SearchResult = () => {
       (v, index, arr) =>
         arr.findIndex((t) => t.video_id === v.video_id) === index,
     );
-
     const mappingData = uniqueData.map((video) => {
       return {
         ...video,
@@ -109,12 +117,12 @@ const SearchResult = () => {
         content: formatContent(video.content, check),
       };
     });
-    setData([...data, ...mappingData]);
+    setData([...mappingData]);
   };
 
   if (loading) {
     return (
-      <div style={{ width: '100%', height: '100vh' }}>스켈레톤 페이지</div>
+      <LoadingSpinner isCroll={isCroll} setLoading={setLoading} time={2000}/>
     );
   }
   return (
