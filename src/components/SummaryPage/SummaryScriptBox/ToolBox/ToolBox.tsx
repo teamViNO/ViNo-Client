@@ -139,7 +139,14 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
           <>
             <Indicator />
 
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div
+              style={{
+                position: 'absolute',
+                right: 100,
+                display: 'flex',
+                gap: 8,
+              }}
+            >
               <SearchKeyword onChange={onChangeKeyword} />
 
               <ChangeKeyword onChange={onChangeKeyword} />

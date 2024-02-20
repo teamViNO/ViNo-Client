@@ -33,7 +33,7 @@ const SearchKeyword = ({ onChange }: Props) => {
     box: {
       padding: isOpen ? '8px 52px 8px 16px' : '8px 0',
       right: isOpen ? -92 : 0,
-      width: isOpen ? 360 : 38,
+      width: isOpen ? 400 : 38,
     },
     button: {
       transform: isOpen ? 'rotateZ(360deg)' : 'rotateZ(0deg)',

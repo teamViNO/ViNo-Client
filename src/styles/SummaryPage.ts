@@ -254,7 +254,7 @@ export const ScriptBox = styled.div`
   box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
 
   & div.tools {
-    z-index: 1;
+    position: relative;
     padding: 20px 100px 20px 60px;
     display: flex;
     align-items: center;
@@ -293,8 +293,10 @@ export const ScriptBox = styled.div`
 
   & div.indicator {
     display: flex;
+    align-items: center;
     flex: 1 1 auto;
     gap: 20px;
+    height: 40px;
   }
 
   & div.indicator-item {

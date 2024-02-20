@@ -113,10 +113,9 @@ const SummaryPage = () => {
 
     return () => {
       setSummaryVideo(null);
-      // setModelingData(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [videoId, search]);
 
   return (
     <Container style={{ height: 'calc(100vh - 74px)' }}>
