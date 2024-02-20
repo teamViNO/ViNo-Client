@@ -308,6 +308,10 @@ export const ScriptBox = styled.div`
     &.active {
       background-color: ${(props) => props.theme.color.gray500};
     }
+
+    &:nth-of-type(n + 11) {
+      display: none;
+    }
   }
 
   & span.icon-button {
@@ -658,4 +662,56 @@ export const DropdownTopCategoryName = styled.span`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+export const ModalBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 40px 50px;
+  width: 700px;
+  border-radius: 20px;
+  background-color: ${(props) => props.theme.color.white};
+  box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.1);
+
+  & > .close-button {
+    align-self: flex-end;
+    cursor: pointer;
+  }
+
+  & > .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    & > img {
+      width: 56px;
+      height: auto;
+    }
+
+    & > h1 {
+      color: ${(props) => props.theme.color.gray500};
+      ${(props) => props.theme.typography.Header6};
+    }
+
+    & > span {
+      color: ${(props) => props.theme.color.gray300};
+      text-align: center;
+      ${(props) => props.theme.typography.Body1};
+    }
+  }
+
+  & > a {
+    margin-top: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 58px;
+    border-radius: 12px;
+    background-color: ${(props) => props.theme.color.gray500};
+    color: ${(props) => props.theme.color.white};
+    text-decoration: none;
+    ${(props) => props.theme.typography.Body1};
+  }
 `;

@@ -4,6 +4,8 @@ import { useRecoilValue } from 'recoil';
 import DownIcon from '@/assets/icons/down.svg?react';
 import OpenFileIcon from '@/assets/icons/open-file.svg?react';
 
+import GuestLoginModal from '@/components/modals/GuestLoginModal';
+
 import useOutsideClick from '@/hooks/useOutsideClick';
 
 import { categoryState } from '@/stores/category';
@@ -28,6 +30,7 @@ const CategorySelectBox = ({
   const categories = useRecoilValue(categoryState);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(selectedCategoryId);
 
   const selectedCategory =
@@ -50,9 +53,13 @@ const CategorySelectBox = ({
   });
 
   const handleBoxClick = () => {
-    if (!userToken || disabled) return;
+    if (disabled) return;
 
-    setIsOpen(!isOpen);
+    if (userToken) {
+      setIsOpen(!isOpen);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const handleSelect = (categoryId: number) => {
@@ -68,45 +75,55 @@ const CategorySelectBox = ({
   };
 
   return (
-    <div ref={ref} style={{ display: 'flex', gap: 8 }}>
-      <div
-        style={{
-          position: 'relative',
-          flex: '1 1 auto',
-        }}
-        onClick={handleBoxClick}
-      >
+    <>
+      <div ref={ref} style={{ display: 'flex', gap: 8 }}>
         <div
-          className="select-box"
-          style={{ cursor: disabled ? 'default' : 'pointer' }}
+          style={{
+            position: 'relative',
+            flex: '1 1 auto',
+          }}
+          onClick={handleBoxClick}
         >
-          <span>
-            {userToken
-              ? selectedCategory
-                ? selectedCategory.name
-                : size === 'SMALL'
-                  ? '카테고리 선택'
-                  : '어떤 카테고리에 넣을까요?'
-              : '로그인하고 요약한 영상을 아카이빙해요!'}
-          </span>
+          <div
+            className="select-box"
+            style={{ cursor: disabled ? 'default' : 'pointer' }}
+          >
+            <span>
+              {userToken
+                ? selectedCategory
+                  ? selectedCategory.name
+                  : size === 'SMALL'
+                    ? '카테고리 선택'
+                    : '어떤 카테고리에 넣을까요?'
+                : '로그인하고 요약한 영상을 아카이빙해요!'}
+            </span>
 
-          <DownIcon width={18} height={18} />
+            <DownIcon width={18} height={18} />
+          </div>
+
+          {isOpen && (
+            <CategoryDropdown selectedId={selectedId} onSelect={handleSelect} />
+          )}
         </div>
 
-        {isOpen && (
-          <CategoryDropdown selectedId={selectedId} onSelect={handleSelect} />
-        )}
+        <span
+          className={`icon-button ${(!userToken || disabled) && 'disabled'} ${
+            selectedCategoryId !== selectedId ? 'changed' : ''
+          }`}
+          onClick={handleClick}
+        >
+          <OpenFileIcon width={28} height={28} />
+        </span>
       </div>
 
-      <span
-        className={`icon-button ${(!userToken || disabled) && 'disabled'} ${
-          selectedCategoryId !== selectedId ? 'changed' : ''
-        }`}
-        onClick={handleClick}
-      >
-        <OpenFileIcon width={28} height={28} />
-      </span>
-    </div>
+      {isModalOpen && (
+        <GuestLoginModal
+          title="수정사항 저장 안내"
+          description={<>로그인하고 요약한 영상을 아카이빙해요!</>}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

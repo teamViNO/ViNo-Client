@@ -7,7 +7,7 @@ export const Container = styled.header<{ color: ColorKeyType }>`
   position: sticky;
   left: 0;
   top: 0;
-  z-index: 3;
+  z-index: 1;
   padding: 16px 60px;
   display: flex;
   justify-content: space-between;
