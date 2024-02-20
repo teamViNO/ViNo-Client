@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import {
@@ -8,11 +9,14 @@ import {
 
 import PlusIcon from '@/assets/icons/plus.svg?react';
 
+import GuestLoginModal from '@/components/modals/GuestLoginModal';
+
 import useIndex from '@/hooks/useIndex';
 
 import { IVideoSummary } from '@/models/video';
 
 import { summaryIsEditingViewState, summaryVideoState } from '@/stores/summary';
+import { userTokenState } from '@/stores/user';
 
 import NoteItem from './NoteItem';
 
@@ -21,15 +25,19 @@ type Props = {
 };
 
 const NoteBox = ({ onRefresh }: Props) => {
+  const userToken = useRecoilValue(userTokenState);
   const summaryVideo = useRecoilValue(summaryVideoState);
   const isEditingView = useRecoilValue(summaryIsEditingViewState);
   const [editableIndex, setEditableIndex, setDisableIndex] = useIndex();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleActiveEditable = (index: number) => {
-    if (index > (summaryVideo?.summary || []).length - 1) {
-      setEditableIndex(-1);
-    } else {
-      setEditableIndex(index);
+    if (userToken) {
+      if (index > (summaryVideo?.summary || []).length - 1) {
+        setEditableIndex(-1);
+      } else {
+        setEditableIndex(index);
+      }
     }
   };
 
@@ -74,57 +82,63 @@ const NoteBox = ({ onRefresh }: Props) => {
     }
   };
 
+  const handleClickCreateButton: React.MouseEventHandler<HTMLButtonElement> = (
+    e,
+  ) => {
+    if (userToken) {
+      e.stopPropagation();
+      setEditableIndex(-1);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
-    <div style={{ position: 'relative', marginTop: 40 }}>
-      <div className="note-box">
-        {summaryVideo?.summary.map((summary, index) => (
-          <NoteItem
-            key={summary.id}
-            summary={summary}
-            isEditable={editableIndex === index}
-            onDisableEditable={setDisableIndex}
-            onActiveEditable={() => handleActiveEditable(index)}
-            onEdit={(content) => {
-              handleUpdateNote({ id: summary.id, content });
-              setDisableIndex();
-            }}
-            onEditAndNext={(content) => {
-              handleUpdateNote({ id: summary.id, content });
-              handleActiveEditable(index + 1);
-            }}
-            onRemove={() => handleRemoveNote(summary.id)}
-          />
-        ))}
+    <>
+      <div style={{ position: 'relative', marginTop: 40 }}>
+        <div className="note-box">
+          {summaryVideo?.summary.map((summary, index) => (
+            <NoteItem
+              key={summary.id}
+              summary={summary}
+              isEditable={editableIndex === index}
+              onDisableEditable={setDisableIndex}
+              onActiveEditable={() => handleActiveEditable(index)}
+              onEdit={(content) => {
+                handleUpdateNote({ id: summary.id, content });
+                setDisableIndex();
+              }}
+              onEditAndNext={(content) => {
+                handleUpdateNote({ id: summary.id, content });
+                handleActiveEditable(index + 1);
+              }}
+              onRemove={() => handleRemoveNote(summary.id)}
+            />
+          ))}
 
-        {/* 추가 */}
-        {editableIndex === -1 && (
-          <NoteItem
-            summary={{ id: -1, content: '' }}
-            isEditable={editableIndex === -1}
-            onDisableEditable={setDisableIndex}
-            onEdit={(content) => {
-              handleCreateNote(content);
-              setDisableIndex();
-            }}
-            onEditAndNext={handleCreateNote}
-          />
-        )}
+          {/* 추가 */}
+          {editableIndex === -1 && (
+            <NoteItem
+              summary={{ id: -1, content: '' }}
+              isEditable={editableIndex === -1}
+              onDisableEditable={setDisableIndex}
+              onEdit={(content) => {
+                handleCreateNote(content);
+                setDisableIndex();
+              }}
+              onEditAndNext={handleCreateNote}
+            />
+          )}
 
-        {/* 추가 버튼 */}
-        {editableIndex === null && !isEditingView && (
-          <button
-            className="create-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setEditableIndex(-1);
-            }}
-          >
-            <PlusIcon width={28} height={28} />
-          </button>
-        )}
-      </div>
+          {/* 추가 버튼 */}
+          {editableIndex === null && !isEditingView && (
+            <button className="create-button" onClick={handleClickCreateButton}>
+              <PlusIcon width={28} height={28} />
+            </button>
+          )}
+        </div>
 
-      {/* <div className="note-box-tooltip">
+        {/* <div className="note-box-tooltip">
         <Tooltip direction="left">
           더블 클릭을 통해 잘못된 내용을 수정해봐요!
         </Tooltip>
@@ -133,7 +147,22 @@ const NoteBox = ({ onRefresh }: Props) => {
           직접 기록하고 싶은 내용들을 추가할 수 있어요!
         </Tooltip>
       </div> */}
-    </div>
+      </div>
+
+      {isModalOpen && (
+        <GuestLoginModal
+          title="수정사항 저장 안내"
+          description={
+            <>
+              로그인하지 않으면 수정한 부분을 나중에 다시 확인할 수 없어요!
+              <br />
+              로그인하고 수정내용을 저장해요
+            </>
+          }
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
