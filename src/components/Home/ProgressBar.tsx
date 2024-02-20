@@ -67,7 +67,7 @@ const ProgressBar = () => {
 
         {['CONTINUE', 'STOP', 'ERROR'].includes(status) && (
           <div className="converting-text">
-            <button
+            {/* <button
               className="converting-btn"
               style={{
                 backgroundColor:
@@ -77,7 +77,7 @@ const ProgressBar = () => {
               }}
             >
               {status === 'CONTINUE' ? '변환중지' : '다시 시작'}
-            </button>
+            </button> */}
 
             <div className="converting-percentage">{modelingProgress}%</div>
           </div>
