@@ -17,7 +17,6 @@ import {
   modelingStatusState,
 } from '@/stores/model-controller';
 import theme from '@/styles/theme';
-import useCreateVideo from '@/hooks/useCreateVideo';
 import { confirmSelectAlarmAPI } from '@/apis/user';
 
 type Props = {
@@ -38,7 +37,6 @@ const AlarmItem = ({
   const navigate = useNavigate();
   const status = useRecoilValue(modelingStatusState);
   const progress = useRecoilValue(modelingProgressState);
-  const { createVideo } = useCreateVideo();
   const isSelected = selectIdList.indexOf(alarm.alarm_id) > -1;
 
   const type = () => {
@@ -76,12 +74,11 @@ const AlarmItem = ({
       navigate('/guide');
       onClose();
     }
-    if (alarm.type === 'video' && !alarm.is_confirm) {
+    if (alarm.type === 'video' && !alarm.is_confirm && alarm.alarm_id !== 999) {
       try {
         await confirmSelectAlarmAPI({ alarms: [alarm.alarm_id] });
-
         onRefresh();
-        createVideo();
+        navigate(`/summary/${alarm.video_id}`);
         onClose();
       } catch (e) {
         console.error(e);

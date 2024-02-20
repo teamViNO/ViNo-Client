@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-
-import { getAlarmAPI } from '@/apis/user';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import NotifyOffIcon from '@/assets/icons/notify-off.svg?react';
 import NotifyOnIcon from '@/assets/icons/notify-on.svg?react';
 
 import useOutsideClick from '@/hooks/useOutsideClick';
 
-import { IAlarm } from '@/models/alarm';
-
 import { modelingStatusState } from '@/stores/model-controller';
 
 import * as HeaderStyle from '@/styles/layout/header';
 
 import AlarmList from './AlarmList';
+import { userAlarmState } from '@/stores/user';
+import useGetAlarm from '@/hooks/useGetAlarm';
 
 type Props = {
   isDark: boolean;
@@ -23,25 +21,21 @@ type Props = {
 const Alarm = ({ isDark }: Props) => {
   const status = useRecoilValue(modelingStatusState);
   const [isOpen, setIsOpen] = useState(false);
-  const [alarmList, setAlarmList] = useState<IAlarm[]>([]);
+  const [alarmList, setAlarmList] = useRecoilState(userAlarmState);
+  const { getAlarm } = useGetAlarm();
 
   const [alarmRef] = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
 
   const hasNotReadAlarm = alarmList.find((item) => !item.is_confirm);
 
-  const callAPI = async () => {
-    const { alarms } = (await getAlarmAPI()).data.result;
-
-    setAlarmList(alarms);
-  };
-
   useEffect(() => {
-    callAPI();
+    getAlarm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (status === 'ERROR' || status === 'COMPLETE') {
-      callAPI();
+      getAlarm();
     }
 
     if (status === 'CONTINUE') {
@@ -78,7 +72,7 @@ const Alarm = ({ isDark }: Props) => {
       {isOpen && (
         <AlarmList
           alarmList={alarmList}
-          onRefresh={callAPI}
+          onRefresh={getAlarm}
           onClose={() => setIsOpen(false)}
         />
       )}
