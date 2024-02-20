@@ -7,7 +7,12 @@ import useOutsideClick from '@/hooks/useOutsideClick';
 import SubCategory from './SubCategory';
 import Option from './Option';
 import handleDrag from '@/utils/handleDrag';
-import { IFolderProps, ISubFolderProps } from 'types/category';
+import {
+  IAddCategoryModalProps,
+  IEditProps,
+  IFolderProps,
+  ISubFolderProps,
+} from 'types/category';
 import EditCategoryName from '@/components/category/EditCategoryName';
 
 interface ITopCategoryProps {
@@ -17,11 +22,11 @@ interface ITopCategoryProps {
   grabedCategory: React.MutableRefObject<ISubFolderProps | undefined>;
   dropedCategory: React.MutableRefObject<number | undefined>;
   category: IFolderProps;
-  isEditing: { activated: boolean; categoryId: number };
-  setIsEditing: React.Dispatch<
-    React.SetStateAction<{ activated: boolean; categoryId: number }>
+  isEditing: IEditProps;
+  setIsEditing: React.Dispatch<React.SetStateAction<IEditProps>>;
+  setIsAddCategoryModalOpen: React.Dispatch<
+    React.SetStateAction<IAddCategoryModalProps>
   >;
-  setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
   putCategoryFolder: () => void;
@@ -36,7 +41,7 @@ const TopCategory = ({
   category,
   isEditing,
   setIsEditing,
-  setIsSubCategoryModalOpen,
+  setIsAddCategoryModalOpen,
   setIsDeleteModalOpen,
   putCategoryFolder,
   setCategoryId,
@@ -53,7 +58,12 @@ const TopCategory = ({
   const handleOptionClick = (e: React.MouseEvent, option: string) => {
     e.stopPropagation();
     if (option === '추가') {
-      setIsSubCategoryModalOpen(true);
+      console.log(category.categoryId);
+      setIsAddCategoryModalOpen({
+        location: 'sub',
+        isOpen: true,
+        categoryId: category.categoryId,
+      });
     } else if (option === '수정') {
       setIsEditing({ activated: true, categoryId: category.categoryId });
       setBeforeEdit(edit);
@@ -101,7 +111,6 @@ const TopCategory = ({
   return (
     <>
       <TopCategoryStyles.Container
-        className={`${topId}`}
         onDragStart={handleDragStart}
         onDragEnter={handleDragEnter}
         onDragEnd={putCategoryFolder}

@@ -1,8 +1,8 @@
 import LookSvg from '@/assets/icons/look.svg?react';
 import * as UserModeStyle from '@/styles/layout/sideBar/UserMode.style';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { topCategoryModalState } from '@/stores/modal';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { addCategoryModalState } from '@/stores/modal';
 import AddCategoryModal from '@/components/modals/AddCategoryModal';
 import SuccessAddCategoryModal from '@/components/modals/SuccessAddCategoryModal';
 import { useRef, useState } from 'react';
@@ -16,7 +16,9 @@ import useUpdateCategories from '@/hooks/useUpdateCategories';
 import useCreateToast from '@/hooks/useCreateToast';
 
 const UserMode = () => {
-  const isTopCategoryModalOpen = useRecoilValue(topCategoryModalState);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useRecoilState(
+    addCategoryModalState,
+  );
   const [isSuccessAddCategoryModalOpen, setIsSuccessAddCategoryModalOpen] =
     useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -24,7 +26,6 @@ const UserMode = () => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [to, setTo] = useState('');
   const categories = useRecoilValue(categoryState);
-  const [isSubCategoryModalOpen, setIsSubCategoryModalOpen] = useState(false);
   const grabedCategory = useRef<ISubFolderProps | undefined>(undefined);
   const dropedCategory = useRef<number | undefined>(undefined);
   const { createToast } = useCreateToast();
@@ -96,7 +97,7 @@ const UserMode = () => {
             category={category}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
+            setIsAddCategoryModalOpen={setIsAddCategoryModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             putCategoryFolder={putCategoryFolder}
             setCategoryId={setCategoryId}
@@ -104,14 +105,11 @@ const UserMode = () => {
           />
         ))}
       </>
-      {(isTopCategoryModalOpen || isSubCategoryModalOpen) && (
+      {isAddCategoryModalOpen.isOpen && (
         <AddCategoryModal
-          isTopCategoryModalOpen={isTopCategoryModalOpen}
-          setIsSubCategoryModalOpen={setIsSubCategoryModalOpen}
           categoryName={categoryName}
           setCategoryName={setCategoryName}
           setIsSuccessAddCategoryModalOpen={setIsSuccessAddCategoryModalOpen}
-          topCategoryId={topId}
           setTo={setTo}
         />
       )}
