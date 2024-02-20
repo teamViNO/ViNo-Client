@@ -75,6 +75,7 @@ const AlarmList = ({ alarmList, onRefresh, onClose }: Props) => {
                 selectIdList={selectIdList}
                 onUpdateSelectIdList={setSelectIdList}
                 onClose={onClose}
+                onRefresh={onRefresh}
               />
             ))}
           </div>
