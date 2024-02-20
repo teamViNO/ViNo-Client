@@ -6,7 +6,6 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 60px 20px 0px 60px;
   box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.05);
-  z-index: 2;
   background-color: ${theme.color.white};
   min-height: 964px;
 `;

@@ -43,7 +43,7 @@ const useCreateVideo = () => {
         setIsOpenErrorModal(true);
       }
     } else {
-      navigate('/summary/guest');
+      navigate(`/summary/guest?id=${Date.now()}`);
     }
 
     setVideoLink(null);

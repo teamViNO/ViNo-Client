@@ -5,6 +5,8 @@ import { getVideoAPI, updateVideoAPI } from '@/apis/videos';
 
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 
+import GuestLoginModal from '@/components/modals/GuestLoginModal';
+
 import useCreateToast from '@/hooks/useCreateToast';
 
 import { IVideo } from '@/models/video';
@@ -15,6 +17,7 @@ import {
   summaryUpdateVideoState,
   summaryVideoState,
 } from '@/stores/summary';
+import { userTokenState } from '@/stores/user';
 
 import Indicator from './Indicator';
 import { SearchKeyword } from './SearchKeyword';
@@ -26,6 +29,7 @@ type Props = {
 };
 
 const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
+  const userToken = useRecoilValue(userTokenState);
   const summaryVideo = useRecoilValue(summaryVideoState) as IVideo;
   const setPlaySubHeadingId = useSetRecoilState(summaryPlaySubHeadingIdState);
   const [summaryUpdateVideo, setSummaryUpdateVideo] = useRecoilState(
@@ -36,13 +40,18 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   );
 
   const [originalSummary, setOriginalSummary] = useState<IVideo | null>(null);
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   const { createToast } = useCreateToast();
 
   const handleClickModifyIcon = () => {
-    setPlaySubHeadingId(-1);
-    setIsEditingView(true);
-    setSummaryUpdateVideo({ ...summaryVideo });
+    if (userToken) {
+      setPlaySubHeadingId(-1);
+      setIsEditingView(true);
+      setSummaryUpdateVideo({ ...summaryVideo });
+    } else {
+      setIsGuestModalOpen(true);
+    }
   };
 
   const handleClickPrevButton = () => {
@@ -105,42 +114,65 @@ const ToolBox = ({ onRefresh, onChangeKeyword }: Props) => {
   }, []);
 
   return (
-    <div className="tools">
-      {isEditingView ? (
-        <>
-          <div />
+    <>
+      <div className="tools">
+        {isEditingView ? (
+          <>
+            <div />
 
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              className="edit-button prev"
-              onClick={handleClickPrevButton}
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                className="edit-button prev"
+                onClick={handleClickPrevButton}
+              >
+                초기 버전
+              </button>
+              <button
+                className="edit-button save"
+                onClick={handleClickSaveButton}
+              >
+                수정하기
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <Indicator />
+
+            <div
+              style={{
+                position: 'absolute',
+                right: 100,
+                display: 'flex',
+                gap: 8,
+              }}
             >
-              이전 버전
-            </button>
-            <button
-              className="edit-button save"
-              onClick={handleClickSaveButton}
-            >
-              수정하기
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <Indicator />
+              <SearchKeyword onChange={onChangeKeyword} />
 
-          <div style={{ display: 'flex', gap: 8 }}>
-            <SearchKeyword onChange={onChangeKeyword} />
+              <ChangeKeyword onChange={onChangeKeyword} />
 
-            <ChangeKeyword onChange={onChangeKeyword} />
+              <span className="icon-button" onClick={handleClickModifyIcon}>
+                <ModifyIcon width={18} height={18} />
+              </span>
+            </div>
+          </>
+        )}
+      </div>
 
-            <span className="icon-button" onClick={handleClickModifyIcon}>
-              <ModifyIcon width={18} height={18} />
-            </span>
-          </div>
-        </>
+      {isGuestModalOpen && (
+        <GuestLoginModal
+          title="수정사항 저장 안내"
+          description={
+            <>
+              로그인하지 않으면 수정한 부분을 나중에 다시 확인할 수 없어요!
+              <br />
+              로그인하고 수정내용을 저장해요
+            </>
+          }
+          onClose={() => setIsGuestModalOpen(false)}
+        />
       )}
-    </div>
+    </>
   );
 };
 

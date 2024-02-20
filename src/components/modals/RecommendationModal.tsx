@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 
-import { getAllDummyVideosAPI, getUnReadDummyVideosAPI } from '@/apis/videos';
+import { getAllDummyVideosAPI } from '@/apis/videos';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 import TransformationIcon from '@/assets/icons/transformation.svg?react';
@@ -27,16 +27,9 @@ const RecommendationModal = () => {
 
   useEffect(() => {
     const callAPI = async () => {
-      let videos: IVideo[] = [];
-
       try {
+        const videos = (await getAllDummyVideosAPI()).data.result.videos;
         const random = Math.round(Math.random() * (videos.length - 1));
-
-        if (userToken) {
-          videos = (await getUnReadDummyVideosAPI()).data.result.videos;
-        } else {
-          videos = (await getAllDummyVideosAPI()).data.result.videos;
-        }
 
         setDummyVideo(videos[random]);
       } catch (e) {
@@ -83,14 +76,14 @@ const RecommendationModal = () => {
 
             <Link
               className="insight-card"
-              to={`/summary/${dummyVideo.video_id}`}
+              to={`/summary/${dummyVideo.video_id}?insight=true`}
             >
               <img src={dummyVideo.image} alt="thumbnail" />
 
               <div className="insight-content">
                 <h1>{dummyVideo.title}</h1>
 
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {dummyVideo.tag.slice(0, 3).map((item) => (
                     <div key={item.name} className="insight-tag">
                       # {item.name}

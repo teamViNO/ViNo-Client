@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
   getRecentVideos,
   getAllDummyVideos,
   createDummyVideoToMine,
+  createVideoAPI,
 } from '@/apis/videos';
 
 import SearchYoutube from '@/components/Home/SearchYoutube';
@@ -13,28 +14,26 @@ import RecentVideos from '@/components/Home/RecentVideos';
 import InsightVideos from '@/components/Home/InsightVideos';
 import RecommendationModal from '@/components/modals/RecommendationModal';
 
+import useCreateToast from '@/hooks/useCreateToast';
+
 import { HomePageContainer } from '@/styles/HomepageStyle';
 
 import { userTokenState } from '@/stores/user';
 import { recommendationModalState } from '@/stores/modal';
 import { isSideBarOpenState } from '@/stores/ui';
-import useCreateToast from '@/hooks/useCreateToast';
-
-export interface Video {
-  id: string;
-  title: string;
-  subtitle: string;
-  hashtags: string[];
-  thumbnailUrl: string;
-}
+import { modelingDataState } from '@/stores/model-controller';
 
 const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
-  const setIsSideBarOpen = useSetRecoilState(isSideBarOpenState);
   const isOpenModal = useRecoilValue(recommendationModalState);
+  const setIsSideBarOpen = useSetRecoilState(isSideBarOpenState);
+  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
+
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
+
   const { createToast } = useCreateToast();
+
   const searchRef = useRef(null);
 
   const onFileClick = async (
@@ -68,6 +67,27 @@ const HomePage: React.FC = () => {
 
     setIsSideBarOpen(false);
   }, [setIsSideBarOpen, userToken]);
+
+  useEffect(() => {
+    const createVideo = async () => {
+      if (!modelingData) return;
+
+      try {
+        await createVideoAPI(modelingData);
+      } catch (e) {
+        console.error(e);
+      }
+
+      setModelingData(null);
+    };
+
+    if (userToken) {
+      createVideo();
+    } else {
+      setModelingData(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userToken]);
 
   return (
     <>
