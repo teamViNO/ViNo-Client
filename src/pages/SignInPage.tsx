@@ -102,10 +102,14 @@ const SignInPage: React.FC = () => {
     window.location.href = kakaoURL;
   };
 
+  const tohome = () => {
+    navigate('/');
+  };
+
   return (
     <SignInPageStyles.PageComponent>
       <SignInPageStyles.LoginTotalComponent>
-        <LogoIcon />
+        <LogoIcon onClick={tohome} />
         <SignInPageStyles.TextDiv>로그인</SignInPageStyles.TextDiv>
         <SignInPageStyles.TextDiv
           style={{
