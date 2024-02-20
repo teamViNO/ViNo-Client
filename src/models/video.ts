@@ -53,3 +53,7 @@ export interface UpdateVideoRequest {
 export interface UpdateVideoCategoryRequest {
   video_id: (string | number)[];
 }
+
+export interface CreateVideoResponse {
+  video_id: number;
+}

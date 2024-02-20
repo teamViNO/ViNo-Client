@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import * as SignInPageStyles from '@/styles/signin/SigninpageStyle';
 
 import { loginAPI } from '@/apis/user';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
-import smallLogo from '@/assets/logo-dark.png';
+import LogoIcon from '@/assets/icons/dark-logo.svg?react';
 import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
@@ -69,11 +70,11 @@ const SignInPage: React.FC = () => {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as APIBaseResponse;
+        const { code } = error.response?.data as APIBaseResponse;
 
-        if (message.indexOf('비밀번호') > -1) {
+        if (code === 'WRONG_PASSWORD') {
           setIsOpenErrorModal(true);
-        } else if (message.indexOf('이메일') > -1) {
+        } else if (code === 'NOT_FOUND_EMAIL') {
           setIsOpenSignUpModal(true);
         }
       }
@@ -88,7 +89,7 @@ const SignInPage: React.FC = () => {
 
   const handleOnClick = () => {
     handleClickLoginButton();
-  }
+  };
 
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
@@ -102,11 +103,11 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <PageComponent>
-      <LoginTotalComponent>
-        <Image src={smallLogo} alt="logo" width={'auto'} height={20} />
-        <TextDiv>로그인</TextDiv>
-        <TextDiv
+    <SignInPageStyles.PageComponent>
+      <SignInPageStyles.LoginTotalComponent>
+        <LogoIcon />
+        <SignInPageStyles.TextDiv>로그인</SignInPageStyles.TextDiv>
+        <SignInPageStyles.TextDiv
           style={{
             textTransform: 'none',
             fontSize: '16px',
@@ -116,22 +117,27 @@ const SignInPage: React.FC = () => {
           }}
         >
           계정에 로그인하고 나만의 영상 아카이빙을 시작해요
-        </TextDiv>
+        </SignInPageStyles.TextDiv>
 
-        <NaverSection type="button">
+        <SignInPageStyles.NaverSection type="button">
           <img src={NaverLogoImage} alt="naver-logo" id="naver_id_login" />
           네이버는 지금 준비중!
-        </NaverSection>
+        </SignInPageStyles.NaverSection>
 
-        <KakaoSection type="button" onClick={handleKakaoLogin}>
+        <SignInPageStyles.KakaoSection type="button" onClick={handleKakaoLogin}>
           <img src={KakaoLogoImage} alt="kakao-logo" />
           카카오로 시작하기
-        </KakaoSection>
+        </SignInPageStyles.KakaoSection>
 
-        <LineTotalComponent>
-          <FlexBox style={{ flexDirection: 'row' }}>
-            <Image src={lineImg} alt="line" width="266px" height="1.7px" />
-            <TextDiv
+        <SignInPageStyles.LineTotalComponent>
+          <SignInPageStyles.FlexBox style={{ flexDirection: 'row' }}>
+            <SignInPageStyles.Image
+              src={lineImg}
+              alt="line"
+              width="266px"
+              height="1.7px"
+            />
+            <SignInPageStyles.TextDiv
               style={{
                 textTransform: 'none',
                 fontSize: '16px',
@@ -140,12 +146,17 @@ const SignInPage: React.FC = () => {
               }}
             >
               OR
-            </TextDiv>
-            <Image src={lineImg} alt="line" width="266px" height="1.7px" />
-          </FlexBox>
-        </LineTotalComponent>
+            </SignInPageStyles.TextDiv>
+            <SignInPageStyles.Image
+              src={lineImg}
+              alt="line"
+              width="266px"
+              height="1.7px"
+            />
+          </SignInPageStyles.FlexBox>
+        </SignInPageStyles.LineTotalComponent>
 
-        <TextDiv
+        <SignInPageStyles.TextDiv
           style={{
             margin: '40px 0px 10px',
             textTransform: 'none',
@@ -157,9 +168,9 @@ const SignInPage: React.FC = () => {
           }}
         >
           이메일 주소
-        </TextDiv>
+        </SignInPageStyles.TextDiv>
 
-        <LoginInput
+        <SignInPageStyles.LoginInput
           onChange={handleChangeEmail}
           type="text"
           placeholder="abcd@email.com"
@@ -167,7 +178,7 @@ const SignInPage: React.FC = () => {
           value={loginInfo.email}
         />
 
-        <TextDiv
+        <SignInPageStyles.TextDiv
           style={{
             margin: '20px 0px 10px',
             textTransform: 'none',
@@ -179,9 +190,9 @@ const SignInPage: React.FC = () => {
           }}
         >
           비밀번호
-        </TextDiv>
+        </SignInPageStyles.TextDiv>
 
-        <LoginInput
+        <SignInPageStyles.LoginInput
           onChange={handleChangePassword}
           type="password"
           placeholder="비밀번호를 입력해주세요."
@@ -190,16 +201,16 @@ const SignInPage: React.FC = () => {
           onKeyDown={handleOnKeyDown}
         />
 
-        <Button
+        <SignInPageStyles.Button
           disabled={!(isEmail && isPassword)}
           style={{ marginTop: 20 }}
           onClick={handleClickLoginButton}
         >
           로그인
-        </Button>
+        </SignInPageStyles.Button>
 
-        <TextTotalComponent style={{ marginTop: 40 }}>
-          <TextDiv
+        <SignInPageStyles.TextTotalComponent style={{ marginTop: 40 }}>
+          <SignInPageStyles.TextDiv
             style={{
               fontSize: '14px',
               color: '#BBB',
@@ -208,14 +219,14 @@ const SignInPage: React.FC = () => {
             }}
           >
             계정이 기억나지 않으신가요?
-          </TextDiv>
+          </SignInPageStyles.TextDiv>
 
           <StyledLink to="/find-email">이메일 찾기</StyledLink>
           <StyledLink to="/find-password">비밀번호 찾기</StyledLink>
-        </TextTotalComponent>
+        </SignInPageStyles.TextTotalComponent>
 
-        <TextTotalComponent style={{ marginTop: 14 }}>
-          <TextDiv
+        <SignInPageStyles.TextTotalComponent style={{ marginTop: 14 }}>
+          <SignInPageStyles.TextDiv
             style={{
               fontSize: '14px',
               color: '#BBB',
@@ -224,16 +235,16 @@ const SignInPage: React.FC = () => {
             }}
           >
             아직 계정이 없으신가요?
-          </TextDiv>
+          </SignInPageStyles.TextDiv>
           <StyledLink to="/sign-up">이메일로 회원가입</StyledLink>
-        </TextTotalComponent>
-      </LoginTotalComponent>
+        </SignInPageStyles.TextTotalComponent>
+      </SignInPageStyles.LoginTotalComponent>
 
       <ImageSlider />
 
       {isOpenErrorModal && (
         <BlurBackground>
-          <ModalDiv>
+          <SignInPageStyles.ModalDiv>
             <CloseIcon
               width={28}
               height={28}
@@ -256,19 +267,19 @@ const SignInPage: React.FC = () => {
               </span>
             </div>
 
-            <Button
+            <SignInPageStyles.Button
               style={{ marginTop: 48 }}
               onClick={() => setIsOpenErrorModal(false)}
             >
               다시 입력하기
-            </Button>
-          </ModalDiv>
+            </SignInPageStyles.Button>
+          </SignInPageStyles.ModalDiv>
         </BlurBackground>
       )}
 
       {isOpenSignUpModal && (
         <BlurBackground>
-          <ModalDiv style={{ height: '384px' }}>
+          <SignInPageStyles.ModalDiv style={{ height: '384px' }}>
             <CloseIcon
               width={28}
               height={28}
@@ -292,145 +303,20 @@ const SignInPage: React.FC = () => {
               </span>
             </div>
 
-            <Button
+            <SignInPageStyles.Button
               style={{ marginTop: 48 }}
               onClick={() => navigate('/sign-up')}
             >
               회원가입 하기
-            </Button>
-          </ModalDiv>
+            </SignInPageStyles.Button>
+          </SignInPageStyles.ModalDiv>
         </BlurBackground>
       )}
-    </PageComponent>
+    </SignInPageStyles.PageComponent>
   );
 };
 
 export default SignInPage;
-
-const PageComponent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 1440px;
-  width: 100%;
-  min-height: 100vh;
-  gap: 124px;
-`;
-
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const LoginTotalComponent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 494px;
-`;
-
-const Image = styled.img`
-  width: ${(props) => props.width || '68px'};
-  height: ${(props) => props.height || '39.667px'};
-`;
-
-const TextTotalComponent = styled.div`
-  display: flex;
-  margin: 0px;
-`;
-
-const TextDiv = styled.div`
-  color: ${(props) => props.color || '#1e1e1e'};
-  text-transform: capitalize;
-  font-size: 36px;
-  font-weight: bold;
-  font-style: normal;
-  line-height: 160%; /* 57.6px */
-  font-family: 'Pretendard';
-  margin: 0px;
-`;
-
-const LineTotalComponent = styled.div`
-  width: 594px;
-  height: 24px;
-`;
-
-const LoginInput = styled.input`
-  display: flex;
-  width: 100%;
-  height: 56px;
-  align-items: center;
-  gap: 20px;
-  border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8);
-  padding: 0px 0px 0px 20px;
-  color: var(--Main, #1e1e1e);
-  font-family: Spline Sans;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 160%; /* 25.6px */
-  outline: none;
-  transition: 0.1s;
-
-  &:hover {
-    border: 1.5px solid #1e1e1e;
-  }
-
-  &:focus {
-    border: 1.5px solid #1e1e1e;
-    border-color: #1e1e1e;
-  }
-
-  &::placeholder {
-    color: var(--gray-300, #bbb);
-
-    /* Body1 */
-    font-family: 'Pretendard';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 160%; /* 25.6px */
-  }
-`;
-
-const Button = styled.button((props) => ({
-  width: '100%',
-  height: 56,
-  border: 'none',
-  borderRadius: 12,
-  backgroundColor: props.disabled
-    ? props.theme.color.gray100
-    : props.theme.color.gray500,
-  textAlign: 'center',
-  color: props.disabled ? props.theme.color.gray300 : props.theme.color.white,
-  cursor: props.disabled ? 'not-allowed' : 'pointer',
-  transition: '0.2s',
-  ...props.theme.typography.Body1,
-}));
-
-const ModalDiv = styled.div`
-  padding: 40px 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 700px;
-  border-radius: 20px;
-  background: ${(props) => props.theme.color.white};
-  box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.1);
-
-  & h1.title {
-    color: ${(props) => props.theme.color.gray500};
-    ${(props) => props.theme.typography.Header6};
-  }
-
-  & span.description {
-    color: ${(props) => props.theme.color.gray300};
-    ${(props) => props.theme.typography.Body1};
-  }
-`;
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
@@ -440,30 +326,4 @@ const StyledLink = styled(Link)`
   font-weight: 500;
   line-height: 160%;
   margin-left: 10px;
-`;
-
-const SocialButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  height: 64px;
-  border-radius: 100px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'Pretendard';
-  border: none;
-`;
-
-const NaverSection = styled(SocialButton)`
-  margin-top: 60px;
-  background: #F3F3F3;
-  color: #bbbbbb;
-`;
-
-const KakaoSection = styled(SocialButton)`
-  margin: 12px 0px 40px;
-  background: #fbe300;
-  color: #000000;
 `;

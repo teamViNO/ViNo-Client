@@ -35,6 +35,7 @@ const HomePage: React.FC = () => {
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
   const { createToast } = useCreateToast();
+  const searchRef = useRef(null);
 
   const onFileClick = async (
     videoId: number,
@@ -50,7 +51,6 @@ const HomePage: React.FC = () => {
       );
     }
   };
-  const searchRef = useRef(null);
 
   useEffect(() => {
     userToken &&
@@ -74,25 +74,23 @@ const HomePage: React.FC = () => {
       <HomePageContainer>
         <SearchYoutube searchRef={searchRef} />
 
-        {userToken ? (
-          <div>
-            <RecentVideos searchRef={searchRef} videos={recentVideos} />
-            <InsightVideos
-              userToken={userToken}
-              dummyVideos={dummyVideos}
-              onFileClick={onFileClick}
-            />
-          </div>
-        ) : (
-          <div>
-            <InsightVideos
-              userToken={userToken}
-              dummyVideos={dummyVideos}
-              onFileClick={onFileClick}
-            />
-            <RecentVideos searchRef={searchRef} videos={recentVideos} />
-          </div>
-        )}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: userToken ? 'column' : 'column-reverse',
+            gap: 160,
+            padding: '100px 0',
+            borderRadius: '50px 50px 0 0',
+            backgroundColor: 'white',
+          }}
+        >
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
+          <InsightVideos
+            userToken={userToken}
+            dummyVideos={dummyVideos}
+            onFileClick={onFileClick}
+          />
+        </div>
       </HomePageContainer>
 
       {isOpenModal && <RecommendationModal />}

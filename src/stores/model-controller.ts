@@ -1,7 +1,6 @@
 import { atom } from 'recoil';
 
-import { IVideo } from '@/models/video';
-import { ModelingStatus } from '@/models/modeling';
+import { ModelingFinalData, ModelingStatus } from '@/models/modeling';
 
 import localStorageEffect from './effects/localStorageEffect';
 
@@ -20,7 +19,7 @@ export const modelingStatusState = atom<ModelingStatus>({
   default: 'NONE',
 });
 
-export const modelingDataState = atom<IVideo | null>({
+export const modelingDataState = atom<ModelingFinalData | null>({
   key: 'modeling-data',
   default: null,
   effects_UNSTABLE: [localStorageEffect],

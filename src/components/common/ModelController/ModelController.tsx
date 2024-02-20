@@ -1,11 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-
-import {
-  modelingProcess1,
-  modelingProcess2,
-  modelingProcess3,
-} from '@/apis/video';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 
 import {
   modelingDataState,
@@ -13,10 +7,18 @@ import {
   modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
+import {
+  modelingProcess1,
+  modelingProcess2,
+  modelingProcess3,
+} from '@/apis/video';
+import { userTokenState } from '@/stores/user';
+
 import { createVideoAlarmAPI } from '@/apis/user';
 
 const ModelController = () => {
   const interval = useRef<NodeJS.Timeout>();
+  const userToken = useRecoilValue(userTokenState);
   const [videoLink, setVideoLink] = useRecoilState(videoLinkState);
   const setModelingStatus = useSetRecoilState(modelingStatusState);
   const setModelingProgress = useSetRecoilState(modelingProgressState);
@@ -32,11 +34,13 @@ const ModelController = () => {
 
   const handleError = async () => {
     try {
-      await createVideoAlarmAPI(0, 'fail', {
-        title: '앗, 영상 변환 중 오류가 생겼어요',
-        content: '어떤 문제인지 확인해보세요!',
-        is_confirm: false,
-      });
+      if (userToken) {
+        await createVideoAlarmAPI(0, 'fail', {
+          title: '앗, 영상 변환 중 오류가 생겼어요',
+          content: '어떤 문제인지 확인해보세요!',
+          is_confirm: false,
+        });
+      }
     } catch (e) {
       console.error(e);
     }
@@ -44,6 +48,8 @@ const ModelController = () => {
     if (interval.current) {
       clearInterval(interval.current);
     }
+
+    clearInterval(interval.current);
 
     setModelingStatus('ERROR');
     setVideoLink(null);
@@ -53,6 +59,8 @@ const ModelController = () => {
     if (!videoLink) return;
 
     const callProcess1API = async () => {
+      setModelingProgress(0);
+
       try {
         const { videoId } = (await modelingProcess1(videoLink)).data.result;
 
@@ -83,11 +91,14 @@ const ModelController = () => {
       try {
         const { finalData } = (await modelingProcess3({ videoId })).data.result;
 
-        if (interval.current) {
-          clearInterval(interval.current);
-        }
+        clearInterval(interval.current);
 
-        setModelingData(finalData);
+        setModelingData({
+          ...finalData,
+          youtube_id: videoId,
+          created_at: new Date().toString(),
+          updated_at: new Date().toString(),
+        });
         setModelingProgress(100);
         setModelingStatus('COMPLETE');
       } catch (e) {
@@ -98,7 +109,6 @@ const ModelController = () => {
     };
 
     setModelingStatus('CONTINUE');
-    setModelingProgress(Math.ceil(Math.random() * 5));
     callProcess1API();
     startInterval();
     // eslint-disable-next-line react-hooks/exhaustive-deps
