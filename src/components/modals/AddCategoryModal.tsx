@@ -1,6 +1,6 @@
 import useOutsideClick from '@/hooks/useOutsideClick';
-import { topCategoryModalState } from '@/stores/modal';
-import { useSetRecoilState } from 'recoil';
+import { addCategoryModalState } from '@/stores/modal';
+import { useRecoilState } from 'recoil';
 import OpenFileSvg from '@/assets/icons/open-file.svg?react';
 import CloseSvg from '@/assets/icons/close.svg?react';
 import * as AddTopCategoryModalStyles from '@/styles/modals/AddCategoryModal.style';
@@ -17,22 +17,18 @@ import useUpdateCategories from '@/hooks/useUpdateCategories';
 import useCreateToast from '@/hooks/useCreateToast';
 
 interface IAddTopCategoryModalProps extends ICommonModalProps {
-  isTopCategoryModalOpen: boolean;
-  setIsSubCategoryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  topCategoryId: number;
   setTo: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AddCategoryModal = ({
-  isTopCategoryModalOpen,
-  setIsSubCategoryModalOpen,
   categoryName,
   setCategoryName,
   setIsSuccessAddCategoryModalOpen,
-  topCategoryId,
   setTo,
 }: IAddTopCategoryModalProps) => {
-  const setIsTopCategoryModalOpen = useSetRecoilState(topCategoryModalState);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useRecoilState(
+    addCategoryModalState,
+  );
   const { createToast } = useCreateToast();
   const { updateCategories } = useUpdateCategories();
   const { editText } = handleEdit();
@@ -42,13 +38,14 @@ const AddCategoryModal = ({
   const categoryNameRegex = /^[a-zA-Z0-9가-힣\s]*$/;
   const checkCategoryNameRegex = categoryNameRegex.test(categoryName);
   const addEnabled = categoryName.length > 0 && checkCategoryNameRegex;
+  const isTopAdd = isAddCategoryModalOpen.location === 'top';
 
-  const onCloseModal = () => {
-    isTopCategoryModalOpen
-      ? setIsTopCategoryModalOpen(false)
-      : setIsSubCategoryModalOpen(false);
-    setCategoryName('');
-  };
+  const onCloseModal = () =>
+    setIsAddCategoryModalOpen({
+      location: '',
+      isOpen: false,
+      categoryId: -1,
+    });
 
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
 
@@ -60,13 +57,13 @@ const AddCategoryModal = ({
       createToast(`'기타' 이름은 사용하실 수 없어요`);
       return;
     }
-    const response = isTopCategoryModalOpen
+    const response = isTopAdd
       ? await postTopCategroy(categoryName)
-      : await postSubCategroy(categoryName, topCategoryId);
+      : await postSubCategroy(categoryName, isAddCategoryModalOpen.categoryId);
     if (response.isSuccess) {
       updateCategories();
       setTo(
-        isTopCategoryModalOpen
+        isTopAdd
           ? `${response.result.categoryId}`
           : `${response.result.topCategoryId}/${response.result.categoryId}`,
       );
@@ -83,7 +80,7 @@ const AddCategoryModal = ({
         </CommonCloseButton>
         <OpenFileSvg width={56} height={56} />
         <AddTopCategoryModalStyles.Title>
-          {isTopCategoryModalOpen ? '상위' : '하위'} 카테고리 추가
+          {isTopAdd ? '상위' : '하위'} 카테고리 추가
         </AddTopCategoryModalStyles.Title>
         <AddTopCategoryModalStyles.SubTitle>
           만들고 싶은 카테고리의 이름을 작성해주세요

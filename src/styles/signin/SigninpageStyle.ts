@@ -27,6 +27,7 @@ export const LoginTotalComponent = styled.div`
 export const Image = styled.img`
   width: ${(props) => props.width || '68px'};
   height: ${(props) => props.height || '39.667px'};
+  cursor: pointer;
 `;
 
 export const TextTotalComponent = styled.div`
