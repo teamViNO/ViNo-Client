@@ -14,3 +14,8 @@ export const recommendationModalState = atom({
   key: 'recommendation-modal',
   default: false,
 });
+
+export const errorModalState = atom({
+    key: 'error-modal',
+    default: false,
+});

@@ -19,7 +19,7 @@ const SearchResultBox: React.FC<SearchResultProp> = ({ video, tags }) => {
     target.style.display = 'none';
   };
   const handleOnclick = () => {
-    nav(`/summary/${video.video_id}?insight=${userName?.name === video.user}`);
+    nav(`/summary/${video.video_id}?insight=${userName?.name !== video.user}`);
   };
 
   return (

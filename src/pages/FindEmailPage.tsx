@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import * as FindEmailPageStyles from '@/styles/find/FindEmailPageStyle';
+import { Link } from 'react-router-dom';
 
 import { findEmailAPI } from '@/apis/user';
 
@@ -42,9 +43,9 @@ const FindEmailPage = () => {
 
   if (isFind) {
     return (
-      <Container>
+      <FindEmailPageStyles.Container>
         <FindEmail userName={name} email={email} />
-      </Container>
+      </FindEmailPageStyles.Container>
     );
   }
   return (

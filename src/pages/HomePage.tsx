@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
@@ -35,6 +35,7 @@ const HomePage: React.FC = () => {
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
   const { createToast } = useCreateToast();
+  const searchRef = useRef(null);
 
   const onFileClick = async (
     videoId: number,
@@ -71,7 +72,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <HomePageContainer>
-        <SearchYoutube />
+        <SearchYoutube searchRef={searchRef} />
 
         <div
           style={{
@@ -83,7 +84,7 @@ const HomePage: React.FC = () => {
             backgroundColor: 'white',
           }}
         >
-          <RecentVideos videos={recentVideos} />
+          <RecentVideos searchRef={searchRef} videos={recentVideos} />
           <InsightVideos
             userToken={userToken}
             dummyVideos={dummyVideos}

@@ -1,8 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-
-import { createVideoAPI } from '@/apis/videos';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import VideoIcon from '@/assets/icons/video.svg?react';
 import WarningIcon from '@/assets/icons/warning.svg?react';
@@ -16,27 +13,30 @@ import {
 } from '@/styles/HomepageStyle';
 
 import { recommendationModalState } from '@/stores/modal';
+
 import {
   modelingDataState,
   modelingProgressState,
   modelingStatusState,
   videoLinkState,
 } from '@/stores/model-controller';
-import { userTokenState } from '@/stores/user';
 
 import { validateYoutubeLink } from '@/utils/validation';
 
 import ProgressBar from './ProgressBar';
+import useCreateVideo from '@/hooks/useCreateVideo';
 
-const SearchYoutube = () => {
-  const navigate = useNavigate();
+type Props = {
+  searchRef: React.RefObject<HTMLInputElement>;
+};
 
-  const userToken = useRecoilValue(userTokenState);
+const SearchYoutube = ({ searchRef }: Props) => {
   const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const setModelingData = useSetRecoilState(modelingDataState);
   const setVideoLink = useSetRecoilState(videoLinkState);
   const setProgress = useSetRecoilState(modelingProgressState);
   const [status, setStatus] = useRecoilState(modelingStatusState);
-  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
+  const { createVideo } = useCreateVideo();
 
   const [inputLink, setInputLink] = useState('');
 
@@ -95,27 +95,6 @@ const SearchYoutube = () => {
     setModelingData(null);
   };
 
-  const handleClickCreateVideoButton = async () => {
-    if (!modelingData) return;
-
-    if (userToken) {
-      try {
-        const { video_id } = (await createVideoAPI(modelingData)).data.result;
-
-        navigate(`/summary/${video_id}`);
-        setModelingData(null);
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      navigate('/summary/guest');
-    }
-
-    setVideoLink(null);
-    setStatus('NONE');
-    setProgress(0);
-  };
-
   return (
     <>
       <SearchContainer className="dark-section">
@@ -168,6 +147,7 @@ const SearchYoutube = () => {
                 disabled={status === 'CONTINUE'}
                 onChange={handleChangeInput}
                 placeholder="https://youtube.com/..."
+                ref={searchRef}
               />
             </div>
 
@@ -178,7 +158,7 @@ const SearchYoutube = () => {
                   color: theme.color.gray500,
                   backgroundColor: theme.color.green400,
                 }}
-                onClick={handleClickCreateVideoButton}
+                onClick={createVideo}
               >
                 영상 읽기
               </SearchButton>
