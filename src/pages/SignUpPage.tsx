@@ -35,7 +35,7 @@ const SignUp = () => {
     '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
   );
   const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>(
-    '비밀번호 확인을 위해 다시 한 번 입력해주세요',
+    '',
   );
   const [mismatchError, setMismatchError] = useState<boolean>(false);
   const [isEmailSuccess, setIsEmailSuccess] = useState(false);
@@ -99,7 +99,7 @@ const SignUp = () => {
 
   const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordCheck(e.target.value);
-    if (e.target.value === '') {
+    if (!password) {
       setPasswordCheckMessage('비밀번호를 재입력해주세요');
     } else if (password && e.target.value !== password) {
       setMismatchError(true);
@@ -117,6 +117,11 @@ const SignUp = () => {
   };
 
   const navigate = useNavigate();
+
+  const tohome = () => {
+    navigate('/');
+  }
+
   const onApply = () => {
     if (
       name &&
@@ -175,7 +180,7 @@ const SignUp = () => {
       <SignupPageStyles.MainSection>
         <SignupPageStyles.InputSection>
           <SignupPageStyles.Intro>
-            <img src={logo} alt="로고 이미지" />
+            <img src={logo} alt="로고 이미지" onClick={tohome} />
             <h3>회원가입</h3>
             <p>새로운 계정을 생성하고 나만의 영상 아카이빙을 시작해요</p>
           </SignupPageStyles.Intro>

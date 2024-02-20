@@ -9,6 +9,7 @@ import PhoneCheck from '@/components/PhoneCheck';
 import { findEmailAPI } from '@/apis/user';
 import FindEmail from '@/components/FindEmail';
 import ImageSlider from '@/components/ImageSlider';
+import { useNavigate } from 'react-router-dom';
 
 const FindEmailPage = () => {
   const [name, setName] = useState<string>("");
@@ -37,6 +38,12 @@ const FindEmailPage = () => {
   }
 }
 
+const navigate = useNavigate();
+
+const tohome = () => {
+  navigate('/');
+}
+
 if(isFind){
   return (
     <FindEmailPageStyles.Container>
@@ -50,7 +57,7 @@ return (
             <ImageSlider/>
             <FindEmailPageStyles.MainSection>
               <FindEmailPageStyles.Intro>
-                <img src={smallLogo} alt="로고 이미지" />
+                <img src={smallLogo} alt="로고 이미지" onClick={tohome} />
                 <h3>이메일 찾기</h3>
                 <p>이메일이 기억나지 않으시나요?</p>
               </FindEmailPageStyles.Intro>

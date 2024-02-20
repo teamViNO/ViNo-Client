@@ -84,7 +84,7 @@ const PhoneCheck : React.FC<PhoneCheckProps> = ({setCheck, tel, setTel, type}) =
       const handleCertifyNum = async () => {
             if(isSend){
                 SetIsCheck(false);
-                setTime(10);
+                setTime(5*60);
             }
             try{
                 const {data} = type === true ? (await sendSMSAPI({

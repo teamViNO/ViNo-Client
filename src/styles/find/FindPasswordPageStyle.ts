@@ -34,6 +34,7 @@ export const Intro = styled.div`
     width: 64.55px;
     height: 20px;
     margin-bottom: 4px;
+    cursor: pointer;
   }
   h3 {
     color: #1e1e1e;
