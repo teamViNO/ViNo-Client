@@ -83,7 +83,7 @@ const RecommendationModal = () => {
               <div className="insight-content">
                 <h1>{dummyVideo.title}</h1>
 
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {dummyVideo.tag.slice(0, 3).map((item) => (
                     <div key={item.name} className="insight-tag">
                       # {item.name}

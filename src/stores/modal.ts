@@ -5,6 +5,11 @@ export const addCategoryModalState = atom({
   default: { location: '', isOpen: false, categoryId: -1 },
 });
 
+export const guestCategoryModalState = atom({
+  key: 'guest-category-modal',
+  default: false,
+});
+
 export const summaryTransformModalState = atom({
   key: 'summary-transform-modal',
   default: false,
