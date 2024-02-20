@@ -47,7 +47,6 @@ const AddCategoryModal = ({
     isTopCategoryModalOpen
       ? setIsTopCategoryModalOpen(false)
       : setIsSubCategoryModalOpen(false);
-    setCategoryName('');
   };
 
   const [topCategoryModalRef] = useOutsideClick<HTMLDivElement>(onCloseModal);
