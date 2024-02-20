@@ -1,16 +1,20 @@
-import React, { useState} from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import smallLogo from "../assets/logo.png";
-import theme from '@/styles/theme';
+import styled from 'styled-components';
+
+import { findEmailAPI } from '@/apis/user';
+
+import LogoIcon from '@/assets/icons/dark-logo.svg?react';
+
 import NotFindUserModal from '@/components/modals/NotFindUserModal';
 import PhoneCheck from '@/components/PhoneCheck';
-import { findEmailAPI } from '@/apis/user';
 import FindEmail from '@/components/FindEmail';
 import ImageSlider from '@/components/ImageSlider';
 
+import theme from '@/styles/theme';
+
 const FindEmailPage = () => {
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>('');
   const [tel, setTel] = useState('');
   const [email, setEmail] = useState('');
   const [isModal, setIsModal] = useState(false);
@@ -19,81 +23,99 @@ const FindEmailPage = () => {
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-  }
+  };
 
   const findBtnHandler = async () => {
     try {
-      const {data} = await findEmailAPI({
+      const { data } = await findEmailAPI({
         name: name,
         phone_number: tel,
       });
-      if(data.success){
+      if (data.success) {
         setIsFind(true);
         setEmail(data.email);
       }
     } catch (error) {
-        setIsModal(true);
-  }
-}
+      setIsModal(true);
+    }
+  };
 
-if(isFind){
+  if (isFind) {
+    return (
+      <Container>
+        <FindEmail userName={name} email={email} />
+      </Container>
+    );
+  }
   return (
     <Container>
-      <FindEmail userName={name} email={email}/>
-    </Container>
-  );
-}
-return (
-  <Container>
-          <Wrapper>
-            <ImageSlider/>
-            <MainSection>
-              <Intro>
-                <img src={smallLogo} alt="로고 이미지" />
-                <h3>이메일 찾기</h3>
-                <p>이메일이 기억나지 않으시나요?</p>
-              </Intro>
-              <InputSection>
-                  <Label>
-                    <span>이름</span>
-                    <InputBox
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={name}
-                      placeholder="홍길동"
-                      onChange={onChangeName}
-                      readOnly={allChecked}
-                  ></InputBox>
-                  </Label>
-                  <TwoLabel>
-                    <PhoneCheck setCheck={setAllChecked} tel={tel} setTel={setTel} type = {false}/>
-                    </TwoLabel>
-                  <FindButton disabled={!allChecked} onClick={findBtnHandler}>
-                    찾아보기
-                  </FindButton>
-              <TextTotalComponent style={{margin: "40px 0px 0px 0px"}}>
-              <TextDiv style={{fontSize:"14px", color:"#BBB", fontWeight: "500", lineHeight: "1.6"}}>
+      <Wrapper>
+        <ImageSlider />
+        <MainSection>
+          <Intro>
+            <LogoIcon />
+            <h3>이메일 찾기</h3>
+            <p>이메일이 기억나지 않으시나요?</p>
+          </Intro>
+          <InputSection>
+            <Label>
+              <span>이름</span>
+              <InputBox
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                placeholder="홍길동"
+                onChange={onChangeName}
+                readOnly={allChecked}
+              ></InputBox>
+            </Label>
+            <TwoLabel>
+              <PhoneCheck
+                setCheck={setAllChecked}
+                tel={tel}
+                setTel={setTel}
+                type={false}
+              />
+            </TwoLabel>
+            <FindButton disabled={!allChecked} onClick={findBtnHandler}>
+              찾아보기
+            </FindButton>
+            <TextTotalComponent style={{ margin: '40px 0px 0px 0px' }}>
+              <TextDiv
+                style={{
+                  fontSize: '14px',
+                  color: '#BBB',
+                  fontWeight: '500',
+                  lineHeight: '1.6',
+                }}
+              >
                 계정이 기억나시나요?
               </TextDiv>
               <StyledLink to="/sign-in">로그인</StyledLink>
-              </TextTotalComponent>
-              <TextTotalComponent style={{margin: "12px 0px 0px 0px"}}>
-              <TextDiv style={{fontSize:"14px", color:"#BBB", fontWeight: "500", lineHeight: "1.6"}}>
-                    아직 계정이 없으신가요?
+            </TextTotalComponent>
+            <TextTotalComponent style={{ margin: '12px 0px 0px 0px' }}>
+              <TextDiv
+                style={{
+                  fontSize: '14px',
+                  color: '#BBB',
+                  fontWeight: '500',
+                  lineHeight: '1.6',
+                }}
+              >
+                아직 계정이 없으신가요?
               </TextDiv>
               <StyledLink to="/sign-up">이메일로 회원가입</StyledLink>
-              </TextTotalComponent>
-              </InputSection>
-            </MainSection>
-          </Wrapper>
-      {isModal && <NotFindUserModal setIsShow={setIsModal} type={true}/>}
-      </Container>
+            </TextTotalComponent>
+          </InputSection>
+        </MainSection>
+      </Wrapper>
+      {isModal && <NotFindUserModal setIsShow={setIsModal} type={true} />}
+    </Container>
   );
 };
 
 export default FindEmailPage;
-
 
 const Container = styled.div`
   display: flex;
@@ -109,14 +131,13 @@ const Wrapper = styled.div`
   gap: 124px;
 `;
 
-
 const MainSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: auto;
   height: 840px;
-  margin-top: 300px;
 `;
 
 const Intro = styled.div`
@@ -154,7 +175,6 @@ const InputSection = styled.div`
   height: auto;
 `;
 
-
 const Label = styled.label`
   span {
     font-size: 16px;
@@ -164,11 +184,15 @@ const Label = styled.label`
     font-weight: 500;
     line-height: 160%;
   }
+
+  &:not(:first-of-type) {
+    margin-top: 20px;
+  }
 `;
 
 const TwoLabel = styled.label`
-  display : flex;
-  flex-direction : column;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 8px;
   span {
     font-size: 16px;
@@ -177,12 +201,15 @@ const TwoLabel = styled.label`
     font-weight: 500;
     line-height: 160%;
   }
+
+  &:not(:first-of-type) {
+    margin-top: 20px;
+  }
 `;
 
 const InputBox = styled.input`
   display: flex;
   align-items: center;
-  margin-bottom : 8px;
   justify-content: center;
   width: 494px;
   height: 56px;
@@ -191,14 +218,14 @@ const InputBox = styled.input`
   flex: 1 0 0;
   font-size: 16px;
   font-style: normal;
-  color: var(--Main, #1E1E1E);
+  color: var(--Main, #1e1e1e);
   font-family: Pretendard;
   font-weight: 500;
   line-height: 160%;
   border-radius: 12px;
   border: 1.5px solid var(--gray-200, #e8e8e8);
   outline: none;
-  
+
   &:hover {
     border: 1.5px solid #1e1e1e;
   }
@@ -216,8 +243,8 @@ const InputBox = styled.input`
 const FindButton = styled.button`
   width: 494px;
   height: 56px;
-  background: #1E1E1E;
-  color: #EEEEEE;
+  background: #1e1e1e;
+  color: #eeeeee;
   font-size: 16px;
   font-weight: 500;
   line-height: 160%;
@@ -228,32 +255,32 @@ const FindButton = styled.button`
     cursor: pointer;
   }
   &:disabled {
-    background-color : #F3F3F3;
-    color : #BBBBBB;
+    background-color: #f3f3f3;
+    color: #bbbbbb;
   }
 `;
 
 const TextTotalComponent = styled.div`
   display: flex;
   flex-direction: row;
-  margin: "0px";
+  margin: '0px';
 `;
 
 const TextDiv = styled.div`
-  color: ${(props) => props.color || "#1e1e1e"};
+  color: ${(props) => props.color || '#1e1e1e'};
   text-transform: capitalize;
   font-size: 36px;
   font-weight: bold;
   font-style: normal;
   line-height: 160%; /* 57.6px */
   font-family: Pretendard;
-  margin: "0px";
+  margin: '0px';
 `;
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.color.gray500};
-  ${ theme.typography.Body3 };
+  ${theme.typography.Body3};
   text-align: center;
   text-decoration: none;
-  margin : 0px 0px 0px 10px;
+  margin: 0px 0px 0px 10px;
 `;

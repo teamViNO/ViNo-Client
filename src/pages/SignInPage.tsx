@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { loginAPI } from '@/apis/user';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
-import smallLogo from '@/assets/logo-dark.png';
+import LogoIcon from '@/assets/icons/dark-logo.svg?react';
 import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
@@ -69,11 +69,11 @@ const SignInPage: React.FC = () => {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as APIBaseResponse;
+        const { code } = error.response?.data as APIBaseResponse;
 
-        if (message.indexOf('비밀번호') > -1) {
+        if (code === 'WRONG_PASSWORD') {
           setIsOpenErrorModal(true);
-        } else if (message.indexOf('이메일') > -1) {
+        } else if (code === 'NOT_FOUND_EMAIL') {
           setIsOpenSignUpModal(true);
         }
       }
@@ -88,7 +88,7 @@ const SignInPage: React.FC = () => {
 
   const handleOnClick = () => {
     handleClickLoginButton();
-  }
+  };
 
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
@@ -104,7 +104,7 @@ const SignInPage: React.FC = () => {
   return (
     <PageComponent>
       <LoginTotalComponent>
-        <Image src={smallLogo} alt="logo" width={'auto'} height={20} />
+        <LogoIcon />
         <TextDiv>로그인</TextDiv>
         <TextDiv
           style={{
@@ -458,7 +458,7 @@ const SocialButton = styled.button`
 
 const NaverSection = styled(SocialButton)`
   margin-top: 60px;
-  background: #F3F3F3;
+  background: #f3f3f3;
   color: #bbbbbb;
 `;
 

@@ -59,7 +59,7 @@ const ModelController = () => {
     if (!videoLink) return;
 
     const callProcess1API = async () => {
-      setModelingProgress(Math.ceil(Math.random() * 5));
+      setModelingProgress(0);
 
       try {
         const { videoId } = (await modelingProcess1(videoLink)).data.result;

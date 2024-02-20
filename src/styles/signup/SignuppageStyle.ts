@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
 `;
 
 export const LogoSection = styled.div`
-  img{
+  img {
     display: flex;
     width: auto;
     height: 840px;
@@ -26,8 +26,9 @@ export const MainSection = styled.div`
   justify-content: center;
   width: 580px;
   height: 896px;
-  margin-top: 128px;
+  margin-top: 95px;
 `;
+
 export const InputSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -38,13 +39,13 @@ export const InputSection = styled.div`
   &::-webkit-scrollbar {
     width: 8px;
   }
-  &::-webkit-scrollbar-thumb{
+  &::-webkit-scrollbar-thumb {
     height: 200px;
-    background-color:#f3f3f3;
+    background-color: #f3f3f3;
     border-radius: 100px;
   }
-  &::-webkit-scrollbar-track{
-    background-color:#ffffff;
+  &::-webkit-scrollbar-track {
+    background-color: #ffffff;
   }
 `;
 
@@ -101,8 +102,8 @@ export const TwoLabel = styled.label`
 `;
 
 export const ThreeLabel = styled.label`
-  display : flex;
-  flex-direction : column;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 8px;
 `;
 
@@ -117,12 +118,12 @@ export const PhoneInputBox = styled.input`
   flex: 1 0 0;
   font-size: 16px;
   font-style: normal;
-  color: var(--Main, #1E1E1E);
+  color: var(--Main, #1e1e1e);
   font-family: Pretendard;
   font-weight: 500;
   line-height: 160%;
   border-radius: 12px;
-  border: 1.5px solid var(--gray-200, #e8e8e8) ;
+  border: 1.5px solid var(--gray-200, #e8e8e8);
   margin-top: 8px;
   outline: none;
   &:hover {
@@ -187,7 +188,7 @@ export const EmailInputBox = styled.input`
   flex: 1 0 0;
   font-size: 16px;
   font-style: normal;
-  color: var(--Main, #1E1E1E);
+  color: var(--Main, #1e1e1e);
   font-family: Pretendard;
   font-weight: 500;
   line-height: 160%;
@@ -235,14 +236,14 @@ export const BirthInputBox = styled.input`
   flex: 1 0 0;
   font-size: 16px;
   font-style: normal;
-  color: var(--Main, #1E1E1E);
+  color: var(--Main, #1e1e1e);
   font-family: Pretendard;
   font-weight: 500;
   line-height: 160%;
   margin-right: 8px;
   border-radius: 12px;
   border: 1.5px solid #e8e8e8;
-  color: var(--Main, #1E1E1E);
+  color: var(--Main, #1e1e1e);
   background: #fff;
   &::placeholder {
     color: #bbb;
@@ -255,7 +256,6 @@ export const BirthInputBox = styled.input`
     line-height: 160%; /* 25.6px */
   }
 `;
-
 
 export const SexSelectBox = styled.div`
   display: flex;
@@ -280,7 +280,8 @@ export const SexButton = styled.button<{ selected: boolean }>`
   line-height: 160%;
   margin-right: 10px;
   cursor: pointer;
-  ${(props) => props.selected &&
+  ${(props) =>
+    props.selected &&
     `
       background: #1e1e1e;
       color: #fff;
@@ -298,7 +299,7 @@ export const Error = styled.p`
 `;
 
 export const Avail = styled.p`
-  color: #3681FE;
+  color: #3681fe;
   font-size: 14px;
   font-weight: 500;
   margin-top: 8px;
@@ -334,7 +335,7 @@ export const Button = styled.button`
 
 export const SucButton = styled.button`
   border-radius: 12px;
-  background: #1E1E1E;
+  background: #1e1e1e;
   color: #fff;
   display: flex;
   width: 494px;
@@ -352,8 +353,8 @@ export const SucButton = styled.button`
 
 export const DupSucButton = styled.button`
   border-radius: 12px;
-  background: #E9FF3F;
-  color: #1E1E1E;
+  background: #e9ff3f;
+  color: #1e1e1e;
   display: flex;
   margin-top: 8px;
   margin-left: 8px;
@@ -369,8 +370,8 @@ export const DupSucButton = styled.button`
   border: none;
   cursor: pointer;
   &:disabled {
-    background-color : ${theme.color.gray100};
-    color : ${theme.color.gray300};
+    background-color: ${theme.color.gray100};
+    color: ${theme.color.gray300};
     cursor: default;
   }
 `;
@@ -431,14 +432,13 @@ export const RetryButton = styled.button((props) => ({
 }));
 
 export const PwDiv = styled.div`
-   font-size: 14px;
-   margin-top: 8px;
-   color:#3681FE;
-   font-weight: 500;
-   line-height: 160%;
-   padding-left: 16px;
+  font-size: 14px;
+  margin-top: 8px;
+  color: #3681fe;
+  font-weight: 500;
+  line-height: 160%;
+  padding-left: 16px;
 `;
-
 
 export const TextTotalComponent = styled.div`
   display: flex;
@@ -447,118 +447,118 @@ export const TextTotalComponent = styled.div`
 `;
 
 export const TextDiv = styled.div`
-   font-size: 14px;
-   color: #BBB;
-   font-weight: 500;
-   line-height: 160%;
+  font-size: 14px;
+  color: #bbb;
+  font-weight: 500;
+  line-height: 160%;
 `;
 
 export const UserButton = styled.button`
-  width : 160px;
-  height : 56px;
-  color : #1E1E1E;
-  background-color : ${theme.color.green400};
-  border : none;
-  border-radius : 12px;
+  width: 160px;
+  height: 56px;
+  color: #1e1e1e;
+  background-color: ${theme.color.green400};
+  border: none;
+  border-radius: 12px;
   margin-top: 8px;
   ${theme.typography.Body1};
   &:disabled {
-    background-color : ${theme.color.gray100};
-    color : ${theme.color.gray300};
+    background-color: ${theme.color.gray100};
+    color: ${theme.color.gray300};
   }
-`
+`;
 
 export const UserDiv = styled.div`
-  display : flex;
-  flex-direction : row;
-  gap : 10px;
-`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+`;
 
 export const SendMsg = styled.div`
-   margin-left : 16px;
-   margin-top : 8px;
-    ${theme.typography.Body3};
-    color : ${theme.color.red};
-`
+  margin-left: 16px;
+  margin-top: 8px;
+  ${theme.typography.Body3};
+  color: ${theme.color.red};
+`;
 
 export const CustomButton = styled.button`
-    width : 54px;
-    height : 54px;
-    display : flex;
-    align-items: center;
-    justify-content: center;
-    background : #1E1E1E;
-    border : none;
-    border-radius : 12px;
-`
-export const CalendarContainer =  styled.div`
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1e1e1e;
+  border: none;
+  border-radius: 12px;
+`;
+export const CalendarContainer = styled.div`
   .custom-inputSelected {
-    background : #BBBBBB !important;
+    background: #bbbbbb !important;
   }
   .react-datepicker {
     & select {
-        border : none;
-        color : #1E1E1E;
-        font-weight: bold;
+      border: none;
+      color: #1e1e1e;
+      font-weight: bold;
     }
     & button {
-        border : none;
-        border-radius : 8px;
+      border: none;
+      border-radius: 8px;
     }
     .react-datepicker__month-container {
-          .react-datepicker__header {
-              background-color: white;
-              border: none;
-          }
-          .react-datepicker__day-name {
-              margin: 0px 7px 0px 7px;
-          }
-          .react-datepicker__month {
-              .react-datepicker__day {
-                  margin: 5px 7px 5px 7px;
-                  &:hover {
-                      border-radius: 18px;
-                      background-color: #FBFFCC
-                  }
-              }
-              .react-datepicker__day--today,
-              .react-datepicker__day--keyboard-selected {
-                  border-radius: 18px;
-                  background-color: #E9FF3F;
-                  font-weight: 400;
-              }
-              .react-datepicker__day--selected,
-              .react-datepicker__day--in-range,
-              .react-datepicker__day--in-selecting-range {
-                  border-radius: 18px;
-                  background-color: #E9FF3F;
-                  color: black;
-              }
-          }
+      .react-datepicker__header {
+        background-color: white;
+        border: none;
       }
+      .react-datepicker__day-name {
+        margin: 0px 7px 0px 7px;
+      }
+      .react-datepicker__month {
+        .react-datepicker__day {
+          margin: 5px 7px 5px 7px;
+          &:hover {
+            border-radius: 18px;
+            background-color: #fbffcc;
+          }
+        }
+        .react-datepicker__day--today,
+        .react-datepicker__day--keyboard-selected {
+          border-radius: 18px;
+          background-color: #e9ff3f;
+          font-weight: 400;
+        }
+        .react-datepicker__day--selected,
+        .react-datepicker__day--in-range,
+        .react-datepicker__day--in-selecting-range {
+          border-radius: 18px;
+          background-color: #e9ff3f;
+          color: black;
+        }
+      }
+    }
   }
 
-    .react-datepicker__aria-live,
-    .react-datepicker__time-list-item—disabled,
-    .react-datepicker-time__header {
-        display: none;
-    }
+  .react-datepicker__aria-live,
+  .react-datepicker__time-list-item—disabled,
+  .react-datepicker-time__header {
+    display: none;
+  }
 
-    .react-datepicker__time-container {
-        overflow-y: scroll;
-        height: 100px;
-        cursor: pointer;
-    }
-    .react-datepicker__input-container > input,
-    .react-datepicker__time-container {
-        width: 80px;
-        background-color: #f9f9f9;
-        outline: none;
-        text-align: center;
-        overflow-x: hidden;
-    }
-    .react-datepicker__time-list-item—selected {
-        background-color: #fff2b4 !important;
-        color: black !important;
-    }
-`
+  .react-datepicker__time-container {
+    overflow-y: scroll;
+    height: 100px;
+    cursor: pointer;
+  }
+  .react-datepicker__input-container > input,
+  .react-datepicker__time-container {
+    width: 80px;
+    background-color: #f9f9f9;
+    outline: none;
+    text-align: center;
+    overflow-x: hidden;
+  }
+  .react-datepicker__time-list-item—selected {
+    background-color: #fff2b4 !important;
+    color: black !important;
+  }
+`;
