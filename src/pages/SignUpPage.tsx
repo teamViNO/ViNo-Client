@@ -12,6 +12,7 @@ import CloseIcon from '@/assets/icons/close.svg?react';
 import Calendar from '@/components/Calendar';
 import ImageSlider from '@/components/ImageSlider';
 import PhoneCheck from '@/components/PhoneCheck';
+import { ValidatePassword, validatePassword } from '@/utils/validation';
 
 import { BlurBackground } from '@/styles/modals/common.style';
 import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
@@ -27,18 +28,15 @@ const SignUp = () => {
   const [phonenumber, setPhonenumber] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [passwordCheck, setPasswordCheck] = useState<string>('');
-
   const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPassword, setIsPassword] = useState<boolean | string>('');
   const [isCertify, setIsCertify] = useState(false);
   const [emailMessage, setEmailMessage] = useState<string>('');
   const [avaMessage, setAvaMessage] = useState<string>('');
-  const [passwordMessage, setPasswordMessage] = useState<string>(
-    '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
-  );
-  const [passwordcheckMessage, setPasswordCheckMessage] = useState<string>('');
-  const [mismatchError, setMismatchError] = useState<boolean>(false);
+  const [validateNewPassword, setValidateNewPassword] =
+    useState<ValidatePassword | null>(null);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [validateConfirmPassword, setValidateConfirmPassword] = useState(true);
+  // const [mismatchError, setMismatchError] = useState<boolean>(false);
   const [isEmailSuccess, setIsEmailSuccess] = useState(false);
 
   const [isOpenOverlapModal, setIsOpenOverlapModal] = useState(false);
@@ -82,35 +80,24 @@ const SignUp = () => {
     }
   };
 
-  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const passwordRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-    const passwordCurrent = e.target.value;
-    setPassword(passwordCurrent);
-    if (!passwordRegex.test(passwordCurrent)) {
-      setPasswordMessage(
-        '*8자 이상으로 입력 *대문자 사용 *숫자 사용 *특수문자 사용',
-      );
-      setIsPassword(false);
-    } else {
-      setPasswordMessage('');
-      setIsPassword(true);
-    }
+  const handleChangeNewPassword: React.ChangeEventHandler<HTMLInputElement> = ({
+    target: { value },
+  }) => {
+    setPassword(value);
+    setValidateNewPassword(validatePassword(value));
+    setValidateConfirmPassword(value === password);
   };
 
-  const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordCheck(e.target.value);
-    if (!password) {
-      setPasswordCheckMessage('비밀번호를 재입력해주세요');
-    } else if (password && e.target.value !== password) {
-      setMismatchError(true);
-      setPasswordCheckMessage(
-        '비밀번호가 일치하지 않습니다. 다시 확인해주세요.',
-      );
-    } else {
-      setMismatchError(false);
-      setPasswordCheckMessage('비밀번호가 일치합니다.');
-    }
+  const handleChangeConfirmPassword: React.ChangeEventHandler<
+    HTMLInputElement
+  > = ({ target: { value } }) => {
+    setConfirmPassword(value);
+    setValidateConfirmPassword(value === password);
+  };
+
+  const getHelpStyle = (test: undefined | boolean) => {
+    if (test === undefined) return '';
+    return test ? 'active' : 'error';
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -133,8 +120,8 @@ const SignUp = () => {
       selectedSex &&
       email &&
       password &&
-      passwordCheck &&
-      !mismatchError
+      confirmPassword &&
+      validateConfirmPassword
     ) {
       // 서버에 데이터 전송
       onRegisterUserInfo();
@@ -151,7 +138,7 @@ const SignUp = () => {
           name: name,
           email: email,
           password: password,
-          check_password: passwordCheck,
+          check_password: confirmPassword,
           birth_date: [year, month, date].join('-'),
           gender: selectedSex === '미표기' ? null : selectedSex,
           phone_number: phonenumber,
@@ -171,6 +158,16 @@ const SignUp = () => {
 
   const handleOnClick = () => {
     onApply();
+  };
+
+  const getConfirmPasswordStyle = () => {
+    if (confirmPassword === '') {
+      return { color: '#BBBBBB' };
+    } else if (validateConfirmPassword) {
+      return { color: '#3681FE' };
+    } else {
+      return { color: '#FF4A4A' };
+    }
   };
 
   return (
@@ -297,13 +294,29 @@ const SignUp = () => {
                 id="password"
                 name="password"
                 value={password}
-                onChange={onChangePassword}
+                onChange={handleChangeNewPassword}
               ></SignupPageStyles.InputBox>
-              {!isPassword && (
-                <SignupPageStyles.Error>
-                  {passwordMessage}
-                </SignupPageStyles.Error>
-              )}
+              <div className="input-help">
+                <span className={getHelpStyle(validateNewPassword?.LENGTH)}>
+                  *8자 이상으로 입력
+                </span>
+
+                <span
+                  className={getHelpStyle(validateNewPassword?.ALPHA_UPPER)}
+                >
+                  *대문자 사용
+                </span>
+
+                <span className={getHelpStyle(validateNewPassword?.NUMBER)}>
+                  *숫자 사용
+                </span>
+
+                <span
+                  className={getHelpStyle(validateNewPassword?.SPECIAL_CHAR)}
+                >
+                  *특수문자 사용
+                </span>
+              </div>
             </SignupPageStyles.Label>
             <SignupPageStyles.Label>
               <span>비밀번호 재입력</span>
@@ -311,20 +324,23 @@ const SignUp = () => {
                 type="password"
                 id="passwordCheck"
                 name="passwordCheck"
-                value={passwordCheck}
-                onChange={onChangePasswordCheck}
+                value={confirmPassword}
+                onChange={handleChangeConfirmPassword}
                 onKeyDown={handleOnKeyDown}
               ></SignupPageStyles.InputBox>
-              {(passwordCheck || passwordCheck === '') &&
-                (mismatchError ? (
-                  <SignupPageStyles.Error>
-                    {passwordcheckMessage}
-                  </SignupPageStyles.Error>
+              <div className="input-help">
+                {validateConfirmPassword ? (
+                  <span style={getConfirmPasswordStyle()}>
+                    {confirmPassword === ''
+                      ? '비밀번호 확인을 위해 다시 한 번 입력해주세요'
+                      : '비밀번호가 일치해요!'}
+                  </span>
                 ) : (
-                  <SignupPageStyles.PwDiv>
-                    {passwordcheckMessage}
-                  </SignupPageStyles.PwDiv>
-                ))}
+                  <span className="error">
+                    비밀번호가 일치하지 않아요 다시 입력해주세요
+                  </span>
+                )}
+              </div>
             </SignupPageStyles.Label>
           </SignupPageStyles.Form>
         </SignupPageStyles.InputSection>
@@ -336,9 +352,8 @@ const SignUp = () => {
           selectedSex &&
           isEmail &&
           avaMessage &&
-          isPassword &&
-          passwordCheck &&
-          !mismatchError ? (
+          confirmPassword &&
+          validateConfirmPassword ? (
             <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
             </SignupPageStyles.SucButton>
