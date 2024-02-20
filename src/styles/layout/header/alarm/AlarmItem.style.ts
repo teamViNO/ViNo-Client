@@ -2,6 +2,7 @@ import theme from '@/styles/theme';
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  cursor: pointer !important;
   padding: 28px 0;
   display: flex;
   flex-direction: column;

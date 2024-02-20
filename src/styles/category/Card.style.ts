@@ -47,6 +47,10 @@ export const DropdownWrap = styled.div`
         fill: ${(props) => props.theme.color.gray400};
       }
     }
+
+    &.changed {
+      background-color: ${theme.color.green400};
+    }
   }
 `;
 

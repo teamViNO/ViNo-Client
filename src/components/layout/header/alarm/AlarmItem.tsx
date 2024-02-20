@@ -70,20 +70,25 @@ const AlarmItem = ({
   };
 
   const handleClick = async () => {
-    if (alarm.type === 'notice') {
-      navigate('/guide');
-      onClose();
-    }
-    if (alarm.type === 'video' && !alarm.is_confirm && alarm.alarm_id !== 999) {
+    if (!alarm.is_confirm) {
       try {
         await confirmSelectAlarmAPI({ alarms: [alarm.alarm_id] });
         onRefresh();
-        navigate(`/summary/${alarm.video_id}`);
-        onClose();
       } catch (e) {
         console.error(e);
       }
     }
+    if (alarm.type === 'notice') {
+      navigate('/guide');
+    }
+    if (
+      alarm.type === 'video' &&
+      alarm.state === 'success' &&
+      alarm.alarm_id !== 999
+    ) {
+      navigate(`/summary/${alarm.video_id}`);
+    }
+    onClose();
   };
 
   const handleClickRemoveButton: React.MouseEventHandler<HTMLButtonElement> = (
