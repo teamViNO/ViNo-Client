@@ -39,7 +39,7 @@ const SearchResult = () => {
       case 'hashtag':
         const tagValues = searchParams.get('value') as string;
         const tagtype = searchParams.get('type') as string;
-        
+
         setTags(tagValues.replace(/\s+/g, '').split('&'));
         setSearchType(false);
         handleSearchAPI(tagValues, tagtype, '&');
@@ -50,7 +50,6 @@ const SearchResult = () => {
     }
   }, [location.search]);
 
-  
   const handleSearchAPI = async (
     inputValues: string,
     type: string,
@@ -91,7 +90,7 @@ const SearchResult = () => {
   const formatContent = (content: string, keyword: string) => {
     let result = escapeHTML(content);
     const keywordArr = keyword.split(' ');
-  
+
     keywordArr.forEach((keyword) => {
       if (keyword.trim() !== '') {
         result = result
@@ -99,15 +98,16 @@ const SearchResult = () => {
           .join(`<mark>${escapeHTML(keyword)}</mark>`);
       }
     });
-  
+
     result = result.replace(/\n/g, '<br>');
-  
+
     return result;
   };
 
   const dataDuplicateHandler = (videos: IVideo[], check: string) => {
-    const uniqueData = videos.filter((v, index, arr) => 
-      arr.findIndex(t => t.video_id === v.video_id) === index
+    const uniqueData = videos.filter(
+      (v, index, arr) =>
+        arr.findIndex((t) => t.video_id === v.video_id) === index,
     );
     const mappingData = uniqueData.map((video) => {
       return {
@@ -166,7 +166,7 @@ const SearchResult = () => {
             <SearchNotFound input={errormsg}></SearchNotFound>
           ) : (
             data.map((item, index) => (
-              <SearchResultBox key={index} video={item} tags = {tags}/>
+              <SearchResultBox key={index} video={item} tags={tags} />
             ))
           )}
         </div>

@@ -15,7 +15,8 @@ import {
   SearchContainer,
 } from '@/styles/HomepageStyle';
 
-import { recommendationModalState } from '@/stores/modal';
+import { recommendationModalState, errorModalState } from '@/stores/modal';
+
 import {
   modelingDataState,
   modelingProgressState,
@@ -28,15 +29,12 @@ import { validateYoutubeLink } from '@/utils/validation';
 
 import ProgressBar from './ProgressBar';
 
-type Props = {
-  searchRef: React.RefObject<HTMLInputElement>;
-};
-
-const SearchYoutube = ({ searchRef }: Props) => {
+const SearchYoutube = () => {
   const navigate = useNavigate();
 
   const userToken = useRecoilValue(userTokenState);
   const setIsOpenModal = useSetRecoilState(recommendationModalState);
+  const setIsOpenErrorModal = useSetRecoilState(errorModalState);
   const setVideoLink = useSetRecoilState(videoLinkState);
   const setProgress = useSetRecoilState(modelingProgressState);
   const [status, setStatus] = useRecoilState(modelingStatusState);
@@ -96,6 +94,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
     setVideoLink(null);
     setStatus('NONE');
     setProgress(0);
+    setModelingData(null);
   };
 
   const handleClickCreateVideoButton = async () => {
@@ -109,6 +108,7 @@ const SearchYoutube = ({ searchRef }: Props) => {
         setModelingData(null);
       } catch (e) {
         console.error(e);
+        setIsOpenErrorModal(true);
       }
     } else {
       navigate('/summary/guest');
@@ -156,7 +156,6 @@ const SearchYoutube = ({ searchRef }: Props) => {
               </div>
 
               <SearchInput
-                ref={searchRef}
                 type="text"
                 value={inputLink}
                 disabled={status === 'CONTINUE'}

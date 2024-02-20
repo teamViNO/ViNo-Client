@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import { CategorySelectBox } from '@/components/SummaryPage/SummaryDetailBox/CategorySelectBox';
 
-import { categoryState } from '@/stores/category';
+import { userTokenState } from '@/stores/user';
 
 import * as CardStyles from '@/styles/category/Card.style';
-import Chip from '../common/chip/Chip';
+
+import Chip from '@/components/common/chip/Chip';
 
 interface ICardProps {
   mode: 'default' | 'category' | 'recommend';
@@ -28,15 +29,9 @@ const Card: React.FC<ICardProps> = ({
   setCheckedVideos,
   onFileClick,
 }) => {
-  const category = useRecoilValue(categoryState);
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    category.length ? category[0].categoryId : -1,
-  );
-  const [startSelect, setStartSelect] = useState(false);
+  const userToken = useRecoilValue(userTokenState);
 
   const onFileClickWithProps = (categoryId: number, categoryName?: string) => {
-    setSelectedCategoryId(categoryId);
     onFileClick && onFileClick(video.video_id, categoryId, categoryName);
   };
 
@@ -48,7 +43,7 @@ const Card: React.FC<ICardProps> = ({
     }
   };
   return (
-    <CardStyles.Wrap mode={mode}>
+    <CardStyles.Wrap token={userToken} mode={mode}>
       <div style={{ display: 'flex' }}>
         <CardStyles.Image src={video.image} alt="카드 이미지" />
         {mode === 'category' && (
@@ -65,9 +60,7 @@ const Card: React.FC<ICardProps> = ({
       </div>
 
       <CardStyles.Content
-        to={`/summary/${video.video_id}${
-          mode === 'recommend' && '?insights=true'
-        }`}
+        to={`/summary/${video.video_id}?insight=${mode === 'recommend'}`}
       >
         <CardStyles.Title>{video.title}</CardStyles.Title>
         <CardStyles.Summary>{video.description}</CardStyles.Summary>
@@ -77,12 +70,11 @@ const Card: React.FC<ICardProps> = ({
           ))}
         </CardStyles.ChipWrap>
       </CardStyles.Content>
-      {mode === 'recommend' && (
+      {mode === 'recommend' && userToken && (
         <CardStyles.DropdownWrap>
           <CategorySelectBox
-            selectedCategoryId={selectedCategoryId}
-            startSelect={startSelect}
-            setStartSelect={setStartSelect}
+            size="SMALL"
+            selectedCategoryId={video.category_id}
             onSelect={onFileClickWithProps}
           />
         </CardStyles.DropdownWrap>
