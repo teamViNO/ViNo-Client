@@ -9,6 +9,27 @@ export const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   gap: 124px;
+
+  & .input-help {
+    display: flex;
+    gap: 4px;
+    padding-left: 16px;
+    padding-top: 8px;
+
+    & > span {
+      color: ${(props) => props.theme.color.gray300};
+      transition: 0.1s;
+      ${(props) => props.theme.typography.Body3};
+
+      &.active {
+        color: ${(props) => props.theme.color.gray500};
+      }
+
+      &.error {
+        color: ${(props) => props.theme.color.red};
+      }
+    }
+  }
 `;
 
 export const LogoSection = styled.div`
