@@ -120,6 +120,10 @@ export const Container = styled.div`
 
       & h1 {
         font-weight: bold;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
       }
     }
   }
