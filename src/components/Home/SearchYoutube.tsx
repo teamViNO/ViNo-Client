@@ -100,7 +100,17 @@ const SearchYoutube = ({ searchRef }: Props) => {
       <SearchContainer className="dark-section">
         <SearchForm onSubmit={handleSubmit}>
           <div className="search-text">
-            <h1 className="search-title">{getTitle()}</h1>
+            <h1
+              className="search-title"
+              style={{
+                color:
+                  status === 'COMPLETE'
+                    ? theme.color.green300
+                    : theme.color.white,
+              }}
+            >
+              {getTitle()}
+            </h1>
 
             <div className="search-subtitle-wrapper">
               {(status === 'ERROR' || (!isValidate && inputLink !== '')) && (

@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
-import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
-import errorImg from '@/assets/Error.png';
-import CloseIcon from '@/assets/icons/close.svg?react';
 import { AxiosError } from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import { checkEmailAPI, joinAPI } from '@/apis/user';
 
-import { BlurBackground } from '@/styles/modals/common.style';
+import LogoIcon from '@/assets/icons/dark-logo.svg?react';
+import errorImg from '@/assets/Error.png';
+import CloseIcon from '@/assets/icons/close.svg?react';
+
 import Calendar from '@/components/Calendar';
 import ImageSlider from '@/components/ImageSlider';
 import PhoneCheck from '@/components/PhoneCheck';
-import { Link } from 'react-router-dom';
+
+import { BlurBackground } from '@/styles/modals/common.style';
+import * as SignupPageStyles from '@/styles/signup/SignuppageStyle';
+
 import useCreateToast from '@/hooks/useCreateToast';
 
 const SignUp = () => {
@@ -165,7 +168,7 @@ const SignUp = () => {
 
   const handleOnClick = () => {
     onApply();
-  }
+  };
 
   return (
     <SignupPageStyles.Wrapper>
@@ -175,7 +178,7 @@ const SignUp = () => {
       <SignupPageStyles.MainSection>
         <SignupPageStyles.InputSection>
           <SignupPageStyles.Intro>
-            <img src={logo} alt="로고 이미지" />
+            <LogoIcon />
             <h3>회원가입</h3>
             <p>새로운 계정을 생성하고 나만의 영상 아카이빙을 시작해요</p>
           </SignupPageStyles.Intro>
@@ -333,10 +336,7 @@ const SignUp = () => {
           isPassword &&
           passwordCheck &&
           !mismatchError ? (
-            <SignupPageStyles.SucButton 
-            type="submit" 
-            onClick={onApply}
-            >
+            <SignupPageStyles.SucButton type="submit" onClick={onApply}>
               가입하기
             </SignupPageStyles.SucButton>
           ) : (

@@ -9,7 +9,7 @@ import * as SignInPageStyles from '@/styles/signin/SigninpageStyle';
 import { loginAPI } from '@/apis/user';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
-import smallLogo from '@/assets/logo-dark.png';
+import LogoIcon from '@/assets/icons/dark-logo.svg?react';
 import lineImg from '@/assets/line_img.png';
 import errorImg from '@/assets/Error.png';
 import signupImg from '@/assets/before-login.png';
@@ -70,11 +70,11 @@ const SignInPage: React.FC = () => {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data as APIBaseResponse;
+        const { code } = error.response?.data as APIBaseResponse;
 
-        if (message.indexOf('비밀번호') > -1) {
+        if (code === 'WRONG_PASSWORD') {
           setIsOpenErrorModal(true);
-        } else if (message.indexOf('이메일') > -1) {
+        } else if (code === 'NOT_FOUND_EMAIL') {
           setIsOpenSignUpModal(true);
         }
       }
@@ -89,7 +89,7 @@ const SignInPage: React.FC = () => {
 
   const handleOnClick = () => {
     handleClickLoginButton();
-  }
+  };
 
   const redirect_uri = `${location.origin}/social-account`; //Redirect URI
   const KAKAO_KEY = '77ddf1baeb87f4a9752ed437db43cd96'; //kakao REST API KEY
@@ -105,7 +105,7 @@ const SignInPage: React.FC = () => {
   return (
     <SignInPageStyles.PageComponent>
       <SignInPageStyles.LoginTotalComponent>
-        <SignInPageStyles.Image src={smallLogo} alt="logo" width={'auto'} height={20} />
+        <LogoIcon />
         <SignInPageStyles.TextDiv>로그인</SignInPageStyles.TextDiv>
         <SignInPageStyles.TextDiv
           style={{
@@ -131,7 +131,12 @@ const SignInPage: React.FC = () => {
 
         <SignInPageStyles.LineTotalComponent>
           <SignInPageStyles.FlexBox style={{ flexDirection: 'row' }}>
-            <SignInPageStyles.Image src={lineImg} alt="line" width="266px" height="1.7px" />
+            <SignInPageStyles.Image
+              src={lineImg}
+              alt="line"
+              width="266px"
+              height="1.7px"
+            />
             <SignInPageStyles.TextDiv
               style={{
                 textTransform: 'none',
@@ -142,7 +147,12 @@ const SignInPage: React.FC = () => {
             >
               OR
             </SignInPageStyles.TextDiv>
-            <SignInPageStyles.Image src={lineImg} alt="line" width="266px" height="1.7px" />
+            <SignInPageStyles.Image
+              src={lineImg}
+              alt="line"
+              width="266px"
+              height="1.7px"
+            />
           </SignInPageStyles.FlexBox>
         </SignInPageStyles.LineTotalComponent>
 

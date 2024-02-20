@@ -260,7 +260,7 @@ export const ScriptBox = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.1s;
 
     & button.edit-button {
       padding: 8px 20px;

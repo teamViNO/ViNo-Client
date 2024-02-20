@@ -14,7 +14,7 @@ const Indicator = () => {
     summaryPlaySubHeadingIdState,
   );
 
-  const [focusId, setFocusId] = useState(summaryVideo.subHeading[0].id);
+  const [focusId, setFocusId] = useState(-1);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,10 +23,20 @@ const Indicator = () => {
         .map((el) => el.getBoundingClientRect().top - containerTop)
         .filter((top) => top < 100);
       // window.innerHeight * 0.3
-      const { id } = summaryVideo.subHeading[list.length - 1];
 
-      setFocusId(id);
+      (document.querySelector('.tools') as HTMLDivElement).style.boxShadow =
+        `0 4px 40px 0 rgba(0, 0, 0, ${container.scrollTop > 0 ? 0.05 : 0})`;
+
+      if (list.length) {
+        const { id } = summaryVideo.subHeading[list.length - 1];
+
+        setFocusId(id);
+      }
     };
+
+    if (summaryVideo.subHeading.length) {
+      setFocusId(summaryVideo.subHeading[0].id);
+    }
 
     const container = document.querySelector('#script-box') as HTMLDivElement;
     container.addEventListener('scroll', handleScroll);
@@ -47,13 +57,15 @@ const Indicator = () => {
       const container = document.querySelector('#script-box') as HTMLDivElement;
       const element = document.querySelectorAll('.script-box')[findIdx];
 
-      const { top: containerTop } = container.getBoundingClientRect();
-      const { top } = element.getBoundingClientRect();
+      if (element) {
+        const { top: containerTop } = container.getBoundingClientRect();
+        const { top } = element.getBoundingClientRect();
 
-      container.scrollTo({
-        top: container.scrollTop + top - containerTop,
-        behavior: 'smooth',
-      });
+        container.scrollTo({
+          top: container.scrollTop + top - containerTop - 20,
+          behavior: 'smooth',
+        });
+      }
     }
 
     setFocusId(playSubHeadingId);
