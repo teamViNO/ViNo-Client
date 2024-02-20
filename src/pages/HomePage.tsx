@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IVideoProps } from 'types/videos';
 
 import {
   getRecentVideos,
   getAllDummyVideos,
   createDummyVideoToMine,
-  createVideoAPI,
 } from '@/apis/videos';
 
 import SearchYoutube from '@/components/Home/SearchYoutube';
@@ -15,6 +14,7 @@ import InsightVideos from '@/components/Home/InsightVideos';
 import RecommendationModal from '@/components/modals/RecommendationModal';
 
 import useCreateToast from '@/hooks/useCreateToast';
+import useCreateVideo from '@/hooks/useCreateVideo';
 
 import { HomePageContainer } from '@/styles/HomepageStyle';
 
@@ -27,12 +27,13 @@ const HomePage: React.FC = () => {
   const userToken = useRecoilValue(userTokenState);
   const isOpenModal = useRecoilValue(recommendationModalState);
   const setIsSideBarOpen = useSetRecoilState(isSideBarOpenState);
-  const [modelingData, setModelingData] = useRecoilState(modelingDataState);
+  const setModelingData = useSetRecoilState(modelingDataState);
 
   const [recentVideos, setRecentVideos] = useState<IVideoProps[]>([]);
   const [dummyVideos, setDummyVideos] = useState<IVideoProps[]>([]);
 
   const { createToast } = useCreateToast();
+  const { createVideo } = useCreateVideo();
 
   const searchRef = useRef(null);
 
@@ -69,18 +70,6 @@ const HomePage: React.FC = () => {
   }, [setIsSideBarOpen, userToken]);
 
   useEffect(() => {
-    const createVideo = async () => {
-      if (!modelingData) return;
-
-      try {
-        await createVideoAPI(modelingData);
-      } catch (e) {
-        console.error(e);
-      }
-
-      setModelingData(null);
-    };
-
     if (userToken) {
       createVideo();
     } else {

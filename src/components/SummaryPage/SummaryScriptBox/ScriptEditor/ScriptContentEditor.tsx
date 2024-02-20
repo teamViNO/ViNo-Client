@@ -52,10 +52,12 @@ const ScriptContentEditor = ({ content, onChange }: Props) => {
       className="script-content-edit"
       contentEditable
       dangerouslySetInnerHTML={{ __html: content }}
-      onInput={({ target }) => {
+      onKeyDown={({ target, nativeEvent }) => {
+        if (nativeEvent.isComposing) return;
         caretPos.current = getCaret(contentRef.current as HTMLDivElement);
         onChange((target as HTMLDivElement).innerText);
       }}
+      onBlur={({ target }) => onChange((target as HTMLDivElement).innerText)}
     />
   );
 };

@@ -43,7 +43,7 @@ const NoteItem = ({
   ) => {
     if (e.key === 'Escape') {
       onDisableEditable();
-    } else if (e.key === 'Enter') {
+    } else if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       e.preventDefault();
 
       onEditAndNext && onEditAndNext(noteText);
