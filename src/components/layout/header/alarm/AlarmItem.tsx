@@ -70,22 +70,22 @@ const AlarmItem = ({
   };
 
   const handleClick = async () => {
+    if (!alarm.is_confirm) {
+      try {
+        await confirmSelectAlarmAPI({ alarms: [alarm.alarm_id] });
+        onRefresh();
+      } catch (e) {
+        console.error(e);
+      }
+    }
     if (alarm.type === 'notice') {
       navigate('/guide');
     }
     if (
       alarm.type === 'video' &&
-      alarm.state !== 'fail' &&
+      alarm.state === 'success' &&
       alarm.alarm_id !== 999
     ) {
-      if (!alarm.is_confirm) {
-        try {
-          await confirmSelectAlarmAPI({ alarms: [alarm.alarm_id] });
-          onRefresh();
-        } catch (e) {
-          console.error(e);
-        }
-      }
       navigate(`/summary/${alarm.video_id}`);
     }
     onClose();
