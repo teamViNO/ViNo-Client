@@ -126,8 +126,6 @@ export const ModalDiv = styled.div`
   }
 `;
 
-
-
 export const SocialButton = styled.button`
   display: flex;
   align-items: center;
@@ -144,7 +142,7 @@ export const SocialButton = styled.button`
 
 export const NaverSection = styled(SocialButton)`
   margin-top: 60px;
-  background: #F3F3F3;
+  background: #f3f3f3;
   color: #bbbbbb;
 `;
 
