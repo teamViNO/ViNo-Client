@@ -47,6 +47,10 @@ export const DropdownWrap = styled.div`
         fill: ${(props) => props.theme.color.gray400};
       }
     }
+
+    &.changed {
+      background-color: ${theme.color.green400};
+    }
   }
 `;
 
@@ -98,7 +102,7 @@ export const CardContainer = styled.div`
   row-gap: 40px;
 `;
 
-export const Wrap = styled.div<{ mode: string }>`
+export const Wrap = styled.div<{ token: string | null; mode: string }>`
   display: flex;
   flex-direction: column;
   width: 290px;
@@ -122,6 +126,7 @@ export const Wrap = styled.div<{ mode: string }>`
     box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
     ${(props) =>
       props.mode === 'recommend' &&
+      props.token &&
       css`
         height: 424px;
       `}

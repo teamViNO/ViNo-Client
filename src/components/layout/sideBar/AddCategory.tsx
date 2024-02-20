@@ -1,18 +1,22 @@
 import * as AddCategoryStyle from '@/styles/layout/sideBar/AddCategory.style';
 import PlusSvg from '@/assets/icons/plus.svg?react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { topCategoryModalState } from '@/stores/modal';
+import { addCategoryModalState } from '@/stores/modal';
 import { userTokenState } from '@/stores/user';
 import { useState } from 'react';
 import NoticeModal from '@/components/modals/NoticeModal';
 
 const AddCategory = () => {
   const isUser = useRecoilValue(userTokenState);
-  const setTopCategoryModal = useSetRecoilState(topCategoryModalState);
+  const setIsAddCategoryModalOpen = useSetRecoilState(addCategoryModalState);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
 
   const openAddModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setTopCategoryModal(true);
+    setIsAddCategoryModalOpen({
+      location: 'top',
+      isOpen: true,
+      categoryId: -1,
+    });
     e.stopPropagation();
   };
 

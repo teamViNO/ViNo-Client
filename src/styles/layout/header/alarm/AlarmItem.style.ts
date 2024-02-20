@@ -1,6 +1,8 @@
+import theme from '@/styles/theme';
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  cursor: pointer !important;
   padding: 28px 0;
   display: flex;
   flex-direction: column;
@@ -119,7 +121,37 @@ export const Container = styled.div`
 
       & h1 {
         font-weight: bold;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
       }
     }
+  }
+
+  & div.progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  & div.progress-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 100px;
+    background-color: ${(props) => props.theme.color.gray100};
+    overflow: hidden;
+
+    & > div {
+      height: 100%;
+      transition: 1s;
+      transition-delay: 0.5s;
+    }
+  }
+
+  & span.progress-text {
+    ${theme.typography.Caption3}
+    color: ${theme.color.gray400};
   }
 `;

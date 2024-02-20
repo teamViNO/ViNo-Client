@@ -90,6 +90,14 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
   };
 
   useEffect(() => {
+    return () => {
+      setSummaryVideoTime(0);
+      setPlaySubHeadingId(-1);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (player.current) return;
 
     player.current = new YT.Player('player', {
@@ -98,10 +106,6 @@ const SummaryDetailBox = ({ onRefresh }: Props) => {
 
     window.onmessage = handleMessage;
 
-    return () => {
-      setSummaryVideoTime(0);
-      setPlaySubHeadingId(-1);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summaryVideo]);
 

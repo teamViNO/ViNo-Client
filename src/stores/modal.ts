@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
-export const topCategoryModalState = atom({
-  key: 'topCategoryModal',
-  default: false,
+export const addCategoryModalState = atom({
+  key: 'addCategoryModal',
+  default: { location: '', isOpen: false, categoryId: -1 },
 });
 
 export const summaryTransformModalState = atom({
@@ -12,5 +12,10 @@ export const summaryTransformModalState = atom({
 
 export const recommendationModalState = atom({
   key: 'recommendation-modal',
+  default: false,
+});
+
+export const errorModalState = atom({
+  key: 'error-modal',
   default: false,
 });

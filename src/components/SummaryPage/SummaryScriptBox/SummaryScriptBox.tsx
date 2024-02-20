@@ -91,7 +91,11 @@ const SummaryScriptBox = ({ onRefresh }: Props) => {
     <ScriptBox style={{ width }}>
       <ToolBox onRefresh={onRefresh} onChangeKeyword={handleChangeKeyword} />
 
-      <div ref={ref} style={{ height: 'calc(100% - 78px)', overflowY: 'auto' }}>
+      <div
+        ref={ref}
+        id="script-box"
+        style={{ height: 'calc(100% - 78px)', overflowY: 'auto' }}
+      >
         {isEditingView ? <ScriptEditor /> : <ScriptViewer keyword={keyword} />}
       </div>
 
