@@ -18,6 +18,7 @@ const SearchResult = () => {
   const [input, setInput] = useState('');
   const [searchType, setSearchType] = useState(true); // True : keyword | False : hashTag
   const [loading, setLoading] = useState(false);
+  const [isCroll, setIsCroll] = useState(false);
   const [errormsg, setErrormsg] = useState('');
   const [data, setData] = useState<IVideo[]>([]);
   const location = useLocation();
@@ -49,12 +50,6 @@ const SearchResult = () => {
     }
   }, [location.search]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [loading]);
   
   const handleSearchAPI = async (
     inputValues: string,
@@ -62,6 +57,7 @@ const SearchResult = () => {
     splittype: string,
   ) => {
     try {
+      setIsCroll(true);
       const keywords = inputValues.split(splittype);
       const requests = keywords.map((value) => {
         if (type === 'hashtag') {
@@ -126,7 +122,7 @@ const SearchResult = () => {
 
   if (loading) {
     return (
-      <LoadingSpinner/>
+      <LoadingSpinner isCroll={isCroll} setLoading={setLoading} time={2000}/>
     );
   }
   return (
