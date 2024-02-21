@@ -430,6 +430,7 @@ export const Dropdown = styled.div`
   position: absolute;
   left: 0;
   top: 5px;
+  z-index: 1;
   width: 100%;
   max-height: 276px;
   border-radius: 12px;
