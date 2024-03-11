@@ -62,8 +62,10 @@ const HomePage: React.FC = () => {
 
     !userToken &&
       getAllDummyVideos().then((res) => {
+        if (res.isSuccess) {
+          setDummyVideos(res.result.videos);
+        }
         setRecentVideos([]);
-        setDummyVideos(res.result.videos);
       });
 
     setIsSideBarOpen(false);
